@@ -11,3 +11,17 @@
  *= require_self
  *= require_tree .
  */
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+th,td
+{
+padding:5px;
+}
+
+table.borderless,th,td
+{
+border:0px;
+}

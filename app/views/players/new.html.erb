@@ -1,0 +1,16 @@
+<h1>Create Player</h1>
+
+<%= form_for(@player) do |f| %>
+  <div>
+    <%= f.label "member_id:" %>
+    <%= f.text_field :member_id %><br/>
+  <div>
+  <div>
+    <%= f.label "player_name:" %>
+    <%= f.text_field :player_name %><br/>
+  <div>
+  <div>
+    <%= f.submit %>
+  <div>
+<% end %>
+

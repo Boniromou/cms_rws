@@ -1,4 +1,6 @@
 CmsRws::Application.routes.draw do
+  resources :players
+
   root :to => 'home#index'
   get "home/index"
 

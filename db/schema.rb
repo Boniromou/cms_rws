@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20150323073907) do
 
   create_table "players", :force => true do |t|
     t.string   "player_name"
+    t.string   "member_id"
     t.string   "card_id"
     t.integer  "currency_id"
     t.integer  "balance"

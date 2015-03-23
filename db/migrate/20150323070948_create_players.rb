@@ -14,7 +14,7 @@ class CreatePlayers < ActiveRecord::Migration
   end
 
   def down
-    execute "ALTER TABLE maintenances DROP FOREIGN KEY fk_currency_id;"
+    execute "ALTER TABLE players DROP FOREIGN KEY fk_currency_id;"
     drop_table :players
   end
 end

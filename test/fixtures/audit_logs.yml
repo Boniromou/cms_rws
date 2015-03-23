@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  audit_targit: MyString
+  action_type: MyString
+  action: MyString
+  action_status: MyString
+  action_error: MyString
+  ip: MyString
+  action_by: 1
+  description: MyString
+
+two:
+  audit_targit: MyString
+  action_type: MyString
+  action: MyString
+  action_status: MyString
+  action_error: MyString
+  ip: MyString
+  action_by: 1
+  description: MyString

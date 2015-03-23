@@ -11,13 +11,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150323062957) do
+ActiveRecord::Schema.define(:version => 20150323070948) do
 
   create_table "currencies", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "players", :force => true do |t|
+    t.string   "player_name"
+    t.string   "card_id"
+    t.integer  "currency_id"
+    t.integer  "balance"
+    t.string   "status"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "players", ["currency_id"], :name => "fk_currency_id"
 
   create_table "shift_types", :force => true do |t|
     t.string   "name"

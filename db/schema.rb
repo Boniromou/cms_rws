@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20150323073907) do
   end
 
   add_index "players", ["currency_id"], :name => "fk_currency_id"
+  add_index "players", ["member_id"], :name => "by_member_id", :unique => true
 
   create_table "shift_types", :force => true do |t|
     t.string   "name"

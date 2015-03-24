@@ -35,5 +35,14 @@ CmsRws::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  config.cache_store = :dalli_store,
+                        'stg-cons-vapp01.rnd.laxino.com:11211', 'stg-cons-vapp01.rnd.laxino.com:11212',
+                        {:namespace => 'cirrus_stg',
+                         :expires_in => 1.day,
+                         :socket_timeout => 3,
+                         :compress => true }
+
   SITE_DOMAIN = 'laxino.com'
 end
+
+USER_URL = 'http://mo-stg-sso-vapp01.rnd.laxino.com:80'

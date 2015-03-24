@@ -1,0 +1,26 @@
+<% content_for :header do %>
+  <%= link_to(t("general.sign_up"), new_registration_path(resource_name), :class => "btn btn-danger") %>
+<% end %>
+
+<!-- ap_login_panel -->
+<%= form_for(resource, as: resource_name, url: login_path, html: {:class => "smart-form client-form"}) do |f| %>
+  <header><%= t("title.login_title") %></header>
+  <fieldset>
+    <section>
+      <%= f.label(t("user.user_name"), :class => "label") %>
+      <label class="input"><i class="icon-append fa fa-user"></i>
+        <%= f.text_field(:username) %>
+        <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i><%=t("login_page.username_tooltip") %></b></label>
+    </section>
+    <section>
+      <%= f.label(t("user.password"), :class => "label") %>
+      <label class="input"><i class="icon-append fa fa-lock"></i>
+        <%= f.password_field :password %>
+        <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i><%=t("login_page.password_tooltip") %></b> </label>
+    </section>
+  </fieldset>
+  <footer>
+     <%= f.submit(t("general.login"), :class => "btn btn-primary") %>
+  </footer>
+<% end %>
+<%= link_to("Test", home_path)%>

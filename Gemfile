@@ -35,3 +35,9 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'debugger'
+
+gem 'devise', '3.2.4'
+
+group :ldap do
+  gem "net-ldap", "~> 0.3.1"
+end

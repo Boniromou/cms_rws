@@ -3,6 +3,7 @@ class PlayersController < ApplicationController
     @player = Player.new
     respond_to do |format|
       format.html {render file: "players/new", :layout => "cage", formats: [:html]}
+      format.js { render template: "players/new", formats: [:js] }
     end
   end
 

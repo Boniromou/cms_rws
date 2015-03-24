@@ -1,0 +1,20 @@
+$('div#flash_message').html("<%= escape_javascript(render :partial => "shared/flash_message", :formats => [ :html ] , :layout => nil) %>");
+
+<% if flash[:success] || flash.now[:success] %>
+$.smallBox({
+  title : "Success",
+  content : $('div#message_content').text(),
+  color : "#659265",
+  iconSmall : "fa fa-check fa-2x fadeInRight animated",
+});
+<% elsif flash[:alert] || flash.now[:alert] %>
+$.smallBox({
+  title : "Fail",
+  content : $('div#message_content').text(),
+  color : "#C46A69",
+  iconSmall : "fa fa-times fa-2x fadeInRight animated",
+});
+<% end %>
+
+<% flash.clear %>
+

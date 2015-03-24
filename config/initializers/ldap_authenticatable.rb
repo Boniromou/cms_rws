@@ -12,11 +12,11 @@ module Devise
       def authenticate!
         result = UserManagement::authenticate(username, password)
         if result['success']
-          system_user = SystemUser.find_by_uid(result['system_user']['id'])
-          if !system_user
-            system_user = SystemUser.create!(:uid => result['system_user']['id'], :username => result['system_user']['username'])
+          user = User.find_by_employee_id(result['system_user']['id'])
+          if !user
+            user = User.create!(:employee_id => result['system_user']['id'])
           end
-          success!(system_user)
+          success!(user)
           return
         else
           fail!(result['message'])
@@ -46,4 +46,3 @@ module Devise
 end
 
 Warden::Strategies.add(:ldap_authenticatable, Devise::Strategies::LdapAuthenticatable)
-#Devise.add_module :ldap_authenticatable, :strategy => true

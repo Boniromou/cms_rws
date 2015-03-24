@@ -38,6 +38,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1)
+    dalli (2.0.5)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -115,6 +116,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 3.2.1)
+  dalli (~> 2.0.3)
   devise (= 3.2.4)
   jquery-rails
   mysql2

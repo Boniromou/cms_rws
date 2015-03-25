@@ -2,15 +2,15 @@
 
 <%= form_for(@player) do |f| %>
   <div>
-    <%= f.label "member_id:" %>
+    <%= f.label t("general.member_id") %>
     <%= f.text_field :member_id %><br/>
   </div>
   <div>
-    <%= f.label "player_name:" %>
+    <%= f.label t("general.name") %>
     <%= f.text_field :player_name %><br/>
   </div>
   <div>
-    <%= f.submit %>
+    <%= f.submit t("button.create")%>
   </div>
 <% end %>
 

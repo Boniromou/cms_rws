@@ -5,13 +5,14 @@ CmsRws::Application.routes.draw do
     root :to => "user_sessions#new"
     get "/login" => "user_sessions#new", :as => :login
     post '/login' => 'user_sessions#create', :as => :user_session
-    #get "/logout" => "system_user_sessions#destroy", :as => :logout
+    get "/logout" => "user_sessions#destroy", :as => :logout
     #get "/register" => "system_user_registrations#new", :as => :new_system_user_registration
     #post "/register" => "system_user_registrations#create"
   end
 
   root :to => "user_sessions#new"
-  get "home/index", as: :home
+
+  get 'home' => 'home#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

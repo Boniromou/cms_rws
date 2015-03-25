@@ -7,6 +7,10 @@ en:
     login: "Log In"
     logout: "Log Out"
     signup: "Sign Up"
+    member_id: "Membership ID"
+    name: "Name"
+    card_id: "Card ID"
+    player: "Player"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -19,3 +23,14 @@ en:
   user:
     user_name: "User Name"
     password: "Password"
+  button:
+    create: "Create"
+  create_player:
+    success: "create player successful"
+    exist: "The player you try to create is already exist."
+  create_player_error:
+    id_blank_error: "Membership ID can not be blank"
+    name_blank_error: "Player name can not be blank"
+  balance_enquiry:
+    account_balance: "Account Balance (HKD)"
+

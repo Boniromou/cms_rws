@@ -3,3 +3,19 @@
 
 en:
   hello: "Hello world"
+  general:
+    login: "Log In"
+    logout: "Log Out"
+    signup: "Sign Up"
+  login_page:
+    username_tooltip: "Please enter username"
+    password_tooltip: "Enter your password"
+  logout_page:
+    action_yes: "Yes"
+    action_no: "No"
+  title:
+    title: "Cage"
+    login_title: "Login"
+  user:
+    user_name: "User Name"
+    password: "Password"

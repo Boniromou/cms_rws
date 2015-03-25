@@ -13,6 +13,9 @@ CmsRws::Application.routes.draw do
   root :to => "user_sessions#new"
 
   get 'home' => 'home#index'
+  resources :players
+
+  get "players/balance" => 'player#show'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

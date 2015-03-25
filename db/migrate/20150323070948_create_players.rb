@@ -10,7 +10,7 @@ class CreatePlayers < ActiveRecord::Migration
 
       t.timestamps
     end
-
+    add_index(:players, :member_id, unique:true, name: 'by_member_id')
     execute "ALTER TABLE players ADD CONSTRAINT fk_currency_id FOREIGN KEY (currency_id) REFERENCES currencies(id);"
   end
 

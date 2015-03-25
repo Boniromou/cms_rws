@@ -20,6 +20,16 @@
           <i class="fa fa-home"></i> <span class="menu-item-parent">Home</span>
         <% end %>
       </li>
+      <li id="nav_create_player">
+        <%= link_to new_player_path, :title => "Create Player", :remote => true do %>
+          <i class="fa fa-home"></i> <span class="menu-item-parent">Create Player</span>
+        <% end %>
+      </li>
+      <li id="nav_balance_enquiry">
+        <%= link_to players_balance_path, :title => "Balance Enquiry", :remote => true do %>
+          <i class="fa fa-home"></i> <span class="menu-item-parent">Balance Enquiry</span>
+        <% end %>
+      </li>
     </ul>
   </nav>
   <span class="minifyme" data-action="minifyMenu">

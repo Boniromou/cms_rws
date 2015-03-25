@@ -1,7 +1,6 @@
 class PlayersController < ApplicationController
   def new
     @player = Player.new
-    flash[:alert] = "fail"
     respond_to do |format|
       format.html {render file: "players/new", :layout => "cage", formats: [:html]}
       format.js { render template: "players/new", formats: [:js] }
@@ -10,7 +9,7 @@ class PlayersController < ApplicationController
 
   def create
     begin
-      is_success = Player.create_by_param(params[:player][:member_id],params[:player][:member_id])
+      is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
       if is_success
         redirect_to(home_index_path)
       else
@@ -18,6 +17,7 @@ class PlayersController < ApplicationController
       end
     rescue Exception => e
       @player = Player.new(params[:player])
+    flash[:alert] = e.message
       respond_to do |format|
         format.html {render file: "players/new", :layout => "cage", formats: [:html]}
       end

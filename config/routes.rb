@@ -4,7 +4,7 @@ CmsRws::Application.routes.draw do
   devise_scope :user do
     root :to => "user_sessions#new"
     get "/login" => "user_sessions#new", :as => :login
-    #post '/login' => 'system_user_sessions#create', :as => :system_user_session
+    post '/login' => 'user_sessions#create', :as => :user_session
     #get "/logout" => "system_user_sessions#destroy", :as => :logout
     #get "/register" => "system_user_registrations#new", :as => :new_system_user_registration
     #post "/register" => "system_user_registrations#create"

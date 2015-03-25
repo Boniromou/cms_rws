@@ -43,3 +43,5 @@ group :ldap do
 end
 
 gem 'dalli', "~> 2.0.3"
+
+gem 'thin', '1.6.2'

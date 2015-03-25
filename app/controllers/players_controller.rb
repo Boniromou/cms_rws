@@ -23,4 +23,14 @@ class PlayersController < ApplicationController
       end
     end
   end
+
+  def show
+    @player = Player.find_by_id(1)
+    @currency = Currency.find_by_id(@player.currency_id)
+    respond_to do |format|
+      format.html {render file: "players/show", :layout => "cage", formats: [:html]}
+      format.js { render template: "players/show", formats: [:js] }
+    end
+    
+  end
 end

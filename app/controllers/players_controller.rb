@@ -13,7 +13,7 @@ class PlayersController < ApplicationController
       is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
       if is_success
         flash[:success] = "create_player.success"
-        redirect_to :action => 'show', :member_id => params[:player][:member_id]
+        redirect_to :action => 'balance', :member_id => params[:player][:member_id]
       else
         raise Exception.new
       end
@@ -26,7 +26,7 @@ class PlayersController < ApplicationController
     end
   end
 
-  def show
+  def balance
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)

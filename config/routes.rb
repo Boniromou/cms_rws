@@ -1,7 +1,5 @@
 CmsRws::Application.routes.draw do
 
-  get "players/search"
-  post "players/search" => "players#do_search"
   devise_for :users, controllers: {:sessions => "user_sessions"}
 
   devise_scope :user do
@@ -16,9 +14,11 @@ CmsRws::Application.routes.draw do
   root :to => "user_sessions#new"
 
   get 'home' => 'home#index'
-  resources :players
 
   get "players/balance" => 'players#balance'
+  get "players/search"
+  post "players/search" => "players#do_search"
+  resources :players
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

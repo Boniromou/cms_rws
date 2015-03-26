@@ -1,7 +1,7 @@
 class CreateAuditLogs < ActiveRecord::Migration
   def change
     create_table :audit_logs do |t|
-      t.string :audit_targit
+      t.string :audit_target
       t.string :action_type
       t.string :action
       t.string :action_status
@@ -9,6 +9,7 @@ class CreateAuditLogs < ActiveRecord::Migration
       t.string :ip
       t.integer :action_by
       t.string :description
+      t.string :session_id
 
       t.timestamps
     end

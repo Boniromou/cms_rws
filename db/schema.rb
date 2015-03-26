@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(:version => 20150323073907) do
 
   create_table "audit_logs", :force => true do |t|
-    t.string   "audit_targit"
+    t.string   "audit_target"
     t.string   "action_type"
     t.string   "action"
     t.string   "action_status"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 20150323073907) do
     t.string   "ip"
     t.integer  "action_by"
     t.string   "description"
+    t.string   "session_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end

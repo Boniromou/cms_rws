@@ -1,10 +1,14 @@
 <h1>Players#search</h1>
-<%= form_tag do %>
-<div>
-  <label><%=  t("general.member_id") %></label>
-  <%= text_field :player,:member_id %>
-</div>
-<div>
-  <%= submit_tag t("button.search")%>
-</div>
+<%= form_for :player, :url =>{:action => :do_search}  do |f| %>
+  <div>
+    <label><%=  t("general.member_id") %></label>
+    <%= f.text_field :member_id %>
+  </div>
+  <div>
+    <%= submit_tag t("button.search")%>
+  </div>
+<% end %>
+<% if @found == "false" %>
+<p> create</p>
+
 <% end %>

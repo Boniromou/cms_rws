@@ -42,6 +42,9 @@ class PlayersController < ApplicationController
   end
 
   def search
+    @player = Player.new
+    @player.member_id = params[:member_id]
+    @found = params[:found]
     respond_to do |format|
       format.html {render file: "players/search", :layout => "cage", formats: [:html]}
       format.js { render template: "players/search", formats: [:js] }
@@ -49,6 +52,12 @@ class PlayersController < ApplicationController
   end
 
   def do_search
- #   redirect_to :action => 'show', :member_id => params[:player][:member_id]
+    member_id = params[:player][:member_id]
+    @player = Player.find_by_member_id(member_id)
+    if @player.nil?
+      redirect_to :action => 'search', :found => false, :member_id => member_id
+    else
+      redirect_to :action => 'show', :member_id => member_id
+    end
   end
 end

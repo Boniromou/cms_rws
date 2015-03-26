@@ -3,6 +3,10 @@
 
 en:
   hello: "Hello world"
+  tree_panel:
+    home: "Home"
+    create_player: "Create Player"
+    balance: "Balance Enquiry"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -32,6 +36,9 @@ en:
   create_player_error:
     id_blank_error: "Membership ID can not be blank"
     name_blank_error: "Player name can not be blank"
+  search_error:
+    not_found: "Player Not Found!!"
+    create_player: "Create new player?"
   balance_enquiry:
     account_balance: "Account Balance (HKD)"
 

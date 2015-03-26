@@ -1,4 +1,4 @@
-<h1>Players#search</h1>
+<h1><%= t(@search_title)%></h1>
 <%= form_for :player, :url =>{:action => :do_search}  do |f| %>
   <div>
     <label><%=  t("general.member_id") %></label>
@@ -9,6 +9,7 @@
   </div>
 <% end %>
 <% if @found == "false" %>
-<p> create</p>
-
+  <h2> <%= t("search_error.not_found")%></h2>
+  <p> <%= t("search_error.create_player")%></p>
+  <%= link_to t("button.create"), :action => :new, :member_id => @player.member_id %>
 <% end %>

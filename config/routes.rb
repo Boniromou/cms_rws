@@ -15,7 +15,7 @@ CmsRws::Application.routes.draw do
   get 'home' => 'home#index'
   resources :players
 
-  get "players/balance" => 'player#show'
+  get "players/balance" => 'players#show'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

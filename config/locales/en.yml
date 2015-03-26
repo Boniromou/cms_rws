@@ -25,6 +25,7 @@ en:
     password: "Password"
   button:
     create: "Create"
+    search: "Search"
   create_player:
     success: "create player successful"
     exist: "The player you try to create is already exist."

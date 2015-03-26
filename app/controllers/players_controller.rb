@@ -40,4 +40,15 @@ class PlayersController < ApplicationController
       redirect_to(new_player_path+"?member_id=#{member_id}")
     end
   end
+
+  def search
+    respond_to do |format|
+      format.html {render file: "players/search", :layout => "cage", formats: [:html]}
+      format.js { render template: "players/search", formats: [:js] }
+    end
+  end
+
+  def do_search
+ #   redirect_to :action => 'show', :member_id => params[:player][:member_id]
+  end
 end

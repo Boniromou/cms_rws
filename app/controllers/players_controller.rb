@@ -44,9 +44,8 @@ class PlayersController < ApplicationController
   def search
     @player = Player.new
     @player.member_id = params[:member_id]
-    operation = "balance"
-    operation = params[:operation] if params[:operation]
-    @search_title = "tree_panel." + operation
+    @operation = params[:operation] if params[:operation]
+    @search_title = "tree_panel." + @operation
     @found = params[:found]
     respond_to do |format|
       format.html {render file: "players/search", :layout => "cage", formats: [:html]}
@@ -56,13 +55,12 @@ class PlayersController < ApplicationController
 
   def do_search
     member_id = params[:player][:member_id]
-    operation = "balance"
-    operation = params[:operation] if params[:operation]
+    @operation = params[:operation] if params[:operation]
     @player = Player.find_by_member_id(member_id)
     if @player.nil?
-      redirect_to :action => 'search', :found => false, :member_id => member_id
+      redirect_to :action => 'search', :found => false, :member_id => member_id, :operation => @operation
     else
-      redirect_to :action => operation, :member_id => member_id
+      redirect_to eval( @operation + "_path" ) + "?member_id=" + member_id
     end
   end
 end

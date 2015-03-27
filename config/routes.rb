@@ -15,7 +15,7 @@ CmsRws::Application.routes.draw do
 
   get 'home' => 'home#index'
 
-  get "players/balance" => 'players#balance'
+  get "players/balance" => 'players#balance', as: :balance
   get "players/search"
   post "players/search" => "players#do_search"
   resources :players

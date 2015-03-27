@@ -1,0 +1,18 @@
+<h1>Deposit</h1>
+
+<div>
+  <p>Player Name: <%= @player[:player_name] %></p>
+  <p>Member ID: <%= @player[:member_id] %></p>
+</div>
+
+<%= form_for :player_transaction, url: "fund_in", remote: true do |f| %>
+  <div>
+    <%= hidden_field(:player, :member_id) %>
+  </div>
+
+  <div>
+    <%= f.label "Amount: " %>
+    <%= f.text_field :amount %><br/>
+  </div>
+  <%= f.submit "Confirm" %>
+<% end %>

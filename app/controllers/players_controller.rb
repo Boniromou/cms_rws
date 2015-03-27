@@ -35,8 +35,8 @@ class PlayersController < ApplicationController
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
       respond_to do |format|
-        format.html {render file: "players/show", :layout => "cage", formats: [:html]}
-        format.js { render template: "players/show", formats: [:js] }
+        format.html {render file: "players/balance", :layout => "cage", formats: [:html]}
+        format.js { render template: "players/balance", formats: [:js] }
       end
     rescue Exception => e
       flash[:alert] = "player not found"

@@ -5,14 +5,63 @@
   <p>Member ID: <%= @player[:member_id] %></p>
 </div>
 
-<%= form_for :player_transaction, url: "fund_in", remote: true do |f| %>
+<%= form_for :player_transaction, url: "fund_in", remote: true, html: { id: "fund_in_request" } do |f| %>
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
 
   <div>
     <%= f.label "Amount: " %>
-    <%= f.text_field :amount %><br/>
+    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$' %><br/>
   </div>
-  <%= f.submit "Confirm" %>
 <% end %>
+
+<div id="button_set">
+  <button id="confirm">Confirm</button>
+  <button id="cancel">Cancel</button>
+</div>
+
+<div id="confirm_fund_in_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 206px; left: 376px; display: none;">
+  <div style="height: 60%;" align="center">
+    <table>
+      <td width="60%"><p style="font-size: 18px;">Deposit Amount(HKD):</p></td>
+      <td width="40%"><p style="font-size: 18px;">xxxx</p></td>
+    </table>
+  </div>
+  <div align="center">
+    <button id="confirm" class="btn btn-danger">Confirm</button>
+    <button id="cancel" class="btn btn-default">Cancel</button>
+  </div>
+</div>
+
+<script type='text/javascript'>
+  $('#confirm').click(function() {
+    $('#confirm_fund_in_dialog').css("display", "block");
+
+    $('#confirm').attr('disabled','disabled');
+    $('#cancel').attr('disabled','disabled');
+
+    return false;
+  });
+
+  $('#confirm_fund_in_dialog #confirm').click(function() {
+    $('#fund_in_request').submit();
+
+    return false;
+  });
+
+  $('#cancel').click(function() {
+    history.back();
+
+    return false;
+  });
+
+  $('#confirm_fund_in_dialog #cancel').click(function() {
+    $('#confirm_fund_in_dialog').css("display", "none");
+
+    $('#confirm').removeAttr('disabled');
+    $('#cancel').removeAttr('disabled');
+
+    return false;
+  });
+</script>

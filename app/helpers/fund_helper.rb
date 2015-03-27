@@ -1,9 +1,6 @@
 module FundHelper
-  def amount_valid?( amount )
-    return false unless amount.is_a? String
-    return false unless amount =~ /^\d+(\.\d{1,2})?$/
-    return false unless to_server_amount( amount ) > 0
-    true
+  def validate_amount_str( amount )
+    raise "Input amount not valid" unless amount.is_a?(String) && amount =~ /^\d+(\.\d{1,2})?$/ && to_server_amount( amount ) > 0
   end
 
   def to_server_amount( amount )

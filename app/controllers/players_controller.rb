@@ -10,7 +10,10 @@ class PlayersController < ApplicationController
 
   def create
     begin
-      is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
+      is_success = false
+      AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => "Nino", :shift => "morning"}) do
+        is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
+      end
       if is_success
         flash[:success] = "create_player.success"
         redirect_to :action => 'balance', :member_id => params[:player][:member_id]

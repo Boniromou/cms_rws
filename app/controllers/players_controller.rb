@@ -10,7 +10,10 @@ class PlayersController < ApplicationController
 
   def create
     begin
-      is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
+      is_success = false
+      AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => "Nino", :shift => "morning"}) do
+        is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
+      end
       if is_success
         flash[:success] = "create_player.success"
         redirect_to :action => 'balance', :member_id => params[:player][:member_id]
@@ -32,8 +35,8 @@ class PlayersController < ApplicationController
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
       respond_to do |format|
-        format.html {render file: "players/show", :layout => "cage", formats: [:html]}
-        format.js { render template: "players/show", formats: [:js] }
+        format.html {render file: "players/balance", :layout => "cage", formats: [:html]}
+        format.js { render template: "players/balance", formats: [:js] }
       end
     rescue Exception => e
       flash[:alert] = "player not found"

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   layout false
+  include Pundit
   protect_from_forgery
   before_filter :authenticate_user!
 

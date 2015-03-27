@@ -37,6 +37,7 @@ gem 'jquery-rails'
 # gem 'debugger'
 
 gem 'devise', '3.2.4'
+gem 'pundit'
 
 group :ldap do
   gem "net-ldap", "~> 0.3.1"

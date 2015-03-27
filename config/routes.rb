@@ -4,10 +4,10 @@ CmsRws::Application.routes.draw do
   devise_scope :user do
     root :to => "user_sessions#new"
     get "/login" => "user_sessions#new", :as => :login
-    post '/login' => 'user_sessions#create', :as => :user_session
+    post '/login' => 'user_sessions#create'
     get "/logout" => "user_sessions#destroy", :as => :logout
-    #get "/register" => "system_user_registrations#new", :as => :new_system_user_registration
-    #post "/register" => "system_user_registrations#create"
+    get "/register" => "user_registrations#new", :as => :register
+    post "/register" => "user_registrations#create"
   end
 
   root :to => "user_sessions#new"
@@ -16,6 +16,9 @@ CmsRws::Application.routes.draw do
   resources :players
 
   get "players/balance" => 'player#show'
+
+  get 'fund_in' => 'fund_in#new'
+  post 'fund_in' => 'fund_in#create'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,15 +1,20 @@
-<!-- MAIN PANEL -->
 <div id="main">
-  <!-- MAIN CONTENT -->
   <div id="content">
     <%= yield %>
   </div>
-  <!-- END MAIN CONTENT -->
 
-    <div id="flash_message" style="" data-message-type="">
-      <%= render partial: "shared/flash_message", flash: flash %>
-    </div>
+  <div id="flash_message" style="" data-message-type="">
+    <%= render partial: "shared/flash_message", flash: flash %>
+  </div>
 
+  <style type='text/css'>
+    footer {
+      position: absolute;
+      bottom: 0;
+    }
+  </style>
+
+  <footer>
+    <p>Environment: <%= Rails.env %></p>
+  </footer>
 </div>
-<!-- END MAIN PANEL -->
-

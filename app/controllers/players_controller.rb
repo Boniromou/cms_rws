@@ -2,6 +2,7 @@ class PlayersController < ApplicationController
   def new
     @player = Player.new
     @player.member_id = params[:member_id]
+    #authorize @player
     respond_to do |format|
       format.html {render file: "players/new", :layout => "cage", formats: [:html]}
       format.js { render template: "players/new", formats: [:js] }

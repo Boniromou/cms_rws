@@ -4,7 +4,7 @@
   <tr height="40"></tr>
   <tr>
     <td width="10%">Number</td>
-    <td width="40%"><%= @transaction[:amount] %></td>
+    <td width="40%"><%= to_display_amount_str(@transaction[:amount]) %></td>
     <td width="10%">Date</td>
     <td width="40%"><%= @transaction[:player_id] %></td>
   </tr>

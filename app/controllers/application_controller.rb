@@ -17,4 +17,20 @@ class ApplicationController < ActionController::Base
     request.session_options[:id]
   end
 
+  def check_permission(model, operation = nil)
+    begin
+      if operation.nil?
+        authorize model
+      else
+        authorize model, operation
+      end
+    rescue NotAuthorizedError => e
+      flash[:alert] = "flash_message.not_authorize"
+      redirect_to home_path
+      return false
+    rescue Exception
+    end
+    true
+  end
+
 end

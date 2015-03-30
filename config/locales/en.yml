@@ -41,4 +41,5 @@ en:
     create_player: "Create new player?"
   balance_enquiry:
     account_balance: "Account Balance (HKD)"
-
+  flash_message:
+    not_authorize: "You are not authorize for this request."

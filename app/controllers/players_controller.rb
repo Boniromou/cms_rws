@@ -1,8 +1,8 @@
 class PlayersController < ApplicationController
   def new
+    return unless check_permission Player.new
     @player = Player.new
     @player.member_id = params[:member_id]
-    authorize @player
     respond_to do |format|
       format.html {render file: "players/new", :layout => "cage", formats: [:html]}
       format.js { render template: "players/new", formats: [:js] }
@@ -10,6 +10,7 @@ class PlayersController < ApplicationController
   end
 
   def create
+    return unless check_permission Player.new
     begin
       is_success = false
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => "Nino", :shift => "morning"}) do
@@ -22,6 +23,7 @@ class PlayersController < ApplicationController
         raise Exception.new
       end
     rescue Exception => e
+    rescue Exception => e
       @player = Player.new(params[:player])
       flash[:alert] = e.message
       respond_to do |format|
@@ -31,6 +33,7 @@ class PlayersController < ApplicationController
   end
 
   def balance
+    return unless check_permission Player.new
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
@@ -46,9 +49,11 @@ class PlayersController < ApplicationController
   end
 
   def search
+    @operation = params[:operation] if params[:operation]
+    action = (@operation+ "?").to_sym unless @operation.nil?
+    return unless check_permission Player.new, action
     @player = Player.new
     @player.member_id = params[:member_id]
-    @operation = params[:operation] if params[:operation]
     @search_title = "tree_panel." + @operation
     @found = params[:found]
     respond_to do |format|

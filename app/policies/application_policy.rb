@@ -49,7 +49,6 @@ class ApplicationPolicy
   def is_admin?
     cache_key = "#{user.uid}"
     status = Rails.cache.fetch cache_key
-    p status[:admin]
     status[:admin]
   end
 

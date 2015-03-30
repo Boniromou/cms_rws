@@ -6,6 +6,7 @@ gem 'rails', '3.2.19'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'
+gem 'lax-support', '0.6.32', :path => "vendor/gems/lax-support-0.6.32"
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -46,3 +47,16 @@ end
 gem 'dalli', "~> 2.0.3"
 
 gem 'thin', '1.6.2'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0'
+end
+
+group :test do
+  gem 'capybara', '2.4.3'
+  gem 'poltergeist'
+  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'simplecov'
+  #gem 'capybara-webkit'
+end
+

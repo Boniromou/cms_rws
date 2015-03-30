@@ -1,0 +1,92 @@
+LaxSupport provides the following supporting classes/modules for Laxino gaming platform development:
+
+  * Lax Model - an extremely light-weight Ruby ORM class built on top of Sequel.
+  * Lax Event - an message event class used for lax messaging system.
+  * Lax Callbacks - a mixin module that allows you to define callbacks in your class.
+  * Lax Configurator - generic class to handle configuration.
+  * Lax Daemonizable - generic module to daemonize your class.
+  * Lax Messenger - a message broker client using stomp protocol.
+  * Lax PerfTrace - a mixin module that allows you to do benchmarking with any methods in your class.
+  * Lax Rescuable - a mixin module to handle exception in a centralized way. 
+  * Lax Stats - a mixin module that allows you to do basic statistics on a given metrics.
+  * Lax Validation - a mixin module that allow you to do attribute validations in your class.
+  * Lax Sequel Plugins - plugins to handle lock version (optimistic locking) and timestamp (updated_at and created_at).
+  * Lax SimpleStore - a generic/unified API for interacting with various popular key/value stores.
+  * Lax AuthorizedRWS - generic Lax RWS client with REST authentication built-in based on HTTParty.
+  * Lax RWSError - standardized RWS exception class.
+  * Lax RWSErrorHandler - generic exception handler for RWS in Rails.
+  * Lax ActsAsMessagable - a mixin module that handles Lax messages in general for Rails RWS applications.
+  * Lax ActsAsNamespacedSession - a mixin module to handle dynamic namespace for session key in Rails
+  * Lax NonblockingFileLock - a mixin module to make it easy to handle pid file locking
+
+
+There are some more extensions to Ruby kernel:
+
+  * Hash 
+    * recursively_symbolize_keys 
+      Symbolize keys for a Hash recursively
+      
+        h = { 'a'=>1, 'b'=>{ 'b1'=>1, 'b2'=>2 } }
+        h1 = h.recursively_symbolize_keys
+        # h1 = { :a=>1, :b=>{ :b1=>1, :b2=>2 } }
+  
+    * recursively_symbolize_keys!
+      Symbolize keys for a Hash recursively. This method modifies the original hash variable directly.
+        h = { 'a'=>1, 'b'=>{ 'b1'=>1, 'b2'=>2 } }
+        h.recursively_symbolize_keys
+        # h = { :a=>1, :b=>{ :b1=>1, :b2=>2 } }
+
+    * recursively_stringify_keys!
+      Stringify keys for a Hash recursively
+
+        h = { :a=>1, :b=>{ :b1=>1, :b2=>2 } }
+        h1 = h.recursively_stringify_keys
+        # h1 = { 'a'=>1, 'b'=>{ 'b1'=>1, 'b2'=>2 } }
+
+    * recursively_stringify_keys!
+      Stringify keys for a Hash recursively. This method modifies the origin
+al hash variable directly.
+        h = { :a=>1, :b=>{ :b1=>1, :b2=>2 } }
+        h.recursively_symbolize_keys
+        # h = { 'a'=>1, 'b'=>{ 'b1'=>1, 'b2'=>2 } }
+
+  * Array
+    * extract_options! 
+      Extract options from a set of arguments. Removes and returns the last element in the array if it's a hash, otherwise returns a blank hash.
+  
+        def options(*args)
+          args.extract_options!
+        end
+     
+        options(1, 2)           # => {}
+        options(1, 2, :a => :b) # => {:a=>:b}
+  
+  * Class
+    * Class inheritable attributes
+      Allows attributes to be shared within an inheritance hierarchy, but where each descendant gets a copy of their parents' attributes, instead of just a pointer to the same. This means that the child can add elements to, for example, an array without those additions being shared with either their parent, siblings, or children, which is unlike the regular class-level attributes that are shared across the entire hierarchy.
+
+      * class_inheritable_reader
+      * class_inheritable_writer
+      * class_inheritable_array_writer
+      * class_inheritable_hash_writer
+      * class_inheritable_accessor
+      * class_inheritable_array
+      * class_inheritable_hash
+      * inheritable_attributes
+      * write_inheritable_attribute
+      * write_inheritable_array
+      * write_inheritable_hash
+      * read_inheritable_attribute
+      * reset_inheritable_attributes
+  
+  * blank? - check whether an object is blank.
+    * False is always blank
+    * True is never blank
+    * Objects are blank if they respond true to empty?
+    * Nil is always blank
+    * Numerics are never blank (not even 0)
+    * Strings are blank if tehy are empty or include only whitespace(s)
+
+  * duplicable? - check whether an object can be safely .dup
+    * False for nil, false, true, symbols, and numbers; true otherwise   
+

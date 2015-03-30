@@ -1,0 +1,151 @@
+Mar 23, 2012: Version - 0.6.32
+  Updated domain data migration script to support rails 3.x
+
+Mar 11, 2012: Version - 0.6.31
+  Removed gem dependency on Facets.
+
+Nov 02, 2011: Version - 0.6.30
+  Used absolute path when require a header file in all spec files, which is required for Ruby 1.9.2 or above
+  Loaded Sequel extension Inflector in LaxModel in order to make it compatible with newer version of Sequel (version 3 or above)
+
+Feb 23, 2010: Version - 0.6.28
+  Add instance methods subscribe and unsubscribe to Messenger
+
+Jan 29, 2010: Version - 0.6.27
+  Add NonblockingFileLock module to make it easy to handle pid file locking
+
+Jan 28, 2010: Version - 0.6.26
+  Add ActsAsNamespacedSession to handle dynamic namespace for session key in Rails
+
+Dec 17, 2009: Version - 0.6.25
+  In Messenger, change the publish default timeout value to 2 seconds instead of 10 seconds
+  and default retries to 3 instead of 5 in order to shorten the overall timeout period. 
+
+Dec 04, 2009: Version - 0.6.24
+  add support for changing audit columns in lax-model
+
+Nov 24, 2009: Version - 0.6.23
+  change save/save_changes methods in LaxModel to save changes only.
+  In LaxModel, instead of dynamic loading, we simply switch to the "require" 
+    statement to load the SystemTimer gem since SystemTimer is a required gem anyway.
+
+Sept 30, 2009: Version - 0.6.22
+  change precision to microsecond for created_at timestamp in OutboundEvent.
+
+Sept 17, 2009: Version - 0.6.21
+  add timeout handling for AuthorizedRWS.
+
+Sept 1, 2009: Version - 0.6.20
+  fix a bug in the support for broker cluster.
+
+Aug 25, 2009: Version - 0.6.19
+  add support for broker cluster.
+
+Aug 7, 2009 : Version - 0.6.18
+  fixed a few minor bugs in acts_as_messagable Rails gem.
+
+Jul 28, 2009 : Version - 0.6.17
+  added AMF support for message event and acts_as_messagable Rails gem. 
+  AMF format for message data will be default. To change to use other message format,
+  please specify :encoding_format option when setting up acts_as_messagable for your controller.
+
+Jul 15, 2009 : Version - 0.6.16
+  added ServiceController for starting/stopping serivce daemon by utilizing daemon_controller.
+
+Jun 03, 2009 : Version - 0.6.15
+  added support for utf-8 string: length_utf8 - return number of characters for a given UTF-8 string.
+
+Jun 15, 2009 : Version - 0.6.14
+  added DomainDataMigration class to handle domain data synchronization.
+
+May 29, 2009 : Version - 0.6.13
+  Messenger change:
+    add checking for broker connection before disconnecting from the broker
+
+May 21, 2009 : Version - 0.6.12
+  SimpleStore change:
+    fix a bug in lock acquisition which caused the lock expiration broken
+
+Apr 17, 2009 : Version - 0.6.11
+  ActsAsMessagable change:
+    Support specifying broker for a given destination so that message can be delivered
+    to multiple brokers if destinations reside in different brokers. 
+
+Apr 12, 2009 : Version - 0.6.10
+  Messenger changes:
+    Modified message publishing mechanism with retries. 
+    Force reliable flag to be false when using stomp gem because its buggy behavior.
+  acts_as_messagable:
+    reponse content now is logged only in debug mode to avoid logging sensitive info. 
+    in production mode, the logging level is assumed to be "info" by default. 
+
+Mar 27, 2009 : Version - 0.6.9
+  Modified _created_at format in Inbound/Outbound Event:
+    In OutboundEvent, _created_at will be a string of format "%Y-%m-%d %H:%M:%S UTC",
+      for example, "2009-03-27 14:26:30 UTC"
+    In InboundEvent, once signature checking is passed, _created_at will be converted into
+      a Time object (timezone will remain in UTC).
+
+Mar 25, 2009 : Version - 0.6.8
+  Fixed: 1. Correctly bind exception handlers (code block) in Rescuable module
+         2. Modify messenger to be compatible with stomp 1.1 gem. 
+         3. Handle header handling correctly for post in AuthorizedRWS::Base 
+
+Mar 23, 2009 : Version - 0.6.7
+  Add acts_as_messagable for Rails to handle message in general
+  Add RWSErrorHandler for Rails to handle exception in a generic RWS way.
+
+Mar 18, 2009 : Version - 0.6.6
+  Enhance authorized_rws to make its canonicalization to 
+    be more generic and platform independent
+
+Mar 17, 2009 : Version - 0.6.5
+  Enhance authorized_rws to handle both RWS provided to 
+    external party (i.e., licensee) and internal services
+
+Mar 14, 2009 : Version - 0.6.4
+  Add parser for authorized RWS
+  Refractor authorized RWS
+
+Mar 13, 2009 : Version - 0.6.3
+  Add authorized RWS support authenticating Laxino RWS
+  Add standard exception class, RWSError
+
+Mar 04, 2009 : Version - 0.6.2
+  Add SimpleStore, a unified interface for key/value stores with locking
+
+Mar 02, 2009 : Version - 0.6.1
+  Improved timestamp and lock version support in LaxSupport::Model
+    referencing on the Sequel Plugins. 
+
+Feb 27, 2009 : Version - 0.6.1
+  Add two Sequel Plugins: timestamped and lock_versioned
+  Use LaxSupport::Callbacks mixin module in LaxSupport::Model
+  Add timezone support for Sequel
+
+Feb 06, 2009 
+  Add Validation mixin module that allows attribute validations in a class
+
+Feb 04, 2009
+  Add recursively symbolize keys for hash in core_ext module
+  Use the above function to re-symbolize keys in various module 
+
+Jan 14, 2009
+  Add Daemonizable module
+  Deprecate Observable module
+
+Jan 13, 2009
+  Add Stats and PerfTrace modules
+
+Jan 01, 2009
+  Add core extensions to Ruby kernel: class and array
+
+Dec 26, 2008
+  Add features: Callbacks, Configurator and Rescuable
+
+Nov 26, 2008
+  Add Messenger for messaging handling
+
+Nov 06, 2008 
+  Initalize lax-support with the following features:
+    LaxModel, Event, Observable

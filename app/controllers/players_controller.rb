@@ -1,10 +1,11 @@
 class PlayersController < ApplicationController
+  layout 'cage'
   def new
     return unless check_permission Player.new
     @player = Player.new
     @player.member_id = params[:member_id]
     respond_to do |format|
-      format.html {render file: "players/new", :layout => "cage", formats: [:html]}
+      format.html {render file: "players/new", formats: [:html]}
       format.js { render template: "players/new", formats: [:js] }
     end
   end
@@ -20,14 +21,13 @@ class PlayersController < ApplicationController
         flash[:success] = "create_player.success"
         redirect_to :action => 'balance', :member_id => params[:player][:member_id]
       else
-        raise Exception.new
+        raise Exception.new "Unkonwn error"
       end
-    rescue Exception => e
     rescue Exception => e
       @player = Player.new(params[:player])
       flash[:alert] = e.message
       respond_to do |format|
-        format.html {render file: "players/new", :layout => "cage", formats: [:html]}
+        format.html {render file: "players/new", formats: [:html]}
       end
     end
   end
@@ -39,7 +39,7 @@ class PlayersController < ApplicationController
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
       respond_to do |format|
-        format.html {render file: "players/balance", :layout => "cage", formats: [:html]}
+        format.html {render file: "players/balance", formats: [:html]}
         format.js { render template: "players/balance", formats: [:js] }
       end
     rescue Exception => e
@@ -57,7 +57,7 @@ class PlayersController < ApplicationController
     @search_title = "tree_panel." + @operation
     @found = params[:found]
     respond_to do |format|
-      format.html {render file: "players/search", :layout => "cage", formats: [:html]}
+      format.html {render file: "players/search", formats: [:html]}
       format.js { render template: "players/search", formats: [:js] }
     end
   end

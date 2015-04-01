@@ -4,8 +4,11 @@
 en:
   hello: "Hello world"
   tree_panel:
+    cage: "Cage"
     home: "Home"
+    player_management: "Player Management"
     create_player: "Create Player"
+    edit_player: "Edit Player"
     balance: "Balance Enquiry"
   general:
     login: "Log In"
@@ -27,19 +30,33 @@ en:
   user:
     user_name: "User Name"
     password: "Password"
+  deposit_withdrawal:
+    deposit_amt: "Deposit Amount (HKD)"
+    withdrawal_amt: "withdrawal Amount (HKD)"
+  balance_enquiry:
+    account_balance: "Account Balance (HKD)"
   button:
+    cancel: "Cancel"
+    confirm: "Confim"
+    close: "Close"
+    print: "Print"
+    find: "Find"
     create: "Create"
-    search: "Search"
-  create_player:
-    success: "create player successful"
-    exist: "The player you try to create is already exist."
-  create_player_error:
-    id_blank_error: "Membership ID can not be blank"
-    name_blank_error: "Player name can not be blank"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
-  balance_enquiry:
-    account_balance: "Account Balance (HKD)"
+  create_player_error:
+    id_blank_error: "Membership ID can not be blank"
+    name_blank_error: "Player name can not be blank"
+  create_player:
+    success: "create player successful"
+    exist: "The player you try to create is already exist."
+  invalid_amt:
+    deposit: "invalid deposit amount"
+    withdrawal: "invalid withdrawal amount"
+    no_enough_to_withdrawal: "the account balance is not enough to withdrawal. Current balance: [player account balance]"
   flash_message:
+    user_no_role: "Your account is not ready to use, please contact the System Administrator."
+    session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
+

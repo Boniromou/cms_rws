@@ -92,9 +92,9 @@ ActiveRecord::Schema.define(:version => 20150323073907) do
 
   create_table "users", :force => true do |t|
     t.string   "employee_id"
+    t.string   "uid"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.string   "uid"
   end
 
 end

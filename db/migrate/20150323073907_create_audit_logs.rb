@@ -7,7 +7,7 @@ class CreateAuditLogs < ActiveRecord::Migration
       t.string :action_status
       t.string :action_error
       t.string :ip
-      t.integer :action_by
+      t.string :action_by
       t.string :description
       t.string :session_id
 

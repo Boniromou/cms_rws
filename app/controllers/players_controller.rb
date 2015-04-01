@@ -28,7 +28,7 @@ class PlayersController < ApplicationController
       end
     rescue Exception => e
       @player = Player.new(params[:player])
-      flash[:alert] = e.message
+      flash[:error] = e.message
       respond_to do |format|
         format.html {render file: "players/new", formats: [:html]}
         format.js { render template: "players/new", formats: [:js] }

@@ -29,7 +29,28 @@ describe PlayersController do
       title = first("div div h1")
       expect(title.text).to eq I18n.t("tree_panel.create_player")
       expect(page.source).to have_selector("form#new_player div input#player_member_id")
-      expect(page.source).to have_selector("form#new_player div input#player_name")
+      expect(page.source).to have_selector("form#new_player div input#player_player_name")
+    end
+
+    it '[3.2] Successfully create player' do
+      login_as(@root_user)
+      visit new_player_path
+      @player = Player.new
+      @player.member_id = 123456
+      @player.player_name = "test player"
+      fill_in "player_member_id", :with => @player.member_id
+      fill_in "player_player_name", :with => @player.player_name
+      click_button I18n.t("button.create")
+
+      title = first("div div h1")
+      expect(title.text).to eq I18n.t("tree_panel.balance")
+
+      test_player = Player.find_by_member_id(@player.member_id)
+      expect(test_player).not_to be_nil
+      test_player.member_id = @player.member_id
+      test_player.player_name = @player.player_name
+
+
     end
   end
 end

@@ -12,7 +12,8 @@ class Player < ActiveRecord::Base
     player.status = "unlock"
     result = false
     begin
-      player.save
+      result = player.save
+      [result,player]
     rescue
       raise Exception, "create_player.exist"
     end

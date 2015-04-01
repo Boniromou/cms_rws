@@ -15,11 +15,14 @@ class PlayersController < ApplicationController
     begin
       is_success = false
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => "Nino", :shift => "morning"}) do
-        is_success = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
+        is_success,@player = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
       end
       if is_success
         flash[:success] = "create_player.success"
-        redirect_to :action => 'balance', :member_id => params[:player][:member_id]
+        respond_to do |format|
+          format.js {render template: "players/balance", formats: [:js]}
+          format.html {render file: "players/balance", formats: [:html]}
+        end
       else
         raise Exception.new "Unkonwn error"
       end
@@ -28,6 +31,7 @@ class PlayersController < ApplicationController
       flash[:alert] = e.message
       respond_to do |format|
         format.html {render file: "players/new", formats: [:html]}
+        format.js { render template: "players/new", formats: [:js] }
       end
     end
   end
@@ -44,7 +48,7 @@ class PlayersController < ApplicationController
       end
     rescue Exception => e
       flash[:alert] = "player not found"
-      redirect_to(new_player_path+"?member_id=#{member_id}")
+      redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
     end
   end
 

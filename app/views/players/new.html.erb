@@ -1,6 +1,6 @@
 <h1><%= t("tree_panel.create_player") %></h1>
 
-<%= form_for(@player) do |f| %>
+<%= form_for(@player, :remote => true) do |f| %>
   <div>
     <%= f.label t("general.member_id") %>
     <%= f.text_field :member_id %><br/>

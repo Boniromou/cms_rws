@@ -44,13 +44,12 @@ describe PlayersController do
 
       title = first("div div h1")
       expect(title.text).to eq I18n.t("tree_panel.balance")
+      check_flash_message I18n.t("create_player.success")
 
       test_player = Player.find_by_member_id(@player.member_id)
       expect(test_player).not_to be_nil
       test_player.member_id = @player.member_id
       test_player.player_name = @player.player_name
-
-
     end
   end
 end

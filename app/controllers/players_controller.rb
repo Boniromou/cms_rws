@@ -4,6 +4,7 @@ class PlayersController < ApplicationController
     return unless check_permission Player.new
     @player = Player.new
     @player.member_id = params[:member_id]
+    @player.player_name = params[:player_name]
     respond_to do |format|
       format.html {render file: "players/new", formats: [:html]}
       format.js { render template: "players/new", formats: [:js] }
@@ -19,20 +20,13 @@ class PlayersController < ApplicationController
       end
       if is_success
         flash[:success] = "create_player.success"
-        respond_to do |format|
-          format.js {render template: "players/balance", formats: [:js]}
-          format.html {render file: "players/balance", formats: [:html]}
-        end
+        redirect_to :action => 'balance', :member_id => params[:player][:member_id]
       else
         raise Exception.new "Unkonwn error"
       end
     rescue Exception => e
-      @player = Player.new(params[:player])
       flash[:error] = e.message
-      respond_to do |format|
-        format.html {render file: "players/new", formats: [:html]}
-        format.js { render template: "players/new", formats: [:js] }
-      end
+      redirect_to :action => 'new', :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end
   end
 

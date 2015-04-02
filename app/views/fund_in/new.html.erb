@@ -12,20 +12,20 @@
 
   <div>
     <%= f.label "Amount: " %>
-    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$' %><br/>
+    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount" %><br/>
   </div>
 <% end %>
 
 <div id="button_set">
-  <button id="confirm">Confirm</button>
-  <button id="cancel">Cancel</button>
+  <%= button_tag t("button.confirm"), :id => "confirm"%>
+  <%= button_to t("button.cancel"), home_path, :id => "cancel", :method => "get", :remote => true%>
 </div>
 
 <div id="confirm_fund_in_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 206px; left: 376px; display: none;">
   <div style="height: 60%;" align="center">
     <table>
       <td width="60%"><p style="font-size: 18px;">Deposit Amount(HKD):</p></td>
-      <td width="40%"><p style="font-size: 18px;">xxxx</p></td>
+      <td width="40%"><p style="font-size: 18px;" id="deposit_amt"></p></td> 
     </table>
   </div>
   <div align="center">
@@ -35,11 +35,18 @@
 </div>
 
 <script type='text/javascript'>
+  function updateConfirmAmt(){
+    amt = document.getElementById('player_transaction_amount').value
+    document.getElementById('deposit_amt').innerText = amt
+  }
+
   $('#confirm').click(function() {
     $('#confirm_fund_in_dialog').css("display", "block");
 
     $('#confirm').attr('disabled','disabled');
     $('#cancel').attr('disabled','disabled');
+    $('#player_transaction_amount').attr('readonly','readonly');
+    updateConfirmAmt();
 
     return false;
   });
@@ -50,17 +57,13 @@
     return false;
   });
 
-  $('#cancel').click(function() {
-    history.back();
-
-    return false;
-  });
 
   $('#confirm_fund_in_dialog #cancel').click(function() {
     $('#confirm_fund_in_dialog').css("display", "none");
 
     $('#confirm').removeAttr('disabled');
     $('#cancel').removeAttr('disabled');
+    $('#player_transaction_amount').removeAttr('readonly','readonly');
 
     return false;
   });

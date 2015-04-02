@@ -42,6 +42,8 @@ en:
     print: "Print"
     find: "Find"
     create: "Create"
+    deposit: "Deposit"
+    withdrawal: "Withdrawal"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"

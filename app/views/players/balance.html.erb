@@ -13,3 +13,14 @@
   <label><%= t("balance_inquiry.account_balance")%>:</label>
   <label><%= @player.balance%></label>
 </div>
+<div>
+    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.deposit"), :remote => true do %>
+      <span> <%= t("button.deposit")%></span>
+    <% end %>
+    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true do %>
+      <span> <%= t("button.withdrawal")%></span>
+    <% end %>
+    <%= link_to home_path , :title => t("button.close"), :remote => true do %>
+      <span> <%= t("button.close")%></span>
+    <% end %>
+</div>

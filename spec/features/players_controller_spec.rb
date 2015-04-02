@@ -166,4 +166,61 @@ describe PlayersController do
       first("aside#left-panel ul li#nav_create_player").should be_nil
     end     
   end
+  
+  describe '[4] Search player by membership ID' do
+    before(:each) do
+      Player.delete_all
+    end
+
+    after(:each) do
+      Player.delete_all
+    end
+
+    it '[4.1] Show search Page' do
+      login_as(@root_user)
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      check_title("tree_panel.balance")
+      expect(page.source).to have_selector("form div input#player_member_id")
+    end
+
+    it '[4.2] successfully search player' do
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "unlock")
+      login_as(@root_user)
+      visit balance_path
+      fill_in "player_member_id", :with => @player.member_id
+      click_button I18n.t("button.find")
+      check_title("tree_panel.balance")
+    end
+    
+    it '[4.3] fail to search player' do
+      @player = Player.new
+      @player.member_id = 123456
+      @player.player_name = "test player"
+      login_as(@root_user)
+      visit balance_path
+      fill_in "player_member_id", :with => @player.member_id
+      click_button I18n.t("button.find")
+      check_title("tree_panel.balance")
+      expect(page.source).to have_selector("form div input#player_member_id")
+      expect(page.source).to have_content(I18n.t("search_error.not_found"))
+      click_link I18n.t("button.create")
+    end
+    
+    it '[4.4] direct to create player' do
+      @player = Player.new
+      @player.member_id = 123456
+      @player.player_name = "test player"
+      login_as(@root_user)
+      visit balance_path
+      fill_in "player_member_id", :with => @player.member_id
+      click_button I18n.t("button.find")
+      check_title("tree_panel.balance")
+      expect(page.source).to have_selector("form div input#player_member_id")
+      expect(page.source).to have_content(I18n.t("search_error.not_found"))
+      click_link I18n.t("button.create")
+      check_title("tree_panel.create_player")
+      expect(find("form#new_player div input#player_member_id").value).to eq @player.member_id.to_s
+    end
+  end
 end

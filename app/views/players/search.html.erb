@@ -10,6 +10,8 @@
 <% end %>
 <% if @found == "false" %>
   <h2> <%= t("search_error.not_found")%></h2>
+  <% if policy(Player.new).create? %>
   <p> <%= t("search_error.create_player")%></p>
   <%= link_to t("button.create"), :action => :new, :member_id => @player.member_id %>
+  <% end %>
 <% end %>

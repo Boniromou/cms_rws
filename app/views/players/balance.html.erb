@@ -2,29 +2,29 @@
 
 <div>
   <label>Player Name:</label>
-  <label><%= @player.player_name%></label>
+  <label><%= label_tag :player_name,@player.player_name, :id => "player_name" %></label>
 </div>
 <div>
   <label>Player ID:</label>
-  <label><%= @player.member_id%></label>
+  <label><%= label_tag :player_member_id,@player.member_id, :id => "player_member_id" %></label>
 </div>
 </br>
 <div>
   <label><%= t("balance_inquiry.account_balance")%>:</label>
-  <label><%= @player.balance%></label>
+  <label><%= label_tag :player_balance, to_display_amount_str(@player.balance), :id => "player_balance"%></label>
 </div>
 <div>
   <% if policy(PlayerTransaction.new).deposit? %>
-    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.deposit"), :remote => true do %>
+    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit" do %>
       <span> <%= t("button.deposit")%></span>
     <% end %>
   <% end %>
   <% if policy(PlayerTransaction.new).withdraw? %>
-    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true do %>
+    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw" do %>
       <span> <%= t("button.withdrawal")%></span>
     <% end %>
   <% end %>
-    <%= link_to home_path , :title => t("button.close"), :remote => true do %>
+    <%= link_to home_path , :title => t("button.close"), :remote => true, :id => "balance_close" do %>
       <span> <%= t("button.close")%></span>
     <% end %>
 </div>

@@ -15,9 +15,11 @@ Capybara.javascript_driver = :poltergeist
 Devise::TestHelpers
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/features/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("app/helpers/**/*.rb")].each {|f| require f}
 
 Capybara.ignore_hidden_elements = false
 RSpec.configure do |config|
+  config.include FundHelper, type: :feature
   config.include Devise::TestHelpers, :type => :controller
   config.extend ControllerHelpers, :type => :controller
   config.fixture_path = "#{::Rails.root}/spec/features/fixtures"

@@ -4,11 +4,13 @@ class FundInController < ApplicationController
   layout 'cage'
 
   def new
+    return unless check_permission PlayerTransaction.new, :deposit?
     member_id = params[:member_id]
     @player = Player.find_by_member_id(member_id)
   end
 
   def create
+    return unless check_permission PlayerTransaction.new, :deposit?
     member_id = params[:player][:member_id]
     amount = params[:player_transaction][:amount]
 

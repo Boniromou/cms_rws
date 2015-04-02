@@ -1,10 +1,9 @@
 class PlayerPolicy < ApplicationPolicy
   def create?
-    is_admin? || has_permission?('Player', 'create')
+    is_admin? || has_permission?('player', 'create')
   end
 
   def balance?
-    p "check balance"
-    is_admin? || has_permission?('Player', 'balance')
+    is_admin? || has_permission?('player', 'balance')
   end
 end

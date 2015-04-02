@@ -16,7 +16,7 @@ module StepHelper
 =begin
   def login_as(user)
     Rails.cache.write user.uid.to_s, {:status => true, :admin => true}
-    result = {'success' => true, 'system_user' => {'id' => user.uid, 'username' => user.username}}
+    result = {'success' => true, 'system_user' => {'id' => user.uid, 'username' => user.employee_id}}
     UserManagement.stub(:authenticate).and_return(result)
     visit '/login'
     fill_in "system_user_username", :with => @root_user.username
@@ -24,6 +24,18 @@ module StepHelper
     click_button I18n.t("general.login")
   end
 =end
+  def login_as_not_admin(user)
+    login_as user
+    Rails.cache.write user.uid.to_s, {:status => true, :admin => false}
+  end
+
+  def set_permission(user,role,target,permissions)
+    cache_key = "#{APP_NAME}:permissions:#{user.uid}"
+    perm_hash = {target => permissions}
+    permission = {:permissions => {:role => role, :permissions => perm_hash}}
+    Rails.cache.write cache_key,permission
+  end    
+
   def check_complete_success_audit
     al = AuditLog.first
     expect(al.audit_target).to eq("maintenance")
@@ -210,6 +222,11 @@ module StepHelper
     expect(propagation_table_header.text).to eq I18n.t("propagation.title")
     expect(propagation_first_row_id.text).to eq ppg_id
     expect(propagation_first_row_status.text).to eq propagation_status_to_expect
+  end
+
+  def check_title(title_str)
+    title = first("div div h1")
+    expect(title.text).to eq I18n.t(title_str)
   end
 end
 

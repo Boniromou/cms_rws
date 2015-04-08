@@ -233,7 +233,7 @@ describe PlayersController do
       Player.delete_all
     end
 
-    it '[5.1] Show search Page' do
+    it '[5.1] view player balance enquiry' do
       @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "unlock")
       login_as(@root_user)
       visit home_path

@@ -12,7 +12,7 @@
 
   <div>
     <%= f.label "Amount: " %>
-    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount" %><br/>
+    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :onkeyup => "return ValidateFloat($(this),value)" %><br/>
   </div>
 <% end %>
 
@@ -67,4 +67,12 @@
 
     return false;
   });
+  function ValidateFloat(e, pnumber)
+  {
+    if (!/^\d+[.]?[\d\d]?$/.test(pnumber))
+    {
+        $(e).val(/^\d+[.]?\d\d/.exec($(e).val()));
+    }
+    return false;
+  }
 </script>

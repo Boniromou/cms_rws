@@ -17,6 +17,14 @@ class ApplicationController < ActionController::Base
     request.session_options[:id]
   end
 
+  def station
+    "window#1"
+  end
+
+  def current_shift
+    "morning"
+  end
+
   def check_permission(model, operation = nil)
     begin
       if operation.nil?

@@ -17,7 +17,7 @@ class FundInController < ApplicationController
     begin
       validate_amount_str( amount )
       server_amount = to_server_amount(amount)
-      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => "window#1", :shift => "morning"}) do
+      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift}) do
         do_fund_in(member_id, server_amount)
       end
       @transaction = {member_id: member_id, amount: server_amount}

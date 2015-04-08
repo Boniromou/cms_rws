@@ -21,7 +21,7 @@
   <%= button_to t("button.cancel"), home_path, :id => "cancel", :method => "get", :remote => true%>
 </div>
 
-<div id="confirm_fund_in_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 206px; left: 376px; display: none;">
+<div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 206px; left: 376px; display: none;">
   <div style="height: 60%;" align="center">
     <table>
       <td width="60%"><p style="font-size: 18px;"><%= t("deposit_withdrawal.deposit_amt")%>:</p></td>
@@ -41,7 +41,7 @@
   }
 
   $('#confirm').click(function() {
-    $('#confirm_fund_in_dialog').css("display", "block");
+    $('#confirm_fund_dialog').css("display", "block");
 
     $('#confirm').attr('disabled','disabled');
     $('#cancel').attr('disabled','disabled');
@@ -51,15 +51,15 @@
     return false;
   });
 
-  $('#confirm_fund_in_dialog #confirm').click(function() {
+  $('#confirm_fund_dialog #confirm').click(function() {
     $('#fund_in_request').submit();
 
     return false;
   });
 
 
-  $('#confirm_fund_in_dialog #cancel').click(function() {
-    $('#confirm_fund_in_dialog').css("display", "none");
+  $('#confirm_fund_dialog #cancel').click(function() {
+    $('#confirm_fund_dialog').css("display", "none");
 
     $('#confirm').removeAttr('disabled');
     $('#cancel').removeAttr('disabled');

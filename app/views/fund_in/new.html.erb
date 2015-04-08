@@ -67,6 +67,7 @@
 
     return false;
   });
+
   function ValidateFloat(e, pnumber)
   {
     if (!/^\d+[.]?[\d\d]?$/.test(pnumber))
@@ -75,4 +76,11 @@
     }
     return false;
   }
+  
+  function ifenter(){ 
+    if(event.keyCode==13){
+      return   false;
+    }
+  }
+  document.onkeydown=ifenter;
 </script>

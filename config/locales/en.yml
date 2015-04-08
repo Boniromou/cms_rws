@@ -10,6 +10,8 @@ en:
     create_player: "Create Player"
     edit_player: "Edit Player"
     balance: "Balance Enquiry"
+    fund_in: "Deposit"
+    fund_out: "Withdrawal"
   general:
     login: "Log In"
     logout: "Log Out"

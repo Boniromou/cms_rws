@@ -22,21 +22,21 @@
       </li>
       <% if policy(Player.new).create? %>
         <li id="nav_create_player">
-          <%= link_to new_player_path, :title => "Create Player", :remote => true do %>
+          <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
             <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.create_player")%></span>
           <% end %>
         </li>
       <% end %>
       <% if policy(Player.new).balance? %>
         <li id="nav_balance_enquiry">
-          <%= link_to players_search_path + "?operation=balance", :title => "Balance Enquiry", :remote => true do %>
-            <i class="fa fa-home"></i> <span class="menu-item-parent">Balance Enquiry</span>
+          <%= link_to players_search_path + "?operation=balance", :title => t("tree_panel.balance"), :remote => true do %>
+            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
           <% end %>
         </li>
       <% end %>
       <li id="nav_fund_in">
-        <%= link_to players_search_path + "?operation=fund_in", :title => "Deposit", :remote => true do %>
-          <i class="fa fa-home"></i> <span class="menu-item-parent">Deposit</span>
+        <%= link_to players_search_path + "?operation=fund_in", :title => t("tree_panel.fund_in"), :remote => true do %>
+          <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_in") %></span>
         <% end %>
       </li>
       <!--

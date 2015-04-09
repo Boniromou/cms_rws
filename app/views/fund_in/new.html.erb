@@ -1,9 +1,5 @@
 <h1><%= t("tree_panel.fund_in")%></h1>
-
-<div>
-  <p>Player Name: <%= @player[:player_name] %></p>
-  <p>Member ID: <%= @player[:member_id] %></p>
-</div>
+<%= render "shared/player_info" %>
 
 <%= form_for :player_transaction, url: fund_in_path, remote: true, html: { id: "fund_request" } do |f| %>
   <div>

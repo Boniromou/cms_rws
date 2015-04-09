@@ -1,13 +1,6 @@
-<h1>Balance Enquiry</h1>
+<h1><%= t("tree_panel.balance")%></h1>
 
-<div>
-  <label>Player Name:</label>
-  <label><%= label_tag :player_name,@player.player_name, :id => "player_name" %></label>
-</div>
-<div>
-  <label>Player ID:</label>
-  <label><%= label_tag :player_member_id,@player.member_id, :id => "player_member_id" %></label>
-</div>
+<%= render "shared/player_info" %>
 </br>
 <div>
   <label><%= t("balance_inquiry.account_balance")%>:</label>

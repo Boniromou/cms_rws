@@ -6,7 +6,7 @@ class PlayerTransaction < ActiveRecord::Base
     transaction = new
     transaction[:player_id] = player_id
     transaction[:amount] = amount
-    transaction[:shift_id] = shift_id
+ #   transaction[:shift_id] = shift_id
     transaction[:station] = station
     transaction[:status] = "complete"
     transaction[:transaction_type_id] = TransactionType.find_by_name("Deposit").id;

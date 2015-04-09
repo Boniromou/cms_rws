@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_shift
-    Shift.find_by_id(1)
+    shift = Shift.new
   end
 
   def check_permission(model, operation = nil)

@@ -20,7 +20,7 @@
     <% end %>
   <% end %>
   <% if policy(PlayerTransaction.new).withdraw? %>
-    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw" do %>
+    <%= link_to fund_out_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw" do %>
       <span> <%= t("button.withdrawal")%></span>
     <% end %>
   <% end %>

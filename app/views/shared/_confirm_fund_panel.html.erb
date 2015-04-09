@@ -6,8 +6,8 @@
 <div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 206px; left: 376px; display: none;">
   <div style="height: 60%;" align="center">
     <table>
-      <td width="60%"><p style="font-size: 18px;"><%= t("deposit_withdrawal.deposit_amt")%>:</p></td>
-      <td width="40%"><p style="font-size: 18px;" id="deposit_amt"></p></td> 
+      <td width="60%"><p style="font-size: 18px;"><%= t("deposit_withdrawal."+@operation+"_amt")%>:</p></td>
+      <td width="40%"><p style="font-size: 18px;" id="fund_amt"></p></td> 
     </table>
   </div>
   <div align="center">
@@ -19,7 +19,7 @@
 <script type='text/javascript'>
   function updateConfirmAmt(){
     amt = document.getElementById('player_transaction_amount').value
-    document.getElementById('deposit_amt').innerText = amt
+    document.getElementById('fund_amt').innerText = amt
   }
 
   $('#confirm').click(function() {

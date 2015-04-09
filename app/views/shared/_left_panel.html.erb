@@ -39,13 +39,11 @@
           <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_in") %></span>
         <% end %>
       </li>
-      <!--
       <li id="nav_fund_out">
-        <%= link_to fund_in_path, :title => "Withdrawal", :remote => true do %>
-          <i class="fa fa-home"></i> <span class="menu-item-parent">Withdrawal</span>
+        <%= link_to players_search_path + "?operation=fund_out", :title => t("tree_panel.fund_out"), :remote => true do %>
+          <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_out") %></span>
         <% end %>
       </li>
-      -->
     </ul>
   </nav>
   <span class="minifyme" data-action="minifyMenu">

@@ -33,8 +33,8 @@ en:
     user_name: "User Name"
     password: "Password"
   deposit_withdrawal:
-    deposit_amt: "Deposit Amount (HKD)"
-    withdrawal_amt: "withdrawal Amount (HKD)"
+    fund_in_amt: "Deposit Amount (HKD)"
+    fund_out_amt: "Withdrawal Amount (HKD)"
   balance_enquiry:
     account_balance: "Account Balance (HKD)"
   button:

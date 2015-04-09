@@ -6,7 +6,9 @@ class FundInController < ApplicationController
   def new
     return unless check_permission PlayerTransaction.new, :deposit?
     member_id = params[:member_id]
+    @operation = "fund_in"
     @player = Player.find_by_member_id(member_id)
+
   end
 
   def create

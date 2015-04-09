@@ -17,7 +17,7 @@ class FundInController < ApplicationController
     begin
       validate_amount_str( amount )
       server_amount = to_server_amount(amount)
-      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift}) do
+      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift.shift_type}) do
         do_fund_in(member_id, server_amount)
       end
       @transaction = {member_id: member_id, amount: server_amount}
@@ -32,7 +32,7 @@ class FundInController < ApplicationController
   def do_fund_in(member_id, amount)
     Player.transaction do
       Player.fund_in(member_id, amount)
-      PlayerTransaction.save_fund_in_transaction(member_id, amount)
+      PlayerTransaction.save_fund_in_transaction(member_id, amount, current_shift.id, current_user.id, station)
     end
   end
 end

@@ -24,4 +24,10 @@ class Player < ActiveRecord::Base
     player.balance += amount
     player.save
   end
+  
+  def self.fund_out(member_id, amount)
+    player = find_by_member_id(member_id)
+    player.balance -= amount
+    player.save
+  end
 end

@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_shift
-    "morning"
+    Shift.find_by_id(1)
   end
 
   def check_permission(model, operation = nil)

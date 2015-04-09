@@ -7,6 +7,10 @@ module FundHelper
     (amount.to_f.round(2) * 100).to_i
   end
 
+  def validate_balance_enough( amount , balance)
+    raise "Input amount not valid" unless balance > amount
+  end
+
   def to_display_amount_str( amount )
     "%0.2f" % (amount.to_f / 100)
   end

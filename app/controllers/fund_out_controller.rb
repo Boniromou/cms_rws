@@ -16,11 +16,14 @@ class FundOutController < ApplicationController
     amount = params[:player_transaction][:amount]
 
     begin
-      validate_amount_str( amount )
-
-      server_amount = to_server_amount(amount)
-      balance = Player.find_by_member_id(member_id).balance
-      validate_balance_enough( server_amount, balance )
+      begin
+        validate_amount_str( amount )
+        server_amount = to_server_amount(amount)
+        balance = Player.find_by_member_id(member_id).balance
+        validate_balance_enough( server_amount, balance )
+      rescue Exception => e
+        raise "invalid_amt.withdrawal"
+      end
       AuditLog.fund_in_out_log("withdrawal", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift.shift_type}) do
         do_fund_out(member_id, server_amount)
       end

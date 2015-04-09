@@ -17,8 +17,12 @@ class FundInController < ApplicationController
     amount = params[:player_transaction][:amount]
 
     begin
-      validate_amount_str( amount )
-      server_amount = to_server_amount(amount)
+      begin
+        validate_amount_str( amount )
+        server_amount = to_server_amount(amount)
+      rescue Exception => e
+        raise "invalid_amt.deposit"
+      end
       AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift.shift_type}) do
         do_fund_in(member_id, server_amount)
       end

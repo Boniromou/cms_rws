@@ -45,4 +45,4 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-USER_URL = 'http://mo-int-sso-vapp01.rnd.laxino.com:80'
+SSO_URL = 'http://mo-int-sso-vapp01.rnd.laxino.com:80'

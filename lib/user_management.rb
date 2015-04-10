@@ -4,7 +4,7 @@ require 'json'
 
 module UserManagement
   def self.authenticate(username, password)
-    uri = URI.parse("#{USER_URL}/internal/system_user_sessions")
+    uri = URI.parse("#{SSO_URL}/internal/system_user_sessions")
     http = Net::HTTP.new(uri.host, uri.port)
     http.set_debug_output($stdout)
 

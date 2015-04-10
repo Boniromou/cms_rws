@@ -4,21 +4,25 @@ describe PlayersController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
+    PlayerTransaction.delete_all
     User.delete_all
     @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
   end
 
   after(:all) do
+    PlayerTransaction.delete_all
     User.delete_all
     Warden.test_reset!
   end
 
   describe '[3] Create player' do
     before(:each) do
+      AuditLog.delete_all
       Player.delete_all
     end
 
     after(:each) do
+      AuditLog.delete_all
       Player.delete_all
     end
 

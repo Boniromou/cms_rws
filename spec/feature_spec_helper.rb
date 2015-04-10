@@ -23,7 +23,7 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
   config.extend ControllerHelpers, :type => :controller
   config.fixture_path = "#{::Rails.root}/spec/features/fixtures"
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   config.before(:each) do
     allow_any_instance_of(ApplicationController).to receive(:client_ip).and_return("192.1.1.1")

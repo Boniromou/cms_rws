@@ -18,8 +18,8 @@
 
 <script type='text/javascript'>
   function updateConfirmAmt(){
-    amt = document.getElementById('player_transaction_amount').value
-    document.getElementById('fund_amt').innerText = amt
+    amt = $('#player_transaction_amount').val()
+    $('#confirm_fund_dialog #fund_amt').text(amt);
   }
 
   $('#confirm').click(function() {
@@ -59,10 +59,11 @@
     return false;
   }
   
-  function ifenter(){ 
-    if(event.keyCode==13){
+  function blockEnter(event){ 
+    if (event.keyCode == 13) {
       return false;
     }
   }
-  document.getElementById('fund_request').onkeydown=ifenter;
+
+  $('#fund_request').keydown(blockEnter);
 </script>

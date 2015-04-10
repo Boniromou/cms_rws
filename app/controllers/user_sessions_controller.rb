@@ -2,7 +2,7 @@ class UserSessionsController < Devise::SessionsController
   layout "login"  
 
   def new
-    #super
+    @login_url = %(#{root_url}login)
   end
 
   def create

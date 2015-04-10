@@ -5,6 +5,7 @@ class PlayerTransaction < ActiveRecord::Base
     player_id = Player.find_by_member_id(member_id)[:id]
     transaction = new
     transaction[:player_id] = player_id
+    transaction[:action] = "deposit"
     transaction[:amount] = amount
  #   transaction[:shift_id] = shift_id
     transaction[:station] = station
@@ -18,6 +19,7 @@ class PlayerTransaction < ActiveRecord::Base
     player_id = Player.find_by_member_id(member_id)[:id]
     transaction = new
     transaction[:player_id] = player_id
+    transaction[:action] = "withdraw"
     transaction[:amount] = amount
  #   transaction[:shift_id] = shift_id
     transaction[:station] = station

@@ -4,24 +4,28 @@ describe FundInController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
+    PlayerTransaction.delete_all
     User.delete_all
     @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
   end
 
   after(:all) do
+    PlayerTransaction.delete_all
     User.delete_all
     Warden.test_reset!
   end
 
   describe '[6] Deposit' do
     before(:each) do
+      AuditLog.delete_all
       PlayerTransaction.delete_all
       Player.delete_all
-      @player = Player.create!(:player_name => "test", :member_id => 123456, :currency_id => 1,:balance => 0, :status => "unlock")
+      @player = Player.create!(:player_name => "test", :member_id => "123456", :currency_id => 1,:balance => 0, :status => "unlock")
       TransactionType.create!(:name => "Deposit")
     end
     
     after(:each) do
+      AuditLog.delete_all
       PlayerTransaction.delete_all
       Player.delete_all
     end
@@ -124,10 +128,32 @@ describe FundInController do
       find("div#confirm_fund_dialog div button#confirm").click
       
       check_title("tree_panel.fund_in")
-      expect(page.source).to have_selector("div#content table")
+      expect(page).to have_selector("table")
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
+    end
 
+    it '[6.9] audit log for confirm dialog box Deposit', :js => true do
+      login_as(@root_user) 
+      visit fund_in_path + "?member_id=" + @player.member_id
+      fill_in "player_transaction_amount", :with => 100
+      click_button I18n.t("button.confirm")
+      find("div#confirm_fund_dialog div button#confirm").click
+      wait_for_ajax
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+      
+      audit_log = AuditLog.find_by_audit_target("player")
+      audit_log.should_not be_nil
+      audit_log.audit_target.should == "player"
+      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_type.should == "update"
+      audit_log.action.should == "deposit"
+      audit_log.action_status.should == "success"
+      audit_log.action_error.should be_nil
+      audit_log.ip.should_not be_nil
+      audit_log.session_id.should_not be_nil
+      audit_log.description.should_not be_nil
     end
   end
 end

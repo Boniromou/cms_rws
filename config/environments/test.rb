@@ -35,3 +35,6 @@ CmsRws::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 end
+
+SSO_URL = 'http://thomaswong01.rnd.laxino.com:3333'
+REGISTRATION_PATH = '/register'

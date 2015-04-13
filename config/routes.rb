@@ -7,8 +7,6 @@ CmsRws::Application.routes.draw do
     get "/login" => "user_sessions#new", :as => :login
     post '/login' => 'user_sessions#create'
     get "/logout" => "user_sessions#destroy", :as => :logout
-    get "/register" => "user_registrations#new", :as => :register
-    post "/register" => "user_registrations#create"
   end
 
   root :to => "user_sessions#new"

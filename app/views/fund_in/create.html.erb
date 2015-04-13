@@ -13,8 +13,9 @@
     <td></td>
   </tr>
 </table>
-
-<button id="print_slip">Print</button>
+<% if policy(PlayerTransacion.new).print? %>
+  <button id="print_slip">Print</button>
+<% end %>
 <%= link_to home_path , :title => t("button.close"), :remote => true, :id => "close_link" do %>
   <span> <%= t("button.close")%></span>
 <% end %>

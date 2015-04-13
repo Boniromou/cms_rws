@@ -13,7 +13,7 @@
     <td></td>
   </tr>
 </table>
-<% if policy(PlayerTransacion.new).print? %>
+<% if policy(PlayerTransaction.new).print? %>
   <button id="print_slip">Print</button>
 <% end %>
 <%= link_to home_path , :title => t("button.close"), :remote => true, :id => "close_link" do %>
@@ -22,6 +22,8 @@
 
 <script type='text/javascript'>
   $('#print_slip').click(function() {
+    $('#close_link').click()
+
     var w = window.open();
     var html = $("#slip").html();
 

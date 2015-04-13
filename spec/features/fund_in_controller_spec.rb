@@ -159,7 +159,8 @@ describe FundInController do
     it '[6.10] click unauthorized action (Deposit)' do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
-      set_permission(@test_user,"cashier",:player,["balance","deposit"])
+      set_permission(@test_user,"cashier",:player,["balance"])
+      set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       visit home_path
       click_link I18n.t("tree_panel.balance")
       fill_in "player_member_id", :with => @player.member_id
@@ -169,6 +170,7 @@ describe FundInController do
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
       set_permission(@test_user,"cashier",:player,[])
+      set_permission(@test_user,"cashier",:player_transaction,[])
 
       find("div a#balance_deposit").click
 

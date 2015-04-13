@@ -1,4 +1,7 @@
 module StepHelper
+  @root_user_name = 'portal.admin'
+  @root_user_password = '123456'
+ 
   def check_flash_message(msg)
     flash_msg = find("div#flash_message div#message_content")
     expect(flash_msg.text).to eq(msg)
@@ -10,7 +13,7 @@ module StepHelper
   end
 
   def login_as_root
-    root_user = SystemUser.find_by_uid(1)
+    root_user = User.find_by_uid(1)
     login_as(root_user)
   end
 =begin
@@ -27,6 +30,16 @@ module StepHelper
   def login_as_not_admin(user)
     login_as user
     Rails.cache.write user.uid.to_s, {:status => true, :admin => false}
+  end
+
+  def login_as_admin
+    allow(UserManagement).to receive(:authenticate).and_return({'success' => true, 'system_user' => {'username' => @root_user_name, 'id' => 1}})
+    allow_any_instance_of(ApplicationPolicy).to receive(:is_admin?).and_return(true)
+
+    visit login_path
+    fill_in "user_username", with: @root_user_name
+    fill_in "user_password", with: @root_user_password
+    click_button I18n.t("general.login")
   end
 
   def set_permission(user,role,target,permissions)

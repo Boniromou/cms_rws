@@ -155,5 +155,25 @@ describe FundInController do
       audit_log.session_id.should_not be_nil
       audit_log.description.should_not be_nil
     end
+
+    it '[6.10] click unauthorized action (Deposit)' do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,["balance","deposit"])
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      fill_in "player_member_id", :with => @player.member_id
+      click_button I18n.t("button.find")
+      
+      expect(find("label#player_name").text).to eq @player.player_name
+      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
+      expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+      set_permission(@test_user,"cashier",:player,[])
+
+      find("div a#balance_deposit").click
+
+      check_title("tree_panel.home")
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
   end
 end

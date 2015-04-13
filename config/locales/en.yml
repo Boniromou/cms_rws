@@ -3,6 +3,15 @@
 
 en:
   hello: "Hello world"
+  alert:
+    invalid_login: Invalid user name or password
+    inactive_account: The account is inactive, please contact the System Administrator
+      for account activation
+    registered_account: The account has been registered
+    signup_completed: Sign up completed, please contact the System Administrator for
+      account activation
+    unauthenticated: You need to sign in or sign up before continuing
+    account_no_role: Your account is not ready to use, please contact the System Administrator.
   tree_panel:
     cage: "Cage"
     home: "Home"
@@ -60,7 +69,6 @@ en:
     withdrawal: "invalid withdrawal amount"
     no_enough_to_withdrawal: "the account balance is not enough to withdrawal. Current balance: [player account balance]"
   flash_message:
-    user_no_role: "Your account is not ready to use, please contact the System Administrator."
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
 

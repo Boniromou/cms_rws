@@ -19,10 +19,13 @@
 <%= link_to home_path , :title => t("button.close"), :remote => true, :id => "close_link" do %>
   <span> <%= t("button.close")%></span>
 <% end %>
+<%= link_to print_path , :title => t("button.close"), :remote => true, :id => "print_link" , :style => "display: none" do %>
+  <span> <%= t("button.Print")%></span>
+<% end %>
 
 <script type='text/javascript'>
-  $('#print_slip').click(function() {
-    $('#close_link').click()
+  $('#print_link').click(function() {
+    $('#print_link').click()
 
     var w = window.open();
     var html = $("#slip").html();

@@ -177,5 +177,101 @@ describe FundInController do
       check_title("tree_panel.home")
       check_flash_message I18n.t("flash_message.not_authorize")
     end
+
+    it '[6.11] click link to the unauthorized page' do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player_transaction,[])
+      visit fund_in_path + "?member_id=#{@player.member_id}"
+      check_title("tree_panel.home")
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+
+    it '[6.12] click unauthorized action (confirm dialog box Deposit)', :js => true do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,["balance"])
+      set_permission(@test_user,"cashier",:player_transaction,["deposit"])
+      visit fund_in_path + "?member_id=" + @player.member_id
+      fill_in "player_transaction_amount", :with => 100
+      click_button I18n.t("button.confirm")
+      set_permission(@test_user,"cashier",:player_transaction,[])
+      find("div#confirm_fund_dialog div button#confirm").click
+      wait_for_ajax
+
+      check_title("tree_panel.home")
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+    
+    it '[6.13] click unauthorized action (print slip)', :js => true do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player_transaction,["deposit"])
+      visit fund_in_path + "?member_id=#{@player.member_id}"
+      fill_in "player_transaction_amount", :with => 100
+      click_button I18n.t("button.confirm")
+      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
+      find("div#button_set button#confirm")[:disabled].should == "disabled"
+      find("div#button_set form input#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq "100"
+      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
+      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
+      find("div#confirm_fund_dialog div button#confirm").click
+      
+      check_title("tree_panel.fund_in")
+      expect(page).to have_selector("table")
+      expect(page).to_not have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+    end
+
+    it '[6.14] Confirm Deposit', :js => true do
+      login_as(@root_user) 
+      visit fund_in_path + "?member_id=#{@player.member_id}"
+      fill_in "player_transaction_amount", :with => 100
+      click_button I18n.t("button.confirm")
+      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
+      find("div#button_set button#confirm")[:disabled].should == "disabled"
+      find("div#button_set form input#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq "100"
+      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
+      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
+      find("div#confirm_fund_dialog div button#confirm").click
+      
+      check_title("tree_panel.fund_in")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+
+      find("button#print_slip").click
+      expect(page.driver.browser.window_handles.length).to eq 1
+      new_window = page.driver.browser.window_handles.last do |page|
+        page.driver.browser.switch_to.window(page)
+        page.execute_script "window.close()"
+      end
+      check_title("tree_panel.home")
+    end
+
+    it '[6.15] Close slip', :js => true do
+      login_as(@root_user) 
+      visit fund_in_path + "?member_id=#{@player.member_id}"
+      fill_in "player_transaction_amount", :with => 100
+      click_button I18n.t("button.confirm")
+      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
+      find("div#button_set button#confirm")[:disabled].should == "disabled"
+      find("div#button_set form input#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq "100"
+      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
+      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
+      find("div#confirm_fund_dialog div button#confirm").click
+      
+      check_title("tree_panel.fund_in")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+      
+      find("a#close_link").click
+      wait_for_ajax
+      check_title("tree_panel.home")
+    end
   end
 end

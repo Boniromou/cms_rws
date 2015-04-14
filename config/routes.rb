@@ -25,6 +25,8 @@ CmsRws::Application.routes.draw do
 
   get 'fund_out' => 'fund_out#new'
   post 'fund_out' => 'fund_out#create'
+  
+  get 'print'=> 'player_transactions#print'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

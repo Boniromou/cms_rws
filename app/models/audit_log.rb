@@ -2,7 +2,7 @@ class AuditLog < ActiveRecord::Base
   attr_accessible :action, :action_by, :action_error, :action_status, :action_type, :audit_target, :description, :ip, :session_id
 
   ACTION_TYPE_LIST = { 
-    :player => {:create => "create",:deposit => "update", :withdraw => "update"},
+    :player => {:create => "create",:deposit => "update", :withdrawal => "update"},
     :player_transaction => {:print => "read"}
   }
 

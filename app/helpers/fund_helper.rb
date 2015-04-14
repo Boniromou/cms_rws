@@ -8,7 +8,7 @@ module FundHelper
   end
 
   def validate_balance_enough( amount , balance)
-    raise "Input amount not valid" unless balance > amount
+    raise "Input amount not valid" unless balance >= amount
   end
 
   def to_display_amount_str( amount )

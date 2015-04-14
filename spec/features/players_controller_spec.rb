@@ -317,6 +317,7 @@ describe PlayersController do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
+      set_permission(@test_user,"cashier",:player_transaction,[])
       visit home_path
       click_link I18n.t("tree_panel.balance")
       check_title("tree_panel.balance")

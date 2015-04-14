@@ -248,6 +248,7 @@ describe FundInController do
         page.driver.browser.switch_to.window(page)
         page.execute_script "window.close()"
       end
+      wait_for_ajax
       check_title("tree_panel.home")
     end
 
@@ -272,6 +273,46 @@ describe FundInController do
       find("a#close_link").click
       wait_for_ajax
       check_title("tree_panel.home")
+    end
+    
+    it '[6.16] audit log for print slip', :js => true do
+      login_as(@root_user) 
+      visit fund_in_path + "?member_id=#{@player.member_id}"
+      fill_in "player_transaction_amount", :with => 100
+      click_button I18n.t("button.confirm")
+      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
+      find("div#button_set button#confirm")[:disabled].should == "disabled"
+      find("div#button_set form input#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq "100"
+      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
+      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
+      find("div#confirm_fund_dialog div button#confirm").click
+      
+      check_title("tree_panel.fund_in")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+      
+      find("button#print_slip").click
+      expect(page.driver.browser.window_handles.length).to eq 1
+      new_window = page.driver.browser.window_handles.last do |page|
+        page.driver.browser.switch_to.window(page)
+        page.execute_script "window.close()"
+      end
+      wait_for_ajax
+      check_title("tree_panel.home")
+      
+      audit_log = AuditLog.find_by_audit_target("player_transaction")
+      audit_log.should_not be_nil
+      audit_log.audit_target.should == "player_transaction"
+      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_type.should == "read"
+      audit_log.action.should == "print"
+      audit_log.action_status.should == "success"
+      audit_log.action_error.should be_nil
+      audit_log.ip.should_not be_nil
+      audit_log.session_id.should_not be_nil
+      audit_log.description.should_not be_nil
     end
   end
 end

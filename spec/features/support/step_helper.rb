@@ -22,8 +22,8 @@ module StepHelper
     result = {'success' => true, 'system_user' => {'id' => user.uid, 'username' => user.employee_id}}
     UserManagement.stub(:authenticate).and_return(result)
     visit '/login'
-    fill_in "system_user_username", :with => @root_user.username
-    fill_in "system_user_password", :with => 'secret'
+    fill_in "user_username", :with => user.employee_id
+    fill_in "user_password", :with => 'secret'
     click_button I18n.t("general.login")
   end
 =end
@@ -44,7 +44,9 @@ module StepHelper
 
   def set_permission(user,role,target,permissions)
     cache_key = "#{APP_NAME}:permissions:#{user.uid}"
-    perm_hash = {target => permissions}
+    origin_permissions = Rails.cache.fetch cache_key
+    origin_perm_hash = origin_permissions[:permissions][:permissions]
+    perm_hash = origin_perm_hash.merge({target => permissions})
     permission = {:permissions => {:role => role, :permissions => perm_hash}}
     Rails.cache.write cache_key,permission
   end    

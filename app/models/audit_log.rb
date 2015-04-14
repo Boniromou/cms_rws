@@ -2,7 +2,8 @@ class AuditLog < ActiveRecord::Base
   attr_accessible :action, :action_by, :action_error, :action_status, :action_type, :audit_target, :description, :ip, :session_id
 
   ACTION_TYPE_LIST = { 
-    :player => {:create => "create",:deposit => "update", :withdraw => "update"}
+    :player => {:create => "create",:deposit => "update", :withdraw => "update"},
+    :player_transaction => {:print => "read"}
   }
 
   def self.player_log(action, action_by, ip, session_id, options={}, &block)
@@ -11,6 +12,10 @@ class AuditLog < ActiveRecord::Base
 
   def self.fund_in_out_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "player", ip, session_id, options, &block)
+  end
+
+  def self.print_log(action, action_by, ip, session_id, options={}, &block)
+    compose_log(action, action_by, "player_transaction", ip, session_id, options, &block)
   end
 
   private

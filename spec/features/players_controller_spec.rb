@@ -4,21 +4,25 @@ describe PlayersController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
+    PlayerTransaction.delete_all
     User.delete_all
     @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
   end
 
   after(:all) do
+    PlayerTransaction.delete_all
     User.delete_all
     Warden.test_reset!
   end
 
   describe '[3] Create player' do
     before(:each) do
+      AuditLog.delete_all
       Player.delete_all
     end
 
     after(:each) do
+      AuditLog.delete_all
       Player.delete_all
     end
 
@@ -313,6 +317,7 @@ describe PlayersController do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
+      set_permission(@test_user,"cashier",:player_transaction,[])
       visit home_path
       click_link I18n.t("tree_panel.balance")
       check_title("tree_panel.balance")

@@ -13,17 +13,4 @@
     <td></td>
   </tr>
 </table>
-
-<button id="print_slip">Print</button>
-
-<script type='text/javascript'>
-  $('#print_slip').click(function() {
-    var w = window.open();
-    var html = $("#slip").html();
-
-    $(w.document.body).html(html);
-    w.print();
-
-    return false;
-  });
-</script>
+<%= render "shared/print_slip_panel" %>

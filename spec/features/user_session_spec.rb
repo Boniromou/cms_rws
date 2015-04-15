@@ -4,20 +4,21 @@ describe UserSessionsController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    User.delete_all
-    #@root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
   end
 
   after(:all) do
-    #User.delete_all
     Warden.test_reset!
   end
 
   describe '[1] Authentication' do
     before(:each) do
-    end
+      @location = "Main Cage - Window #1"
+      @accounting_date = "2015-04-15"
+      @shift = "Morning Shift"
 
-    after(:each) do
+      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
     end
 
     it '[1.1] Cage login page' do
@@ -65,6 +66,29 @@ describe UserSessionsController do
 
       expect(page).to have_content I18n.t("alert.account_no_role")
       expect(current_path).to eq "/login"
+    end
+  end
+
+  describe '[2] Display information' do
+    before(:each) do
+      @location = "Main Cage - Window #1"
+      @accounting_date = "2015-04-15"
+      @shift = "Morning Shift"
+
+      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
+    end
+
+    it '[2.1] Show information', js: true do
+      visit login_path
+
+      within '#cage_info' do
+        expect(page).to have_content @location
+        expect(page).to have_content @accounting_date
+        expect(page).to have_content @shift
+        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+      end
     end
   end
 end

@@ -22,6 +22,13 @@ describe FundOutController do
       Player.delete_all
       @player = Player.create!(:player_name => "test", :member_id => "123456", :currency_id => 1,:balance => 20000, :status => "unlock")
       TransactionType.create!(:name => "Withdrawal")
+      @location = "Main Cage - Window #1"
+      @accounting_date = "2015-04-15"
+      @shift = "Morning Shift"
+
+      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
     end
     
     after(:each) do
@@ -93,7 +100,7 @@ describe FundOutController do
       visit fund_out_path + "?member_id=#{@player.member_id}"
       find("div#button_set form input#cancel").click
 
-      check_title("tree_panel.home")
+      check_home_page
     end
 
     it '[7.7] Confirm Withdraw', :js => true do
@@ -186,7 +193,7 @@ describe FundOutController do
 
       find("div a#balance_withdraw").click
 
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
 
@@ -195,7 +202,7 @@ describe FundOutController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_out_path + "?member_id=#{@player.member_id}"
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
 
@@ -211,7 +218,7 @@ describe FundOutController do
       find("div#confirm_fund_dialog div button#confirm").click
       wait_for_ajax
 
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
     
@@ -261,7 +268,7 @@ describe FundOutController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      check_title("tree_panel.home")
+      check_home_page
     end
 
     it '[7.16] Close slip', :js => true do
@@ -284,7 +291,7 @@ describe FundOutController do
       
       find("a#close_link").click
       wait_for_ajax
-      check_title("tree_panel.home")
+      check_home_page
     end
     
     it '[7.17] audit log for print slip', :js => true do
@@ -312,7 +319,7 @@ describe FundOutController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      check_title("tree_panel.home")
+      check_home_page
       
       audit_log = AuditLog.find_by_audit_target("player_transaction")
       audit_log.should_not be_nil

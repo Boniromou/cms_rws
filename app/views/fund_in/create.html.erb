@@ -1,16 +1,4 @@
 <h1><%= t("tree_panel.fund_in") %></h1>
 
-<table id="slip" width="800" frame="box">
-  <tr height="40"></tr>
-  <tr>
-    <td width="10%">Amount:</td>
-    <td width="40%"><%= to_display_amount_str(@transaction[:amount]) %></td>
-    <td width="10%">Member ID:</td>
-    <td width="40%"><%= @transaction[:member_id] %></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+<%= render :partial =>"shared/slip_form", :locals => {:operation => "Deposit"} %>
 <%= render "shared/print_slip_panel" %>

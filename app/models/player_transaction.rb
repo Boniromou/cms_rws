@@ -13,6 +13,7 @@ class PlayerTransaction < ActiveRecord::Base
     transaction[:transaction_type_id] = TransactionType.find_by_name("Deposit").id;
     transaction[:user_id] = user_id
     transaction.save
+    transaction
   end
 
   def self.save_fund_out_transaction(member_id, amount, shift_id, user_id, station)
@@ -27,5 +28,6 @@ class PlayerTransaction < ActiveRecord::Base
     transaction[:transaction_type_id] = TransactionType.find_by_name("Withdrawal").id;
     transaction[:user_id] = user_id
     transaction.save
+    transaction
   end
 end

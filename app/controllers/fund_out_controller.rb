@@ -25,9 +25,9 @@ class FundOutController < ApplicationController
         raise "invalid_amt.withdrawal"
       end
       AuditLog.fund_in_out_log("withdrawal", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift.shift_type}) do
-        do_fund_out(member_id, server_amount)
+        @transaction = do_fund_out(member_id, server_amount)
       end
-      @transaction = {member_id: member_id, amount: server_amount}
+      @player = Player.find_by_member_id(member_id)
     rescue Exception => e
       flash[:alert] = e.message
       redirect_to :action => 'new', member_id: member_id
@@ -37,9 +37,11 @@ class FundOutController < ApplicationController
   protected
 
   def do_fund_out(member_id, amount)
+    transaction = nil
     Player.transaction do
       Player.fund_out(member_id, amount)
-      PlayerTransaction.save_fund_out_transaction(member_id, amount, current_shift.id, current_user.id, station)
+      transaction = PlayerTransaction.save_fund_out_transaction(member_id, amount, current_shift.id, current_user.id, station)
     end
+    transaction
   end
 end

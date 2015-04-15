@@ -19,6 +19,13 @@ describe PlayersController do
     before(:each) do
       AuditLog.delete_all
       Player.delete_all
+      @location = "Main Cage - Window #1"
+      @accounting_date = "2015-04-15"
+      @shift = "Morning Shift"
+
+      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
+      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
     end
 
     after(:each) do
@@ -149,7 +156,7 @@ describe PlayersController do
       visit home_path
       set_permission(@test_user,"cashier",:player,[])
       click_link I18n.t("tree_panel.create_player")
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
@@ -158,7 +165,7 @@ describe PlayersController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit new_player_path
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
@@ -263,7 +270,7 @@ describe PlayersController do
       visit home_path
       set_permission(@test_user,"cashier",:player,[])
       click_link I18n.t("tree_panel.balance")
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
@@ -272,7 +279,7 @@ describe PlayersController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit balance_path
-      check_title("tree_panel.home")
+      check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
@@ -309,7 +316,7 @@ describe PlayersController do
       expect(page.source).to have_selector("div a#balance_close")
 
       click_link I18n.t("button.close")
-      check_title("tree_panel.home")
+      check_home_page
     end
 
     it '[5.6] unauthorized to all actions' do

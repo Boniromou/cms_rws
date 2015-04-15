@@ -243,6 +243,12 @@ module StepHelper
     title = first("div div h1")
     expect(title.text).to eq I18n.t(title_str)
   end
+
+  def check_home_page
+    expect(page).to have_content @location
+    expect(page).to have_content @accounting_date
+    expect(page).to have_content @shift
+  end
 end
 
 RSpec.configure do |config|

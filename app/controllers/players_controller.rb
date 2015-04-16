@@ -5,10 +5,6 @@ class PlayersController < ApplicationController
     @player = Player.new
     @player.member_id = params[:member_id]
     @player.player_name = params[:player_name]
-    respond_to do |format|
-      format.html {render file: "players/new", formats: [:html]}
-      format.js { render template: "players/new", formats: [:js] }
-    end
   end
 
   def create
@@ -36,10 +32,6 @@ class PlayersController < ApplicationController
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
-      respond_to do |format|
-        format.html {render file: "players/balance", formats: [:html]}
-        format.js { render template: "players/balance", formats: [:js] }
-      end
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
@@ -54,10 +46,6 @@ class PlayersController < ApplicationController
     @player.member_id = params[:member_id]
     @search_title = "tree_panel." + @operation
     @found = params[:found]
-    respond_to do |format|
-      format.html {render file: "players/search", formats: [:html]}
-      format.js { render template: "players/search", formats: [:js] }
-    end
   end
 
   def do_search

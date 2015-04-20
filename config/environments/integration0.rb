@@ -46,3 +46,4 @@ CmsRws::Application.configure do
 end
 
 SSO_URL = 'http://mo-int-sso-vapp01.rnd.laxino.com:80'
+REGISTRATION_PATH = '/register'

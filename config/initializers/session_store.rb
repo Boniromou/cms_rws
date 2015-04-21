@@ -19,13 +19,13 @@ if File.file?(filename)
       v.symbolize_keys! if v.respond_to?(:symbolize_keys!)
     end
 
-    ApRws::Application.config.session_store :dalli_store,
-                                            :key => '_cms_rws_session',
-                                            #:domain => SITE_DOMAIN,
-                                            :memcache_server => mem_config['servers'],
-                                            :namespace => mem_config['namespace'],
-                                            :expires_in => mem_config['expires'],
-                                            :socket_timeout => mem_config['timeout'],
-                                            :keepalive => true
+    CmsRws::Application.config.session_store :dalli_store,
+                                             :key => '_cms_rws_session',
+                                             #:domain => SITE_DOMAIN,
+                                             :memcache_server => mem_config['servers'],
+                                             :namespace => mem_config['namespace'],
+                                             :expires_in => mem_config['expires'],
+                                             :socket_timeout => mem_config['timeout'],
+                                             :keepalive => true
   end
 end

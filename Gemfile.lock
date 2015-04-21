@@ -1,4 +1,9 @@
 PATH
+  remote: vendor/gems/hood-1.0.0
+  specs:
+    hood (1.0.0)
+
+PATH
   remote: vendor/gems/lax-support-0.6.32
   specs:
     lax-support (0.6.32)
@@ -176,6 +181,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   dalli (~> 2.0.3)
   devise (= 3.2.4)
+  hood!
   jquery-rails
   lax-support (= 0.6.32)!
   mysql2

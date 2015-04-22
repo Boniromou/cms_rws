@@ -20,6 +20,7 @@ class CreateWalletTransactions < ActiveRecord::Migration
     change_column :wallet_transactions, :after_balance, :bigint
 
     execute "ALTER TABLE wallet_transactions ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES players(id);"
+    execute "ALTER TABLE wallet_transactions MODIFY COLUMN `id` BIGINT(20) NOT NULL AUTO_INCREMENT;"
   end
 
   def down

@@ -36,6 +36,7 @@ class CreateRoundTransactions < ActiveRecord::Migration
     change_column :round_transactions, :jp_direct_pay, :tinyint
 
     execute "ALTER TABLE round_transactions ADD CONSTRAINT fk_round_trans_player_id FOREIGN KEY (player_id) REFERENCES players(id);"
+    execute "ALTER TABLE round_transactions MODIFY COLUMN `id` BIGINT(20) NOT NULL AUTO_INCREMENT;"
   end
 
   def down

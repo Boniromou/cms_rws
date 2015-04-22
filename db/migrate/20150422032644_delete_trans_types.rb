@@ -4,5 +4,10 @@ class DeleteTransTypes < ActiveRecord::Migration
   end
 
   def down
+    create_table :transaction_types do |t|
+      t.string :name
+
+      t.timestamps
+    end
   end
 end

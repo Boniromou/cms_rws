@@ -4,7 +4,7 @@ development:
   servers:
     - int-cons-vapp01.rnd.laxino.com:11211
     - int-cons-vapp01.rnd.laxino.com:11212
-  expires: 86400
+  expires: 3600
   namespace: s3_dev
   no_block: false
   timeout: 30
@@ -12,7 +12,7 @@ development:
 test:
   servers:
     - dev-cons-app01.rnd.laxino.com:11211
-  expires: 86400
+  expires: 3600
   namespace: s3_tst
   no_block: true
   timeout: 30
@@ -21,7 +21,7 @@ integration0:
   servers:
     - int-cons-vapp01.rnd.laxino.com:11211
     - int-cons-vapp01.rnd.laxino.com:11212
-  expires: 86400
+  expires: 3600
   namespace: s3_int
   no_block: true
   timeout: 30
@@ -30,7 +30,7 @@ staging0:
   servers:
     - stg-cons-vapp01.rnd.laxino.com:11211
     - stg-cons-vapp01.rnd.laxino.com:11212
-  expires: 86400
+  expires: 3600
   namespace: s3_stg
   no_block: false
   timeout: 30
@@ -38,7 +38,7 @@ staging0:
 sandbox0:
   servers:
     - snd-cons-vapp01.sandbox.laxigames.com:11211
-  expires: 86400
+  expires: 3600
   namespace: s3_snd
   no_block: true
   timeout: 30
@@ -46,7 +46,7 @@ sandbox0:
 sandbox2:
   servers:
     - snd-cons-vapp01.sbox.so.idc02.laxigames.local:11211
-  expires: 86400
+  expires: 3600
   namespace: s3_snd
   no_block: true
   timeout: 30
@@ -57,7 +57,7 @@ smartocean2:
     - prd-s3-vapp01.prod.so.idc02.laxigames.local:7001
     - prd-s3-vapp02.prod.so.idc02.laxigames.local:7000
     - prd-s3-vapp02.prod.so.idc02.laxigames.local:7001
-  expires: 86400
+  expires: 3600
   namespace: s3_prd
   no_block: true
   timeout: 15
@@ -68,7 +68,7 @@ production0:
     - prd-s3-vapp01.prod.laxigames.com:7001
     - prd-s3-vapp02.prod.laxigames.com:7000
     - prd-s3-vapp02.prod.laxigames.com:7001
-  expires: 86400
+  expires: 3600
   namespace: s3_prd
   #no_block: true
   timeout: 15

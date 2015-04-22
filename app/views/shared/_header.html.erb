@@ -65,29 +65,6 @@
     </div>
     <!-- end logout button -->
 
-    <!-- multiple lang dropdown : find all flags in the flags page -->
-    <ul class="header-dropdown-list hidden-xs">
-      <li>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
-          <%= image_tag("blank.gif", :class => "flag flag-us") %>
-          <span> English (US) </span> <i class="fa fa-angle-down"></i> 
-        </a>
-        <ul class="dropdown-menu pull-right">
-          <li class="active">
-            <a href="javascript:void(0);">
-              <%= image_tag("blank.gif", :class => "flag flag-us", alt: "United States") %> English (US)
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0);">
-              <%= image_tag("blank.gif", :class => "flag flag-cn", alt: "China") %> 中文
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <!-- end multiple lang -->
-
     <!-- show user name -->
     <span class="navbar-text">
       <%= current_user.employee_id %>

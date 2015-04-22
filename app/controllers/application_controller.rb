@@ -1,8 +1,11 @@
 class ApplicationController < ActionController::Base
-  layout false
-  include Pundit
   protect_from_forgery
   before_filter :authenticate_user!
+
+  layout false
+
+  include Pundit
+  include CageInfoHelper
 
   def client_ip
     if Rails.env.development?
@@ -13,16 +16,9 @@ class ApplicationController < ActionController::Base
    end
   
   protected
+
   def sid
     request.session_options[:id]
-  end
-
-  def current_station
-    "window#1"
-  end
-
-  def current_shift
-    shift = Shift.new
   end
 
   def check_permission(model, operation = nil)
@@ -40,5 +36,4 @@ class ApplicationController < ActionController::Base
     end
     true
   end
-
 end

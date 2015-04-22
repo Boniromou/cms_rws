@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     request.session_options[:id]
   end
 
-  def station
+  def current_station
     "window#1"
   end
 

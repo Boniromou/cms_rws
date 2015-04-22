@@ -11,7 +11,7 @@ class PlayersController < ApplicationController
     return unless check_permission Player.new
     begin
       is_success = false
-      AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift.shift_type}) do
+      AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.shift_type}) do
         is_success,@player = Player.create_by_param(params[:player][:member_id],params[:player][:player_name])
       end
       if is_success

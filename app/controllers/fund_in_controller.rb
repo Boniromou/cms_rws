@@ -22,7 +22,7 @@ class FundInController < ApplicationController
       rescue Exception => e
         raise "invalid_amt.deposit"
       end
-      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => station, :shift => current_shift.shift_type}) do
+      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.shift_type}) do
         @transaction = do_fund_in(member_id, server_amount)
       end
       @player = Player.find_by_member_id(member_id)
@@ -38,7 +38,7 @@ class FundInController < ApplicationController
     transaction = nil
     Player.transaction do
       Player.fund_in(member_id, amount)
-      transaction = PlayerTransaction.save_fund_in_transaction(member_id, amount, current_shift.id, current_user.id, station)
+      transaction = PlayerTransaction.save_fund_in_transaction(member_id, amount, current_shift.id, current_user.id, current_station)
     end
     transaction
   end

@@ -1,20 +1,28 @@
 <span class="shift_widget">Waiting for shift</span>
 
 <script>
-  function updateShift() {
-    var randomRange = 500;
-    var updateShiftInterval = 60 * 1000 + parseInt(Math.random() * randomRange);
+  $( document ).ready(function() {
+    console.log($.shift_widget_loaded);
+    if ( !$.shift_widget_loaded ) {
+      $.shift_widget_loaded = true;
+      console.log($.shift_widget_loaded);
 
-    $.ajax({
-      url: 'shifts/current',
-      type: 'get',
-      success: function(data) {
-        $('.shift_widget').html(data);
-      }
-    });
+      function updateShift() {
+        var updateShiftInterval = <%= update_shift_interval %>
+        console.log( updateShiftInterval );
 
-    setTimeout(updateShift, updateShiftInterval);
-  };
+        $.ajax({
+          url: 'shifts/current',
+          type: 'get',
+          success: function(data) {
+            $('.shift_widget').html(data);
+          }
+        });
 
-  updateShift();
+        setTimeout(updateShift, updateShiftInterval);
+      };
+
+      updateShift();
+    }
+  });
 </script>

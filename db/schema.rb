@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150422095027) do
+ActiveRecord::Schema.define(:version => 20150423021448) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -115,17 +115,25 @@ ActiveRecord::Schema.define(:version => 20150422095027) do
 
   create_table "shifts", :force => true do |t|
     t.integer  "shift_type_id"
-    t.integer  "user_id"
+    t.integer  "roll_shift_by_user_id"
     t.datetime "roll_shift_at"
-    t.string   "station"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.integer  "roll_shift_on_station_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
     t.integer  "accounting_date_id"
+    t.integer  "lock_version"
   end
 
   add_index "shifts", ["accounting_date_id"], :name => "fk_accounting_date_id"
+  add_index "shifts", ["roll_shift_by_user_id"], :name => "fk_user_id"
+  add_index "shifts", ["roll_shift_on_station_id"], :name => "fk_station_id"
   add_index "shifts", ["shift_type_id"], :name => "fk_shift_type_id"
-  add_index "shifts", ["user_id"], :name => "fk_user_id"
+
+  create_table "stations", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "employee_id"

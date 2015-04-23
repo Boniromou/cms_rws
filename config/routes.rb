@@ -26,6 +26,19 @@ CmsRws::Application.routes.draw do
   
   get 'print'=> 'player_transactions#print'
 
+  resources :shifts, only: [:index] do
+    collection do
+      get 'new'
+      get 'current'
+    end
+  end
+
+  resources :accounting_dates, only: [:index] do
+    collection do
+      get 'current'
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

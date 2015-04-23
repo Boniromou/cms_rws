@@ -10,6 +10,8 @@
         <%= yield :header %>
       </span>
 		</header>
+
+    <%= javascript_include_tag "login" %>
     
 		<div id="main" role="main">
 			<!-- ap_main_content -->
@@ -35,6 +37,5 @@
 				</div>
 			</div>
 		</div>
-    <%= javascript_include_tag "login" %>
 	</body>
 </html>

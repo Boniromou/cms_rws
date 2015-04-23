@@ -1,6 +1,6 @@
 <p><%= current_cage_location_str %></p>
-<p><%= current_accounting_date_str %></p>
-<p><%= current_shift_str %></p>
+<p><%= render 'shared/current_accounting_date_widget' %></p>
+<p><%= render 'shared/current_shift_widget' %></p>
 <p id="local_date_time"></p>
 
 <%= javascript_include_tag "date.time.helper.js" %>
@@ -9,7 +9,7 @@
   function updateInfo() {
     var localDateTimeStr = getDateTimeStr();
 
-    document.getElementById('local_date_time').innerHTML = localDateTimeStr;
+    $('#local_date_time').html(localDateTimeStr);
 
     setTimeout(updateInfo, 1000);
   }

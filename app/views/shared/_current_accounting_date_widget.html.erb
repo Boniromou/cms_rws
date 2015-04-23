@@ -1,0 +1,20 @@
+<span class="accounting_date_widget">Waiting for accounting date</span>
+
+<script>
+  function updateAccountingDate() {
+    var randomRange = 500;
+    var updateAccountingDateInterval = 60 * 1000 + parseInt(Math.random() * randomRange);
+
+    $.ajax({
+      url: 'accounting_dates/current',
+      type: 'get',
+      success: function(data) {
+        $('.accounting_date_widget').html(data);
+      }
+    });
+
+    setTimeout(updateAccountingDate, updateAccountingDateInterval);
+  };
+
+  updateAccountingDate();
+</script>

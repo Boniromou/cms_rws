@@ -2,14 +2,11 @@
 
 <script>
   $( document ).ready(function() {
-    console.log($.accounting_date_widget_loaded);
     if ( !$.accounting_date_widget_loaded ) {
       $.accounting_date_widget_loaded = true;
-      console.log($.accounting_date_widget_loaded);
 
       function updateAccountingDate() {
         var updateAccountingDateInterval = <%= update_accounting_date_interval %>;
-        console.log( updateAccountingDateInterval );
 
         $.ajax({
           url: 'accounting_dates/current',

@@ -2,14 +2,11 @@
 
 <script>
   $( document ).ready(function() {
-    console.log($.shift_widget_loaded);
     if ( !$.shift_widget_loaded ) {
       $.shift_widget_loaded = true;
-      console.log($.shift_widget_loaded);
 
       function updateShift() {
         var updateShiftInterval = <%= update_shift_interval %>
-        console.log( updateShiftInterval );
 
         $.ajax({
           url: 'shifts/current',

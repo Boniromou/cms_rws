@@ -1,0 +1,46 @@
+
+                    <div class="col-sm-6">
+                      <label><%= t("general.start_time") %></label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input class="form-control" name="start_time" id="from" type="text" placeholder="">
+                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label><%= t("general.end_time") %></label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input class="form-control" name="end_time" id="to" type="text" placeholder="">
+                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                    
+
+                    <script>
+                      // Date Range Picker
+                      $("#from").datepicker({
+                        //defaultDate: "+1w",
+                        changeMonth: true,
+                        dateFormat: "yy-mm-dd",
+                        numberOfMonths: 1,
+                        prevText: '<i class="fa fa-chevron-left"></i>',
+                        nextText: '<i class="fa fa-chevron-right"></i>',
+                        onClose: function (selectedDate) {
+                            $("#to").datepicker("option", "minDate", selectedDate);
+                        }
+                      });
+                      $("#to").datepicker({
+                        //defaultDate: "+1w",
+                        changeMonth: true,
+                        dateFormat: "yy-mm-dd",
+                        numberOfMonths: 1,
+                        prevText: '<i class="fa fa-chevron-left"></i>',
+                        nextText: '<i class="fa fa-chevron-right"></i>',
+                        onClose: function (selectedDate) {
+                            $("#from").datepicker("option", "maxDate", selectedDate);
+                        }
+                      });
+                    </script>

@@ -1,0 +1,61 @@
+          <!--form-->
+          <%= form_tag(search_transactions_path, :remote => true, :id => "search_form") do %>
+            <fieldset>
+              <div class="row">
+                  <%= render "shared/date_range_picker" %>
+              </div>
+              
+              <div class="row">
+                <div class="col-sm-4">
+                  <section class="smart-form">
+                    <label class="label"><%= t("general.transaction_id") %></label>
+                    <label class="input">
+                      <%= text_field_tag(:"transaction_id") %>
+                    </label>
+                  </section>
+                </div>
+                
+                <div class="col-sm-4">
+                  <section class="smart-form">
+                    <label class="label"> ID </label>
+                    <div class="inline-group">
+                      <label class="radio">
+                        <input type="radio" name="radio-inline" checked="checked">
+                        <i>
+                        </i>
+                        <%= t("general.member_id") %>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="radio-inline" checked="checked">
+                        <i>
+                        </i>
+                        <%= t("general.card_id") %>
+                      </label>
+                    </div>
+                  </section>
+                </div>
+                
+                <div class="col-sm-4">
+                  <section class="smart-form">
+                    <label class="label"> ID </label>
+                    <label class="input">
+                      <%= text_field_tag(:"transaction_id") %>
+                    </label>
+                  </section>
+                </div>
+              </div>
+              
+            </fieldset>
+              
+            <div class="form-actions">
+              <div class="row">
+                <div class="col-md-12">
+                  <%= hidden_field_tag 'from', search_transactions_path %>
+                  <%= submit_tag t("button.search"), :class => "btn btn-primary", :remote => true  %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <!--/form-->
+
+          

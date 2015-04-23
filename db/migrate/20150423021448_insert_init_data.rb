@@ -1,8 +1,8 @@
 class InsertInitData < ActiveRecord::Migration
   def up
     AccountingDate.delete_all
-    t= Time.now
-    execute "INSERT INTO accounting_dates(id,accounting_date, created_at, updated_at) values(1,'#{t.year}-#{t.month}-#{t.day-1}', '#{Time.now.utc}', '#{Time.now.utc}');"
+    t= Time.now  - 60*60*24
+    execute "INSERT INTO accounting_dates(id,accounting_date, created_at, updated_at) values(1,'#{t.utc}', '#{Time.now.utc}', '#{Time.now.utc}');"
     ShiftType.delete_all
     execute "INSERT INTO shift_types(id, name, created_at, updated_at) values(1,'morning', '#{Time.now.utc}', '#{Time.now.utc}');"
     execute "INSERT INTO shift_types(id, name, created_at, updated_at) values(2,'swing', '#{Time.now.utc}', '#{Time.now.utc}');"

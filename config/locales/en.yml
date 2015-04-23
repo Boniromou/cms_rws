@@ -21,6 +21,7 @@ en:
     balance: "Balance Enquiry"
     fund_in: "Deposit"
     fund_out: "Withdrawal"
+    roll_shift: "Roll Shift"
   general:
     login: "Log In"
     logout: "Log Out"

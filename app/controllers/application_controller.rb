@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
     AccountingDate.find_by_id(current_shift.accounting_date_id)
   end
 
-  def check_permission(model, operation = nil)
+  def permission_granted?(model, operation = nil)
     begin
       if operation.nil?
         authorize model

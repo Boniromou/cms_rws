@@ -1,14 +1,14 @@
 class PlayersController < ApplicationController
   layout 'cage'
   def new
-    return unless check_permission Player.new
+    return unless permission_granted? Player.new
     @player = Player.new
     @player.member_id = params[:member_id]
     @player.player_name = params[:player_name]
   end
 
   def create
-    return unless check_permission Player.new
+    return unless permission_granted? Player.new
     begin
       is_success = false
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.shift_type}) do
@@ -27,7 +27,7 @@ class PlayersController < ApplicationController
   end
 
   def balance
-    return unless check_permission Player.new
+    return unless permission_granted? Player.new
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
@@ -41,7 +41,7 @@ class PlayersController < ApplicationController
   def search
     @operation = params[:operation] if params[:operation]
     action = (@operation+ "?").to_sym unless @operation.nil?
-    return unless check_permission Player.new, action
+    return unless permission_granted? Player.new, action
     @player = Player.new
     @player.member_id = params[:member_id]
     @search_title = "tree_panel." + @operation

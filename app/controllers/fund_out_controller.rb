@@ -4,14 +4,14 @@ class FundOutController < ApplicationController
   layout 'cage'
 
   def new
-    return unless check_permission PlayerTransaction.new, :withdraw?
+    return unless permission_granted? PlayerTransaction.new, :withdraw?
     member_id = params[:member_id]
     @operation = "fund_out"
     @player = Player.find_by_member_id(member_id)
   end
 
   def create
-    return unless check_permission PlayerTransaction.new, :withdraw?
+    return unless permission_granted? PlayerTransaction.new, :withdraw?
     member_id = params[:player][:member_id]
     amount = params[:player_transaction][:amount]
 

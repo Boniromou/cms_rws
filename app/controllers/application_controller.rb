@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   layout false
 
   include Pundit
-  include CageInfoHelper
 
   def client_ip
     if Rails.env.development?
@@ -19,6 +18,16 @@ class ApplicationController < ActionController::Base
 
   def sid
     request.session_options[:id]
+  end
+
+  def current_shift
+    shift = Shift.find_by_roll_shift_at(nil)
+    raise 'Current shift not found!' unless shift
+    shift
+  end
+
+  def current_accounting_date
+    AccountingDate.find_by_id(current_shift.accounting_date_id)
   end
 
   def check_permission(model, operation = nil)

@@ -1,0 +1,64 @@
+<div class='roll_detail'>
+  <table width='300'>
+    <col width="70%">
+    <tr>
+      <td><h3>Current Shift: </h3></td>
+      <td><h3><%= @current_shift.capitalize %></h3></td>
+    </tr>
+    <tr>
+      <td><h6>Current Account Date: </h6></td>
+      <td><h6><%= @current_accounting_date %></h6></td>
+    </tr>
+    <tr>
+      <td><br/></td>
+    </tr>
+    <tr>
+      <td><h3>Next Shift: </h3></td>
+      <td><h3><%= @next_shift.capitalize %></h3></td>
+    </tr>
+    <tr>
+      <td><h6>Next Account Date: </h6></td>
+      <td><h6><%= @next_accounting_date %></h6></td>
+    </tr>
+  </table>
+</div>
+
+<% 2.times do %>
+  <br/>
+<% end %>
+
+<button id="roll_shift">Roll Shift Now</button>
+<%= button_to "confirm_roll", 'shifts', remote: true, style: 'display: none;' %>
+
+<div id="confirm_roll_shift_dialog" style="display: none;">
+  <div class="ui-dialog" style="height: 350px; width: 600px; top: 206px; left: 376px;">
+    <div style="height: 80%; vertical-align:middle;" align="center">
+      <div class="confirm_roll_detail"/>
+    </div>
+    <div align="center">
+      <button id="confirm" class="btn btn-danger">Confirm</button>
+      <button id="cancel" class="btn btn-default">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  $( document ).ready(function() {
+    $('#confirm_roll_shift_dialog .confirm_roll_detail').html($('.roll_detail').html());
+
+    $('#roll_shift').click(function() {
+      $('#confirm_roll_shift_dialog').show();
+      $(this).attr('disabled', 'disabled');
+    });
+
+    $('#confirm_roll_shift_dialog button#confirm').click(function() {
+      $('input[value="confirm_roll"]').click();
+      $('input[value="confirm_roll"]').attr('disabled', 'disabled');
+    });
+
+    $('#confirm_roll_shift_dialog button#cancel').click(function() {
+      $('#confirm_roll_shift_dialog').hide();
+      $('#roll_shift').removeAttr('disabled');
+    });
+  });
+</script>

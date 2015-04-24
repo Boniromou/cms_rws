@@ -22,6 +22,7 @@ en:
     fund_in: "Deposit"
     fund_out: "Withdrawal"
     roll_shift: "Roll Shift"
+    player_transaction: "Player Transaction"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -74,4 +75,7 @@ en:
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
+  search_form:
+    start_time: "start Time"
+    end_time: "End Time"
 

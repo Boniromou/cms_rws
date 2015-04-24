@@ -44,6 +44,13 @@
           <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_out") %></span>
         <% end %>
       </li>
+      <% if true %>
+        <li id="nav_search_transactions">
+          <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
+            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
+          <% end %>
+        </li>
+      <% end %>
       <% if policy(Shift.new).roll? %>
         <li id="nav_roll_shift">
           <%= link_to shifts_path, :title => t("tree_panel.roll_shift"), :remote => true do %>

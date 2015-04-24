@@ -1,8 +1,18 @@
           <%= form_tag(search_transactions_path, :remote => true, :id => "search_form") do %>
             <fieldset>
               <div class="row">
-                  <%= render "shared/date_range_picker" %>
+                <div class="col-sm-5">
+                  <section class="smart-form">
+                  <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
+                  </section>
+                </div>
+                <div class="col-sm-5">
+                  <section class="smart-form">
+                  <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
+                  </section>
+                </div>
               </div>
+              
               
               <div class="row">
                 <div class="col-sm-4">

@@ -1,0 +1,16 @@
+
+                    <section>
+                      <label class="label"><%= t("search."+name) %></label> 
+                      <label class="input"> <i class="icon-append fa fa-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        <input class="form-control" name=<%= name %> id="datetimepicker_<%= name %>" type="text" value='<%=format_time(calender_time)%>'>
+                      </label>
+                    </section>
+                    
+                    <script type="text/javascript">
+                      $(function() {
+                        $('#datetimepicker_<%= name %>').datetimepicker({
+                          useSeconds: false,
+                          format: "YYYY-MM-DD HH:mm:ss"
+                        });
+                      });
+                    </script>

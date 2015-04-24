@@ -28,6 +28,7 @@ CmsRws::Application.routes.draw do
   get 'transactions' => 'player_transactions#index'
   get 'search_transactions' => 'player_transactions#search'
   post 'search_transactions' => 'player_transactions#do_search'
+  get 'index' => 'player_transactions#index'
 
   resources :shifts, only: [:index] do
     collection do

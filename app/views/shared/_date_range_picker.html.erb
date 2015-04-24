@@ -3,7 +3,7 @@
                       <label><%= t("general.start_time") %></label>
                       <div class="form-group">
                         <div class="input-group">
-                          <input class="form-control" name="start_time" id="from" type="text" placeholder="">
+                          <input class="form-control" name="start_time" id="from" type="text" placeholder="" value="<%= Time.now.strftime("%Y-%m-%d") %>">
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         </div>
                       </div>
@@ -12,7 +12,7 @@
                       <label><%= t("general.end_time") %></label>
                       <div class="form-group">
                         <div class="input-group">
-                          <input class="form-control" name="end_time" id="to" type="text" placeholder="">
+                          <input class="form-control" name="end_time" id="to" type="text" placeholder="" value="<%= Time.now.strftime("%Y-%m-%d") %>">
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         </div>
                       </div>

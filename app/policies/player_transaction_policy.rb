@@ -10,4 +10,8 @@ class PlayerTransactionPolicy < ApplicationPolicy
   def print?
     is_admin? || has_permission?('player_transaction', 'print')
   end
+
+  def search?
+    is_admin? || has_permission?('player_transaction', 'search')
+  end
 end

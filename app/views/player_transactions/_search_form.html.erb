@@ -14,18 +14,18 @@
                   </section>
                 </div>
                 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <section class="smart-form">
-                    <label class="label"> ID </label>
+                    <label class="label"> ID Type</label>
                     <div class="inline-group">
                       <label class="radio">
-                        <input type="radio" name="radio-inline" checked="checked">
+                        <input type="radio" name="member_id">
                         <i>
                         </i>
                         <%= t("general.member_id") %>
                       </label>
                       <label class="radio">
-                        <input type="radio" name="radio-inline" checked="checked">
+                        <input type="radio" name="card_id" checked="checked">
                         <i>
                         </i>
                         <%= t("general.card_id") %>
@@ -34,11 +34,11 @@
                   </section>
                 </div>
                 
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                   <section class="smart-form">
-                    <label class="label"> ID </label>
+                    <label class="label"> ID Number</label>
                     <label class="input">
-                      <%= text_field_tag(:"transaction_id") %>
+                      <%= text_field_tag(:"id_number") %>
                     </label>
                   </section>
                 </div>

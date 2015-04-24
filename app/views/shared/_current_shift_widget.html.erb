@@ -2,24 +2,23 @@
 
 <script>
   $( document ).ready(function() {
+    function updateShift() {
+      $.ajax({
+        url: 'shifts/current',
+        type: 'get',
+        success: function(data) {
+          $('.shift_widget').html(data);
+        }
+      });
+    };
+
+    updateShift();
+
     if ( !$.shift_widget_loaded ) {
+      var updateShiftInterval = <%= update_shift_interval %>;
+      setInterval(updateShift, updateShiftInterval);
+
       $.shift_widget_loaded = true;
-
-      function updateShift() {
-        var updateShiftInterval = <%= update_shift_interval %>
-
-        $.ajax({
-          url: 'shifts/current',
-          type: 'get',
-          success: function(data) {
-            $('.shift_widget').html(data);
-          }
-        });
-
-        setTimeout(updateShift, updateShiftInterval);
-      };
-
-      updateShift();
     }
   });
 </script>

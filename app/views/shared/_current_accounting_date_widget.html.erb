@@ -2,24 +2,23 @@
 
 <script>
   $( document ).ready(function() {
+    function updateAccountingDate() {
+      $.ajax({
+        url: 'accounting_dates/current',
+        type: 'get',
+        success: function(data) {
+          $('.accounting_date_widget').html(data);
+        }
+      });
+    };
+
+    updateAccountingDate();
+
     if ( !$.accounting_date_widget_loaded ) {
+      var updateAccountingDateInterval = <%= update_accounting_date_interval %>;
+      setInterval(updateAccountingDate, updateAccountingDateInterval);
+
       $.accounting_date_widget_loaded = true;
-
-      function updateAccountingDate() {
-        var updateAccountingDateInterval = <%= update_accounting_date_interval %>;
-
-        $.ajax({
-          url: 'accounting_dates/current',
-          type: 'get',
-          success: function(data) {
-            $('.accounting_date_widget').html(data);
-          }
-        });
-
-        setTimeout(updateAccountingDate, updateAccountingDateInterval);
-      };
-
-      updateAccountingDate();
     }
   });
 </script>

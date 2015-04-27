@@ -30,6 +30,7 @@ CmsRws::Application.routes.draw do
     collection do
       get 'new'
       get 'current'
+      post 'create'
     end
   end
 

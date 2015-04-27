@@ -2,9 +2,6 @@
 
 <script>
   function updateShift() {
-    var randomRange = 500;
-    var updateShiftInterval = 60 * 1000 + parseInt(Math.random() * randomRange);
-
     $.ajax({
       url: 'shifts/current',
       type: 'get',
@@ -12,9 +9,14 @@
         $('.shift_widget').html(data);
       }
     });
-
-    setTimeout(updateShift, updateShiftInterval);
   };
 
   updateShift();
+
+  if ( !$.shift_widget_loaded ) {
+    var updateShiftInterval = <%= update_shift_interval %>;
+    setInterval(updateShift, updateShiftInterval);
+
+    $.shift_widget_loaded = true;
+  }
 </script>

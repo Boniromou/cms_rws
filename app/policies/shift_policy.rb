@@ -1,5 +1,5 @@
 class ShiftPolicy < ApplicationPolicy
   def roll?
-    true
+    is_admin? || has_permission?('shift', 'roll')
   end
 end

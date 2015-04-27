@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150423021448) do
+ActiveRecord::Schema.define(:version => 20150427075229) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -37,75 +37,39 @@ ActiveRecord::Schema.define(:version => 20150423021448) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.datetime "purge_at"
   end
 
-  create_table "player_infos", :force => true do |t|
+  create_table "player_transactions", :force => true do |t|
+    t.integer  "shift_id"
+    t.integer  "player_id"
+    t.integer  "user_id"
+    t.integer  "transaction_type_id"
+    t.string   "status"
+    t.integer  "amount",              :limit => 8
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.integer  "station_id"
+    t.string   "ref_trans_id"
+  end
+
+  add_index "player_transactions", ["player_id"], :name => "fk_player_id"
+  add_index "player_transactions", ["shift_id"], :name => "fk_shift_id"
+  add_index "player_transactions", ["transaction_type_id"], :name => "fk_transaction_type_id"
+  add_index "player_transactions", ["user_id"], :name => "fk_playerTransaction_user_id"
+
+  create_table "players", :force => true do |t|
     t.string   "player_name"
     t.string   "member_id"
     t.string   "card_id"
-    t.integer  "player_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "player_infos", ["card_id"], :name => "by_card_id", :unique => true
-  add_index "player_infos", ["member_id"], :name => "by_member_id", :unique => true
-  add_index "player_infos", ["player_id"], :name => "fk_info_player_id"
-
-  create_table "players", :force => true do |t|
-    t.string   "login_name"
-    t.integer  "currency_id",              :null => false
+    t.integer  "currency_id"
     t.integer  "balance",     :limit => 8
-    t.string   "lock_state"
+    t.string   "status"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.string   "shareholder"
-    t.datetime "played_at"
-    t.datetime "purge_at"
-    t.integer  "property_id",              :null => false
   end
 
   add_index "players", ["currency_id"], :name => "fk_currency_id"
-  add_index "players", ["property_id"], :name => "fk_property_id"
-
-  create_table "properties", :force => true do |t|
-    t.string   "name"
-    t.string   "secret_key"
-    t.string   "time_zone"
-    t.datetime "purge_at"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "round_transactions", :force => true do |t|
-    t.string   "ref_trans_id",                                                  :null => false
-    t.integer  "bet_amt",          :limit => 8
-    t.integer  "payout_amt",       :limit => 8
-    t.integer  "win_amt",          :limit => 8
-    t.integer  "before_balance",   :limit => 8
-    t.integer  "after_balance",    :limit => 8
-    t.string   "aasm_state"
-    t.string   "trans_type",                                                    :null => false
-    t.datetime "trans_date"
-    t.integer  "round_id",         :limit => 8
-    t.integer  "internal_game_id"
-    t.integer  "external_game_id"
-    t.decimal  "pc_jp_con_amt",                 :precision => 25, :scale => 10
-    t.decimal  "pc_jp_win_amt",                 :precision => 25, :scale => 10
-    t.decimal  "jc_jp_con_amt",                 :precision => 25, :scale => 10
-    t.decimal  "jc_jp_win_amt",                 :precision => 25, :scale => 10
-    t.string   "jp_win_id"
-    t.integer  "jp_win_lev"
-    t.integer  "jp_direct_pay",    :limit => 1
-    t.integer  "property_id",                                                   :null => false
-    t.integer  "player_id",                                                     :null => false
-    t.datetime "purge_at"
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
-  end
-
-  add_index "round_transactions", ["player_id"], :name => "fk_round_trans_player_id"
+  add_index "players", ["member_id"], :name => "by_member_id", :unique => true
 
   create_table "shift_types", :force => true do |t|
     t.string   "name"
@@ -135,41 +99,17 @@ ActiveRecord::Schema.define(:version => 20150423021448) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "transaction_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "users", :force => true do |t|
     t.string   "employee_id"
+    t.string   "uid"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.string   "uid"
   end
-
-  create_table "wallet_transaction_infos", :force => true do |t|
-    t.integer  "shift_id"
-    t.integer  "user_id"
-    t.string   "station"
-    t.integer  "wallet_transaction_id", :limit => 8
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-  end
-
-  add_index "wallet_transaction_infos", ["shift_id"], :name => "fk_shift_id"
-  add_index "wallet_transaction_infos", ["user_id"], :name => "fk_transaction_info_user_id"
-  add_index "wallet_transaction_infos", ["wallet_transaction_id"], :name => "fk_info_wallet_id"
-
-  create_table "wallet_transactions", :force => true do |t|
-    t.string   "ref_trans_id",                :null => false
-    t.integer  "amt",            :limit => 8
-    t.integer  "before_balance", :limit => 8
-    t.integer  "after_balance",  :limit => 8
-    t.string   "aasm_state"
-    t.string   "trans_type",                  :null => false
-    t.datetime "trans_date"
-    t.integer  "property_id",                 :null => false
-    t.integer  "player_id",                   :null => false
-    t.datetime "purge_at"
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
-  end
-
-  add_index "wallet_transactions", ["player_id"], :name => "fk_player_id"
 
 end

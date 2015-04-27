@@ -2,9 +2,6 @@
 
 <script>
   function updateAccountingDate() {
-    var randomRange = 500;
-    var updateAccountingDateInterval = 60 * 1000 + parseInt(Math.random() * randomRange);
-
     $.ajax({
       url: 'accounting_dates/current',
       type: 'get',
@@ -12,9 +9,14 @@
         $('.accounting_date_widget').html(data);
       }
     });
-
-    setTimeout(updateAccountingDate, updateAccountingDateInterval);
   };
 
   updateAccountingDate();
+
+  if ( !$.accounting_date_widget_loaded ) {
+    var updateAccountingDateInterval = <%= update_accounting_date_interval %>;
+    setInterval(updateAccountingDate, updateAccountingDateInterval);
+
+    $.accounting_date_widget_loaded = true;
+  }
 </script>

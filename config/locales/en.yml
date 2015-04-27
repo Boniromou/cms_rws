@@ -22,7 +22,7 @@ en:
     fund_in: "Deposit"
     fund_out: "Withdrawal"
     roll_shift: "Roll Shift"
-    player_transaction: "Player Transaction"
+    player_transaction: "Transaction History"
   general:
     login: "Log In"
     logout: "Log Out"

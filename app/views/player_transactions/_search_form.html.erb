@@ -1,32 +1,8 @@
           <%= form_tag(search_transactions_path, :remote => true, :id => "search_form") do %>
             <fieldset>
               <div class="row">
-                <div class="col-sm-5">
-                  <section class="smart-form">
-                  <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
-                  </section>
-                </div>
-                <div class="col-sm-5">
-                  <section class="smart-form">
-                  <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
-                  </section>
-                </div>
-              </div>
-              
-              
-              <div class="row">
-                <div class="col-sm-4">
-                  <section class="smart-form">
-                    <label class="label"><%= t("general.transaction_id") %></label>
-                    <label class="input">
-                      <%= text_field_tag(:"transaction_id") %>
-                    </label>
-                  </section>
-                </div>
-                
                 <div class="col-sm-3">
                   <section class="smart-form">
-                    <label class="label"> ID Type</label>
                     <div class="inline-group">
                       <label class="radio">
                         <input type="radio" name="member_id">
@@ -46,13 +22,53 @@
                 
                 <div class="col-sm-5">
                   <section class="smart-form">
-                    <label class="label"> ID Number</label>
                     <label class="input">
                       <%= text_field_tag(:"id_number") %>
                     </label>
                   </section>
                 </div>
               </div>
+
+              <div class="row">
+                <div class="col-sm-1">
+                  <section class="smart-form">
+                  <br/>
+                    <label class="label"><%= t("search_form.start_time") %></label>
+                  </section>
+                </div>
+                <div class="col-sm-3">
+                  <section class="smart-form">
+                  <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
+                  </section>
+                </div>
+                <div class="col-sm-1">
+                  <section class="smart-form">
+                  <br/>
+                    <label class="label"><%= t("search_form.end_time") %></label>
+                  </section>
+                </div>
+                <div class="col-sm-3">
+                  <section class="smart-form">
+                  <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
+                  </section>
+                </div>
+              </div>
+              
+              
+              <div class="row">
+                <div class="col-sm-1">
+                  <section class="smart-form">
+                    <label class="label"><%= t("general.transaction_id") %></label>
+                  </section>
+                </div>
+                <div class="col-sm-7">
+                  <section class="smart-form">
+                    <label class="input">
+                      <%= text_field_tag(:"transaction_id") %>
+                    </label>
+                  </section>
+                </div>
+                
               
             </fieldset>
               

@@ -30,6 +30,10 @@ describe Shift do
       @station_id = Station.create!(:name => 'window#1').id
     end
 
+    after(:each) do
+      clean_dbs
+    end
+
     it 'Morning to Swing' do
       current_shift = Shift.current
       expect(current_shift.accounting_date).to eq AccountingDate.find_by_id(@accounting_date_id).accounting_date
@@ -70,6 +74,16 @@ describe Shift do
       new_current_shift = Shift.current
       expect(new_current_shift.accounting_date).to eq @today + 1
       expect(new_current_shift.name).to eq 'morning'
+    end
+  end
+
+  describe 'Helper functions' do
+    it 'next shift name' do
+      expect(Shift.next_shift_name_by_name('morning')).to eq 'swing'
+      expect(Shift.next_shift_name_by_name('swing')).to eq 'night'
+      expect(Shift.next_shift_name_by_name('night')).to eq 'morning'
+
+      expect(lambda {Shift.next_shift_name_by_name('eight')}).to raise_error
     end
   end
 end

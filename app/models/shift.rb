@@ -36,6 +36,7 @@ class Shift < ActiveRecord::Base
     end
 
     def next_shift_name_by_name( shift_name )
+      raise 'Shift name not found!!' if SHIFT_NAME.index(shift_name).nil?
       SHIFT_NAME[(SHIFT_NAME.index(shift_name) + 1) % 3]
     end
   end

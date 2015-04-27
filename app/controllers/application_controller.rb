@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   layout false
 
   include Pundit
+  include CageInfoHelper
 
   def client_ip
     if Rails.env.development?

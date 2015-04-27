@@ -8,7 +8,10 @@ class InsertInitData < ActiveRecord::Migration
     execute "INSERT INTO shift_types(id, name, created_at, updated_at) values(2,'swing', '#{Time.now.utc}', '#{Time.now.utc}');"
     execute "INSERT INTO shift_types(id, name, created_at, updated_at) values(3,'night', '#{Time.now.utc}', '#{Time.now.utc}');"
     Shift.delete_all
-    execute "INSERT INTO shifts(id,shift_type_id,accounting_date_id, lock_version, created_at, updated_at) values(1, 1, 1, 0, '#{Time.now.utc}', '#{Time.now.utc}');"
+    execute "INSERT INTO shifts(id, shift_type_id,accounting_date_id, lock_version, created_at, updated_at) values(1, 1, 1, 0, '#{Time.now.utc}', '#{Time.now.utc}');"
+    TransactionType.delete_all
+    execute "INSERT INTO transaction_types(id, name, created_at, updated_at) values(1, 'Deposit',  '#{Time.now.utc}', '#{Time.now.utc}');"
+    execute "INSERT INTO transaction_types(id, name, created_at, updated_at) values(2, 'Withdrawal',  '#{Time.now.utc}', '#{Time.now.utc}');"
   end
 
   def down

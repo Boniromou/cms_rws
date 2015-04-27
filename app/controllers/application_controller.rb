@@ -21,13 +21,11 @@ class ApplicationController < ActionController::Base
   end
 
   def current_shift
-    shift = Shift.find_by_roll_shift_at(nil)
-    raise 'Current shift not found!' unless shift
-    shift
+    Shift.current
   end
 
   def current_accounting_date
-    AccountingDate.find_by_id(current_shift.accounting_date_id)
+    AccountingDate.current
   end
 
   def permission_granted?(model, operation = nil)

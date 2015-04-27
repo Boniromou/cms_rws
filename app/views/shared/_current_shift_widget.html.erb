@@ -1,24 +1,22 @@
 <span class="shift_widget">Waiting for shift</span>
 
 <script>
-  $( document ).ready(function() {
-    function updateShift() {
-      $.ajax({
-        url: 'shifts/current',
-        type: 'get',
-        success: function(data) {
-          $('.shift_widget').html(data);
-        }
-      });
-    };
+  function updateShift() {
+    $.ajax({
+      url: 'shifts/current',
+      type: 'get',
+      success: function(data) {
+        $('.shift_widget').html(data);
+      }
+    });
+  };
 
-    updateShift();
+  updateShift();
 
-    if ( !$.shift_widget_loaded ) {
-      var updateShiftInterval = <%= update_shift_interval %>;
-      setInterval(updateShift, updateShiftInterval);
+  if ( !$.shift_widget_loaded ) {
+    var updateShiftInterval = <%= update_shift_interval %>;
+    setInterval(updateShift, updateShiftInterval);
 
-      $.shift_widget_loaded = true;
-    }
-  });
+    $.shift_widget_loaded = true;
+  }
 </script>

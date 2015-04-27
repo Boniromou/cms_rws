@@ -1,24 +1,22 @@
 <span class="accounting_date_widget">Waiting for accounting date</span>
 
 <script>
-  $( document ).ready(function() {
-    function updateAccountingDate() {
-      $.ajax({
-        url: 'accounting_dates/current',
-        type: 'get',
-        success: function(data) {
-          $('.accounting_date_widget').html(data);
-        }
-      });
-    };
+  function updateAccountingDate() {
+    $.ajax({
+      url: 'accounting_dates/current',
+      type: 'get',
+      success: function(data) {
+        $('.accounting_date_widget').html(data);
+      }
+    });
+  };
 
-    updateAccountingDate();
+  updateAccountingDate();
 
-    if ( !$.accounting_date_widget_loaded ) {
-      var updateAccountingDateInterval = <%= update_accounting_date_interval %>;
-      setInterval(updateAccountingDate, updateAccountingDateInterval);
+  if ( !$.accounting_date_widget_loaded ) {
+    var updateAccountingDateInterval = <%= update_accounting_date_interval %>;
+    setInterval(updateAccountingDate, updateAccountingDateInterval);
 
-      $.accounting_date_widget_loaded = true;
-    }
-  });
+    $.accounting_date_widget_loaded = true;
+  }
 </script>

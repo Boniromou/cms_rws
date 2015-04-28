@@ -1,20 +1,27 @@
 <h1><%= t("tree_panel.create_player") %></h1>
 
 <%= form_for(@player, :remote => true) do |f| %>
-  <div>
-    <%= f.label t("general.member_id") %>
-    <%= f.text_field :member_id %><br/>
-  </div>
-  <div>
-    <%= f.label t("general.name") %>
-    <%= f.text_field :player_name %><br/>
-  </div>
-  <div>
-    <%= f.label t("general.card_id") %>
-    <%= f.text_field :card_id %><br/>
-  </div>
-  <div>
-    <%= f.submit t("button.create")%>
-  </div>
+  <table>
+    <col width="40%">
+    <tr>
+      <td><%= f.label t("general.card_id") %></td>
+      <td><%= f.text_field :card_id, autofocus: true %></td>
+    </tr>
+    <tr>
+      <td><%= f.label t("general.member_id") %></td>
+      <td><%= f.text_field :member_id %></td>
+    </tr>
+    <tr>
+      <td><%= f.label t("general.name") %></td>
+      <td><%= f.text_field :player_name %></td>
+    </tr>
+    <tr>
+      <td><%= f.submit t("button.create")%></td>
+    </tr>
 <% end %>
 
+<script>
+  $(document).ready(function() {
+    $('input[autofocus="autofocus"]').focus();
+  });
+</script>

@@ -1,19 +1,20 @@
 class PlayersController < ApplicationController
   layout 'cage'
+
   def new
     return unless permission_granted? Player.new
     @player = Player.new
+    @player.card_id = params[:card_id]
     @player.member_id = params[:member_id]
     @player.player_name = params[:player_name]
-    @player.card_id = params[:card_id]
   end
 
   def create
     return unless permission_granted? Player.new
     begin
       is_success = false
-      AuditLog.player_log("create", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
-        is_success,@player = Player.create_by_param(params[:player][:member_id],params[:player][:player_name],params[:player][:card_id])
+      AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        is_success = Player.create_by_params(params[:player])
       end
       if is_success
         flash[:success] = "create_player.success"
@@ -23,7 +24,7 @@ class PlayersController < ApplicationController
       end
     rescue Exception => e
       flash[:error] = e.message
-      redirect_to :action => 'new', :member_id => params[:player][:member_id], :player_name => params[:player][:player_name], :card_id => params[:player][:card_id]
+      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end
   end
 

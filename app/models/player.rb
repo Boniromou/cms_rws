@@ -1,21 +1,27 @@
 class Player < ActiveRecord::Base
   attr_accessible :balance, :card_id, :currency_id,:member_id, :player_name, :status
 
-  def self.create_by_param(member_id,player_name,card_id)
-    raise ArgumentError , "create_player_error.id_blank_error" if member_id.blank?
+  def self.create_by_params(params)
+    card_id = params[:card_id]
+    member_id = params[:member_id]
+    player_name = params[:player_name]
+
+    raise ArgumentError , "create_player_error.card_id_blank_error" if card_id.blank?
+    raise ArgumentError , "create_player_error.member_id_blank_error" if member_id.blank?
     raise ArgumentError , "create_player_error.name_blank_error" if player_name.blank?
-    raise ArgumentError , "create_player_error.card_blank_error" if card_id.blank?
+
+    result = false
+
     player = new
+    player.card_id = card_id
     player.member_id = member_id
     player.player_name = player_name
-    player.card_id = card_id
     player.balance = 0
     player.currency_id = 1
     player.status = "active"
-    result = false
     begin
       result = player.save
-      [result,player]
+      return result
     rescue
       raise Exception, "create_player.exist"
     end

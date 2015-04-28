@@ -29,6 +29,8 @@ class FundOutController < ApplicationController
       end
       @player = Player.find_by_member_id(member_id)
     rescue Exception => e
+      puts e.message
+      puts e.backtrace
       flash[:alert] = e.message
       redirect_to :action => 'new', member_id: member_id
     end

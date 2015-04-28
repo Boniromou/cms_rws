@@ -5,16 +5,16 @@
                   <section class="smart-form">
                     <div class="inline-group">
                       <label class="radio">
-                        <input type="radio" name="member_id">
-                        <i>
-                        </i>
-                        <%= t("general.member_id") %>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="card_id" checked="checked">
+                        <input type="radio" name="id_type" value="card_id" checked="checked">
                         <i>
                         </i>
                         <%= t("general.card_id") %>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="id_type" value="member_id">
+                        <i>
+                        </i>
+                        <%= t("general.member_id") %>
                       </label>
                     </div>
                   </section>
@@ -76,7 +76,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <%= hidden_field_tag 'from', search_transactions_path %>
-                  <%= submit_tag t("button.search"), :class => "btn btn-primary", :remote => true  %>
+                  <%= submit_tag t("button.search"), :class => "btn btn-primary"  %>
                 </div>
               </div>
             </div>

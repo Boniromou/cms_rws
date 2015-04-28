@@ -10,7 +10,7 @@
       <thead>
         <th>Transaction ID</th>
         <th>Player Name</th>
-        <th>Player ID</th>
+        <th>Member ID</th>
         <th>Accounting Date</th>
         <th>Date</th>
         <th>Shift</th>
@@ -21,19 +21,22 @@
         <th>Withdrawal</th>
         <th>Action</th>
       </thead>
-      <% 10.times do |i| %>
+      <% @player_transactions.each do |t| %>
         <tr>
-          <td><%= i %></td>
-          <td><%= "player_name"+i.to_s %></td>
-          <td><%= i %></td>
-          <td><%= Time.now.utc%></td>
-          <td><%= Time.now.utc %></td>
-          <td><%= "Morning" %></td>
-          <td><%= "window#1" %></td>
-          <td><%= 123456 %></td>
-          <td><%= "Complete" %></td>
-          <td><%= 100000 %></td>
-          <td><%= 100000 %></td>
+          <% shift = Shift.find_by_id(t.shift_id) %>
+          <% player = Player.find_by_id(t.player_id) %>
+          <% user = User.find_by_id(t.user_id) %>
+          <td><%= t.id %></td>
+          <td><%= player.player_name %></td>
+          <td><%= player.member_id %></td>
+          <td><%= shift.accounting_date%></td>
+          <td><%= format_time(t.created_at) %></td>
+          <td><%= shift.name %></td>
+          <td><%= current_station %></td>
+          <td><%= user.employee_id %></td>
+          <td><%= t.status %></td>
+          <td><%= t.deposit_amt_str %></td>
+          <td><%= t.withdrawal_amt_str %></td>
           <td><button>reprint</button>
         </tr>
       <% end %>

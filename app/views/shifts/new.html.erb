@@ -33,21 +33,41 @@
 <% end %>
 
 <div id="confirm_roll_shift_dialog" style="display: none;">
-  <div class="ui-dialog" style="height: 350px; width: 600px; top: 206px; left: 376px;">
-    <div style="height: 80%; vertical-align:middle;" align="center">
-      <div class="confirm_roll_detail"/>
+  <div class="ui-dialog" style="height: 350px; width: 600px; top: 150px; left: 250px;">
+    <div style="height: 70%; vertical-align:middle; padding: 30px;" align="center">
+      <div class="confirm_roll_detail">
+        <table>
+          <tr>
+            <td><h3>Roll system to next shift?</h3></td>
+          </tr>
+          <tr>
+            <td><h3>Current Shift:</h3></td>
+            <td><h3><%= @current_accounting_date %></h3></td>
+            <td><h3>(<%= @current_shift_name.capitalize %>)</h3></td>
+          </tr>
+          <tr>
+            <td><h3>Next Shift:</h3></td>
+            <td><h3><%= @next_accounting_date %></h3></td>
+            <td><h3>(<%= @next_shift_name.capitalize %>)</h3></td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <div align="center">
-      <button id="confirm" class="btn btn-danger">Confirm</button>
-      <button id="cancel" class="btn btn-default">Cancel</button>
+
+    <div align="center" style='height: 20%;'>
+      <table>
+        <tr>
+          <td><button id="confirm" class="btn btn-danger">Confirm</button></td>
+          <td width='20%'/>
+          <td><button id="cancel" class="btn btn-default">Cancel</button></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
 
 <script>
   $( document ).ready(function() {
-    $('#confirm_roll_shift_dialog .confirm_roll_detail').html($('.roll_detail').html());
-
     $('#roll_shift').click(function() {
       $('#confirm_roll_shift_dialog').show();
       $(this).attr('disabled', 'disabled');

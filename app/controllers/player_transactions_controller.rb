@@ -3,7 +3,7 @@ class PlayerTransactionsController < ApplicationController
   include FormattedTimeHelper
 
   def search
-    return unless permission_granted? PlayerTransaction.new, :search?
+    return unless permission_granted? PlayerTransaction.new
   end
 
   def do_search
@@ -31,13 +31,14 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def print
-    return unless permission_granted? PlayerTransaction.new, :print?
+    return unless permission_granted? PlayerTransaction.new
     AuditLog.print_log("print", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
     end
     redirect_to home_path
   end
 
   def reprint
+    return unless permission_granted? PlayerTransaction.new
     transaction_id = params[:transaction_id]
     @transaction = PlayerTransaction.find(transaction_id)
     @player = Player.find(@transaction.player_id)

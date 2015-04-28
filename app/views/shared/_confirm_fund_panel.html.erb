@@ -1,6 +1,6 @@
 <div id="button_set">
   <%= button_tag t("button.confirm"), :id => "confirm"%>
-  <%= button_to t("button.cancel"), home_path, :id => "cancel", :method => "get", :remote => true%>
+  <%= button_to t("button.cancel"), balance_path + "?member_id=" + @player.member_id, :id => "cancel", :method => "get", :remote => true %>
 </div>
 
 <div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 150px; left: 250px; display: none;">

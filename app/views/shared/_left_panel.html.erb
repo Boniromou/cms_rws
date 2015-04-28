@@ -34,16 +34,6 @@
           <% end %>
         </li>
       <% end %>
-      <li id="nav_fund_in">
-        <%= link_to players_search_path + "?operation=fund_in", :title => t("tree_panel.fund_in"), :remote => true do %>
-          <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_in") %></span>
-        <% end %>
-      </li>
-      <li id="nav_fund_out">
-        <%= link_to players_search_path + "?operation=fund_out", :title => t("tree_panel.fund_out"), :remote => true do %>
-          <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_out") %></span>
-        <% end %>
-      </li>
       <% if policy(PlayerTransaction.new).search? %>
         <li id="nav_search_transactions">
           <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>

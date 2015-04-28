@@ -5,7 +5,7 @@
 <script>
   function updateShift(target) {
     $.ajax({
-      url: 'shifts/current',
+      url: '/shifts/current',
       type: 'get',
       context: document.body,
       success: function(data) {

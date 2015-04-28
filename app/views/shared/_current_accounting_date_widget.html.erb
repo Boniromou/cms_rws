@@ -5,7 +5,7 @@
 <script>
   function updateAccountingDate() {
     $.ajax({
-      url: 'accounting_dates/current',
+      url: '/accounting_dates/current',
       type: 'get',
       success: function(data) {
         $('.accounting_date_widget').each(function(index, element) {

@@ -7,11 +7,6 @@ module StepHelper
     expect(flash_msg.text).to eq(msg)
   end
 
-  def mock_time_at_now(time_in_str)
-    fake_time = Time.parse(time_in_str)
-    allow(Time).to receive(:now).and_return(fake_time)
-  end
-
   def login_as_root
     root_user = User.find_by_uid(1)
     login_as(root_user)

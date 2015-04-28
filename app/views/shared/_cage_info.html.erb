@@ -1,7 +1,33 @@
-<p><%= current_cage_location_str %></p>
-<p><%= render 'shared/current_accounting_date_widget' %></p>
-<p><%= render 'shared/current_shift_widget' %></p>
-<p id="local_date_time"></p>
+<style>
+  td.cage_info {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+</style>
+
+<table align='center'>
+  <tr>
+    <td></td>
+    <td class='cage_info'><%= current_cage_location_str %></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class='cage_info'><div style='visibility: hidden;'>.</div></td>
+    <td class='cage_info'><%= render 'shared/current_accounting_date_widget' %></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class='cage_info'><div style='visibility: hidden;'>.</div></td>
+    <td class='cage_info' width='100%'><%= render 'shared/current_shift_widget' %></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class='cage_info'><div id="local_date_time"/></td>
+    <td></td>
+  </tr>
+</table>
 
 <%= javascript_include_tag "date.time.helper.js" %>
 

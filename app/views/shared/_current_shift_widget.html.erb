@@ -1,12 +1,22 @@
-<span class="shift_widget">Waiting for shift</span>
+<div class="shift_widget"><%= default_shift_widget_message %></div>
+
+<%= javascript_include_tag "custom.effect.js" %>
 
 <script>
-  function updateShift() {
+  function updateShift(target) {
     $.ajax({
       url: 'shifts/current',
       type: 'get',
+      context: document.body,
       success: function(data) {
-        $('.shift_widget').html(data);
+        $('.shift_widget').each(function(index, element) {
+          var widget = $(element);
+          var pre = widget.html();
+          if ( pre == "<%= default_shift_widget_message %>" )
+            widget.html(data);
+          else if ( pre != data && !widget.is(':animated') )
+            slideDownUpdate(element, data);
+        });
       }
     });
   };

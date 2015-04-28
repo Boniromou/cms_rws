@@ -11,6 +11,14 @@ module CageInfoHelper
     polling_interval
   end
 
+  def default_shift_widget_message
+    "Waiting for shift"
+  end
+
+  def default_accounting_date_widget_message
+    "Waiting for accounting date"
+  end
+
   protected
 
   def polling_interval

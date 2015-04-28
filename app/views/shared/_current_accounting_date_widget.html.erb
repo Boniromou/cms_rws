@@ -1,4 +1,6 @@
-<span class="accounting_date_widget">Waiting for accounting date</span>
+<div class="accounting_date_widget"><%= default_accounting_date_widget_message %></div>
+
+<%= javascript_include_tag "custom.effect.js" %>
 
 <script>
   function updateAccountingDate() {
@@ -6,7 +8,14 @@
       url: 'accounting_dates/current',
       type: 'get',
       success: function(data) {
-        $('.accounting_date_widget').html(data);
+        $('.accounting_date_widget').each(function(index, element) {
+          var widget = $(element);
+          var pre = widget.html();
+          if ( pre == "<%= default_accounting_date_widget_message %>" )
+            widget.html(data)
+          else if ( pre != data && !widget.is(':animated') )
+            slideDownUpdate(element, data);
+        });
       }
     });
   };

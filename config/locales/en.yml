@@ -22,6 +22,7 @@ en:
     fund_in: "Deposit"
     fund_out: "Withdrawal"
     roll_shift: "Roll Shift"
+    player_transaction: "Transaction History"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -30,6 +31,7 @@ en:
     name: "Name"
     card_id: "Card ID"
     player: "Player"
+    transaction_id: "Transaction ID"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -56,6 +58,7 @@ en:
     create: "Create"
     deposit: "Deposit"
     withdrawal: "Withdrawal"
+    search: "Search"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -72,4 +75,7 @@ en:
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
+  search_form:
+    start_time: "start Time"
+    end_time: "End Time"
 

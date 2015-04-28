@@ -44,6 +44,11 @@ class PlayerTransaction < ActiveRecord::Base
     transaction.save
     transaction
   end
+  
+  scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }
+  scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }
+  scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
+  scope :by_transaction_id, -> transaction_id { where("id = ?", transaction_id) if transaction_id.present? }
 
   def self.search_query(*args)
     id_type = args[0]
@@ -51,10 +56,14 @@ class PlayerTransaction < ActiveRecord::Base
     start_time = args[2]
     end_time = args[3]
     transaction_id = args[4]
+    
     if id_type == "member_id"
-      find(:all)
+      player = Player.find_by_member_id(id_number)
     else
-      find(:all)
+      player = Player.find_by_card_id(id_number)
     end
+    player_id = 0 if id_number!=""
+    player_id = player.id unless player.nil?
+    by_transaction_id(transaction_id).by_player_id(player_id).since(start_time).until(end_time)
   end
 end

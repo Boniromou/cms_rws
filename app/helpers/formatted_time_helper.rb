@@ -18,6 +18,6 @@ module FormattedTimeHelper
   end
 
   def parse_datetime(datetime_str)
-    Time.strptime(datetime_str, "%m/%d/%Y %H:%M:%S")
+    Time.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
   end
 end

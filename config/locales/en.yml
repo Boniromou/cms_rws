@@ -23,6 +23,7 @@ en:
     fund_out: "Withdrawal"
     roll_shift: "Roll Shift"
     player_transaction: "Transaction History"
+    front_money: "FM Activity Report"
   general:
     login: "Log In"
     logout: "Log Out"

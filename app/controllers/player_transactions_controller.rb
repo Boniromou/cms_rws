@@ -38,7 +38,9 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def reprint
-    @transaction = PlayerTransaction.first
-    @player = Player.first
+    transaction_id = params[:transaction_id]
+    @transaction = PlayerTransaction.find(transaction_id)
+    @player = Player.find(@transaction.player_id)
+    @operation =  @transaction.action_type_str
   end
 end

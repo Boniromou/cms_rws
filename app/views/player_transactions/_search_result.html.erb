@@ -39,7 +39,7 @@
               <td><%= t.status %></td>
               <td><%= t.deposit_amt_str %></td>
               <td><%= t.withdrawal_amt_str %></td>
-              <td><%= button_to t("button.print"), reprint_path, :id => "reprint", :method => "get", :remote => true %> </td>
+              <td><%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :method => "get", :remote => true %> </td>
             </tr>
           <% end %>
         </table>

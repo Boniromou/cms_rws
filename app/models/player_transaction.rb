@@ -15,7 +15,14 @@ class PlayerTransaction < ActiveRecord::Base
     result = amount.to_s if transaction_type_id == WITHDRAWAL
     result
   end
-    
+
+  def action_type_str
+    if transaction_type_id == 1
+      "Deposit"
+    else
+      "Withdrawal"
+    end
+  end    
 
   def self.save_fund_in_transaction(member_id, amount, shift_id, user_id, station)
     player_id = Player.find_by_member_id(member_id)[:id]

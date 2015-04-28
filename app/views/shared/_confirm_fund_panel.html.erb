@@ -3,16 +3,23 @@
   <%= button_to t("button.cancel"), home_path, :id => "cancel", :method => "get", :remote => true%>
 </div>
 
-<div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 206px; left: 376px; display: none;">
-  <div style="height: 60%;" align="center">
-    <table>
-      <td width="60%"><p style="font-size: 18px;"><%= t("deposit_withdrawal."+@operation+"_amt")%>:</p></td>
-      <td width="40%"><p style="font-size: 18px;" id="fund_amt"></p></td> 
+<div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 150px; left: 250px; display: none;">
+  <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+    <table width='80%'>
+      <tr>
+        <td width='60%'><p style="font-size: 18px;"><%= t("deposit_withdrawal."+@operation+"_amt")%>:</p></td>
+        <td width='40%'><p style="font-size: 18px;" id="fund_amt"></p></td> 
+      </tr>
     </table>
   </div>
   <div align="center">
-    <button id="confirm" class="btn btn-danger">Confirm</button>
-    <button id="cancel" class="btn btn-default">Cancel</button>
+    <table>
+      <tr>
+        <td><button id="confirm" class="btn btn-danger">Confirm</button></td>
+        <td width='20%'></td>
+        <td><button id="cancel" class="btn btn-default">Cancel</button></td>
+      </tr>
+    </table>
   </div>
 </div>
 

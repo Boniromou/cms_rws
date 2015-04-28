@@ -65,6 +65,7 @@ en:
   create_player_error:
     id_blank_error: "Membership ID can not be blank"
     name_blank_error: "Player name can not be blank"
+    card_blank_error: "Card ID can not be blank"
   create_player:
     success: "create player successful"
     exist: "The player you try to create is already exist."

@@ -10,6 +10,10 @@
     <%= f.text_field :player_name %><br/>
   </div>
   <div>
+    <%= f.label t("general.card_id") %>
+    <%= f.text_field :card_id %><br/>
+  </div>
+  <div>
     <%= f.submit t("button.create")%>
   </div>
 <% end %>

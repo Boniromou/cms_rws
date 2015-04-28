@@ -25,6 +25,7 @@ CmsRws::Application.routes.draw do
   post 'fund_out' => 'fund_out#create'
   
   get 'print'=> 'player_transactions#print'
+  get 'reprint'=> 'player_transactions#reprint'
   get 'transactions' => 'player_transactions#index'
   get 'search_transactions' => 'player_transactions#search'
   post 'search_transactions' => 'player_transactions#do_search'

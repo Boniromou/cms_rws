@@ -1,0 +1,5 @@
+var w = window.open()
+var html ="hi"
+var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => "Deposit"}, :formats => [ :html ]) %>"
+$(w.document.body).html(html);
+w.print()

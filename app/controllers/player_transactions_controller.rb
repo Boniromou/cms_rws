@@ -36,4 +36,9 @@ class PlayerTransactionsController < ApplicationController
     end
     redirect_to home_path
   end
+
+  def reprint
+    @transaction = PlayerTransaction.first
+    @player = Player.first
+  end
 end

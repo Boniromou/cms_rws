@@ -1,11 +1,42 @@
 <h1><%= t(@search_title)%></h1>
 <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}  do |f| %>
-  <div>
-    <label><%=  t("general.member_id") %></label>
-    <%= f.text_field :member_id %>
-  </div>
-  <div>
-    <%= submit_tag t("button.find")%>
+  <fieldset>
+    <div class="row">
+      <div class="col-sm-3">
+        <section class="smart-form">
+          <div class="inline-group">
+            <label class="radio">
+              <input type="radio" name="id_type" value="card_id" <%= checked="checked" if @id_type != "member_id" %>>
+              <i>
+              </i>
+              <%= t("general.card_id") %>
+            </label>
+            <label class="radio">
+              <input type="radio" name="id_type" value="member_id" <%= checked="checked" if @id_type == "member_id" %>>
+              <i>
+              </i>
+              <%= t("general.member_id") %>
+            </label>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-sm-5">
+        <section class="smart-form">
+          <label class="input">
+            <%= text_field_tag(:"id_number", @id_number) %>
+          </label>
+        </section>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <div class="row">
+      <div class="col-md-12">
+        <%= submit_tag t("button.find"), :class => "btn btn-primary"  %>
+      </div>
+    </div>
   </div>
 <% end %>
 <% if @found == "false" %>

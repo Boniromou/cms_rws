@@ -30,4 +30,12 @@ class Player < ActiveRecord::Base
     player.balance -= amount
     player.save
   end
+
+  def self.find_by_type_id(id_type, id_number)
+    if id_type == "member_id"
+      find_by_member_id(id_number)
+    else
+      find_by_card_id(id_number)
+    end
+  end
 end

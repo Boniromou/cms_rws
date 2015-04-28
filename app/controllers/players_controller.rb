@@ -42,20 +42,24 @@ class PlayersController < ApplicationController
     @operation = params[:operation] if params[:operation]
     action = (@operation+ "?").to_sym unless @operation.nil?
     return unless permission_granted? Player.new, action
+    @id_number = params[:id_number] if params[:id_number]
+    @id_type = params[:id_type] if params[:id_type]
+    p "earch~~~~~~~~~~~~~~~~",params
     @player = Player.new
-    @player.member_id = params[:member_id]
     @search_title = "tree_panel." + @operation
     @found = params[:found]
   end
 
   def do_search
-    member_id = params[:player][:member_id]
+    id_number = params[:id_number]
+    id_type = params[:id_type]
     @operation = params[:operation] if params[:operation]
-    @player = Player.find_by_member_id(member_id)
+    @player = Player.find_by_type_id(id_type, id_number)
+    member_id = @player.member_id if @player
     if @player.nil?
-      redirect_to :action => 'search', :found => false, :member_id => member_id, :operation => @operation
+      redirect_to :action => 'search', :found => false, :id_number => id_number, :id_type => id_type, :operation => @operation
     else
-      redirect_to eval( @operation + "_path" ) + "?member_id=" + member_id
+      redirect_to eval( @operation + "_path" )  + "?member_id=" + member_id
     end
   end
 end

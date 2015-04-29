@@ -46,7 +46,6 @@ class PlayersController < ApplicationController
     return unless permission_granted? Player.new, action
     @id_number = params[:id_number] if params[:id_number]
     @id_type = params[:id_type] if params[:id_type]
-    p "earch~~~~~~~~~~~~~~~~",params
     @player = Player.new
     @search_title = "tree_panel." + @operation
     @found = params[:found]

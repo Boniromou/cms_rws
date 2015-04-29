@@ -5,7 +5,6 @@ describe PlayersController do
     include Warden::Test::Helpers
     Warden.test_mode!
     PlayerTransaction.delete_all
-    User.delete_all
     @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
   end
 
@@ -224,13 +223,7 @@ describe PlayersController do
   describe '[4] Search player by membership ID' do
     before(:each) do
       Player.delete_all
-      @location = "Main Cage - Window #1"
-      @accounting_date = "2015-04-15"
-      @shift = "Morning Shift"
-
-      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
+      mock_cage_info
     end
 
     after(:each) do
@@ -238,33 +231,31 @@ describe PlayersController do
     end
 
     it '[4.1] Show search Page' do
-      login_as(@root_user)
+      login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
+      check_search_page
     end
 
     it '[4.2] successfully search player' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
-      login_as(@root_user)
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      login_as_admin
       visit players_search_path + "?operation=balance"
-      fill_in "player_member_id", :with => @player.member_id
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
-      check_title("tree_panel.balance")
+      check_balance_page
+      check_player_info
     end
     
     it '[4.3] fail to search player' do
       @player = Player.new
       @player.member_id = 123456
       @player.player_name = "test player"
-      login_as(@root_user)
+      login_as_admin
       visit players_search_path + "?operation=balance"
-      fill_in "player_member_id", :with => @player.member_id
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
-      expect(page.source).to have_content(I18n.t("search_error.not_found"))
+      check_not_found
       click_link I18n.t("button.create")
     end
     
@@ -272,29 +263,21 @@ describe PlayersController do
       @player = Player.new
       @player.member_id = 123456
       @player.player_name = "test player"
-      login_as(@root_user)
+      login_as_admin
       visit players_search_path + "?operation=balance"
-      fill_in "player_member_id", :with => @player.member_id
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
-      expect(page.source).to have_content(I18n.t("search_error.not_found"))
+      check_not_found
       click_link I18n.t("button.create")
       check_title("tree_panel.create_player")
-      expect(find("form#new_player div input#player_member_id").value).to eq @player.member_id.to_s
+      expect(find("form#new_player input#player_member_id").value).to eq @player.member_id.to_s
     end
   end
   
   describe '[5] Balance Enquiry' do
     before(:each) do
       Player.delete_all
-      @location = "Main Cage - Window #1"
-      @accounting_date = "2015-04-15"
-      @shift = "Morning Shift"
-
-      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
+      mock_cage_info
     end
 
     after(:each) do
@@ -302,97 +285,93 @@ describe PlayersController do
     end
 
     it '[5.1] view player balance enquiry' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "active")
-      login_as(@root_user)
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
+      login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
-      fill_in "player_member_id", :with => @player.member_id
+      check_search_page
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
       
-      expect(find("label#player_name").text).to eq @player.player_name
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+      check_player_info
+      check_balance_page
 
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(page.source).to have_selector("div a#balance_close")
     end
 
-    it '[5.2] click unauthorized action' do 
+    it '[5.2] click unauthorized action', :js => true do 
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       visit home_path
       set_permission(@test_user,"cashier",:player,[])
       click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
-    it '[5.3] click link to the unauthorized page' do 
+    it '[5.3] click link to the unauthorized page', :js => true do 
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit balance_path
+      wait_for_ajax
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
-    it '[5.4] click unauthorized action' do 
+    it '[5.4] authorized to search and unauthorized to create' do 
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       visit players_search_path + "?operation=balance"
-      fill_in "player_member_id", :with => 123456
+      fill_search_info("member_id", 123456)
 
       click_button I18n.t("button.find")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
-      expect(page.source).to have_content(I18n.t("search_error.not_found"))
+      check_not_found
       expect(page.source).to_not have_content(I18n.t("search_error.create_player"))
     end     
     
     it '[5.5] Return to Cage home' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "active")
-      login_as(@root_user)
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
+      login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
-      fill_in "player_member_id", :with => @player.member_id
+      check_search_page
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
       
-      expect(find("label#player_name").text).to eq @player.player_name
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
-
+      check_balance_page
+      check_player_info
+      
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(page.source).to have_selector("div a#balance_close")
 
       click_link I18n.t("button.close")
-      check_home_page
+      expect(page).to have_content @location
+      expect(page).to have_content "Waiting for accounting date"
+      expect(page).to have_content "Waiting for shift"
     end
 
     it '[5.6] unauthorized to all actions' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      check_title("tree_panel.balance")
-      expect(page.source).to have_selector("form div input#player_member_id")
-      fill_in "player_member_id", :with => @player.member_id
+      check_search_page
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
-      
-      expect(find("label#player_name").text).to eq @player.player_name
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
 
+      check_balance_page
+      check_player_info
+      
       expect(page.source).to_not have_selector("div a#balance_deposit")
       expect(page.source).to_not have_selector("div a#balance_withdraw")
       expect(page.source).to have_selector("div a#balance_close")

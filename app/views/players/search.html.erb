@@ -6,13 +6,13 @@
         <section class="smart-form">
           <div class="inline-group">
             <label class="radio">
-              <input type="radio" name="id_type" value="card_id" <%= checked="checked" if @id_type != "member_id" %>>
+              <input type="radio" id="card_id" name="id_type" value="card_id" <%= checked="checked" if @id_type != "member_id" %>>
               <i>
               </i>
               <%= t("general.card_id") %>
             </label>
             <label class="radio">
-              <input type="radio" name="id_type" value="member_id" <%= checked="checked" if @id_type == "member_id" %>>
+              <input type="radio" id="member_id" name="id_type" value="member_id" <%= checked="checked" if @id_type == "member_id" %>>
               <i>
               </i>
               <%= t("general.member_id") %>

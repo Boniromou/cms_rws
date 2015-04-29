@@ -242,7 +242,7 @@ module StepHelper
   def check_home_page
     expect(page).to have_content @location
     expect(page).to have_content @accounting_date
-    expect(page).to have_content @shift
+    expect(page).to have_content @shift.capitalize
   end
 end
 

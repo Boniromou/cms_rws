@@ -19,13 +19,8 @@ describe PlayersController do
     before(:each) do
       AuditLog.delete_all
       Player.delete_all
-      @location = "Main Cage - Window #1"
-      @accounting_date = "2015-04-15"
-      @shift = "Morning Shift"
 
-      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
+      mock_cage_info
     end
 
     after(:each) do
@@ -34,20 +29,22 @@ describe PlayersController do
     end
 
     it '[3.1] Show Create Player Page' do
-      login_as(@root_user)
+      login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.create_player")
       check_title("tree_panel.create_player")
-      expect(page.source).to have_selector("form#new_player div input#player_member_id")
-      expect(page.source).to have_selector("form#new_player div input#player_player_name")
+      expect(page.source).to have_selector("form#new_player input#player_member_id")
+      expect(page.source).to have_selector("form#new_player input#player_player_name")
     end
 
     it '[3.2] Successfully create player' do
-      login_as(@root_user)
+      login_as_admin
       visit new_player_path
       @player = Player.new
+      @player.card_id = 1234567890
       @player.member_id = 123456
       @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
       fill_in "player_player_name", :with => @player.player_name
       click_button I18n.t("button.create")
@@ -57,17 +54,20 @@ describe PlayersController do
 
       test_player = Player.find_by_member_id(@player.member_id)
       expect(test_player).not_to be_nil
+      test_player.card_id = @player.card_id
       test_player.member_id = @player.member_id
       test_player.player_name = @player.player_name
     end
 
     it '[3.3] player already exist' do
-      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "unlock")
-      login_as(@root_user)
+      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
+      login_as_admin
       visit new_player_path
       @player = Player.new
+      @player.card_id = 1234567890
       @player.member_id = 123456
       @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
       fill_in "player_player_name", :with => @player.player_name
       click_button I18n.t("button.create")
@@ -77,24 +77,28 @@ describe PlayersController do
     end
 
     it '[3.4] empty membership ID' do
-      login_as(@root_user)
+      login_as_admin
       visit new_player_path
       @player = Player.new
+      @player.card_id = 1234567890
       @player.member_id = 123456
       @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
       fill_in "player_player_name", :with => @player.player_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player_error.id_blank_error")
+      check_flash_message I18n.t("create_player_error.member_id_blank_error")
     end
 
     it '[3.5] empty Player name' do
-      login_as(@root_user)
+      login_as_admin
       visit new_player_path
       @player = Player.new
+      @player.card_id = 1234567890
       @player.member_id = 123456
       @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
       click_button I18n.t("button.create")
 
@@ -103,11 +107,13 @@ describe PlayersController do
     end
 
     it '[3.6] Audit log for successful create player' do
-      login_as(@root_user)
+      login_as_admin
       visit new_player_path
       @player = Player.new
+      @player.card_id = 1234567890
       @player.member_id = 123456
       @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
       fill_in "player_player_name", :with => @player.player_name
       click_button I18n.t("button.create")
@@ -126,12 +132,14 @@ describe PlayersController do
     end
 
     it '[3.7] Audit log for fail create player' do
-      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "unlock")
-      login_as(@root_user)
+      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
+      login_as_admin
       visit new_player_path
       @player = Player.new
+      @player.card_id = 1234567890
       @player.member_id = 123456
       @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
       fill_in "player_player_name", :with => @player.player_name
       click_button I18n.t("button.create")
@@ -149,7 +157,7 @@ describe PlayersController do
       audit_log.description.should_not be_nil
     end
 
-    it '[3.8] click unauthorized action' do 
+    it '[3.8] click unauthorized action', js: true do 
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["create"])
@@ -160,7 +168,7 @@ describe PlayersController do
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
-    it '[3.9] click link to the unauthorized page' do 
+    it '[3.9] click link to the unauthorized page', js: true do 
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
@@ -169,7 +177,7 @@ describe PlayersController do
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
     
-    it '[3.10] unauthorization for create player' do 
+    it '[3.10] unauthorization for create player', js: true do 
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
@@ -203,7 +211,7 @@ describe PlayersController do
     end
 
     it '[4.2] successfully search player' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "unlock")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
       login_as(@root_user)
       visit players_search_path + "?operation=balance"
       fill_in "player_member_id", :with => @player.member_id
@@ -259,7 +267,7 @@ describe PlayersController do
     end
 
     it '[5.1] view player balance enquiry' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "unlock")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "active")
       login_as(@root_user)
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -312,7 +320,7 @@ describe PlayersController do
     end     
     
     it '[5.5] Return to Cage home' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "unlock")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "active")
       login_as(@root_user)
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -334,7 +342,7 @@ describe PlayersController do
     end
 
     it '[5.6] unauthorized to all actions' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "unlock")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 9999, :status => "active")
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])

@@ -3,7 +3,8 @@ class AuditLog < ActiveRecord::Base
 
   ACTION_TYPE_LIST = { 
     :player => {:create => "create",:deposit => "update", :withdrawal => "update"},
-    :player_transaction => {:print => "read"}
+    :player_transaction => {:print => "read"},
+    :shift => {:roll_shift => "create"}
   }
 
   def self.player_log(action, action_by, ip, session_id, options={}, &block)
@@ -16,6 +17,10 @@ class AuditLog < ActiveRecord::Base
 
   def self.print_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "player_transaction", ip, session_id, options, &block)
+  end
+
+  def self.shift_log(action, action_by, ip, session_id, options={}, &block)
+    compose_log(action, action_by, "shift", ip, session_id, options, &block)
   end
 
   private

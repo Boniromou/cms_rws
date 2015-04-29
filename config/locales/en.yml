@@ -59,6 +59,7 @@ en:
     deposit: "Deposit"
     withdrawal: "Withdrawal"
     search: "Search"
+    roll_shift_now: "Roll Shift Now"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"

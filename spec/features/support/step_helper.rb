@@ -244,6 +244,32 @@ module StepHelper
     expect(page).to have_content @accounting_date
     expect(page).to have_content @shift.capitalize
   end
+
+  def check_search_page
+    check_title("tree_panel.balance")
+    expect(page.source).to have_selector("input#id_number")
+  end
+
+  def check_not_found
+    check_search_page
+    expect(page.source).to have_content(I18n.t("search_error.not_found"))
+  end
+
+  def fill_search_info(id_type,id_number)
+    choose I18n.t("general."+id_type)
+    fill_in "id_number", :with => id_number
+  end
+
+  def check_balance_page
+    check_title("tree_panel.balance")
+    expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+  end
+
+  def check_player_info
+    expect(find("label#player_name").text).to eq @player.player_name
+    expect(find("label#player_member_id").text).to eq @player.member_id.to_s
+    expect(find("label#player_card_id").text).to eq @player.card_id.to_s
+  end
 end
 
 RSpec.configure do |config|

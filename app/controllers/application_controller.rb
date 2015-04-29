@@ -29,6 +29,11 @@ class ApplicationController < ActionController::Base
     AccountingDate.current
   end
 
+  def current_station_id
+    #TODO
+    1
+  end
+
   def permission_granted?(model, operation = nil)
     begin
       if operation.nil?

@@ -62,13 +62,15 @@ en:
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
-  create_player_error:
-    card_id_blank_error: "Card ID can not be blank"
-    member_id_blank_error: "Membership ID can not be blank"
-    name_blank_error: "Player name can not be blank"
   create_player:
     success: "create player successful"
     exist: "The player you try to create is already exist."
+    card_id_blank_error: "Card ID can not be blank"
+    member_id_blank_error: "Membership ID can not be blank"
+    name_blank_error: "Player name can not be blank"
+    card_id_only_number_allowed_error: "Card ID can only input number"
+    member_id_only_number_allowed_error: "Membership ID can only input number"
+    unknown_error: "Unknown error"
   invalid_amt:
     deposit: "invalid deposit amount"
     withdrawal: "invalid withdrawal amount"

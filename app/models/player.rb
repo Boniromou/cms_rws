@@ -2,13 +2,11 @@ class Player < ActiveRecord::Base
   attr_accessible :balance, :card_id, :currency_id,:member_id, :player_name, :status
 
   def self.create_by_params(params)
+    verify_player_params(params)
+
     card_id = params[:card_id]
     member_id = params[:member_id]
     player_name = params[:player_name]
-
-    raise ArgumentError , "create_player_error.card_id_blank_error" if card_id.blank?
-    raise ArgumentError , "create_player_error.member_id_blank_error" if member_id.blank?
-    raise ArgumentError , "create_player_error.name_blank_error" if player_name.blank?
 
     result = false
 
@@ -23,7 +21,7 @@ class Player < ActiveRecord::Base
       result = player.save
       return result
     rescue
-      raise Exception, "create_player.exist"
+      raise "exist"
     end
   end
 
@@ -44,6 +42,27 @@ class Player < ActiveRecord::Base
       find_by_member_id(id_number)
     else
       find_by_card_id(id_number)
+    end
+  end
+
+  protected
+
+  class << self
+    def str_is_i?(str)
+      !!(str =~ /^[0-9]+$/)
+    end
+
+    def verify_player_params(params)
+      card_id = params[:card_id]
+      member_id = params[:member_id]
+      player_name = params[:player_name]
+
+      raise "card_id_blank_error" if card_id.nil? || card_id.blank?
+      raise "member_id_blank_error" if member_id.nil? || member_id.blank?
+      raise "name_blank_error" if player_name.nil? || player_name.blank?
+
+      raise "card_id_only_number_allowed_error" if !str_is_i?(card_id)
+      raise "member_id_only_number_allowed_error" if !str_is_i?(member_id)
     end
   end
 end

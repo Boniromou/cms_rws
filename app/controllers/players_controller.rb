@@ -20,10 +20,10 @@ class PlayersController < ApplicationController
         flash[:success] = "create_player.success"
         redirect_to :action => 'balance', :member_id => params[:player][:member_id]
       else
-        raise Exception.new "Unkonwn error"
+        raise "unknown_error"
       end
     rescue Exception => e
-      flash[:error] = e.message
+      flash[:error] = "create_player." + e.message
       redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end
   end

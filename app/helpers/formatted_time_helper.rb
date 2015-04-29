@@ -9,12 +9,8 @@ module FormattedTimeHelper
     end
   end
   
-  def parse_date(date_str, is_end_time=false)
-    if is_end_time
-      Time.strptime(date_str + " 23:59:59", "%m/%d/%Y %H:%M:%S")
-    else
-      Time.strptime(date_str, "%m/%d/%Y")
-    end
+  def parse_date(date_str)
+    Date.parse(date_str)
   end
 
   def parse_datetime(datetime_str)

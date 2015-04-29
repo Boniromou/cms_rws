@@ -18,5 +18,11 @@ class AccountingDate < ActiveRecord::Base
         current.id
       end
     end
+
+    def get_id_by_date( date )
+      accounting_date = self.find_by_accounting_date(date)
+      raise "no result" if accounting_date.nil?
+      accounting_date
+    end
   end
 end

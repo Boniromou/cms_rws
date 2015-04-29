@@ -5,6 +5,78 @@
   </header>
   <div>
     <div class="widget-body no-padding">
+      <% if @player_transaction_group.length > 0 %>
+        <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+          <tr>
+            <thead>
+              <th>Transaction ID</th>
+              <th>Player Name</th>
+              <th>Member ID</th>
+              <th>Accounting Date</th>
+              <th>Date</th>
+              <th>Shift</th>
+              <th>Location</th>
+              <th>Employee ID</th>
+              <th>Status</th>
+              <th>Deposit</th>
+              <th>Withdrawal</th>
+              <th>Balance</th>
+            </thead>
+          </tr>
+          <% 
+            grand_deposit = 0
+            grand_withdraw = 0
+            @player_transaction_group.each do |player_transactions|
+              total_deposit = 0
+              total_withdraw = 0
+              player_transactions.each do |t| 
+          %>
+              <tr>
+                <% shift = Shift.find(t.shift_id) %>
+                <% player = Player.find_by_id(t.player_id) %>
+                <% user = User.find_by_id(t.user_id) %>
+                <td><%= t.id %></td>
+                <td><%= player.player_name %></td>
+                <td><%= player.member_id %></td>
+                <td><%= shift.accounting_date%></td>
+                <td><%= format_time(t.created_at) %></td>
+                <td><%= shift.name %></td>
+                <td><%= Station.get_name_by_id(t.station_id) %></td>
+                <td><%= user.employee_id %></td>
+                <td><%= t.status %></td>
+                <td><%= t.deposit_amt_str %></td>
+                <td><%= t.withdrawal_amt_str %></td>
+                <td><%= t.amount %></td>
+              </tr>
+              <% 
+                if t.transaction_type_id ==1
+                  total_deposit += t.amount
+                else
+                  total_withdraw += t.amount
+                end
+              %>
+            <% end %>
+            <tr>
+              <td colspan="9"></td>
+              <td><%=total_deposit %></td>
+              <td><%=total_withdraw %></td>
+              <td><%=report_balance(total_deposit - total_withdraw) %></td>
+            </tr>
+            <%
+              grand_deposit += total_deposit
+              grand_withdraw +=total_withdraw
+            %>
+          <% end %>
+          <tr>
+            <td colspan="9">Grand Total</td>
+            <td><%=grand_deposit %></td>
+            <td><%=grand_withdraw %></td>
+            <td><%=report_balance(grand_deposit - grand_withdraw) %></td>
+          </tr>
+        </table>
+      <% else %>
+        <p> no result </p>
+      <% end %>
     </div>
   </div>
 </div>

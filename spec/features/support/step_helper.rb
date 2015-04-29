@@ -1,7 +1,4 @@
 module StepHelper
-  @root_user_name = 'portal.admin'
-  @root_user_password = '123456'
- 
   def check_flash_message(msg)
     flash_msg = find("div#flash_message div#message_content")
     expect(flash_msg.text).to eq(msg)
@@ -28,6 +25,9 @@ module StepHelper
   end
 
   def login_as_admin
+    @root_user_name = 'portal.admin'
+    @root_user_password = '123456'
+
     allow(UserManagement).to receive(:authenticate).and_return({'success' => true, 'system_user' => {'username' => @root_user_name, 'id' => 1}})
     allow_any_instance_of(ApplicationPolicy).to receive(:is_admin?).and_return(true)
 

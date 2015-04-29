@@ -88,7 +88,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player_error.member_id_blank_error")
+      check_flash_message I18n.t("create_player.member_id_blank_error")
     end
 
     it '[3.5] empty Player name' do
@@ -103,7 +103,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player_error.name_blank_error")
+      check_flash_message I18n.t("create_player.name_blank_error")
     end
 
     it '[3.6] Audit log for successful create player' do
@@ -184,6 +184,41 @@ describe PlayersController do
       visit home_path
       first("aside#left-panel ul li#nav_create_player").should be_nil
     end     
+
+    it '[3.11] empty card ID' do
+      login_as_admin
+      visit new_player_path
+      @player = Player.new
+      @player.card_id = 1234567890
+      @player.member_id = 123456
+      @player.player_name = "test player"
+      fill_in "player_member_id", :with => @player.member_id
+      fill_in "player_player_name", :with => @player.player_name
+      click_button I18n.t("button.create")
+
+      check_title("tree_panel.create_player")
+      check_flash_message I18n.t("create_player.card_id_blank_error")
+    end
+
+    it '[3.12] member id and card ID can only input number' do
+      login_as_admin
+      visit new_player_path
+      fill_in "player_card_id", :with => '..//.-=-++-'
+      fill_in "player_member_id", :with => '123456'
+      fill_in "player_player_name", :with => '$$$$@@@'
+      click_button I18n.t("button.create")
+
+      check_title("tree_panel.create_player")
+      check_flash_message I18n.t("create_player.card_id_only_number_allowed_error")
+      
+      fill_in "player_card_id", :with => '1234567890'
+      fill_in "player_member_id", :with => 'hahaha'
+      fill_in "player_player_name", :with => '$$$$@@@'
+      click_button I18n.t("button.create")
+
+      check_title("tree_panel.create_player")
+      check_flash_message I18n.t("create_player.member_id_only_number_allowed_error")
+    end
   end
   
   describe '[4] Search player by membership ID' do

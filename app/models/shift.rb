@@ -10,7 +10,7 @@ class Shift < ActiveRecord::Base
   end
 
   def roll!(station_id, user_id)
-    raise 'Shift has been rolled!' if self.roll_shift_at != nil
+    raise 'rolled_error' if self.roll_shift_at != nil
 
     self.roll_shift_on_station_id = station_id
     self.roll_shift_by_user_id = user_id

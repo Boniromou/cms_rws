@@ -24,13 +24,13 @@ class PlayerTransaction < ActiveRecord::Base
     end
   end    
 
-  def self.save_fund_in_transaction(member_id, amount, shift_id, user_id, station)
+  def self.save_fund_in_transaction(member_id, amount, shift_id, user_id, station_id)
     player_id = Player.find_by_member_id(member_id)[:id]
     transaction = new
     transaction[:player_id] = player_id
     transaction[:amount] = amount
     transaction[:shift_id] = shift_id
-    transaction[:station] = station
+    transaction[:station_id] = station_id
     transaction[:status] = "complete"
     transaction[:transaction_type_id] = TransactionType.find_by_name("Deposit").id;
     transaction[:user_id] = user_id
@@ -38,13 +38,13 @@ class PlayerTransaction < ActiveRecord::Base
     transaction
   end
 
-  def self.save_fund_out_transaction(member_id, amount, shift_id, user_id, station)
+  def self.save_fund_out_transaction(member_id, amount, shift_id, user_id, station_id)
     player_id = Player.find_by_member_id(member_id)[:id]
     transaction = new
     transaction[:player_id] = player_id
     transaction[:amount] = amount
     transaction[:shift_id] = shift_id
-    transaction[:station] = station
+    transaction[:station_id] = station_id
     transaction[:status] = "complete"
     transaction[:transaction_type_id] = TransactionType.find_by_name("Withdrawal").id;
     transaction[:user_id] = user_id

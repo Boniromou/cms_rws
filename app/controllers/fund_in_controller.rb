@@ -40,7 +40,7 @@ class FundInController < ApplicationController
     transaction = nil
     Player.transaction do
       Player.fund_in(member_id, amount)
-      transaction = PlayerTransaction.save_fund_in_transaction(member_id, amount, current_shift.id, current_user.id, current_station)
+      transaction = PlayerTransaction.save_fund_in_transaction(member_id, amount, current_shift.id, current_user.id, current_station_id)
     end
     transaction
   end

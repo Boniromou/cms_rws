@@ -23,6 +23,7 @@ en:
     fund_out: "Withdrawal"
     roll_shift: "Roll Shift"
     player_transaction: "Transaction History"
+    front_money: "FM Activity Report"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -90,4 +91,9 @@ en:
   search_form:
     start_time: "start Time"
     end_time: "End Time"
-
+    shift: "Shift"
+    accounting_date: "Accounting Date"
+  shift_name:
+    morning: "Monring"
+    swing: "Swing"
+    night: "Night"

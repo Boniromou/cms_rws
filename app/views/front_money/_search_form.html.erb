@@ -1,0 +1,28 @@
+          <%= form_tag(search_front_money_path, :remote => true, :id => "search_form") do %>
+            <fieldset>
+              <div class="row">
+                <%= render "shared/date_picker" %>
+                
+                <div class="col-sm-6">
+                  <section class="smart-form">
+                    <label class="label"><%= t("search_form.shift") %></label>
+                    <label class="select">
+                      <select class="input-sm" name="shift_name" id="shift_name">
+                        <option value="morning"><%= t("shift_name.morning") %></option>
+                        <option value="swing"><%= t("shfit_name.swing") %></option>
+                        <option value="night"><%= t("shift_name.night") %></option>
+                      </select>
+                    </label>
+                  </section>
+                </div>
+              </div>
+                
+              
+            <div class="form-actions">
+              <div class="row">
+                <div class="col-md-12">
+                  <%= submit_tag t("button.search"), :class => "btn btn-primary", :remote => true  %>
+                </div>
+              </div>
+            </div>
+          <% end %>

@@ -24,13 +24,13 @@ class PlayerTransaction < ActiveRecord::Base
     end
   end    
 
-  def self.save_fund_in_transaction(member_id, amount, shift_id, user_id, station)
+  def self.save_fund_in_transaction(member_id, amount, shift_id, user_id, station_id)
     player_id = Player.find_by_member_id(member_id)[:id]
     transaction = new
     transaction[:player_id] = player_id
     transaction[:amount] = amount
     transaction[:shift_id] = shift_id
-    transaction[:station] = station
+    transaction[:station_id] = station_id
     transaction[:status] = "complete"
     transaction[:transaction_type_id] = TransactionType.find_by_name("Deposit").id;
     transaction[:user_id] = user_id
@@ -38,13 +38,13 @@ class PlayerTransaction < ActiveRecord::Base
     transaction
   end
 
-  def self.save_fund_out_transaction(member_id, amount, shift_id, user_id, station)
+  def self.save_fund_out_transaction(member_id, amount, shift_id, user_id, station_id)
     player_id = Player.find_by_member_id(member_id)[:id]
     transaction = new
     transaction[:player_id] = player_id
     transaction[:amount] = amount
     transaction[:shift_id] = shift_id
-    transaction[:station] = station
+    transaction[:station_id] = station_id
     transaction[:status] = "complete"
     transaction[:transaction_type_id] = TransactionType.find_by_name("Withdrawal").id;
     transaction[:user_id] = user_id
@@ -56,6 +56,8 @@ class PlayerTransaction < ActiveRecord::Base
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }
   scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
   scope :by_transaction_id, -> transaction_id { where("id = ?", transaction_id) if transaction_id.present? }
+  scope :by_shift_id, -> shift_id { where( "shift_id=? ",shift_id) if shift_id.present? }
+  scope :by_station_id, -> station_id { where( "station_id=?", station_id) if station_id.present? }
 
   def self.search_query(*args)
     id_type = args[0]
@@ -72,5 +74,16 @@ class PlayerTransaction < ActiveRecord::Base
     player_id = 0 if id_number!=""
     player_id = player.id unless player.nil?
     by_transaction_id(transaction_id).by_player_id(player_id).since(start_time).until(end_time)
+  end
+
+  def self.search_transactions_group_by_station(shift_id)
+    player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
+    result = []
+    player_transaction_stations.each do |station|
+      station_id = station.station_id
+      player_transactions = by_shift_id(shift_id).by_station_id(station_id).order(:created_at)
+      result << player_transactions if player_transactions.length > 0
+    end
+    result
   end
 end

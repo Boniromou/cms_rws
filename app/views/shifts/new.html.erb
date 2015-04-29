@@ -4,8 +4,8 @@
   <table width='300'>
     <col width="70%">
     <tr>
-      <td><h3>Current Shift: </h3></td>
-      <td><h3><%= @current_shift_name.capitalize %></h3></td>
+      <td><h3><%= t("shift.current_shift") %>: </h3></td>
+      <td><h3><%= t("shift.#{@current_shift_name}") %></h3></td>
     </tr>
     <tr>
       <td><h6>Current Account Date: </h6></td>
@@ -15,8 +15,8 @@
       <td><br/></td>
     </tr>
     <tr>
-      <td><h3>Next Shift: </h3></td>
-      <td><h3><%= @next_shift_name.capitalize %></h3></td>
+      <td><h3><%= t("shift.next_shift") %>: </h3></td>
+      <td><h3><%= t("shift.#{@next_shift_name}") %></h3></td>
     </tr>
     <tr>
       <td><h6>Next Account Date: </h6></td>
@@ -43,14 +43,14 @@
             <td><h3>Roll system to next shift?</h3></td>
           </tr>
           <tr>
-            <td><h3>Current Shift:</h3></td>
+            <td><h3><%= t("shift.current_shift") %>:</h3></td>
             <td><h3><%= @current_accounting_date %></h3></td>
-            <td><h3>(<%= @current_shift_name.capitalize %>)</h3></td>
+            <td><h3>(<%= t("shift.#{@current_shift_name}") %>)</h3></td>
           </tr>
           <tr>
-            <td><h3>Next Shift:</h3></td>
+            <td><h3><%= t("shift.next_shift") %>:</h3></td>
             <td><h3><%= @next_accounting_date %></h3></td>
-            <td><h3>(<%= @next_shift_name.capitalize %>)</h3></td>
+            <td><h3>(<%= t("shift.#{@next_shift_name}") %>)</h3></td>
           </tr>
         </table>
       </div>

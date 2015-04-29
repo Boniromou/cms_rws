@@ -5,8 +5,8 @@ module StepHelper
   end
 
   def login_as_root
-    root_user = User.find_by_uid(1)
-    login_as(root_user)
+    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    login_as(@root_user)
   end
 =begin
   def login_as(user)
@@ -242,7 +242,7 @@ module StepHelper
   def check_home_page
     expect(page).to have_content @location
     expect(page).to have_content @accounting_date
-    expect(page).to have_content @shift.capitalize
+    expect(page).to have_content I18n.t("shift.#{@shift}")
   end
 
   def check_search_page

@@ -25,6 +25,7 @@ module ShiftHelper
   end
 
 end
+
 RSpec.configure do |config|
   config.include ShiftHelper, type: :feature
 end

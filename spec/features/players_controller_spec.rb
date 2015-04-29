@@ -16,9 +16,8 @@ describe PlayersController do
 
   describe '[3] Create player' do
     before(:each) do
-      AuditLog.delete_all
-      Player.delete_all
-
+      clean_dbs
+      create_shift_data
       mock_cage_info
     end
 
@@ -222,7 +221,8 @@ describe PlayersController do
   
   describe '[4] Search player by membership ID' do
     before(:each) do
-      Player.delete_all
+      clean_dbs
+      create_shift_data
       mock_cage_info
     end
 
@@ -276,7 +276,8 @@ describe PlayersController do
   
   describe '[5] Balance Enquiry' do
     before(:each) do
-      Player.delete_all
+      clean_dbs
+      create_shift_data
       mock_cage_info
     end
 

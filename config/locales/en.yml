@@ -74,13 +74,14 @@ en:
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
   shift:
-    morning: "Morning"
-    swing: "Swing"
-    night: "Night"
+    confirm_roll_msg: "Roll system to next shift?"
     roll_success: "Roll shift success."
     rolled_error: "Shift has been rolled!"
     current_shift: "Current Shift"
     next_shift: "Next Shift"
+  ac_date:
+    current_ac_date: "Current Account Date"
+    next_ac_date: "Next Account Date"
   invalid_amt:
     deposit: "invalid deposit amount"
     withdrawal: "invalid withdrawal amount"
@@ -94,6 +95,6 @@ en:
     shift: "Shift"
     accounting_date: "Accounting Date"
   shift_name:
-    morning: "Monring"
+    morning: "Morning"
     swing: "Swing"
     night: "Night"

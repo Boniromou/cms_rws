@@ -12,3 +12,15 @@
   </div>
 <% end %>
 <%= render "shared/confirm_fund_panel" %>
+
+<%= javascript_include_tag "validate.input.js" %>
+
+<script>
+  function blockEnter(event){ 
+    if (event.keyCode == 13) {
+      return false;
+    }
+  }
+
+  $('form#fund_request').keydown(blockEnter);
+</script>

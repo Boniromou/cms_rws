@@ -8,9 +8,11 @@
                     <label class="label"><%= t("shift.name") %></label>
                     <label class="select">
                       <select class="input-sm" name="shift_name" id="shift_name">
-                        <option value="morning"><%= t("shift_name.morning") %></option>
-                        <option value="swing"><%= t("shfit_name.swing") %></option>
-                        <option value="night"><%= t("shift_name.night") %></option>
+                      <% @shift_name_list.each do |shift_name| %>
+                        <option value=<%="#{shift_name}" %> <%= selected="selected" if @shift_name == shift_name %>>
+                          <%= t("shift_name.#{shift_name}") %>
+                        </option>
+                      <% end %>
                       </select>
                     </label>
                   </section>

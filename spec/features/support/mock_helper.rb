@@ -18,8 +18,6 @@ module MockHelper
   end
 
   def mock_close_after_print
-    p "mock~~~~~~~~~~~~~~~~~~~~"
-    allow(PlayerTransactionsHelper).to receive(:is_close_after_print).and_return(false)
     allow_any_instance_of(PlayerTransactionsHelper).to receive(:is_close_after_print).and_return(false)
   end
 end

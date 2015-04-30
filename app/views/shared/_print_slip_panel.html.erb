@@ -17,7 +17,7 @@
 
     $(w.document.body).html(html);
     w.print();
-    if( <% is_close_after_print %>) {
+    if( <%= is_close_after_print %>) {
       w.close();
     }
 

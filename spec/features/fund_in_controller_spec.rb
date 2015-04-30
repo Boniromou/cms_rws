@@ -16,6 +16,7 @@ describe FundInController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      mock_close_after_print
       @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 0, :status => "unlock")
       TransactionType.create!(:name => "Deposit")
     end
@@ -236,7 +237,7 @@ describe FundInController do
       expect(page).to have_selector("table")
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
-
+      
       find("button#print_slip").click
       expect(page.driver.browser.window_handles.length).to eq 1
       new_window = page.driver.browser.window_handles.last do |page|

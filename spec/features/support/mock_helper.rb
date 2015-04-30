@@ -16,6 +16,10 @@ module MockHelper
     allow(AccountingDate).to receive(:current).and_return(ac)
     allow_any_instance_of(Shift).to receive(:name).and_return(@shift)
   end
+
+  def mock_close_after_print
+    allow_any_instance_of(PlayerTransactionsHelper).to receive(:is_close_after_print).and_return(false)
+  end
 end
 
 RSpec.configure do |config|

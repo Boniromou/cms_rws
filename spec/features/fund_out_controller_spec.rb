@@ -4,31 +4,20 @@ describe FundOutController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    PlayerTransaction.delete_all
-    User.delete_all
     @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
   end
 
   after(:all) do
-    PlayerTransaction.delete_all
-    User.delete_all
     Warden.test_reset!
   end
 
   describe '[7] Withdraw' do
     before(:each) do
-      AuditLog.delete_all
-      PlayerTransaction.delete_all
-      Player.delete_all
-      @player = Player.create!(:player_name => "test", :member_id => "123456", :currency_id => 1,:balance => 20000, :status => "unlock")
-      TransactionType.create!(:name => "Withdrawal")
-      @location = "Main Cage - Window #1"
-      @accounting_date = "2015-04-15"
-      @shift = "Morning Shift"
-
-      allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location).and_return(@location)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_accounting_date).and_return(@accounting_date)
-      allow_any_instance_of(CageInfoHelper).to receive(:current_shift).and_return(@shift)
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_close_after_print
+      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 20000, :status => "unlock")
     end
     
     after(:each) do
@@ -38,39 +27,38 @@ describe FundOutController do
     end
 
     it '[7.1] show Withdraw page' do
-      login_as(@root_user)
+      login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      fill_in "player_member_id", :with => @player.member_id
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
-      check_title("tree_panel.balance")
+      check_balance_page
 
       within "div#content" do
         click_link I18n.t("button.withdrawal")
       end
+      check_player_info
       check_title("tree_panel.fund_out")
-      expect(find("label#player_name").text).to eq @player.player_name
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       expect(page.source).to have_selector("button#confirm")
       expect(page.source).to have_selector("button#cancel")
     end
     
     it '[7.2] Invalid Withdraw', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 0.111
       expect(find("input#player_transaction_amount").value).to eq "0.11"
     end
 
     it '[7.3] Invalid Withdraw(eng)', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => "abc3de"
       expect(find("input#player_transaction_amount").value).to eq ""
     end
 
     it '[7.4] Invalid Withdraw (input 0 amount)', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 0
       click_button I18n.t("button.confirm")
@@ -83,7 +71,7 @@ describe FundOutController do
     end
 
     it '[7.5] Invalid Withdraw (invalid balance)', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 300
       click_button I18n.t("button.confirm")
@@ -96,7 +84,7 @@ describe FundOutController do
     end
 
     it '[7.6] cancel Withdraw' do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       find("div#button_set form input#cancel").click
 
@@ -104,7 +92,7 @@ describe FundOutController do
     end
 
     it '[7.7] Confirm Withdraw', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")
@@ -117,7 +105,7 @@ describe FundOutController do
     end
 
     it '[7.8] cancel dialog box Withdraw', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")
@@ -135,7 +123,7 @@ describe FundOutController do
 
 
     it '[7.9] Confirm Withdraw', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")
@@ -153,7 +141,7 @@ describe FundOutController do
     end
 
     it '[7.10] audit log for confirm dialog box Withdraw', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")
@@ -182,7 +170,7 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      fill_in "player_member_id", :with => @player.member_id
+      fill_search_info("member_id", @player.member_id)
       click_button I18n.t("button.find")
       
       expect(find("label#player_name").text).to eq @player.player_name
@@ -244,7 +232,7 @@ describe FundOutController do
     end
 
     it '[7.15] Print slip', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")
@@ -272,7 +260,7 @@ describe FundOutController do
     end
 
     it '[7.16] Close slip', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")
@@ -295,7 +283,7 @@ describe FundOutController do
     end
     
     it '[7.17] audit log for print slip', :js => true do
-      login_as(@root_user) 
+      login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
       click_button I18n.t("button.confirm")

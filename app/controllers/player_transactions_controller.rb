@@ -4,6 +4,7 @@ class PlayerTransactionsController < ApplicationController
 
   def search
     return unless permission_granted? PlayerTransaction.new
+    @card_id = params[:card_id]
   end
 
   def do_search

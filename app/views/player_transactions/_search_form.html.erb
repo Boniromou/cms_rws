@@ -5,13 +5,13 @@
                   <section class="smart-form">
                     <div class="inline-group">
                       <label class="radio">
-                        <input type="radio" name="id_type" value="card_id" checked="checked">
+                        <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
                         <i>
                         </i>
                         <%= t("general.card_id") %>
                       </label>
                       <label class="radio">
-                        <input type="radio" name="id_type" value="member_id">
+                        <input type="radio" id="member_id" name="id_type" value="member_id">
                         <i>
                         </i>
                         <%= t("general.member_id") %>
@@ -23,7 +23,7 @@
                 <div class="col-sm-5">
                   <section class="smart-form">
                     <label class="input">
-                      <%= text_field_tag(:"id_number") %>
+                      <%= text_field_tag(:"id_number",@card_id) %>
                     </label>
                   </section>
                 </div>

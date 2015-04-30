@@ -45,7 +45,6 @@ class ApplicationController < ActionController::Base
       flash[:alert] = "flash_message.not_authorize"
       redirect_to home_path
       return false
-    rescue Exception
     end
     true
   end

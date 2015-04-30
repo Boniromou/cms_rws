@@ -5,20 +5,22 @@
     <col width="40%">
     <tr>
       <td><%= f.label :card_id, t("general.card_id") %>:</td>
-      <td><%= f.text_field :card_id, autofocus: true %></td>
+      <td><%= f.text_field :card_id, autofocus: true, required: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %></td>
     </tr>
     <tr>
       <td><%= f.label :member_id, t("general.member_id") %>:</td>
-      <td><%= f.text_field :member_id %></td>
+      <td><%= f.text_field :member_id, required: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%></td>
     </tr>
     <tr>
       <td><%= f.label :name, t("general.name") %>:</td>
-      <td><%= f.text_field :player_name %></td>
+      <td><%= f.text_field :player_name, required: true %></td>
     </tr>
     <tr>
       <td><%= f.submit t("button.create")%></td>
     </tr>
 <% end %>
+
+<%= javascript_include_tag "validate.input.js" %>
 
 <script>
   $(document).ready(function() {

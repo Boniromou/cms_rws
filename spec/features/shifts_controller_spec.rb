@@ -60,17 +60,40 @@ describe ShiftsController do
       wait_for_ajax
     end
 
+    def check_redirected_to_fm(pre_shift, pre_ac_date)
+      check_title "tree_panel.front_money"
+      expect(page).to have_content I18n.t("shift.name")
+      expect(page).to have_content I18n.t("ac_date.name")
+
+      within("#search_form") do
+        expect(page).to have_select('shift_name', selected: I18n.t("shift_name.#{pre_shift}"))
+        expect(page).to have_selector("input#accounting_date[value='#{pre_ac_date}']")
+      end
+    end
+
     before(:each) do
       clean_dbs
       create_shift_data
     end
 
-    it '[9.1] successfully roll shift (morning to swing)', js: true do
+    it '[9.0] unauthorized roll shift redirect to home page' do
       login_as_root
 
-      roll_shift_and_check('morning', @today)
+      visit home_path
+      expect(page).to_not have_content I18n.t("tree_panel.roll_shift")
 
-      skip 'redirect to fm'
+      visit shifts_path
+      expect(page).to_not have_content I18n.t("tree_panel.roll_shift")
+      expect(current_path).to eq home_path
+    end
+
+    it '[9.1] successfully roll shift (morning to swing)', js: true do
+      login_as_admin
+
+      roll_shift_and_check('morning', @today)
+      check_flash_message(I18n.t("shift.roll_success"))
+
+      check_redirected_to_fm('morning', @today)
     end
     
     it '[9.2] unauthorized roll shift' do
@@ -103,17 +126,18 @@ describe ShiftsController do
 
       roll_shift_and_check('morning', @today)
       check_flash_message(I18n.t("shift.roll_success"))
+      check_redirected_to_fm('morning', @today)
 
       roll_shift_and_check('swing', @today)
       check_flash_message(I18n.t("shift.roll_success"))
+      check_redirected_to_fm('swing', @today)
 
       roll_shift_and_check('night', @today)
       check_flash_message(I18n.t("shift.roll_success"))
+      check_redirected_to_fm('night', @today)
 
       visit shifts_path
       check_shift_content('morning', @today + 1)
-
-      skip 'redirect to fm'
     end
 
     it '[9.5] Lock version for roll shift', js: true do
@@ -134,11 +158,11 @@ describe ShiftsController do
 
       roll_shift_and_check('morning', @today)
       check_flash_message(I18n.t("shift.roll_success"))
+      check_redirected_to_fm('morning', @today)
 
       roll_shift_and_check('swing', @today)
       check_flash_message(I18n.t("shift.roll_success"))
-
-      skip 'redirect to fm'
+      check_redirected_to_fm('swing', @today)
     end
   end
 end

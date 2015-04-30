@@ -1,5 +1,6 @@
 module ShiftHelper
   def clean_dbs
+    PlayerTransaction.delete_all
     Shift.delete_all
     AccountingDate.delete_all
     ShiftType.delete_all

@@ -17,7 +17,9 @@
 
     $(w.document.body).html(html);
     w.print();
-    w.close();
+    if( <% is_close_after_print %>) {
+      w.close();
+    }
 
     return false;
   });

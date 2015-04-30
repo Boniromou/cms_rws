@@ -240,9 +240,18 @@ module StepHelper
   end
 
   def check_home_page
+    
     expect(page).to have_content @location
-    expect(page).to have_content @accounting_date
-    expect(page).to have_content @shift.capitalize
+    begin
+      expect(page).to have_content @accounting_date
+    rescue Exception => e
+      expect(page).to have_content "Waiting for accounting date"
+    end
+    begin
+      expect(page).to have_content @shift.capitalize
+    rescue Exception => e
+      expect(page).to have_content "Waiting for shift"
+    end
   end
 
   def check_search_page

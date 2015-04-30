@@ -11,7 +11,8 @@ class ShiftsController < ApplicationController
   end
 
   def new
-    return unless permission_granted? Shift.new, :roll
+    return unless permission_granted? Shift.new, :roll?
+
     @current_shift = current_shift
 
     @current_shift_name = @current_shift.name
@@ -26,7 +27,7 @@ class ShiftsController < ApplicationController
   end
 
   def create
-    return unless permission_granted? Shift.new, :roll
+    return unless permission_granted? Shift.new, :roll?
 
     begin
       current_shift_id = params[:shift][:current_shift_id].to_i
@@ -38,8 +39,8 @@ class ShiftsController < ApplicationController
       end
 
       flash[:success] = "shift.roll_success"
-      #TODO: redirect to FM report
-      redirect_to shifts_path
+      #TODO: with params
+      redirect_to search_front_money_path
     rescue Exception => ex
       flash[:error] = "shift." + ex.message
       redirect_to shifts_path

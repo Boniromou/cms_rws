@@ -39,8 +39,7 @@ class ShiftsController < ApplicationController
       end
 
       flash[:success] = "shift.roll_success"
-      #TODO: with params
-      redirect_to search_front_money_path
+      redirect_to :controller => 'front_money', :action => 'search', :accounting_date => current_shift.accounting_date, :shift_name => current_shift.name
     rescue Exception => ex
       flash[:error] = "shift." + ex.message
       redirect_to shifts_path

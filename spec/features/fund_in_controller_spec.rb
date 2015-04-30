@@ -17,7 +17,7 @@ describe FundInController do
       create_shift_data
       mock_cage_info
       mock_close_after_print
-      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 0, :status => "unlock")
+      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 0, :status => "active")
       TransactionType.create!(:name => "Deposit")
     end
     

@@ -279,6 +279,47 @@ module StepHelper
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
   end
+
+  def check_player_transaction_page
+    expect(find("input#card_id")[:checked]).to eq "checked"
+    expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
+    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:00")
+  end
+
+  def check_player_transaction_result_contents(item, player_transaction)
+    player = Player.find(player_transaction.player_id)
+    shift = Shift.find(player_transaction.shift_id)
+    accounting_date = AccountingDate.find(shift.accounting_date_id)
+    station = Station.find(player_transaction.station_id)
+    user = User.find(player_transaction.user_id)
+    if player_transaction.transaction_type_id == 1
+      deposit_str = player_transaction.amount.to_s
+      withdraw_str = ""
+    else
+      deposit_str = ""
+      withdraw_str = player_transaction.amount.to_s
+    end
+    expect(item[0].text).to eq player_transaction.id.to_s
+    expect(item[1].text).to eq player.player_name
+    expect(item[2].text).to eq player.member_id
+    expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[5].text).to eq shift.name
+    expect(item[6].text).to eq station.name
+    expect(item[7].text).to eq user.employee_id
+    expect(item[8].text).to eq player_transaction.status
+    expect(item[9].text).to eq deposit_str
+    expect(item[10].text).to eq withdraw_str    
+  end
+
+  def check_player_transaction_result_items(items, transaction_list)
+    items.length.times do |i|
+      expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
+      within items[i] do
+        check_player_transaction_result_contents(all("td"),transaction_list[i])
+      end
+    end
+  end
 end
 
 RSpec.configure do |config|

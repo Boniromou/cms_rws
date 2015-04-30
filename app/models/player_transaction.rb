@@ -1,5 +1,5 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :station, :status, :transaction_type_id, :user_id
+  attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :created_at
 
   DEPOSIT = 1;
   WITHDRAWAL = 2;
@@ -73,7 +73,7 @@ class PlayerTransaction < ActiveRecord::Base
     end
     player_id = 0 if id_number!=""
     player_id = player.id unless player.nil?
-    by_transaction_id(transaction_id).by_player_id(player_id).since(start_time).until(end_time)
+    by_transaction_id(transaction_id).by_player_id(player_id).since(start_time).until(end_time + 59)
   end
 
   def self.search_transactions_group_by_station(shift_id)

@@ -7,7 +7,6 @@
     <div class="widget-body no-padding">
       <% if @player_transactions.length > 0 %>
         <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
-          <tr>
             <thead>
               <th>Transaction ID</th>
               <th>Player Name</th>
@@ -22,9 +21,8 @@
               <th>Withdrawal</th>
               <th>Action</th>
             </thead>
-          </tr>
           <% @player_transactions.each do |t| %>
-            <tr>
+            <tr id="transaction_<%= t.id %>">
               <% shift = Shift.find_by_id(t.shift_id) %>
               <% player = Player.find_by_id(t.player_id) %>
               <% user = User.find_by_id(t.user_id) %>

@@ -22,7 +22,7 @@ describe FundInController do
     end
     
     after(:each) do
-      #AuditLog.delete_all
+      AuditLog.delete_all
       PlayerTransaction.delete_all
       Player.delete_all
     end

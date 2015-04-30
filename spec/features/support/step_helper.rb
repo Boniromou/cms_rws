@@ -312,7 +312,8 @@ module StepHelper
     expect(item[10].text).to eq withdraw_str    
   end
 
-  def check_player_transaction_result_items(items, transaction_list)
+  def check_player_transaction_result_items(transaction_list)
+    items = transaction_items = all("table#datatable_col_reorder tr")
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do

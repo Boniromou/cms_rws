@@ -7,7 +7,7 @@
   </div>
 
   <div>
-    <%= f.label "Amount: " %>
+    <%= f.label :amount, t("deposit_withdrawal.amount") + ": " %>
     <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)" %><br/>
   </div>
 <% end %>

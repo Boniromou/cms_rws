@@ -81,6 +81,7 @@ en:
     current_shift: "Current Shift"
     next_shift: "Next Shift"
   ac_date:
+    name: "Accounting Date"
     current_ac_date: "Current Account Date"
     next_ac_date: "Next Account Date"
   invalid_amt:
@@ -93,7 +94,6 @@ en:
   search_form:
     start_time: "start Time"
     end_time: "End Time"
-    accounting_date: "Accounting Date"
   shift_name:
     morning: "Morning"
     swing: "Swing"

@@ -297,6 +297,11 @@ module StepHelper
     expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:00")
   end
 
+  def check_search_fm_page
+    expect(page.source).to have_selector("input#accounting_date")
+    expect(page.source).to have_selector("select#shift_name")
+  end
+
   def check_player_transaction_result_contents(item, player_transaction, reprint_granted)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
@@ -331,13 +336,67 @@ module StepHelper
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true)
-    items = transaction_items = all("table#datatable_col_reorder tr")
+    items = all("table#datatable_col_reorder tr")
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
         check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted)
       end
     end
+  end
+
+  def check_fm_remort_result_items(transaction_hash)
+    items = all("table#datatable_col_reorder tr")
+    i = 0
+    transaction_hash.each do |k,v|
+      total_deposit = 0
+      total_withdraw = 0
+      v.each do |t|
+        within items[i] do
+          expect(items[i][:id]).to eq "transaction_#{t.id}"
+          check_fm_remort_result(all("td"),t)
+        end
+        if t.transaction_type_id == 1
+          total_deposit += t.amount
+        else
+          total_withdraw += t.amount
+        end
+        i += 1
+      end
+      within items[i] do
+        tds = all("td")
+        expect(tds[1].text).to eq total_deposit.to_s
+        expect(tds[2].text).to eq total_withdraw.to_s
+      end
+      i += 1
+    end
+  end
+
+  def check_fm_remort_result(item, player_transaction)
+    player = Player.find(player_transaction.player_id)
+    shift = Shift.find(player_transaction.shift_id)
+    accounting_date = AccountingDate.find(shift.accounting_date_id)
+    station = Station.find(player_transaction.station_id)
+    user = User.find(player_transaction.user_id)
+    if player_transaction.transaction_type_id == 1
+      deposit_str = player_transaction.amount.to_s
+      withdraw_str = ""
+    else
+      deposit_str = ""
+      withdraw_str = player_transaction.amount.to_s
+    end
+    expect(item[0].text).to eq player_transaction.id.to_s
+    expect(item[1].text).to eq player.player_name
+    expect(item[2].text).to eq player.member_id
+    expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[5].text).to eq shift.name
+    expect(item[6].text).to eq station.name
+    expect(item[7].text).to eq user.employee_id
+    expect(item[8].text).to eq player_transaction.status
+    expect(item[9].text).to eq deposit_str
+    expect(item[10].text).to eq withdraw_str
+    expect(item[11].text).to eq player_transaction.amount.to_s
   end
 end
 

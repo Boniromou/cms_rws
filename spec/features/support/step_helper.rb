@@ -269,6 +269,11 @@ module StepHelper
     fill_in "id_number", :with => id_number
   end
 
+  def fill_search_info_js(id_type,id_number)
+    find("input##{id_type}").trigger('click')
+    fill_in "id_number", :with => id_number
+  end
+
   def check_balance_page
     check_title("tree_panel.balance")
     expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
@@ -286,7 +291,13 @@ module StepHelper
     expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:00")
   end
 
-  def check_player_transaction_result_contents(item, player_transaction)
+  def check_player_transaction_page_js
+    expect(find("input#card_id")[:checked]).to eq true
+    expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
+    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:00")
+  end
+
+  def check_player_transaction_result_contents(item, player_transaction, reprint_granted)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
@@ -309,15 +320,22 @@ module StepHelper
     expect(item[7].text).to eq user.employee_id
     expect(item[8].text).to eq player_transaction.status
     expect(item[9].text).to eq deposit_str
-    expect(item[10].text).to eq withdraw_str    
+    expect(item[10].text).to eq withdraw_str
+    within item[11] do
+      if reprint_granted
+        expect(page.source).to have_selector("input#reprint")
+      else
+        expect(page.source).to_not have_selector("input#reprint")
+      end
+    end
   end
 
-  def check_player_transaction_result_items(transaction_list)
+  def check_player_transaction_result_items(transaction_list, reprint_granted = true)
     items = transaction_items = all("table#datatable_col_reorder tr")
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
-        check_player_transaction_result_contents(all("td"),transaction_list[i])
+        check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted)
       end
     end
   end

@@ -38,7 +38,7 @@
               <td><%= t.deposit_amt_str %></td>
               <td><%= t.withdrawal_amt_str %></td>
               <td>
-                <% if policy(PlayerTransaction.new).search? %>
+                <% if policy(PlayerTransaction.new).reprint? %>
                   <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :method => "get", :remote => true %> </td>
                 <% end %>
               </td>

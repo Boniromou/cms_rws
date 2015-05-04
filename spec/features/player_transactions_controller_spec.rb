@@ -94,5 +94,47 @@ describe PlayersController do
 
       check_player_transaction_result_items([@player_transaction2])
     end
+
+    it '[8.6] Transaction history unauthorized' do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,["balance"])
+      set_permission(@test_user,"cashier",:player_transaction,[])
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      fill_search_info("member_id", @player.member_id)
+      click_button I18n.t("button.find")
+
+      check_balance_page
+      check_player_info
+      expect(page).to_not have_selector("div a#player_transaction")
+    end
+    
+    it '[8.7] re-print slip', :js => true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
+      fill_search_info_js("member_id", @player2.member_id)
+      find("input#search").click
+      
+      find("div input#reprint").click
+      wait_for_ajax
+      expect(page.driver.browser.window_handles.length).to eq 1
+    end
+    
+    it '[8.9] Re-print slip unauthorized' do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player_transaction,["search"])
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page
+      fill_in "datetimepicker_start_time", :with => (Time.now + 20*60)
+      find("input#search").click
+
+
+      check_player_transaction_result_items([@player_transaction2,@player_transaction3],false)
+    end
   end
 end

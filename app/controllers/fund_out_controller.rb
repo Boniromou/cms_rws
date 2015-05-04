@@ -1,49 +1,13 @@
-class FundOutController < ApplicationController
-  include FundHelper
-
-  layout 'cage'
-
-  def new
-    return unless permission_granted? PlayerTransaction.new, :withdraw?
-    member_id = params[:member_id]
-    @operation = "fund_out"
-    @player = Player.find_by_member_id(member_id)
+class FundOutController < FundController
+  def operation_sym
+    :withdraw?
   end
 
-  def create
-    return unless permission_granted? PlayerTransaction.new, :withdraw?
-    member_id = params[:player][:member_id]
-    amount = params[:player_transaction][:amount]
-
-    begin
-      begin
-        validate_amount_str( amount )
-        server_amount = to_server_amount(amount)
-        balance = Player.find_by_member_id(member_id).balance
-        validate_balance_enough( server_amount, balance )
-      rescue Exception => e
-        raise "invalid_amt.withdrawal"
-      end
-      AuditLog.fund_in_out_log("withdrawal", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
-        @transaction = do_fund_out(member_id, server_amount)
-      end
-      @player = Player.find_by_member_id(member_id)
-    rescue Exception => e
-      puts e.message
-      puts e.backtrace
-      flash[:alert] = e.message
-      redirect_to :action => 'new', member_id: member_id
-    end
+  def operation_str
+    "fund_out"
   end
 
-  protected
-
-  def do_fund_out(member_id, amount)
-    transaction = nil
-    Player.transaction do
-      Player.fund_out(member_id, amount)
-      transaction = PlayerTransaction.save_fund_out_transaction(member_id, amount, current_shift.id, current_user.id, current_station_id)
-    end
-    transaction
+  def action_str
+    "withdrawal"
   end
 end

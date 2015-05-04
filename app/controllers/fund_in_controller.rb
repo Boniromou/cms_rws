@@ -1,47 +1,13 @@
-class FundInController < ApplicationController
-  include FundHelper
-
-  layout 'cage'
-
-  def new
-    return unless permission_granted? PlayerTransaction.new, :deposit?
-    member_id = params[:member_id]
-    @operation = "fund_in"
-    @player = Player.find_by_member_id(member_id)
+class FundInController < FundController
+  def operation_sym
+    :deposit?
   end
 
-  def create
-    return unless permission_granted? PlayerTransaction.new, :deposit?
-    member_id = params[:player][:member_id]
-    amount = params[:player_transaction][:amount]
-
-    begin
-      begin
-        validate_amount_str( amount )
-        server_amount = to_server_amount(amount)
-      rescue Exception => e
-        raise "invalid_amt.deposit"
-      end
-      AuditLog.fund_in_out_log("deposit", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
-        @transaction = do_fund_in(member_id, server_amount)
-      end
-      @player = Player.find_by_member_id(member_id)
-    rescue Exception => e
-      puts e.message
-      puts e.backtrace
-      flash[:alert] = e.message
-      redirect_to :action => 'new', member_id: member_id
-    end
+  def operation_str
+    "fund_in"
   end
 
-  protected
-
-  def do_fund_in(member_id, amount)
-    transaction = nil
-    Player.transaction do
-      Player.fund_in(member_id, amount)
-      transaction = PlayerTransaction.save_fund_in_transaction(member_id, amount, current_shift.id, current_user.id, current_station_id)
-    end
-    transaction
+  def action_str
+    "deposit"
   end
 end

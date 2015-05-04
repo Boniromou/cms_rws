@@ -1,6 +1,6 @@
 <h1><%= t("tree_panel.create_player") %></h1>
 
-<%= form_for(@player, :remote => true) do |f| %>
+<%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
   <table>
     <col width="40%">
     <tr>

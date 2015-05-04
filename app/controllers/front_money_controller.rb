@@ -3,7 +3,7 @@ class FrontMoneyController < ApplicationController
   include FormattedTimeHelper
   def search
     @shift_name_list = ["morning","swing","night"]
-    @accounting_date = params[:accounting_date] || AccountingDate.find(Shift.current.accounting_date_id).accounting_date
+    @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
     @shift_name = params[:shift_name] || "morning"
   end
 

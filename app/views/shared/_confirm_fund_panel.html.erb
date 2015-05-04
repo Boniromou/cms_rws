@@ -56,21 +56,4 @@
 
     return false;
   });
-
-  function ValidateFloat(e, pnumber)
-  {
-    if (!/^\d+[.]?[\d\d]?$/.test(pnumber))
-    {
-        $(e).val(/^\d+[.]?\d\d/.exec($(e).val()));
-    }
-    return false;
-  }
-  
-  function blockEnter(event){ 
-    if (event.keyCode == 13) {
-      return false;
-    }
-  }
-
-  $('#fund_request').keydown(blockEnter);
 </script>

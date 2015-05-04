@@ -7,8 +7,20 @@
   </div>
 
   <div>
-    <%= f.label "Amount: " %>
+    <%= f.label :amount, t("deposit_withdrawal.amount") + ": " %>
     <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)" %><br/>
   </div>
 <% end %>
 <%= render "shared/confirm_fund_panel" %>
+
+<%= javascript_include_tag "validate.input.js" %>
+
+<script>
+  function blockEnter(event){ 
+    if (event.keyCode == 13) {
+      return false;
+    }
+  }
+
+  $('form#fund_request').keydown(blockEnter);
+</script>

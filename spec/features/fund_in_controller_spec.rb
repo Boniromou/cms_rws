@@ -77,7 +77,7 @@ describe FundInController do
       find("div#button_set form input#cancel").click
       
       wait_for_ajax
-      check_home_page
+      check_balance_page
     end
 
     it '[6.6] Confirm Deposit', :js => true do

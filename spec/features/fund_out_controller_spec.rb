@@ -88,7 +88,7 @@ describe FundOutController do
       visit fund_out_path + "?member_id=#{@player.member_id}"
       find("div#button_set form input#cancel").click
 
-      check_home_page
+      check_balance_page
     end
 
     it '[7.7] Confirm Withdraw', :js => true do

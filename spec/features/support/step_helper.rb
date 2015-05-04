@@ -240,17 +240,19 @@ module StepHelper
   end
 
   def check_home_page
+    within "div#content" do
     
-    expect(page).to have_content @location
-    begin
-      expect(page).to have_content @accounting_date
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      expect(page).to have_content "Waiting for accounting date"
-    end
-    begin
-      expect(page).to have_content I18n.t("shift.#{@shift}")
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      expect(page).to have_content "Waiting for shift"
+      expect(page).to have_content @location
+      begin
+        expect(page).to have_content @accounting_date
+      rescue RSpec::Expectations::ExpectationNotMetError => e
+        expect(page).to have_content "Waiting for accounting date"
+      end
+      begin
+        expect(page).to have_content I18n.t("shift.#{@shift}")
+      rescue RSpec::Expectations::ExpectationNotMetError => e
+        expect(page).to have_content "Waiting for shift"
+      end
     end
   end
 

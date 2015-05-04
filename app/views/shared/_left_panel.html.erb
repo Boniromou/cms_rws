@@ -48,7 +48,7 @@
           <% end %>
         </li>
       <% end %>
-      <% if true %>
+      <% if policy(Shift.new).search_fm? %>
         <li id="nav_roll_shift">
           <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>
             <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.front_money") %></span>

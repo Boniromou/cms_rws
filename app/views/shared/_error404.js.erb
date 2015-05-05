@@ -1,0 +1,1 @@
+$('div#content').html("<%= escape_javascript(render :partial => "shared/error404", :formats => [ :html ], :layout => false, :status => :not_found) %>");

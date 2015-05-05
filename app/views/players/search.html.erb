@@ -21,23 +21,18 @@
         </section>
       </div>
 
-      <div class="col-sm-5">
+      <div class="col-sm-4">
         <section class="smart-form">
           <label class="input">
             <%= text_field_tag(:"id_number", @id_number) %>
           </label>
         </section>
       </div>
+      <%= content_tag(:button, create_icon("fa fa-fw fa-search fa-lg"), :class => "btn btn-primary")%>
     </div>
+    
   </fieldset>
 
-  <div class="form-actions">
-    <div class="row">
-      <div class="col-md-12">
-        <%= submit_tag t("button.find"), :class => "btn btn-primary"  %>
-      </div>
-    </div>
-  </div>
 <% end %>
 <% if @found == "false" %>
   <h2> <%= t("search_error.not_found")%></h2>

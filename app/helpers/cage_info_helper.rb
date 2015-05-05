@@ -27,6 +27,6 @@ module CageInfoHelper
   end
 
   def current_station
-    "window#1"
+    "Main Cage - Window#1"
   end
 end

@@ -1,17 +1,14 @@
 <style>
   td.header_info_padding {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
   }
 </style>
 
-<table width='300'>
+<table width='300' style='font-weight: bold;'>
   <tr>
-    <td><%= current_cage_location_str %></td>
+    <td class='header_info_padding'><%= current_cage_location_str %></td>
   </tr>
   <tr>
-    <td width='20%' class='header_info_padding'><%= render 'shared/current_accounting_date_widget' %></td>
-    <td class='header_info_padding'>,</td>
-    <td width='70%' class='header_info_padding'><%= render 'shared/current_shift_widget' %></td>
+    <td class='header_info_padding'><%= render 'shared/current_accounting_date_widget' %> ( <%= render 'shared/current_shift_widget' %> )</td>
   </tr>
 </table>

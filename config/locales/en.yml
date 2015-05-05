@@ -78,7 +78,7 @@ en:
     unknown_error: "Unknown error"
   shift:
     name: "Shift"
-    confirm_roll_msg: "Roll system to next shift?"
+    confirm_roll_msg: "Roll system to next shift"
     roll_success: "Roll shift success."
     rolled_error: "Shift has been rolled!"
     current_shift: "Current Shift"

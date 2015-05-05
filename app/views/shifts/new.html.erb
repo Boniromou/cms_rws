@@ -1,26 +1,19 @@
 <h1><%= t("tree_panel.roll_shift") %></h1>
 
 <div class='roll_detail'>
-  <table width='300'>
-    <col width="70%">
+  <table>
+    <col width="50%">
     <tr>
-      <td><h3><%= t("shift.current_shift") %>: </h3></td>
-      <td><h3><%= t("shift_name.#{@current_shift_name}") %></h3></td>
+      <td><h3><b><%= t("shift.current_shift") %>:</b></h3></td>
+      <td><h3><%= @current_accounting_date %></h3></td>
+      <td>&nbsp;</td>
+      <td><h3>(<%= t("shift_name.#{@current_shift_name}") %>)</h3></td>
     </tr>
     <tr>
-      <td><h6><%= t("ac_date.current_ac_date") %>: </h6></td>
-      <td><h6><%= @current_accounting_date %></h6></td>
-    </tr>
-    <tr>
-      <td><br/></td>
-    </tr>
-    <tr>
-      <td><h3><%= t("shift.next_shift") %>: </h3></td>
-      <td><h3><%= t("shift_name.#{@next_shift_name}") %></h3></td>
-    </tr>
-    <tr>
-      <td><h6><%= t("ac_date.next_ac_date") %>: </h6></td>
-      <td><h6><%= @next_accounting_date %></h6></td>
+      <td><h3><b><%= t("shift.next_shift") %>:</b></h3></td>
+      <td><h3><%= @next_accounting_date %></h3></td>
+      <td>&nbsp;</td>
+      <td><h3>(<%= t("shift_name.#{@next_shift_name}") %>)</h3></td>
     </tr>
   </table>
 </div>
@@ -29,47 +22,30 @@
   <br/>
 <% end %>
 
-<button id="roll_shift"><%= t("button.roll_shift_now") %></button>
+<button id="roll_shift" class="btn btn-primary"><%= t("button.roll_shift_now") %></button>
 <%= form_for :shift, remote: true, html: { id: "confirm_roll_shift_form", style: 'display: none;' } do |f| %>
   <%= f.hidden_field :current_shift_id, value: @current_shift.id %>
 <% end %>
 
 <div id="confirm_roll_shift_dialog" style="display: none;">
-  <div class="ui-dialog" style="height: 350px; width: 600px; top: 150px; left: 250px;">
+  <div class="ui-dialog" style="height: 250px; width: 600px; top: 150px; left: 250px;">
+    <button id="cancel" class="btn btn-default pull-right"><i class="fa fa-times"/></button>
+
     <div style="height: 70%; vertical-align:middle; padding: 30px;" align="center">
       <div class="confirm_roll_detail">
-        <table>
-          <tr>
-            <td><h3><%= t("shift.confirm_roll_msg") %></h3></td>
-          </tr>
-          <tr>
-            <td><h3><%= t("shift.current_shift") %>:</h3></td>
-            <td><h3><%= @current_accounting_date %></h3></td>
-            <td><h3>(<%= t("shift_name.#{@current_shift_name}") %>)</h3></td>
-          </tr>
-          <tr>
-            <td><h3><%= t("shift.next_shift") %>:</h3></td>
-            <td><h3><%= @next_accounting_date %></h3></td>
-            <td><h3>(<%= t("shift_name.#{@next_shift_name}") %>)</h3></td>
-          </tr>
-        </table>
       </div>
     </div>
 
     <div align="center" style='height: 20%;'>
-      <table>
-        <tr>
-          <td><button id="confirm" class="btn btn-danger"><%= t("button.confirm") %></button></td>
-          <td width='20%'/>
-          <td><button id="cancel" class="btn btn-default"><%= t("button.cancel") %></button></td>
-        </tr>
-      </table>
+      <button id="confirm" class="btn btn-primary"><%= t("shift.confirm_roll_msg") %></button>
     </div>
   </div>
 </div>
 
 <script>
   $( document ).ready(function() {
+    $('div.confirm_roll_detail').html( $('div.roll_detail').html()  );
+
     $('#roll_shift').click(function() {
       $('#confirm_roll_shift_dialog').show();
       $(this).attr('disabled', 'disabled');

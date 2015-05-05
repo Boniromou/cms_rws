@@ -1,5 +1,5 @@
 <h1><%= t("tree_panel.fund_out")%></h1>
-<%= render partial:"shared/player_info" , :locals => {:show_balance => false, :back_path => balance_path + "?member_id=#{@player.member_id}", :footer_path => "shared/confirm_fund_panel", :fund_request_path => fund_out_path} %>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => false, :back_button => close_fund_request, :footer_path => "shared/confirm_fund_panel", :fund_request_path => fund_out_path} %>
 
 
 <%= javascript_include_tag "validate.input.js" %>

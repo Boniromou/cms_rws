@@ -1,6 +1,5 @@
 <div id="button_set">
   <%= button_tag t("button.confirm"), :id => "confirm", :class => "btn btn-primary"%>
-  <%= link_to t("button.cancel"), balance_path + "?member_id=" + @player.member_id, :id => "cancel", :class => "btn btn-primary", :method => "get", :remote => true %>
 </div>
 
 <div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 150px; left: 250px; display: none;">
@@ -15,9 +14,9 @@
   <div align="center">
     <table>
       <tr>
-        <td><button id="confirm" class="btn btn-danger">Confirm</button></td>
-        <td width='20%'></td>
         <td><button id="cancel" class="btn btn-default">Cancel</button></td>
+        <td width='20%'></td>
+        <td><button id="confirm" class="btn btn-danger">Confirm</button></td>
       </tr>
     </table>
   </div>

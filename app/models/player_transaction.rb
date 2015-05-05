@@ -1,5 +1,6 @@
 class PlayerTransaction < ActiveRecord::Base
   attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :created_at
+  include FundHelper
 
   DEPOSIT = 1;
   WITHDRAWAL = 2;
@@ -7,13 +8,13 @@ class PlayerTransaction < ActiveRecord::Base
   def deposit_amt_str
     result = ""
     result = amount.to_s if transaction_type_id == DEPOSIT
-    result
+    to_display_amount_str(result)
   end
 
   def withdrawal_amt_str
     result = ""
     result = amount.to_s if transaction_type_id == WITHDRAWAL
-    result
+    to_display_amount_str(result)
   end
 
   def action_type_str

@@ -44,7 +44,7 @@
                 <td><%= t.status %></td>
                 <td><%= t.deposit_amt_str %></td>
                 <td><%= t.withdrawal_amt_str %></td>
-                <td><%= t.amount %></td>
+                <td><%= to_display_amount_str(t.amount) %></td>
               </tr>
               <% 
                 if t.transaction_type_id ==1
@@ -56,8 +56,8 @@
             <% end %>
             <tr>
               <td colspan="9"></td>
-              <td><%=total_deposit %></td>
-              <td><%=total_withdraw %></td>
+              <td><%=to_display_amount_str(total_deposit) %></td>
+              <td><%=to_display_amount_str(total_withdraw) %></td>
               <td><%=report_balance(total_deposit - total_withdraw) %></td>
             </tr>
             <%
@@ -67,8 +67,8 @@
           <% end %>
           <tr>
             <td colspan="9">Grand Total</td>
-            <td><%=grand_deposit %></td>
-            <td><%=grand_withdraw %></td>
+            <td><%=to_display_amount_str(grand_deposit) %></td>
+            <td><%=to_display_amount_str(grand_withdraw) %></td>
             <td><%=report_balance(grand_deposit - grand_withdraw) %></td>
           </tr>
         </table>

@@ -2,7 +2,6 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
   alert:
     invalid_login: Invalid user name or password
     inactive_account: The account is inactive, please contact the System Administrator
@@ -42,6 +41,7 @@ en:
     action_yes: "Yes"
     action_no: "No"
   title:
+    system: "Cirrus"
     title: "Cage"
     login_title: "Login"
   user:

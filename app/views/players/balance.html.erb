@@ -1,28 +1,4 @@
 <h1><%= t("tree_panel.balance")%></h1>
 
-<%= render partial:"shared/player_info" , :locals => {:show_balance => true}%>
-</br>
-<div>
-  <label><%= t("balance_inquiry.account_balance")%>:</label>
-  <label><%= label_tag :player_balance, to_display_amount_str(@player.balance), :id => "player_balance"%></label>
-</div>
-<div>
-  <% if policy(PlayerTransaction.new).deposit? %>
-    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit" do %>
-      <span> <%= t("button.deposit")%></span>
-    <% end %>
-  <% end %>
-  <% if policy(PlayerTransaction.new).withdraw? %>
-    <%= link_to fund_out_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw" do %>
-      <span> <%= t("button.withdrawal")%></span>
-    <% end %>
-  <% end %>
-  <% if policy(PlayerTransaction.new).search? %>
-    <%= link_to search_transactions_path + "?card_id=#{@player.card_id}" , :title => t("tree_panel.player_transaction"), :remote => true, :id => "player_transaction" do %>
-      <span> <%= t("tree_panel.player_transaction")%></span>
-    <% end %>
-  <% end %>
-    <%= link_to home_path , :title => t("button.close"), :remote => true, :id => "balance_close" do %>
-      <span> <%= t("button.close")%></span>
-    <% end %>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => true, :back_path => home_path, :footer_path => "players/panel_footer"} %>
 </div>

@@ -1,17 +1,6 @@
 <h1><%= t("tree_panel.fund_in")%></h1>
-<%= render partial:"shared/player_info" , :locals => {:show_balance => false}%>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => false, :back_path => balance_path + "?member_id=#{@player.member_id}", :footer_path => "shared/confirm_fund_panel", :fund_request_path => fund_in_path} %>
 
-<%= form_for :player_transaction, url: fund_in_path, remote: true, html: { id: "fund_request", autocomplete: :off  } do |f| %>
-  <div>
-    <%= hidden_field(:player, :member_id) %>
-  </div>
-
-  <div>
-    <%= f.label :amount, t("deposit_withdrawal.amount") + ": " %>
-    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)" %><br/>
-  </div>
-<% end %>
-<%= render "shared/confirm_fund_panel" %>
 
 <%= javascript_include_tag "validate.input.js" %>
 

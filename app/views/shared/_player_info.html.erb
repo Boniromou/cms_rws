@@ -1,4 +1,4 @@
-<article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+<article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
   <div class="jarviswidget jarviswidget-color-blueDark jarviswidget-sortable" id="wid-id-12" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" role="widget">
     <header role="heading">
       <span class="widget-icon"> <i class="glyphicon glyphicon-user"></i> </span>
@@ -6,6 +6,11 @@
         <strong><%= label_tag :player_name,@player.player_name, :id => "player_name" %></strong>
       </h2>       
       <div class="widget-toolbar" role="menu">
+        close_balance
+        <%= link_to back_path , :title => t("button.close"), :remote => true, :id => "balance_close", :class => "btn btn-primary" do %>
+          <i class="fa fa-times">
+          </i>
+        <% end %>
       </div>
       <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
       <div role="content">
@@ -21,11 +26,16 @@
           <label class="col-xs-3 box"><%= label_tag :player_card_id,@player.card_id, :id => "player_card_id" %></label></td>
         </div>
         <% if show_balance %>
-        <div class="row">
-          <label class="col-xs-3 box"><strong><%= t("balance_inquiry.account_balance")%>:</strong></label></td>
-          <label class="col-xs-3 box"><%= label_tag :player_balance, to_display_amount_str(@player.balance), :id => "player_balance"%></label></td>
-        </div>
+          <div class="row">
+            <label class="col-xs-3 box"><strong><%= t("balance_inquiry.account_balance")%>:</strong></label></td>
+            <label class="col-xs-3 box"><%= label_tag :player_balance, to_display_amount_str(@player.balance), :id => "player_balance"%></label></td>
+          </div>
+        <% else %>
+          <%= render partial: "shared/fund_request_form" , :locals => {:fund_request_path => fund_request_path }%>
         <% end %>
+        <div class="widget-footer text-left">
+          <%= render partial:footer_path %>
+        </div>
       </div>
     </div>
   </div>

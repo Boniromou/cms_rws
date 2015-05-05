@@ -1,6 +1,6 @@
 <h1><%= t("tree_panel.balance")%></h1>
 
-<%= render "shared/player_info" %>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => true}%>
 </br>
 <div>
   <label><%= t("balance_inquiry.account_balance")%>:</label>

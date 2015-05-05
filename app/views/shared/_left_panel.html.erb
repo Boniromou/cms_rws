@@ -20,41 +20,58 @@
           <i class="fa fa-home"></i> <span class="menu-item-parent">Home</span>
         <% end %>
       </li>
-      <% if policy(Player.new).create? %>
-        <li id="nav_create_player">
-          <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
-            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.create_player")%></span>
+      
+      <li>
+        <a href="#"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
+        <ul>
+          <% if policy(Player.new).create? %>
+            <li id="nav_create_player">
+              <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
+                <i></i> <span class="menu-item-parent"><%= t("tree_panel.create_player")%></span>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-      <% end %>
-      <% if policy(Player.new).balance? %>
-        <li id="nav_balance_enquiry">
-          <%= link_to players_search_path + "?operation=balance", :title => t("tree_panel.balance"), :remote => true do %>
-            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
+        </ul>
+      </li>
+      <li>
+        <a href="#"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
+        <ul>
+          <% if policy(Player.new).balance? %>
+            <li id="nav_balance_enquiry">
+              <%= link_to players_search_path + "?operation=balance", :title => t("tree_panel.balance"), :remote => true do %>
+                <i></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-      <% end %>
-      <% if policy(PlayerTransaction.new).search? %>
-        <li id="nav_search_transactions">
-          <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
-            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
+          <% if policy(PlayerTransaction.new).search? %>
+            <li id="nav_search_transactions">
+              <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
+                <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-      <% end %>
-      <% if policy(Shift.new).roll? %>
-        <li id="nav_roll_shift">
-          <%= link_to shifts_path, :title => t("tree_panel.roll_shift"), :remote => true do %>
-            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.roll_shift") %></span>
+        </ul>
+      </li>
+      <li>
+        <a href="#"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>
+        <ul>
+          <% if policy(Shift.new).roll? %>
+            <li id="nav_roll_shift">
+              <%= link_to shifts_path, :title => t("tree_panel.roll_shift"), :remote => true do %>
+                <i></i> <span class="menu-item-parent"><%= t("tree_panel.roll_shift") %></span>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-      <% end %>
-      <% if policy(Shift.new).search_fm? %>
-        <li id="nav_front_money">
-          <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>
-            <i class="fa fa-home"></i> <span class="menu-item-parent"><%= t("tree_panel.front_money") %></span>
+          <% if policy(Shift.new).search_fm? %>
+            <li id="nav_front_money">
+              <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>
+                <i></i> <span class="menu-item-parent"><%= t("tree_panel.front_money") %></span>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-      <% end %>
+        </ul>
+      </li>
+
     </ul>
   </nav>
   <span class="minifyme" data-action="minifyMenu">

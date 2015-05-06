@@ -46,6 +46,7 @@ class FundController < ApplicationController
       puts e.message
       puts e.backtrace
       flash[:alert] = e.message
+      flash[:fade_in] = false
       redirect_to :action => 'new', member_id: member_id
     end
   end

@@ -116,3 +116,12 @@ en:
     morning: "Morning"
     swing: "Swing"
     night: "Night"
+  fm_activity:
+    grand_total: "Grand Total"
+    roll_shift_by: "Roll shift by"
+    roll_shift_at: "Roll shift at"
+    reporting_Period: "Reporting Period"
+  report_sarch:
+    search_field_blank_error: "search field can not be blank"
+    no_transaction_found: "No transaction found."
+

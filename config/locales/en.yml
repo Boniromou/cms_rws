@@ -94,10 +94,24 @@ en:
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
-  search_form:
-    start_time: "Start Time"
-    end_time: "End Time"
+  transaction_history:
+    start_date: "Start Date"
+    end_date: "End Date"
     time_remark: "only search 30 days before transactions"
+    transaction_id: "Transaction ID"
+    report: "Player Transaction Report"
+    member_name: "Member Name"
+    member_id: "Member ID"
+    accounting_date: "Accounting Date"
+    date: "Date"
+    shift: "Shift"
+    station: "Location"
+    employee_id: "Employee ID"
+    status: "Status"
+    deposit: "Deposit"
+    withdrawal: "Withdrawal"
+    balance: "Balance"
+    action: "Action"
   shift_name:
     morning: "Morning"
     swing: "Swing"

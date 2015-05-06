@@ -1,22 +1,43 @@
 <h1><%= t("tree_panel.create_player") %></h1>
 
+<style>
+  td.player_input {
+    padding-top: 10px;
+  }
+
+  td.invisible_error {
+    visibility: hidden;
+    padding-left: 10px;
+    color: red;
+  }
+
+  input.field_error {
+    background: none repeat scroll 0 0 #fff0f0;
+    border-color: #a90329;
+  }
+</style>
+
 <%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
   <table>
-    <col width="40%">
+    <col width="10%">
+    <col width="20%">
     <tr>
-      <td><%= f.label :card_id, t("general.card_id") %>:</td>
-      <td><%= f.text_field :card_id, autofocus: true, required: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %></td>
+      <td class='player_input'><%= f.label :card_id, t("general.card_id") %>:</td>
+      <td><%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %></td>
+      <td class='invisible_error'><%= t("create_player.card_id_blank_error") %></td>
     </tr>
     <tr>
-      <td><%= f.label :member_id, t("general.member_id") %>:</td>
-      <td><%= f.text_field :member_id, required: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%></td>
+      <td class='player_input'><%= f.label :member_id, t("general.member_id") %>:</td>
+      <td><%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%></td>
+      <td class='invisible_error'><%= t("create_player.member_id_blank_error") %></td>
     </tr>
     <tr>
-      <td><%= f.label :name, t("general.name") %>:</td>
-      <td><%= f.text_field :player_name, required: true %></td>
+      <td class='player_input'><%= f.label :name, t("general.name") %>:</td>
+      <td><%= f.text_field :player_name %></td>
+      <td class='invisible_error'><%= t("create_player.name_blank_error") %></td>
     </tr>
     <tr>
-      <td><%= f.submit t("button.create")%></td>
+      <td colspan='2' class='player_input'><%= f.submit t("button.create"), class: 'btn btn-primary pull-right', id: 'create_player_submit' %></td>
     </tr>
 <% end %>
 
@@ -25,5 +46,51 @@
 <script>
   $(document).ready(function() {
     $('input[autofocus="autofocus"]').focus();
+  });
+
+  function formValidated() {
+    function validated(comp) {
+      if ( comp.val() == "" )
+        return false;
+      else
+        return true;
+    }
+
+    function showError(comp, index) {
+      $("form#new_player tr:nth-child(" + (index + 1) + ") td:nth-child(3)").css('visibility', 'visible');
+      comp.addClass('field_error');
+    }
+
+    function hideError(comp, index) {
+      $("form#new_player tr:nth-child(" + (index + 1) + ") td:nth-child(3)").css('visibility', 'hidden');
+      comp.removeClass('field_error');
+    }
+
+    var allValidated = true;
+    var formComps = [$("form#new_player input#player_card_id"), $("form#new_player input#player_member_id"), $("form#new_player input#player_player_name")];
+
+    for (var i = 0; i < 3; i++) {
+      var comp = $(formComps[i]);
+      console.log(comp.val());
+
+      if ( !validated(comp) ) {
+        allValidated = false;
+
+        showError(comp, i);
+      }
+      else {
+        hideError(comp, i);
+      }
+    }
+
+    return allValidated;
+  }
+
+  $('form#new_player input#create_player_submit').click(function(e) {
+    e.preventDefault();
+
+    if ( formValidated() ) {
+      $("form#new_player").submit();
+    }
   });
 </script>

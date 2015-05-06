@@ -7,14 +7,15 @@ class PlayerTransaction < ActiveRecord::Base
   
   def deposit_amt_str
     result = ""
-    result = amount.to_s if transaction_type_id == DEPOSIT
-    to_display_amount_str(result)
+    result = to_display_amount_str(amount) if transaction_type_id == DEPOSIT
+    result
   end
+
 
   def withdrawal_amt_str
     result = ""
-    result = amount.to_s if transaction_type_id == WITHDRAWAL
-    to_display_amount_str(result)
+    result = to_display_amount_str(amount) if transaction_type_id == WITHDRAWAL
+    result
   end
 
   def action_type_str
@@ -74,7 +75,7 @@ class PlayerTransaction < ActiveRecord::Base
     end
     player_id = 0 if id_number!=""
     player_id = player.id unless player.nil?
-    by_transaction_id(transaction_id).by_player_id(player_id).since(start_time).until(end_time + 59)
+    by_transaction_id(transaction_id).by_player_id(player_id).since(start_time).until(end_time)
   end
 
   def self.search_transactions_group_by_station(shift_id)

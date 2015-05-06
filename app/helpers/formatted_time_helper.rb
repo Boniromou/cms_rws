@@ -13,7 +13,11 @@ module FormattedTimeHelper
     Date.parse(date_str)
   end
 
-  def parse_datetime(datetime_str)
-    Time.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+  def parse_datetime(datetime_str, default_time=Time.now)
+    begin
+      Time.strptime(datetime_str, "%Y-%m-%d %H:%M:%S").utc
+    rescue ArgumentError
+      default_time
+    end
   end
 end

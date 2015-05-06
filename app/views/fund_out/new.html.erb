@@ -3,13 +3,5 @@
 
 
 <%= javascript_include_tag "validate.input.js" %>
+<%= javascript_include_tag "block.enter.js" %>
 
-<script>
-  function blockEnter(event){ 
-    if (event.keyCode == 13) {
-      return false;
-    }
-  }
-
-  $('form#fund_request').keydown(blockEnter);
-</script>

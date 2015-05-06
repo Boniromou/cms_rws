@@ -16,7 +16,7 @@
       <tr>
         <td><button id="cancel" class="btn btn-default">Cancel</button></td>
         <td width='20%'></td>
-        <td><button id="confirm" class="btn btn-danger">Confirm</button></td>
+        <td><button id="confirm" class="btn btn-primary">Confirm</button></td>
       </tr>
     </table>
   </div>
@@ -30,6 +30,7 @@
 
   $('#confirm').click(function() {
     $('#confirm_fund_dialog').css("display", "block");
+    $('#confirm_fund_dialog #confirm').focus();
 
     $('#confirm').attr('disabled','disabled');
     $('#cancel').attr('disabled','disabled');

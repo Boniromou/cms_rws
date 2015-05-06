@@ -95,8 +95,9 @@ en:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
   search_form:
-    start_time: "start Time"
+    start_time: "Start Time"
     end_time: "End Time"
+    time_remark: "only search 30 days before transactions"
   shift_name:
     morning: "Morning"
     swing: "Swing"

@@ -12,7 +12,7 @@ class PlayerTransactionsController < ApplicationController
     return unless permission_granted? PlayerTransaction.new, :search?
     id_type = params[:id_type]
     id_number = params[:id_number]
-    @start_time = parse_datetime(params[:start_time], today_start_time)
+    @start_time = get_start_time(params[:start_time])
     @end_time = parse_datetime(params[:end_time], today_end_time)
     transaction_id = params[:transaction_id]
     @player_transactions = PlayerTransaction.search_query(id_type, id_number, @start_time, @end_time, transaction_id)
@@ -35,5 +35,11 @@ class PlayerTransactionsController < ApplicationController
     @transaction = PlayerTransaction.find(transaction_id)
     @player = Player.find(@transaction.player_id)
     @operation =  @transaction.action_type_str
+  end
+  
+  def get_start_time(time_str)
+    start_time = parse_datetime(time_str, today_start_time)
+    start_time = today_start_time if today_start_time - 30*24*60*60 > start_time
+    start_time
   end
 end

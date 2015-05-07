@@ -5,7 +5,15 @@
   <%= content_tag :div, :class => "alert #{bootstrap_class_for(type)} fade in" do %>
     <button class="close" data-dismiss="alert">×</button>
     <div id="message_content">
-      <%= t(msg) %>
+      <% if msg.is_a?(Hash) %>
+        <% if msg.has_key?(:key) && msg.has_key?(:replace) %>
+          <%= I18n.t(msg[:key], msg[:replace]) %>
+        <% else %>
+          <%= 'Flash message not recognized!' %>
+        <% end %>
+      <% else %>
+        <%= t(msg) %>
+      <% end %>
     </div>
   </div>
   <% end %>

@@ -1,6 +1,7 @@
 class PlayerTransaction < ActiveRecord::Base
   attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :created_at
   include FundHelper
+  include ActionView::Helpers
 
   DEPOSIT = 1;
   WITHDRAWAL = 2;

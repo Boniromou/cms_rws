@@ -12,6 +12,6 @@ module FundHelper
   end
 
   def to_display_amount_str( amount )
-    "%0.2f" % (amount.to_f / 100)
+    number_to_currency(amount.to_f / 100).sub("$","")
   end
 end

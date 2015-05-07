@@ -32,12 +32,19 @@
     </div>
     
   </fieldset>
-
 <% end %>
+
+<br/>
 <% if @found == "false" %>
-  <h2> <%= t("search_error.not_found")%></h2>
-  <% if policy(Player.new).create? %>
-    <p> <%= t("search_error.create_player")%></p>
-    <%= link_to t("button.create"), :action => :new, :remote => true, @id_type.to_sym => @id_number %>
+  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
+    <button class="close" data-dismiss="alert">×</button>
+    <div id="message_content">
+      <%= t("search_error.not_found") %>
+      <% if policy(Player.new).create? %>
+        <%= t("search_error.create_player")%>
+        <%= link_to "create", new_player_path + "?#{@id_type}=#{@id_number}", :remote => true, :class => "btn btn-warning"%>
+      <% end %>
+    </div>
+  </div>
   <% end %>
 <% end %>

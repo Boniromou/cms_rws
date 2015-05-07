@@ -90,7 +90,7 @@ en:
   invalid_amt:
     deposit: "invalid deposit amount"
     withdrawal: "invalid withdrawal amount"
-    no_enough_to_withdrawal: "the account balance is not enough to withdrawal. Current balance: [player account balance]"
+    no_enough_to_withdrawal: "the account balance is not enough to withdrawal. Current balance: %{balance}"
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."

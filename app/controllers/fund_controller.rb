@@ -32,20 +32,22 @@ class FundController < ApplicationController
         validate_amount_str( amount )
         server_amount = to_server_amount(amount)
         if operation_str == "fund_out"
-          balance = Player.find_by_member_id(member_id).balance
+          player = Player.find_by_member_id(member_id)
+          balance = player.balance
           validate_balance_enough( server_amount, balance )
         end
-      rescue Exception => e
-        raise "invalid_amt." + action_str
+      rescue AmountInvalidError => e
+        flash[:alert] = e.message
+        raise AmountInvalidError.new "invalid_amt." + action_str
+      rescue BalanceNotEnough => e
+        flash[:alert] = { key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: player.balance_str} }
+        raise e
       end
       AuditLog.fund_in_out_log(action_str, current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
         @transaction = do_fund_action(member_id, server_amount)
       end
       @player = Player.find_by_member_id(member_id)
-    rescue Exception => e
-      puts e.message
-      puts e.backtrace
-      flash[:alert] = e.message
+    rescue FundError => e
       flash[:fade_in] = false
       redirect_to :action => 'new', member_id: member_id
     end

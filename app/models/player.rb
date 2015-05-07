@@ -1,5 +1,11 @@
 class Player < ActiveRecord::Base
+  include ActionView::Helpers
+  include FundHelper
   attr_accessible :balance, :card_id, :currency_id,:member_id, :player_name, :status
+
+  def balance_str
+    to_display_amount_str(balance)
+  end
 
   def self.create_by_params(params)
     verify_player_params(params)

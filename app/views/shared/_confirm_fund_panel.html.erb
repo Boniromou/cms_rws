@@ -21,11 +21,11 @@
     </table>
   </div>
 </div>
-
+<%= javascript_include_tag "format.number.js" %>
 <script type='text/javascript'>
   function updateConfirmAmt(){
     amt = $('#player_transaction_amount').val()
-    $('#confirm_fund_dialog #fund_amt').text(amt);
+    $('#confirm_fund_dialog #fund_amt').text(formatNum(amt));
   }
 
   $('#confirm').click(function() {

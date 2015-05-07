@@ -1,19 +1,39 @@
 $('div#flash_message').html("<%= escape_javascript(render :partial => "shared/flash_message", :formats => [ :html ] , :layout => nil) %>");
 
-<% if flash[:success] || flash.now[:success] %>
-$.smallBox({
-  title : "Success",
-  content : $('div#message_content').text(),
-  color : "#659265",
-  iconSmall : "fa fa-check fa-2x fadeInRight animated",
-});
-<% elsif flash[:alert] || flash.now[:alert] %>
-$.smallBox({
-  title : "Fail",
-  content : $('div#message_content').text(),
-  color : "#C46A69",
-  iconSmall : "fa fa-times fa-2x fadeInRight animated",
-});
-<% end %>
+function popSuccess () {
+  $.smallBox({
+    title : "Success",
+    content : $('div#message_content').text(),
+    color : "#659265",
+    icon : "fa fa-check",
+  });
+}
+
+function popFail() {
+  $.smallBox({
+    title : "Fail",
+    content : $('div#message_content').text(),
+    color : "#C46A69",
+    icon : "fa fa-warning",
+  });
+}
+
+function clearFlashMessage() {
+  if ($("div#divSmallBoxes").length) {
+    $("div#divSmallBoxes").empty();
+  }
+}
+
+function popFlashMessage() {
+  if ($('div#message_content').length) {
+    if (<%= flash[:success].present? || flash.now[:success].present? %>)
+      popSuccess();
+    else if (<%= flash[:alert].present? || flash.now[:alert].present? %>)
+      popFail();
+  }
+}
+
+clearFlashMessage();
+popFlashMessage();
 
 <% flash.clear %>

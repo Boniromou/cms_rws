@@ -3,6 +3,8 @@ class ShiftsController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => :current
 
+  include FormattedTimeHelper
+
   def current
     @current_shift = current_shift.name
     respond_to do |format|
@@ -38,7 +40,7 @@ class ShiftsController < ApplicationController
         current_shift.roll!(current_station_id, current_user.id)
       end
 
-      flash[:success] = "shift.roll_success"
+      flash[:success] = { key: "shift.roll_success", replace: { timestamp: format_time(current_shift.roll_shift_at) } }
       redirect_to :controller => 'front_money', :action => 'search', :accounting_date => current_shift.accounting_date, :shift_name => current_shift.name
     rescue Exception => ex
       flash[:error] = "shift." + ex.message

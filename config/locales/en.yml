@@ -79,8 +79,8 @@ en:
   shift:
     name: "Shift"
     confirm_roll_msg: "Roll system to next shift"
-    roll_success: "Roll shift success."
-    rolled_error: "Shift has been rolled!"
+    roll_success: "Roll Shift successful at [%{timestamp}]"
+    rolled_error: "Roll Shift failed; the shift has been updated."
     current_shift: "Current Shift"
     next_shift: "Next Shift"
   ac_date:

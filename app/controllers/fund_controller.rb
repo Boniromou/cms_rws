@@ -37,8 +37,8 @@ class FundController < ApplicationController
           validate_balance_enough( server_amount, balance )
         end
       rescue AmountInvalidError => e
-        flash[:alert] = e.message
-        raise AmountInvalidError.new "invalid_amt." + action_str
+        flash[:alert] = "invalid_amt." + action_str
+        raise e
       rescue BalanceNotEnough => e
         flash[:alert] = { key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: player.balance_str} }
         raise e

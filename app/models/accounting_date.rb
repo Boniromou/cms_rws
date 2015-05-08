@@ -1,5 +1,6 @@
 class AccountingDate < ActiveRecord::Base
   attr_accessible :accounting_date
+  include FrontMoneyHelper
 
   class << self
     NEXT_ACCOUNTING_DATE_ON_SHIFT_ROLLED = 'night'
@@ -21,8 +22,9 @@ class AccountingDate < ActiveRecord::Base
 
     def get_id_by_date( date )
       accounting_date = self.find_by_accounting_date(date)
-      raise "no result" if accounting_date.nil?
+      raise FrontMoneyHelper::NoResultException.new "accounting date not exist" if accounting_date.nil?
       accounting_date
     end
   end
+
 end

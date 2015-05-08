@@ -1,6 +1,8 @@
 class FrontMoneyController < ApplicationController
   layout 'cage'
   include FormattedTimeHelper
+  include FrontMoneyHelper
+
   def search
     @shift_name_list = ["morning","swing","night"]
     @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
@@ -17,9 +19,7 @@ class FrontMoneyController < ApplicationController
     shift = Shift.find_by_accounting_date_id_and_shift_type_id(accounting_date_id, shift_type_id)
 
     @player_transaction_group = PlayerTransaction.search_transactions_group_by_station(shift.id)
-    rescue Exception => e
-      puts e.message
-      puts e.backtrace
+    rescue FrontMoneyHelper::NoResultException => e
       @player_transaction_group = []
     end
     respond_to do |format|

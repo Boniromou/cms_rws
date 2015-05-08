@@ -7,4 +7,7 @@ module FrontMoneyHelper
       return "(#{to_display_amount_str(-balance)})"
     end
   end
+  
+  class NoResultException < Exception
+  end
 end

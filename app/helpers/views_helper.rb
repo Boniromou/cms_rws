@@ -1,7 +1,7 @@
 module ViewsHelper
   def close_balance
     icon = create_icon("fa fa-times")
-    content_tag(:a, icon, :href => home_path, "data-remote".to_sym => true, :id => "balance", :class => "btn btn-primary")
+    content_tag(:a, icon, :href => home_path, "data-remote".to_sym => true, :id => "balance_close", :class => "btn btn-primary")
   end
 
   def close_fund_request

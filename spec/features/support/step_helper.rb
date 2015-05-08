@@ -1,4 +1,5 @@
 module StepHelper
+  include ActionView::Helpers
   def check_flash_message(msg)
     flash_msg = find("div#flash_message div#message_content")
     expect(flash_msg.text).to eq(msg)
@@ -48,8 +49,8 @@ module StepHelper
 
 
   def check_title(title_str)
-    title = first("div div h1")
-    expect(title.text).to eq I18n.t(title_str)
+    title = first("div div h2")
+    expect(title.text).to include I18n.t(title_str)
   end
 
   def check_home_page
@@ -95,7 +96,7 @@ module StepHelper
   end
 
   def check_player_info
-    expect(find("label#player_name").text).to eq @player.player_name
+    expect(find("label#player_name").text).to eq @player.player_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
   end

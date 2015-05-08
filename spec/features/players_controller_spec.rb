@@ -242,7 +242,7 @@ describe PlayersController do
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_balance_page
       check_player_info
     end
@@ -254,7 +254,7 @@ describe PlayersController do
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_not_found
       click_link I18n.t("button.create")
     end
@@ -266,7 +266,7 @@ describe PlayersController do
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_not_found
       click_link I18n.t("button.create")
       check_title("tree_panel.create_player")
@@ -292,7 +292,7 @@ describe PlayersController do
       click_link I18n.t("tree_panel.balance")
       check_search_page
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       
       check_player_info
       check_balance_page
@@ -331,7 +331,7 @@ describe PlayersController do
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", 123456)
 
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_not_found
       expect(page.source).to_not have_content(I18n.t("search_error.create_player"))
     end     
@@ -343,7 +343,7 @@ describe PlayersController do
       click_link I18n.t("tree_panel.balance")
       check_search_page
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       
       check_balance_page
       check_player_info
@@ -352,7 +352,7 @@ describe PlayersController do
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(page.source).to have_selector("div a#balance_close")
 
-      click_link I18n.t("button.close")
+      find("div a#balance_close").click
       expect(page).to have_content @location
       expect(page).to have_content "Waiting for accounting date"
       expect(page).to have_content "Waiting for shift"
@@ -368,7 +368,7 @@ describe PlayersController do
       click_link I18n.t("tree_panel.balance")
       check_search_page
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
 
       check_balance_page
       check_player_info
@@ -410,7 +410,7 @@ describe PlayersController do
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_balance_page
       check_player_info
     end
@@ -423,22 +423,24 @@ describe PlayersController do
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_not_found
       click_link I18n.t("button.create")
     end
     
-    it '[12.4] direct to create player' do
+    it '[12.4] direct to create player', :js => true do
       @player = Player.new
       @player.member_id = 123456
       @player.card_id = 1234567890
       @player.player_name = "test player"
       login_as_admin
       visit players_search_path + "?operation=balance"
-      fill_search_info("card_id", @player.card_id)
-      click_button I18n.t("button.find")
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      wait_for_ajax
       check_not_found
       click_link I18n.t("button.create")
+      wait_for_ajax
       check_title("tree_panel.create_player")
       expect(find("form#new_player input#player_card_id").value).to eq @player.card_id.to_s
     end

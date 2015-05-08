@@ -31,7 +31,7 @@ describe FundOutController do
       visit home_path
       click_link I18n.t("tree_panel.balance")
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       check_balance_page
 
       within "div#content" do
@@ -65,7 +65,7 @@ describe FundOutController do
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#confirm_fund_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
-      expect(find("label#player_name").text).to eq @player.player_name
+      expect(find("label#player_name").text).to eq @player.player_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       check_flash_message I18n.t("invalid_amt.withdrawal")
     end
@@ -78,15 +78,15 @@ describe FundOutController do
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#confirm_fund_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
-      expect(find("label#player_name").text).to eq @player.player_name
+      expect(find("label#player_name").text).to eq @player.player_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      check_flash_message I18n.t("invalid_amt.withdrawal")
+      check_flash_message I18n.t("invalid_amt.no_enough_to_withdrawal", { balance: to_display_amount_str(@player.balance)})
     end
 
     it '[7.6] cancel Withdraw' do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
-      find("div#button_set form input#cancel").click
+      find("a#cancel").click
 
       check_balance_page
     end
@@ -98,8 +98,8 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
     end
@@ -111,14 +111,14 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
       find("div#confirm_fund_dialog div button#cancel").click
       find("div#confirm_fund_dialog")[:style].include?("none").should == true
       find("div#button_set button#confirm")[:disabled].should be_nil
-      find("div#button_set form input#cancel")[:disabled].should be_nil
+      find("a#cancel")[:disabled].should be_nil
     end
 
 
@@ -129,8 +129,8 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
       find("div#confirm_fund_dialog div button#confirm").click
@@ -171,9 +171,9 @@ describe FundOutController do
       visit home_path
       click_link I18n.t("tree_panel.balance")
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
       
-      expect(find("label#player_name").text).to eq @player.player_name
+      expect(find("label#player_name").text).to eq @player.player_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
       set_permission(@test_user,"cashier",:player,[])
@@ -219,8 +219,8 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
       find("div#confirm_fund_dialog div button#confirm").click
@@ -238,8 +238,8 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
       find("div#confirm_fund_dialog div button#confirm").click
@@ -266,8 +266,8 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
       find("div#confirm_fund_dialog div button#confirm").click
@@ -279,7 +279,8 @@ describe FundOutController do
       
       find("a#close_link").click
       wait_for_ajax
-      check_home_page
+      @player.balance -= 10000
+      check_balance_page
     end
     
     it '[7.17] audit log for print slip', :js => true do
@@ -289,8 +290,8 @@ describe FundOutController do
       click_button I18n.t("button.confirm")
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("div#button_set form input#cancel")[:disabled].should == "disabled"
-      expect(find("#fund_amt").text).to eq "100"
+      find("a#cancel")[:disabled].should == "disabled"
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
       expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
       find("div#confirm_fund_dialog div button#confirm").click

@@ -12,7 +12,7 @@ class Player < ActiveRecord::Base
 
     card_id = params[:card_id]
     member_id = params[:member_id]
-    player_name = params[:player_name]
+    player_name = params[:player_name].downcase
 
     result = false
 

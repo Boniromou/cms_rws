@@ -1,5 +1,7 @@
 require 'feature_spec_helper'
 
+include FormattedTimeHelper
+
 describe ShiftsController do
   before(:all) do
     include Warden::Test::Helpers
@@ -30,14 +32,19 @@ describe ShiftsController do
       expect(page).to have_content next_ac_date
     end
 
+    def check_breadcrumb( icon_style, title, subtitle )
+      within("div#breadcrumbs h2") do
+        expect(page).to have_content I18n.t(title) + " > " + I18n.t(subtitle)
+        expect(page).to have_selector "i.#{icon_style.split.join('.')}"
+      end
+    end
+
     def roll_shift_and_check(current_shift, current_ac_date)
       visit shifts_path
 
-      check_title "tree_panel.roll_shift"
+      check_breadcrumb( "glyphicon glyphicon-retweet", "tree_panel.shift_management", "tree_panel.roll_shift" )
       expect(page).to have_content I18n.t("shift.current_shift")
-      expect(page).to have_content I18n.t("ac_date.current_ac_date")
       expect(page).to have_content I18n.t("shift.next_shift")
-      expect(page).to have_content I18n.t("ac_date.next_ac_date")
       expect(page).to have_button I18n.t("button.roll_shift_now")
       expect(find("div#confirm_roll_shift_dialog")[:style]).to include("none")
 
@@ -49,19 +56,19 @@ describe ShiftsController do
       within("div#confirm_roll_shift_dialog") do
         expect(page).to have_content I18n.t("shift.confirm_roll_msg")
 
-        expect(page).to have_button I18n.t("button.confirm")
-        expect(page).to have_button I18n.t("button.cancel")
+        expect(page).to have_button I18n.t("shift.confirm_roll_msg")
+        expect(page).to have_selector "button#cancel"
 
         check_shift_content(current_shift, current_ac_date)
 
-        click_button I18n.t("button.confirm")
+        click_button I18n.t("shift.confirm_roll_msg")
       end
 
       wait_for_ajax
     end
 
     def check_redirected_to_fm(pre_shift, pre_ac_date)
-      check_title "tree_panel.front_money"
+      check_breadcrumb( "glyphicon glyphicon-retweet", "tree_panel.shift_management", "tree_panel.front_money" )
       expect(page).to have_content I18n.t("shift.name")
       expect(page).to have_content I18n.t("ac_date.name")
 
@@ -74,6 +81,8 @@ describe ShiftsController do
     before(:each) do
       clean_dbs
       create_shift_data
+      @now = Time.now
+      allow(Time).to receive(:now).and_return(@now)
     end
 
     it '[9.0] unauthorized roll shift redirect to home page' do
@@ -91,7 +100,7 @@ describe ShiftsController do
       login_as_admin
 
       roll_shift_and_check('morning', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
 
       check_redirected_to_fm('morning', @today)
     end
@@ -125,15 +134,15 @@ describe ShiftsController do
       login_as_admin
 
       roll_shift_and_check('morning', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
       check_redirected_to_fm('morning', @today)
 
       roll_shift_and_check('swing', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
       check_redirected_to_fm('swing', @today)
 
       roll_shift_and_check('night', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
       check_redirected_to_fm('night', @today)
 
       visit shifts_path
@@ -147,7 +156,7 @@ describe ShiftsController do
       login_as_admin
 
       roll_shift_and_check('morning', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
 
       roll_shift_and_check('morning', @today)
       check_flash_message(I18n.t("shift.rolled_error"))
@@ -157,11 +166,11 @@ describe ShiftsController do
       login_as_admin
 
       roll_shift_and_check('morning', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
       check_redirected_to_fm('morning', @today)
 
       roll_shift_and_check('swing', @today)
-      check_flash_message(I18n.t("shift.roll_success"))
+      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
       check_redirected_to_fm('swing', @today)
     end
   end

@@ -256,7 +256,8 @@ describe FundOutController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      check_home_page
+      @player.balance -= 10000
+      check_balance_page
     end
 
     it '[7.16] Close slip', :js => true do
@@ -308,7 +309,8 @@ describe FundOutController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      check_home_page
+      @player.balance -= 10000
+      check_balance_page
       
       audit_log = AuditLog.find_by_audit_target("player_transaction")
       audit_log.should_not be_nil

@@ -37,7 +37,8 @@ describe PlayersController do
       visit home_path
       click_link I18n.t("tree_panel.balance")
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+
+      find("#button_find").click
       check_balance_page
 
       within "div#content" do
@@ -80,7 +81,7 @@ describe PlayersController do
       check_player_transaction_page
       find("input#search").click
 
-      expect(find("div.widget-body p").text).to eq "no result"
+      expect(find("div.widget-body label").text).to eq t("report_sarch.no_transaction_found")
     end
     
     it '[8.5] successfully generate report. (search by member ID)' do
@@ -103,7 +104,7 @@ describe PlayersController do
       visit home_path
       click_link I18n.t("tree_panel.balance")
       fill_search_info("member_id", @player.member_id)
-      click_button I18n.t("button.find")
+      find("#button_find").click
 
       check_balance_page
       check_player_info

@@ -104,13 +104,13 @@ module StepHelper
   def check_player_transaction_page
     expect(find("input#card_id")[:checked]).to eq "checked"
     expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
-    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:00")
+    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
   end
 
   def check_player_transaction_page_js
     expect(find("input#card_id")[:checked]).to eq true
     expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
-    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:00")
+    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
   end
 
   def check_search_fm_page
@@ -125,11 +125,11 @@ module StepHelper
     station = Station.find(player_transaction.station_id)
     user = User.find(player_transaction.user_id)
     if player_transaction.transaction_type_id == 1
-      deposit_str = player_transaction.amount.to_s
+      deposit_str = to_display_amount_str(player_transaction.amount)
       withdraw_str = ""
     else
       deposit_str = ""
-      withdraw_str = player_transaction.amount.to_s
+      withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
     expect(item[1].text).to eq player.player_name

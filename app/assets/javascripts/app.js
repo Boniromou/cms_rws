@@ -370,12 +370,12 @@ var calc_navbar_height = function() {
       // INITIALIZE LEFT NAV
       if (!topmenu) {
         if (!null) {
-          $('nav ul').jarvismenu({
-            accordion : true,
-            speed : menu_speed,
-            closedSign : '<em class="fa fa-plus-square-o"></em>',
-            openedSign : '<em class="fa fa-minus-square-o"></em>'
-          });
+//          $('nav ul').jarvismenu({
+//            accordion : true,
+//            speed : menu_speed,
+//            closedSign : '<em class="fa fa-plus-square-o"></em>',
+//            openedSign : '<em class="fa fa-minus-square-o"></em>'
+//          });
         } else {
           alert("Error - menu anchor does not exist");
         }

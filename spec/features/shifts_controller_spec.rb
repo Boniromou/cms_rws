@@ -12,75 +12,76 @@ describe ShiftsController do
     Warden.test_reset!
   end
 
-  describe '[9] Roll shift' do
-    def get_next_shift_ac_date(current_shift, current_ac_date)
-      shifts = ['morning', 'swing', 'night']
-      next_shift = shifts.rotate[shifts.index(current_shift)]
+  def get_next_shift_ac_date(current_shift, current_ac_date)
+    shifts = ['morning', 'swing', 'night']
+    next_shift = shifts.rotate[shifts.index(current_shift)]
 
-      next_ac_date = current_ac_date
-      next_ac_date += 1 if current_shift == 'night'
+    next_ac_date = current_ac_date
+    next_ac_date += 1 if current_shift == 'night'
 
-      [next_shift, next_ac_date]
+    [next_shift, next_ac_date]
+  end
+
+  def check_shift_content(current_shift, current_ac_date)
+    next_shift, next_ac_date = get_next_shift_ac_date(current_shift, current_ac_date)
+
+    expect(page).to have_content I18n.t("shift_name.#{current_shift}")
+    expect(page).to have_content current_ac_date
+    expect(page).to have_content I18n.t("shift_name.#{next_shift}")
+    expect(page).to have_content next_ac_date
+  end
+
+  def check_breadcrumb( icon_style, title, subtitle )
+    within("div#breadcrumbs h2") do
+      expect(page).to have_content I18n.t(title) + " > " + I18n.t(subtitle)
+      expect(page).to have_selector "i.#{icon_style.split.join('.')}"
     end
+  end
 
-    def check_shift_content(current_shift, current_ac_date)
-      next_shift, next_ac_date = get_next_shift_ac_date(current_shift, current_ac_date)
+  def roll_shift_and_check(current_shift, current_ac_date)
+    visit shifts_path
 
-      expect(page).to have_content I18n.t("shift_name.#{current_shift}")
-      expect(page).to have_content current_ac_date
-      expect(page).to have_content I18n.t("shift_name.#{next_shift}")
-      expect(page).to have_content next_ac_date
-    end
+    check_breadcrumb( "glyphicon glyphicon-retweet", "tree_panel.shift_management", "tree_panel.roll_shift" )
+    expect(page).to have_content I18n.t("shift.current_shift")
+    expect(page).to have_content I18n.t("shift.next_shift")
+    expect(page).to have_button I18n.t("button.roll_shift_now")
+    expect(find("div#confirm_roll_shift_dialog")[:style]).to include("none")
 
-    def check_breadcrumb( icon_style, title, subtitle )
-      within("div#breadcrumbs h2") do
-        expect(page).to have_content I18n.t(title) + " > " + I18n.t(subtitle)
-        expect(page).to have_selector "i.#{icon_style.split.join('.')}"
-      end
-    end
+    check_shift_content(current_shift, current_ac_date)
 
-    def roll_shift_and_check(current_shift, current_ac_date)
-      visit shifts_path
+    click_button I18n.t("button.roll_shift_now")
+    expect(find("div#confirm_roll_shift_dialog")[:style]).to_not include("none")
 
-      check_breadcrumb( "glyphicon glyphicon-retweet", "tree_panel.shift_management", "tree_panel.roll_shift" )
-      expect(page).to have_content I18n.t("shift.current_shift")
-      expect(page).to have_content I18n.t("shift.next_shift")
-      expect(page).to have_button I18n.t("button.roll_shift_now")
-      expect(find("div#confirm_roll_shift_dialog")[:style]).to include("none")
+    within("div#confirm_roll_shift_dialog") do
+      expect(page).to have_content I18n.t("shift.confirm_roll_msg")
+
+      expect(page).to have_button I18n.t("shift.confirm_roll_msg")
+      expect(page).to have_selector "button#cancel"
 
       check_shift_content(current_shift, current_ac_date)
 
-      click_button I18n.t("button.roll_shift_now")
-      expect(find("div#confirm_roll_shift_dialog")[:style]).to_not include("none")
-
-      within("div#confirm_roll_shift_dialog") do
-        expect(page).to have_content I18n.t("shift.confirm_roll_msg")
-
-        expect(page).to have_button I18n.t("shift.confirm_roll_msg")
-        expect(page).to have_selector "button#cancel"
-
-        check_shift_content(current_shift, current_ac_date)
-
-        click_button I18n.t("shift.confirm_roll_msg")
-      end
-
-      wait_for_ajax
+      click_button I18n.t("shift.confirm_roll_msg")
     end
 
-    def check_redirected_to_fm(pre_shift, pre_ac_date)
-      check_breadcrumb( "glyphicon glyphicon-retweet", "tree_panel.shift_management", "tree_panel.front_money" )
-      expect(page).to have_content I18n.t("shift.name")
-      expect(page).to have_content I18n.t("ac_date.name")
+    wait_for_ajax
+  end
 
-      within("#search_form") do
-        expect(page).to have_select('shift_name', selected: I18n.t("shift_name.#{pre_shift}"))
-        expect(page).to have_selector("input#accounting_date[value='#{pre_ac_date}']")
-      end
+  def check_redirected_to_fm(pre_shift, pre_ac_date)
+    check_breadcrumb( "glyphicon glyphicon-retweet", "tree_panel.shift_management", "tree_panel.front_money" )
+    expect(page).to have_content I18n.t("shift.name")
+    expect(page).to have_content I18n.t("ac_date.name")
+
+    within("#search_form") do
+      expect(page).to have_select('shift_name', selected: I18n.t("shift_name.#{pre_shift}"))
+      expect(page).to have_selector("input#accounting_date[value='#{pre_ac_date}']")
     end
+  end
 
+  describe '[9] Roll shift' do
     before(:each) do
       clean_dbs
       create_shift_data
+
       @now = Time.now
       allow(Time).to receive(:now).and_return(@now)
     end
@@ -172,6 +173,27 @@ describe ShiftsController do
       roll_shift_and_check('swing', @today)
       check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
       check_redirected_to_fm('swing', @today)
+    end
+  end
+
+  describe '[10] Update shift and account date to other windows' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+
+      allow_any_instance_of(CageInfoHelper).to receive(:polling_interval).and_return(100)
+    end
+
+    it '[10.1] Successfully update shift to other windows', js: true do
+      login_as_admin
+      roll_shift_and_check('morning', @today)
+
+      next_shift, next_ac_date = get_next_shift_ac_date('morning', @today)
+
+      within("body header#header") do
+        expect(page).to have_content I18n.t("shift_name.#{next_shift}")
+        expect(page).to have_content next_ac_date
+      end
     end
   end
 end

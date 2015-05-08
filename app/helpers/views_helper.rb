@@ -13,7 +13,7 @@ module ViewsHelper
     content_tag(:i,"", :class => style)
   end
 
-  def bread_crub(icon_style,title,subtitle)
+  def bread_crumb(icon_style,title,subtitle)
     text = ""
     if subtitle.class == String
       subtitle = [subtitle]

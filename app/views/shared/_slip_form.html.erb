@@ -11,7 +11,7 @@
     <td width="10%">Player Name:</td>
     <td width="40%"><%=@player.player_name  %></td>
     <td width="10%">Date/Time:</td>
-    <td width="40%"><%= @transaction.created_at %></td>
+    <td width="40%"><%= format_time(@transaction.created_at) %></td>
   </tr>
   <tr>
     <td width="10%"></td>

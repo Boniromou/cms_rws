@@ -1,77 +1,49 @@
-<table id="slip" width="800" frame="box">
-  <tbody>
-  <tr height="40"></tr>
-  <tr>
-    <td width="20%">Member ID:</td>
-    <td width="30%"><%= @player.member_id %></td>
-    <td width="20%">Transaction ID:</td>
-    <td width="30%"><%=@transaction.id  %></td>
-  </tr>
-  <tr>
-    <td width="10%">Player Name:</td>
-    <td width="40%"><%=@player.player_name  %></td>
-    <td width="10%">Date/Time:</td>
-    <td width="40%"><%= format_time(@transaction.created_at) %></td>
-  </tr>
-  <tr>
-    <td width="10%"></td>
-    <td width="40%"></td>
-    <td width="10%">Employee ID:</td>
-    <td width="40%"><%= current_user.employee_id %></td>
-  </tr>
-  </tbody>
-  <tbody>
-  <tr>
-    <td>
-    <td >Total <%= operation %>:</td>
-    <td >HK$<%= to_display_amount_str(@transaction[:amount]) %></td>
-    <td>
-  </tr>
-    <tr>
-      <td>
-      <td>Patron Signature</td>
-      <td colspan="2">___________________________<td/>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr>
-      <td>Qty</td>
-      <td>Description</td>
-      <td>Foreign Amt</td>
-      <td>For Ex Rate</td>
-      <td>Amount</td>
-    </tr>
-    <tr>
-      <td><%= to_display_amount_str(@transaction[:amount]) %></td>
-      <td>HKD 1 Cash</td>
-      <td>HK$<%= to_display_amount_str(@transaction[:amount]) %></td>
-      <td>1.00</td>
-      <td>HK$<%= to_display_amount_str(@transaction[:amount]) %></td>
-    </tr>
-    <tr><td/><td colspan="4">--------------------------------------------END-------------------------------------</td></tr>
-    <tr><td></td></tr>
-    <tr></tr>
-  <tr>
-    <td>
-    <td >Total <%= operation %>:</td>
-    <td >HK$<%= to_display_amount_str(@transaction[:amount]) %></td>
-    <td>
-  </tr>
 
-  </tbody>
-  <tbody>
-    <tr>
-      <td colspan="2">___________________________<td/>
-    </tr>
-    <tr>
-      <td>Cage Cashier</td>
-      <td>ID</td>
-    <tr/>
-    <tr>
-      <td colspan="2">___________________________<td/>
-    </tr>
-    <tr>
-      <td>Cage Supervisor</td>
-      <td>ID</td>
-    <tr/>
-</table>
+<div id="slip">
+  <div class="row">
+    <div class="col-sm-2">Member ID:</div>
+    <div class="col-sm-2"><%= @player.member_id %></div>
+    <div class="col-sm-2">Transaction ID:</div>
+    <div class="col-sm-2"><%= @transaction.id %></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">Player Name:</div>
+    <div class="col-sm-2"><%=@player.player_name  %></div>
+    <div class="col-sm-2">Date/Time:</div>
+    <div class="col-sm-2"><%= format_time(@transaction.created_at) %></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-2"></div>
+    <div class="col-sm-2">Employee ID:</div>
+    <div class="col-sm-2"><%= current_user.employee_id %></div>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <h2 class="col-sm-3">Total <%= operation %>:</h2>
+    <h2 class="col-sm-3">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
+  </div>
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <h4 class="col-sm-3">Patron Signature</h4>
+    <h4 class="col-sm-3">__________________</h4>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col-sm-2">________________________________________</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">Cage Cashier</div>
+    <div class="col-sm-2">ID</div>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col-sm-2">________________________________________</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">Cage Cashier</div>
+    <div class="col-sm-2">ID</div>
+  </div>
+</div>
+

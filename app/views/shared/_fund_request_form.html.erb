@@ -3,8 +3,14 @@
     <%= hidden_field(:player, :member_id) %>
   </div>
 
-          <div class="row">
-            <label class="col-xs-3 box"><strong><%= t("deposit_withdrawal.amount")%>:</strong></label></td>
-    <%= f.text_field :amount, required: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-3 box" %><br/>
-          </div>
+  <div class="row">
+    <label class="col-xs-3 box"><strong><%= t("deposit_withdrawal.amount")%>:</strong></label></td>
+    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-3 box" %><br/>
+  </div>
 <% end %>
+
+<script>
+  $(document).ready(function() {
+    $('input[autofocus="autofocus"]').focus();
+  });
+</script>

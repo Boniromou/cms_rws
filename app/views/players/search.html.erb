@@ -24,7 +24,7 @@
       <div class="col-sm-4">
         <section class="smart-form">
           <label class="input">
-            <%= text_field_tag(:"id_number", @id_number) %>
+            <%= text_field_tag(:"id_number", @id_number, autofocus: true) %>
           </label>
         </section>
       </div>
@@ -48,3 +48,9 @@
   </div>
   <% end %>
 <% end %>
+
+<script>
+  $(document).ready(function() {
+    $('input[autofocus="autofocus"]').focus();
+  });
+</script>

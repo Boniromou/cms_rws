@@ -32,7 +32,7 @@ describe FrontMoneyController do
       PlayerTransaction.delete_all
     end
 
-    it '[11.1] Successfully generate FM Actiivty Report' do
+    it '[11.1] Successfully generate FM Actiivty Report', :js => true do
       login_as_admin
       create_player_transaction
       visit search_front_money_path
@@ -40,8 +40,9 @@ describe FrontMoneyController do
       check_search_fm_page
       
       find("input#search").click
+      wait_for_ajax
       transaction_hash = { @station_id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
-      check_fm_remort_result_items(transaction_hash)
+      check_fm_report_result_items(transaction_hash)
     end
 
     it '[11.2] Search FM Activity Report Unauthorized' do
@@ -49,7 +50,7 @@ describe FrontMoneyController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shift,[""])
       visit home_path
-      first("aside#left-panel ul li#nav_front_money").should be_nil
+      expect(first("aside#left-panel ul li#nav_front_money")).to be_nil
     end
 
     it '[11.3] FM Activity Report not found' do
@@ -59,8 +60,21 @@ describe FrontMoneyController do
       check_search_fm_page
       
       find("input#search").click
-      expect(find("div.widget-body p").text).to eq "no result"
+      expect(find("div.widget-body label").text).to eq t("report_sarch.no_transaction_found")
     end
       
+    it '[11.4] accounting date cannot be empty', :js => true do
+      login_as_admin
+      create_player_transaction
+      visit search_front_money_path
+      fill_in "accounting_date", :with => 1
+      check_search_fm_page
+      
+      find("input#search").click
+      wait_for_ajax
+      transaction_hash = { @station_id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
+      check_fm_report_result_items(transaction_hash)
+      expect(find("input#accounting_date").value).to eq AccountingDate.current.accounting_date.strftime("%Y-%m-%d")
+    end
   end
 end

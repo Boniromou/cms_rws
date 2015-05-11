@@ -8,9 +8,9 @@ function validateNumberOnly(element, value) {
 
 function ValidateFloat(e, pnumber)
 {
-  if (!/^\d+[.]?[\d\d]?$/.test(pnumber))
-  {
-      $(e).val(/^\d+[.]?\d\d/.exec($(e).val()));
+  if (!/^d{1,7}([.](\d\d?)?)?$/.test(pnumber)){
+    result = /^\d{1,7}([.](\d\d?)?)?/.exec(pnumber);
+    $(e).val(result[0]);
   }
   return false;
 }

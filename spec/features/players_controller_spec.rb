@@ -268,8 +268,8 @@ describe PlayersController do
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
       check_not_found
-      click_link I18n.t("button.create")
-      #check_title("tree_panel.create_player")
+      find("div#message_content a.btn").click
+      check_title("tree_panel.create_player")
       expect(find("form#new_player input#player_member_id").value).to eq @player.member_id.to_s
     end
   end
@@ -428,21 +428,18 @@ describe PlayersController do
       click_link I18n.t("button.create")
     end
     
-    it '[12.4] direct to create player', :js => true do
+    it '[12.4] direct to create player' do
       @player = Player.new
       @player.member_id = 123456
       @player.card_id = 1234567890
       @player.player_name = "test player"
       login_as_admin
       visit players_search_path + "?operation=balance"
-      fill_search_info_js("card_id", @player.card_id)
+      fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      wait_for_ajax
       check_not_found
-      click_link I18n.t("button.create")
-      wait_for_ajax
-      #check_title("tree_panel.create_player")
-      print page.html
+      find("div#message_content a.btn").click
+      check_title("tree_panel.create_player")
       expect(find("form#new_player input#player_card_id").value).to eq @player.card_id.to_s
     end
   end

@@ -28,10 +28,8 @@ class ApplicationController < ActionController::Base
 
   def check_session_expiration
     if session[:accessed_at] && Time.now.utc - session[:accessed_at] > SESSION_EXPIRATION_TIME
-      p 'reset'
       reset_session
     else
-      p 'new'
       session[:accessed_at] = Time.now.utc
     end
   end

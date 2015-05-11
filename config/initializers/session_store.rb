@@ -19,6 +19,8 @@ if File.file?(filename)
       v.symbolize_keys! if v.respond_to?(:symbolize_keys!)
     end
 
+    SESSION_EXPIRATION_TIME = mem_config['expires']
+
     CmsRws::Application.config.session_store :dalli_store,
                                              :key => '_cms_rws_session',
                                              #:domain => SITE_DOMAIN,

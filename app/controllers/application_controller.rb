@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :authenticate_user!
+  before_filter :check_session_expiration, :authenticate_user!
 
   layout false
 
@@ -25,6 +25,16 @@ class ApplicationController < ActionController::Base
   end
   
   protected
+
+  def check_session_expiration
+    if session[:accessed_at] && Time.now.utc - session[:accessed_at] > SESSION_EXPIRATION_TIME
+      p 'reset'
+      reset_session
+    else
+      p 'new'
+      session[:accessed_at] = Time.now.utc
+    end
+  end
 
   def sid
     request.session_options[:id]

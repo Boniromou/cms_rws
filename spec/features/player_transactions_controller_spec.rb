@@ -81,7 +81,7 @@ describe PlayersController do
       check_player_transaction_page
       find("input#search").click
 
-      expect(find("div.widget-body label").text).to eq t("report_sarch.no_transaction_found")
+      expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
     end
     
     it '[8.5] successfully generate report. (search by member ID)' do
@@ -136,6 +136,18 @@ describe PlayersController do
 
 
       check_player_transaction_result_items([@player_transaction2,@player_transaction3],false)
+    end
+    
+    it '[8.10] empty search', :js => true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
+      fill_in "datetimepicker_start_time", :with => "abc"
+      find("input#search").click
+      wait_for_ajax
+      check_player_transaction_result_items([@player_transaction1,@player_transaction2,@player_transaction3])
+      expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
     end
   end
 end

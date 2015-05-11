@@ -152,7 +152,7 @@ module StepHelper
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true)
-    items = all("table#datatable_col_reorder tr")
+    items = all("table#datatable_col_reorder tbody tr")
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do

@@ -60,7 +60,7 @@ describe FrontMoneyController do
       check_search_fm_page
       
       find("input#search").click
-      expect(find("div.widget-body label").text).to eq t("report_sarch.no_transaction_found")
+      expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
     end
       
     it '[11.4] accounting date cannot be empty', :js => true do

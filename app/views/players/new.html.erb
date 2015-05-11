@@ -1,45 +1,74 @@
 <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.create_player")) %>
 
 <style>
-  td.player_input {
-    padding-top: 10px;
-  }
-
-  td.invisible_error {
+  label.invisible_error {
     visibility: hidden;
-    padding-left: 10px;
     color: red;
-  }
-
-  input.field_error {
-    background: none repeat scroll 0 0 #fff0f0;
-    border-color: #a90329;
   }
 </style>
 
-<%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
-  <table>
-    <col width="10%">
-    <col width="20%">
-    <tr>
-      <td class='player_input'><%= f.label :card_id, t("general.card_id") %>:</td>
-      <td><%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %></td>
-      <td class='invisible_error'><%= t("create_player.card_id_blank_error") %></td>
-    </tr>
-    <tr>
-      <td class='player_input'><%= f.label :member_id, t("general.member_id") %>:</td>
-      <td><%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%></td>
-      <td class='invisible_error'><%= t("create_player.member_id_blank_error") %></td>
-    </tr>
-    <tr>
-      <td class='player_input'><%= f.label :name, t("general.name") %>:</td>
-      <td><%= f.text_field :player_name %></td>
-      <td class='invisible_error'><%= t("create_player.name_blank_error") %></td>
-    </tr>
-    <tr>
-      <td colspan='2' class='player_input'><%= f.submit t("button.create"), class: 'btn btn-primary pull-right', id: 'create_player_submit' %></td>
-    </tr>
-<% end %>
+<section class='smart-form'>
+  <%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
+    <div class='row'>
+      <div class='col col-2'>
+        <label class='input'>
+          <%= f.label :card_id, t("general.card_id") %>:
+        </label>
+      </div>
+      <div class='col col-3'>
+        <label class='input'>
+          <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %>
+        </label>
+      </div>
+      <div class='col col-3'>
+        <label class='invisible_error'>
+          <%= t("create_player.card_id_blank_error") %>
+        </label>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col col-2'>
+        <label class='input'>
+          <%= f.label :member_id, t("general.member_id") %>:
+        </label>
+      </div>
+      <div class='col col-3'>
+        <label class='input'>
+          <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%>
+        </label>
+      </div>
+      <div class='col col-3'>
+        <label class='invisible_error'>
+          <%= t("create_player.member_id_blank_error") %>
+        </label>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col col-2'>
+        <label class='input'>
+          <%= f.label :name, t("general.name") %>:
+        </label>
+      </div>
+      <div class='col col-3'>
+        <label class='input'>
+          <%= f.text_field :player_name %>
+        </label>
+      </div>
+      <div class='col col-3'>
+        <label class='invisible_error'>
+          <%= t("create_player.name_blank_error") %>
+        </label>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col col-5'>
+        <footer>
+          <%= f.submit t("button.create"), class: 'btn btn-primary pull-right', id: 'create_player_submit' %>
+        </footer>
+      </div>
+    <div>
+  <% end %>
+</section>
 
 <%= javascript_include_tag "validate.input.js" %>
 
@@ -56,14 +85,18 @@
         return true;
     }
 
+    function targetLabel(index) {
+      return $("form#new_player > div.row:eq(" + index + ") > div.col:eq(2) label");
+    }
+
     function showError(comp, index) {
-      $("form#new_player tr:nth-child(" + (index + 1) + ") td:nth-child(3)").css('visibility', 'visible');
-      comp.addClass('field_error');
+      targetLabel(index).css('visibility', 'visible');
+      comp.parent().addClass('state-error');
     }
 
     function hideError(comp, index) {
-      $("form#new_player tr:nth-child(" + (index + 1) + ") td:nth-child(3)").css('visibility', 'hidden');
-      comp.removeClass('field_error');
+      targetLabel(index).css('visibility', 'hidden');
+      comp.parent().removeClass('state-error');
     }
 
     var allValidated = true;

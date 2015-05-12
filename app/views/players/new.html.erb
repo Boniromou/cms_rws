@@ -10,7 +10,7 @@
 <section class='smart-form'>
   <%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
     <fieldset style='padding: 1px;'>
-      <div class='row'>
+      <div class='row' style='padding-bottom: 10px;'>
         <div class='col col-2'>
           <label class='input'>
             <%= f.label :card_id, t("general.card_id") %>:
@@ -27,7 +27,7 @@
           </label>
         </div>
       </div>
-      <div class='row'>
+      <div class='row' style='padding-bottom: 10px;'>
         <div class='col col-2'>
           <label class='input'>
             <%= f.label :member_id, t("general.member_id") %>:
@@ -44,7 +44,7 @@
           </label>
         </div>
       </div>
-      <div class='row'>
+      <div class='row' style='padding-bottom: 10px;'>
         <div class='col col-2'>
           <label class='input'>
             <%= f.label :name, t("general.name") %>:

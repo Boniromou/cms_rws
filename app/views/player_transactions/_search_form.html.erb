@@ -33,7 +33,7 @@
       <div class="col-sm-1">
         <section class="smart-form">
         <br/>
-          <label class="label"><%= t("transaction_history.start_date") %></label>
+          <label class="label lower"><%= t("transaction_history.start_date") %></label>
         </section>
       </div>
       <div class="col-sm-3">
@@ -44,7 +44,7 @@
       <div class="col-sm-1">
         <section class="smart-form">
         <br/>
-          <label class="label"><%= t("transaction_history.end_date") %></label>
+          <label class="label lower"><%= t("transaction_history.end_date") %></label>
         </section>
       </div>
       <div class="col-sm-3">
@@ -58,7 +58,7 @@
     <div class="row">
       <div class="col-sm-1">
         <section class="smart-form">
-          <label class="label"><%= t("transaction_history.transaction_id") %></label>
+          <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
         </section>
       </div>
       <div class="col-sm-7">
@@ -96,3 +96,10 @@
     $('input[autofocus="autofocus"]').focus();
   });
 </script>
+
+<style type="text/css">
+  .lower{
+    padding-top: 7px;
+    }
+</style>
+  

@@ -2,6 +2,7 @@ class FundController < ApplicationController
   include FundHelper
 
   layout 'cage'
+  rescue_from AmountInvalidError, :with => :handle_amount_invalid_error
 
   def operation_sym
     raise NotImplementedError
@@ -24,33 +25,28 @@ class FundController < ApplicationController
 
   def create
     return unless permission_granted? PlayerTransaction.new, operation_sym
-    member_id = params[:player][:member_id]
+    @member_id = params[:player][:member_id]
+    @player = Player.find_by_member_id(@member_id)
     amount = params[:player_transaction][:amount]
-
-    begin
-      begin
-        validate_amount_str( amount )
-        server_amount = to_server_amount(amount)
-        if operation_str == "fund_out"
-          player = Player.find_by_member_id(member_id)
-          balance = player.balance
-          validate_balance_enough( server_amount, balance )
-        end
-      rescue AmountInvalidError => e
-        flash[:alert] = "invalid_amt." + action_str
-        raise e
-      rescue BalanceNotEnough => e
-        flash[:alert] = { key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: player.balance_str} }
-        raise e
-      end
-      AuditLog.fund_in_out_log(action_str, current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
-        @transaction = do_fund_action(member_id, server_amount)
-      end
-      @player = Player.find_by_member_id(member_id)
-    rescue FundError => e
-      flash[:fade_in] = false
-      redirect_to :action => 'new', member_id: member_id
+    server_amount = get_server_amount(amount)
+    AuditLog.fund_in_out_log(action_str, current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
+      @transaction = do_fund_action(@member_id, server_amount)
     end
+  end
+
+  def get_server_amount(amount)
+    validate_amount_str(amount)
+    to_server_amount(amount)
+  end
+
+  def handle_amount_invalid_error(e)
+    handle_fund_error("invalid_amt." + action_str)
+  end
+
+  def handle_fund_error(msg)
+    flash[:alert] = msg
+    flash[:fade_in] = false
+    redirect_to :action => 'new', member_id: @member_id
   end
 
   protected

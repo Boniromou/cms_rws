@@ -1,6 +1,6 @@
 module FundHelper
   def validate_amount_str( amount )
-    raise AmountInvalidError.new "Input amount not valid" unless amount.is_a?(String) && amount =~ /^\d+(\.\d{1,2})?$/ && to_server_amount( amount ) > 0
+    raise AmountInvalidError.new "Input amount not valid" unless amount.is_a?(String) && amount =~ /^\d{1,7}(\.\d{1,2})?$/ && to_server_amount( amount ) > 0
   end
 
   def to_server_amount( amount )
@@ -15,12 +15,9 @@ module FundHelper
     number_to_currency(amount.to_f / 100).sub("$","")
   end
 
-  class FundError <Exception
+  class AmountInvalidError < Exception
   end
 
-  class AmountInvalidError < FundError
-  end
-
-  class BalanceNotEnough < FundError
+  class BalanceNotEnough < Exception
   end
 end

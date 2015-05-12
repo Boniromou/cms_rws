@@ -9,64 +9,66 @@
 
 <section class='smart-form'>
   <%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
-    <div class='row'>
-      <div class='col col-2'>
-        <label class='input'>
-          <%= f.label :card_id, t("general.card_id") %>:
-        </label>
+    <fieldset style='padding: 1px;'>
+      <div class='row'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :card_id, t("general.card_id") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.card_id_blank_error") %>
+          </label>
+        </div>
       </div>
-      <div class='col col-3'>
-        <label class='input'>
-          <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %>
-        </label>
+      <div class='row'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :member_id, t("general.member_id") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.member_id_blank_error") %>
+          </label>
+        </div>
       </div>
-      <div class='col col-3'>
-        <label class='invisible_error'>
-          <%= t("create_player.card_id_blank_error") %>
-        </label>
+      <div class='row'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :name, t("general.name") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :player_name %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.name_blank_error") %>
+          </label>
+        </div>
       </div>
-    </div>
-    <div class='row'>
-      <div class='col col-2'>
-        <label class='input'>
-          <%= f.label :member_id, t("general.member_id") %>:
-        </label>
-      </div>
-      <div class='col col-3'>
-        <label class='input'>
-          <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)'%>
-        </label>
-      </div>
-      <div class='col col-3'>
-        <label class='invisible_error'>
-          <%= t("create_player.member_id_blank_error") %>
-        </label>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='col col-2'>
-        <label class='input'>
-          <%= f.label :name, t("general.name") %>:
-        </label>
-      </div>
-      <div class='col col-3'>
-        <label class='input'>
-          <%= f.text_field :player_name %>
-        </label>
-      </div>
-      <div class='col col-3'>
-        <label class='invisible_error'>
-          <%= t("create_player.name_blank_error") %>
-        </label>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='col col-5'>
-        <footer>
-          <%= f.submit t("button.create"), class: 'btn btn-primary pull-right', id: 'create_player_submit' %>
-        </footer>
-      </div>
-    <div>
+      <div class='row'>
+        <div class='col col-5'>
+          <footer>
+            <%= f.submit t("button.create"), class: 'btn btn-primary pull-right', id: 'create_player_submit' %>
+          </footer>
+        </div>
+      <div>
+    </fieldset>
   <% end %>
 </section>
 
@@ -86,7 +88,7 @@
     }
 
     function targetLabel(index) {
-      return $("form#new_player > div.row:eq(" + index + ") > div.col:eq(2) label");
+      return $("form#new_player > fieldset > div.row:eq(" + index + ") > div.col:eq(2) label");
     }
 
     function showError(comp, index) {

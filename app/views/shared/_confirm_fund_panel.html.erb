@@ -28,14 +28,32 @@
     $('#confirm_fund_dialog #fund_amt').text(formatNum(amt));
   }
 
-  $('#confirm').click(function() {
-    $('#confirm_fund_dialog').css("display", "block");
-    $('#confirm_fund_dialog #confirm').focus();
+  function formValid(){
+    amt = $('#player_transaction_amount').val().replace(/0+/,"");
+    return amt != ""
+  }
 
-    $('#confirm').attr('disabled','disabled');
-    $('#cancel').attr('disabled','disabled');
-    $('#player_transaction_amount').attr('readonly','readonly');
-    updateConfirmAmt();
+  function showError(){
+    $("label.invisible_error").css('visibility', 'visible');
+  }
+
+  function hideError(){
+    $("label.invisible_error").css('visibility', 'hidden');
+  }
+
+  $('#confirm').click(function() {
+    if( formValid()){
+      hideError();
+      $('#confirm_fund_dialog').css("display", "block");
+      $('#confirm_fund_dialog #confirm').focus();
+
+      $('#confirm').attr('disabled','disabled');
+      $('#cancel').attr('disabled','disabled');
+      $('#player_transaction_amount').attr('readonly','readonly');
+      updateConfirmAmt();
+    }else{
+      showError();
+    }
 
     return false;
   });

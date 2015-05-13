@@ -1,12 +1,5 @@
 <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.create_player")) %>
 
-<style>
-  label.invisible_error {
-    visibility: hidden;
-    color: red;
-  }
-</style>
-
 <section class='smart-form'>
   <%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
     <fieldset style='padding: 1px;'>

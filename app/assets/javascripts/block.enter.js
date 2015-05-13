@@ -1,7 +1,6 @@
 function blockEnter(event){ 
   if (event.keyCode == 13) {
-    $('button#confirm').focus();
-    throw ""
+    $('div#button_set button#confirm').click();
     return false;
   }
 }

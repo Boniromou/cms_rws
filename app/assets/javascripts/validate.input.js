@@ -8,6 +8,13 @@ function validateNumberOnly(element, value) {
 
 function ValidateFloat(e, pnumber)
 {
+  if (pnumber[0] == "0"){
+    while(pnumber[0] == "0"){
+      pnumber = pnumber.substring(1);
+    }
+    $(e).val(pnumber);
+  }
+  var numericRegexp = /^\d{1,7}([.](\d\d?)?)?$/;
   if (!/^\d{1,7}([.](\d\d?)?)?$/.test(pnumber)){
     result = /^\d{1,7}([.](\d\d?)?)?/.exec(pnumber);
     if(result == null)

@@ -29,7 +29,7 @@
   }
 
   function formValid(){
-    amt = $('#player_transaction_amount').val().replace(/0+/,"");
+    amt = $('#player_transaction_amount').val().replace(/0+[.]?/,"");
     return amt != ""
   }
 

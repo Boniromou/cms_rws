@@ -23,7 +23,7 @@
 
       <% if policy(Player.new).create? %>
         <li id="player_li">
-          <a id="player" href="#"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
+          <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
           <ul style="display:block;">
             <% if policy(Player.new).create? %>
               <li id="nav_create_player">
@@ -37,7 +37,7 @@
       <% end %>
       <% if policy(Player.new).balance? || policy(PlayerTransaction.new).search? %>
         <li>
-          <a href="#"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
+          <a href="#" class="unlink"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
           <ul style="display:block;">
             <% if policy(Player.new).balance? %>
               <li id="nav_balance_enquiry">
@@ -58,7 +58,7 @@
       <% end %>
       <% if policy(Shift.new).roll? || policy(Shift.new).search_fm? %>
         <li>
-          <a href="#"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>
           <ul style="display:block;">
             <% if policy(Shift.new).roll? %>
               <li id="nav_roll_shift">
@@ -84,3 +84,12 @@
   </span>
 </aside>
 <!-- END NAVIGATION -->
+<style type="text/css">
+.unlink{
+  cursor: default;
+}
+.unlink:active{
+  background: #3a3633!important;
+  color: #fff;
+}
+</style>

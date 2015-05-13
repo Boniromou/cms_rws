@@ -47,8 +47,8 @@ describe FundInController do
     it '[6.2] Invalid Deposit', :js => true do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
-      fill_in "player_transaction_amount", :with => 0.111
-      expect(find("input#player_transaction_amount").value).to eq "0.11"
+      fill_in "player_transaction_amount", :with => 1.111
+      expect(find("input#player_transaction_amount").value).to eq "1.11"
     end
 
     it '[6.3] Invalid Deposit(eng)', :js => true do
@@ -63,12 +63,8 @@ describe FundInController do
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 0
       click_button I18n.t("button.confirm")
-      find("div#confirm_fund_dialog")[:style].include?("block").should == true
-      find("div#confirm_fund_dialog div button#confirm").click
-      check_title("tree_panel.fund_in")
-      expect(find("label#player_name").text).to eq @player.player_name.upcase
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      check_flash_message I18n.t("invalid_amt.deposit")
+      find("div#confirm_fund_dialog")[:style].include?("block").should == false
+      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
 
     it '[6.5] cancel Deposit', :js => true do
@@ -312,6 +308,15 @@ describe FundInController do
       audit_log.ip.should_not be_nil
       audit_log.session_id.should_not be_nil
       audit_log.description.should_not be_nil
+    end
+
+    it '[6.17] Invalid Deposit (empty)', :js => true do
+      login_as_admin 
+      visit fund_in_path + "?member_id=#{@player.member_id}"
+      fill_in "player_transaction_amount", :with => ""
+      click_button I18n.t("button.confirm")
+      find("div#confirm_fund_dialog")[:style].include?("block").should == false
+      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
   end
 end

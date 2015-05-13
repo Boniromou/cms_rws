@@ -2,6 +2,10 @@ function formatNum(str){
 var newStr = "";
 var count = 0;
 
+while(str[0] == "0"){
+  str = str.substring(1);
+}
+
 if(str.indexOf(".")==-1){
    for(var i=str.length-1;i>=0;i--){
  if(count % 3 == 0 && count != 0){

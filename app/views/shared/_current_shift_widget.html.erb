@@ -14,7 +14,7 @@
           var pre = widget.html();
           if ( pre == "<%= default_shift_widget_message %>" )
             widget.html(data);
-          else if ( pre != data && !widget.is(':animated') )
+          else if ( pre != data && !widget.hasClass("animating") )
             animateUpdate(element, data);
         });
       }

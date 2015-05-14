@@ -14,7 +14,7 @@
           if ( pre == "<%= default_accounting_date_widget_message %>" )
             widget.html(data)
           else if ( pre != data && !widget.is(':animated') )
-            slideDownUpdate(element, data);
+            animateUpdate(element, data);
         });
       }
     });

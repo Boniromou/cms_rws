@@ -20,7 +20,6 @@ function animateUpdate(element, newdata) {
   function setIntervalX(callback, delay, repetitions, afterCallback) {
     var repeated = 0;
     var intervalID = window.setInterval(function() {
-      console.log(repeated);
       callback();
 
       if ( ++repeated === repetitions ) {
@@ -35,7 +34,7 @@ function animateUpdate(element, newdata) {
   var flashTime = 3;
 
   setIntervalX(function() {
-                 $(element).effect("highlight", {color: '#A6A6A6'}, flashInterval);
+                 $(element).effect("highlight", {color: '#FFFFA3'}, flashInterval);
                },
                flashInterval,
                flashTime,

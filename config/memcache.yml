@@ -75,10 +75,10 @@ production0:
 
 mockup0:
   servers:
-    - stg-cons-vapp01.rnd.laxino.com:11211
-    - stg-cons-vapp01.rnd.laxino.com:11212
+    - mo-mock-s3-vapp01.rnd.laxino.com:11211
+    - mo-mock-s3-vapp01.rnd.laxino.com:11212
   expires: 3600
-  namespace: s3_mkp
+  namespace: s3_mock
   no_block: false
   timeout: 30
 

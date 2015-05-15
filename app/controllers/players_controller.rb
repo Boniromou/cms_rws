@@ -12,17 +12,12 @@ class PlayersController < ApplicationController
   def create
     return unless permission_granted? Player.new
     begin
-      is_success = false
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        is_success = Player.create_by_params(params[:player])
+        Player.create_by_params(params[:player])
       end
-      if is_success
-        flash[:success] = "create_player.success"
-        redirect_to :action => 'balance', :member_id => params[:player][:member_id]
-      else
-        raise "unknown_error"
-      end
-    rescue Exception => e
+      flash[:success] = "create_player.success"
+      redirect_to :action => 'balance', :member_id => params[:player][:member_id]
+    rescue RuntimeError => e
       flash[:error] = "create_player." + e.message
       redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end

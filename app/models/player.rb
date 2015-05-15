@@ -14,8 +14,6 @@ class Player < ActiveRecord::Base
     member_id = params[:member_id]
     player_name = params[:player_name].downcase
 
-    result = false
-
     player = new
     player.card_id = card_id
     player.member_id = member_id
@@ -24,8 +22,7 @@ class Player < ActiveRecord::Base
     player.currency_id = 1
     player.status = "active"
     begin
-      result = player.save
-      return result
+      player.save!
     rescue
       raise "exist"
     end

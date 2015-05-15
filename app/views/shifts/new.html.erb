@@ -73,6 +73,10 @@
     $('#confirm_roll_shift_dialog button#confirm').click(function() {
       $(this).attr('disabled', 'disabled');
       $('#confirm_roll_shift_form').submit();
+      setTimeout(function() {
+        updateShift();
+        updateAccountingDate();
+      }, 500);
     });
 
     $('#confirm_roll_shift_dialog button#cancel').click(function() {

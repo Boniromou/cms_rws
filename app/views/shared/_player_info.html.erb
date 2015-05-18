@@ -21,6 +21,10 @@
           <label class="col-xs-3 box"><strong><%= t("general.card_id")%> :</strong></label></td>
           <label class="col-xs-3 box"><%= label_tag :player_card_id,@player.card_id, :id => "player_card_id" %></label></td>
         </div>
+        <div class="row">
+          <label class="col-xs-3 box"><strong><%= t("general.status")%> :</strong></label></td>
+          <label class="col-xs-3 box"><%= label_tag :player_status,@player.status, :id => "player_status" %></label></td>
+        </div>
         <%= content %>
         </br>
         <div class="widget-footer text-left">

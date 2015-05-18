@@ -34,6 +34,7 @@ en:
     card_id: "Card ID"
     player: "Player"
     transaction_id: "Transaction ID"
+    status: "Status"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"

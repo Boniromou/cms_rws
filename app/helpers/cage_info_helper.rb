@@ -1,6 +1,6 @@
 module CageInfoHelper
   def current_cage_location_str
-    current_station.capitalize + "!!!"
+    current_station.capitalize
   end
 
   def update_accounting_date_interval

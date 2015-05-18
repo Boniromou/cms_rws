@@ -25,6 +25,7 @@ en:
     roll_shift: "Roll Shift"
     player_transaction: "Transaction History"
     front_money: "FM Activity Report"
+    profile: "Player Profile"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -65,6 +66,8 @@ en:
     withdrawal: "Withdrawal"
     search: "Search"
     roll_shift_now: "Roll Shift Now"
+    edit: "Edit"
+    lock: "Lock"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"

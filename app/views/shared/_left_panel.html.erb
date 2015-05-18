@@ -32,6 +32,13 @@
                 <% end %>
               </li>
             <% end %>
+            <% if policy(Player.new).profile? %>
+              <li id="nav_player_profile">
+                <%= link_to profile_path, :title => t("tree_panel.profile") , :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.profile")%></span>
+                <% end %>
+              </li>
+            <% end %>
           </ul>
         </li>
       <% end %>

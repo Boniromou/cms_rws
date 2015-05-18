@@ -21,17 +21,10 @@
           <label class="col-xs-3 box"><strong><%= t("general.card_id")%> :</strong></label></td>
           <label class="col-xs-3 box"><%= label_tag :player_card_id,@player.card_id, :id => "player_card_id" %></label></td>
         </div>
-        <% if show_balance %>
-          <div class="row">
-            <label class="col-xs-3 box"><strong><%= t("balance_inquiry.account_balance")%>:</strong></label></td>
-            <label class="col-xs-3 box"><%= label_tag :player_balance, to_display_amount_str(@player.balance), :id => "player_balance"%></label></td>
-          </div>
-        <% else %>
-          <%= render partial: "shared/fund_request_form" , :locals => {:fund_request_path => fund_request_path }%>
-        <% end %>
+        <%= content %>
         </br>
         <div class="widget-footer text-left">
-          <%= render partial:footer_path %>
+          <%= footer%>
         </div>
       </div>
     </div>

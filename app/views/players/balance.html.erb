@@ -1,4 +1,7 @@
 <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.balance")) %>
 
-<%= render partial:"shared/player_info" , :locals => {:show_balance => true, :back_button => close_balance, :footer_path => "players/panel_footer"} %>
+<% back_button = close_balance %>
+<% footer = render "players/panel_footer" %>
+<% content = render "players/balance_amt" %>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => true, :back_button => back_button, :content => content, :footer => footer} %>
 </div>

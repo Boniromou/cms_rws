@@ -1,5 +1,6 @@
 CmsRws::Application.routes.draw do
 
+
   devise_for :users, controllers: {:sessions => "user_sessions"}
 
   devise_scope :user do
@@ -16,6 +17,7 @@ CmsRws::Application.routes.draw do
   get "balance" => 'players#balance'
   get "search" => 'players#search' ,:as => :players_search
   post "search" => "players#do_search"
+  get "profile" => "players#profile"
   resources :players
 
   get 'fund_in' => 'fund_in#new'

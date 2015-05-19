@@ -1,4 +1,4 @@
-<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t(@search_title)) %>
+<%= search_page_bread_crumb(t(@search_title)) %>
 <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
   <fieldset>
     <div class="row">

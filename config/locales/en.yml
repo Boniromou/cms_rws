@@ -26,6 +26,7 @@ en:
     player_transaction: "Transaction History"
     front_money: "FM Activity Report"
     profile: "Player Profile"
+    edit: "Edit Player"
   general:
     login: "Log In"
     logout: "Log Out"

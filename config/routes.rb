@@ -18,6 +18,8 @@ CmsRws::Application.routes.draw do
   get "search" => 'players#search' ,:as => :players_search
   post "search" => "players#do_search"
   get "profile" => "players#profile"
+  get "edit" => "players#edit"
+  post "update" => "players#update"
   resources :players
 
   get 'fund_in' => 'fund_in#new'

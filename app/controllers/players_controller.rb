@@ -63,10 +63,18 @@ class PlayersController < ApplicationController
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
-      @currency = Currency.find_by_id(@player.currency_id)
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
     end
+  end
+
+  def edit
+    member_id = params[:member_id]
+    @player = Player.find_by_member_id(member_id)
+  end
+
+  def update
+    redirect_to home_path
   end
 end

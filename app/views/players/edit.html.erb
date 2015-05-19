@@ -1,0 +1,108 @@
+<%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.edit")) %>
+
+<section class='smart-form'>
+  <%= form_for @player, :remote => true, html: {id: :edit_player, autocomplete: :off } do |f| %>
+    <fieldset style='padding: 1px;'>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :card_id, t("general.card_id") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.card_id_blank_error") %>
+          </label>
+        </div>
+      </div>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :name, t("general.name") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :player_name %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.name_blank_error") %>
+          </label>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col col-5'>
+          <footer>
+            <%= f.submit t("button.confirm"), class: 'btn btn-primary pull-right', id: 'edit_player_submit' %>
+            <%= f.button t("button.cancel"), class: 'btn btn-primary pull-right', id: 'edit_player_cancel' %>
+          </footer>
+        </div>
+      <div>
+    </fieldset>
+  <% end %>
+</section>
+
+<%= javascript_include_tag "validate.input.js" %>
+
+<script>
+  $(document).ready(function() {
+    $('input[autofocus="autofocus"]').focus();
+  });
+
+  function formValidated() {
+    function validated(comp) {
+      if ( comp.val() == "" )
+        return false;
+      else
+        return true;
+    }
+
+    function targetLabel(index) {
+      return $("form#edit_player > fieldset > div.row:eq(" + index + ") > div.col:eq(2) label");
+    }
+
+    function showError(comp, index) {
+      targetLabel(index).css('visibility', 'visible');
+      comp.parent().addClass('state-error');
+    }
+
+    function hideError(comp, index) {
+      targetLabel(index).css('visibility', 'hidden');
+      comp.parent().removeClass('state-error');
+    }
+
+    var allValidated = true;
+    var formComps = [$("form#edit_player input#player_card_id"), $("form#edit_player input#player_player_name")];
+
+    for (var i = 0; i < formComps.length; i++) {
+      var comp = $(formComps[i]);
+      console.log(comp.val());
+
+      if ( !validated(comp) ) {
+        allValidated = false;
+
+        showError(comp, i);
+      }
+      else {
+        hideError(comp, i);
+      }
+    }
+
+    return allValidated;
+  }
+
+  $('form#edit_player input#edit_player_submit').click(function(e) {
+    e.preventDefault();
+
+    if ( formValidated() ) {
+      $("form#edit_player").submit();
+    }
+  });
+</script>

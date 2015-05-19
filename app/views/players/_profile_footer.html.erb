@@ -1,10 +1,10 @@
   <% if policy(Player.new).edit? %>
-    <%= link_to fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.edit"), :remote => true, :id => "edit_player", :class => "btn btn-primary" do %>
+    <%= link_to edit_path + "?member_id=#{@player.member_id}" , :title => t("button.edit"), :remote => true, :id => "edit_player", :class => "btn btn-primary" do %>
       <span> <%= t("button.edit")%></span>
     <% end %>
   <% end %>
   <% if policy(Player.new).lock? %>
-    <%= link_to fund_out_path + "?member_id=#{@player.member_id}" , :title => t("button.lock"), :remote => true, :id => "lock_player", :class => "btn btn-primary" do %>
+    <%= link_to home_path + "?member_id=#{@player.member_id}" , :title => t("button.lock"), :remote => true, :id => "lock_player", :class => "btn btn-primary" do %>
       <span> <%= t("button.lock")%></span>
     <% end %>
   <% end %>

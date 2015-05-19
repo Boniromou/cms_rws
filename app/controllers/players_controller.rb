@@ -75,6 +75,17 @@ class PlayersController < ApplicationController
   end
 
   def update
-    redirect_to home_path
+    return unless permission_granted? Player.new
+    p "abc~~~"
+    begin
+      AuditLog.player_log("edit", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        Player.update_by_params(params[:player])
+      end
+      flash[:success] = "update_player.success"
+      redirect_to :action => 'profile', :member_id => params[:player][:member_id]
+    rescue RuntimeError => e
+      flash[:error] = "update_player." + e.message
+      redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
+    end
   end
 end

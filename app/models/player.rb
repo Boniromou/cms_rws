@@ -28,6 +28,23 @@ class Player < ActiveRecord::Base
     end
   end
 
+  def self.update_by_params(params)
+    verify_player_params(params)
+
+    card_id = params[:card_id]
+    member_id = params[:member_id]
+    player_name = params[:player_name].downcase
+
+    player = find_by_member_id(member_id)
+    player.card_id = card_id
+    player.player_name = player_name
+    begin
+      player.save!
+    rescue
+      raise "duplicate"
+    end
+  end
+
   def self.fund_in(member_id, amount)
     player = find_by_member_id(member_id)
     player.balance += amount

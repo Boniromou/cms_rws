@@ -15,6 +15,10 @@ class PlayerPolicy < ApplicationPolicy
     true
   end
 
+  def update?
+    edit?
+  end
+
   def lock?
     true
   end

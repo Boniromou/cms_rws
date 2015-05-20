@@ -12,14 +12,12 @@ module AuditLogsHelper
 
   def display_target(target_name)
     case target_name
-      when "system_user"
-        "user.system_user"
-      when "maintenance"
-        "maintenance.title"
-      when "propagation"
-        "propagation.title"
-      when "test_player"
-        "tree_view.test_player"
+      when "player"
+        "general.player"
+      when "player_transaction"
+        "general.player_transaction"
+      when "shift"
+        "general.shift"
       else
         nil
     end
@@ -27,38 +25,18 @@ module AuditLogsHelper
 
   def display_action(action_name)
     case action_name
-      when "lock"
-        "user.lock"
-      when "unlock"
-        "user.unlock"
-      when "edit_role"
-        "user.edit_role"
       when "create"
-        "maintenance.create"
-      when "cancel"
-        "maintenance.cancel"
-      when "complete"
-        "maintenance.complete"
-      when "extend"
-        "maintenance.extend"
-      when "reschedule"
-        "maintenance.reschedule"
-      when "expire"
-        "maintenance.expire"
-      when "resume"
-        "propagation.resume"
-      when "add"
-        "test_player.add"
-      when "enable"
-        "test_player.enable"
-      when "disable"
-        "test_player.disable"
-      when "deprecate"
-        "test_player.deprecate"
-      when "recover"
-        "test_player.recover"
-      when "sync"
-        "test_player.sync"
+        "player.create"
+      when "deposit"
+        "player.deposit"
+      when "withdrawal"
+        "player.withdrawal"
+      when "edit"
+        "player.edit"
+      when "print"
+        "transaction_history.print"
+      when "roll_shift"
+        "shift.roll"
       else
         nil
     end

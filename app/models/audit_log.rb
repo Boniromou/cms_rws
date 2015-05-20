@@ -1,5 +1,5 @@
 class AuditLog < ActiveRecord::Base
-  attr_accessible :action, :action_by, :action_error, :action_status, :action_type, :audit_target, :description, :ip, :session_id
+  attr_accessible :action, :action_by, :action_error, :action_status, :action_type, :audit_target, :description, :ip, :session_id, :created_at
 
   ACTION_MENU = {:all => { :all => "general.all" },
                  :player => { :all => "general.all",

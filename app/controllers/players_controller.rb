@@ -76,7 +76,6 @@ class PlayersController < ApplicationController
 
   def update
     return unless permission_granted? Player.new
-    p "abc~~~"
     begin
       AuditLog.player_log("edit", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.update_by_params(params[:player])

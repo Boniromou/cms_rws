@@ -2,21 +2,16 @@ class AuditLog < ActiveRecord::Base
   attr_accessible :action, :action_by, :action_error, :action_status, :action_type, :audit_target, :description, :ip, :session_id
 
   ACTION_MENU = {:all => { :all => "general.all" },
-                 :maintenance => { :all => "general.all",
-                                   :create => "maintenance_action.create", 
-                                   :cancel => "maintenance_action.cancel", 
-                                   :complete => "maintenance_action.complete", 
-                                   :extend => "maintenance_action.extend", 
-                                   :reschedule => "maintenance_action.reschedule", 
-                                   :expire => "maintenance_action.expire" },
-                 :propagation => { :all => "general.all", :resume => "propagation.resume" },
-                 :test_player => { :all => "general.all", 
-                                   :add => "test_player.add", 
-                                   :enable => "test_player.enable", 
-                                   :disable => "test_player.disable", 
-                                   :deprecate => "test_player.deprecate", 
-                                   :recover => "test_player.recover", 
-                                   :sync => "test_player.sync" }}
+                 :player => { :all => "general.all",
+                              :create => "player.create",
+                              :deposit => "player.deposit",
+                              :withdrawal => "player.withdrawal",
+                              :edit => "player.edit"},
+                 :player_transaction => { :all => "general.all",
+                                          :print => "transaction_history.print" },
+                 :shift => { :all => "general.all",
+                             :roll => "shift.roll" }}
+
   ACTION_TYPE_LIST = { 
     :player => {:create => "create",:deposit => "update", :withdrawal => "update", :edit => "update"},
     :player_transaction => {:print => "read"},

@@ -21,12 +21,9 @@
                     <label class="select">
                       <select class="input-sm" name="target_name" id="target_name">
                         <option value="all"><%= t("general.all") %></option>
-                        <!--
-                        <option value="system_user"><%= t("user.system_user") %></option>
-                        -->
-                        <option value="maintenance"><%= t("maintenance.title") %></option>
-                        <option value="propagation"><%= t("propagation.title") %></option>
-                        <option value="test_player"><%= t("tree_view.test_player") %></option>
+                        <option value="player"><%= t("general.player") %></option>
+                        <option value="player_transaction"><%= t("general.player_transaction") %></option>
+                        <option value="shift"><%= t("general.shift") %></option>
                       </select>
                     </label>
                   </section>
@@ -50,7 +47,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <%= hidden_field_tag 'from', search_audit_logs_path %>
-                  <%= submit_tag t("general.search"), :class => "btn btn-primary", :remote => true  %>
+                  <%= submit_tag t("button.search"), :class => "btn btn-primary", :remote => true  %>
                 </div>
               </div>
             </div>

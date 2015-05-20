@@ -1,0 +1,10 @@
+/*
+$('div#content').on('ajax:beforeSend', function(xhr, settings) {
+  container = $('div#audit_logs_result')
+  container.removeData().html("");
+  container.html('<h1 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Loading...</h1>');
+});
+*/
+$.loading_selector = $('div#audit_logs_result');
+
+$('div#audit_logs_result').css({ opacity: "0.0" }).html("<%= escape_javascript(render :partial => "audit_logs/search_result", :formats => [ :html ] , :layout => nil) %>").delay(50).animate({ opacity: "1.0" }, 300);

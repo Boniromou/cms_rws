@@ -1,0 +1,33 @@
+      <legend>Result</legend>
+      <% if @audit_logs.blank? %>
+        <p> <%= t("general.no_result_found") %> </p>
+      <% else %>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <th><%= t("auditlog.audit_time") %></th>
+              <th><%= t("auditlog.audit_action") %></th>
+              <th><%= t("auditlog.audit_action_by") %></th>
+              <th><%= t("auditlog.target") %></th>
+              <th><%= t("auditlog.audit_status") %></th>
+              <!--th>Action Type</th-->
+              <th><%= t("auditlog.audit_session_id") %></th>
+              <th><%= t("auditlog.audit_ip") %></th>
+            </thead>
+            <tbody>
+              <% @audit_logs.each do |al| %>
+                <tr id=<%= "audit#{al.id}_body" %> align="center">
+                  <td><%= format_time(al.action_at) %></td>
+                  <td><%= t(display_action(al.action)) %></td>
+                  <td><%= al.action_by %></td>
+                  <td><%= t(display_target(al.audit_target)) %></td>
+                  <td><%= t(display_action_status(al.action_status)) %></td>
+                  <!--td><%= al.action_type %></td-->
+                  <td><%= al.session_id%></td>
+                  <td><%= al.ip %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>

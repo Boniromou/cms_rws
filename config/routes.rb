@@ -50,7 +50,9 @@ CmsRws::Application.routes.draw do
       get 'current'
     end
   end
-
+  
+  get 'search_audit_logs' => 'audit_logs#search'
+  get 'search_audit_logs' => 'audit_logs#do_search'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

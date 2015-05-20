@@ -1,0 +1,1 @@
+$('div#content').css({ opacity: "0.0" }).html("<%= escape_javascript(render :file => "audit_logs/search", :formats => [ :html ]) %>").delay(50).animate({ opacity: "1.0" }, 300)

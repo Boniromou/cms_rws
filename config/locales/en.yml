@@ -27,6 +27,8 @@ en:
     front_money: "FM Activity Report"
     profile: "Player Profile"
     edit: "Edit Player"
+    audit: "Audit"
+    audit_log: "Audit log"
   general:
     login: "Log In"
     logout: "Log Out"

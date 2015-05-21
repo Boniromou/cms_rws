@@ -1,4 +1,4 @@
-<%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.edit")) %>
+<%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),[t("tree_panel.profile"),t("tree_panel.edit")]) %>
 
 <section class='smart-form'>
   <%= form_for @player, :remote => true, html: {id: :edit_player, autocomplete: :off } do |f| %>

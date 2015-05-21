@@ -41,7 +41,11 @@ module StepHelper
   def set_permission(user,role,target,permissions)
     cache_key = "#{APP_NAME}:permissions:#{user.uid}"
     origin_permissions = Rails.cache.fetch cache_key
-    origin_perm_hash = origin_permissions[:permissions][:permissions]
+    if origin_permissions.nil?
+      origin_perm_hash = {}
+    else
+      origin_perm_hash = origin_permissions[:permissions][:permissions]
+    end
     perm_hash = origin_perm_hash.merge({target => permissions})
     permission = {:permissions => {:role => role, :permissions => perm_hash}}
     Rails.cache.write cache_key,permission
@@ -70,8 +74,10 @@ module StepHelper
     end
   end
 
-  def check_search_page
-    check_title("tree_panel.balance")
+  def check_search_page(title = "balance")
+    check_title("tree_panel.#{title}")
+    expect(page.source).to have_selector("input#card_id")
+    expect(page.source).to have_selector("input#member_id")
     expect(page.source).to have_selector("input#id_number")
   end
 
@@ -95,10 +101,22 @@ module StepHelper
     expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
   end
 
+  def check_profile_page
+    check_title("tree_panel.profile")
+    expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+  end
+
+  def check_edit_page
+    check_title("tree_panel.edit")
+    expect(page.source).to have_selector("input#player_card_id")
+    expect(page.source).to have_selector("input#player_player_name")
+  end
+
   def check_player_info
     expect(find("label#player_name").text).to eq @player.player_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
+    expect(find("label#player_status").text).to eq @player.status
   end
 
   def check_player_transaction_page

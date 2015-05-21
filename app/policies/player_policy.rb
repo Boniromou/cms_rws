@@ -8,11 +8,11 @@ class PlayerPolicy < ApplicationPolicy
   end
 
   def profile?
-    true
+    is_admin? || has_permission?('player', 'profile')
   end
 
   def edit?
-    true
+    is_admin? || has_permission?('player', 'edit')
   end
 
   def update?
@@ -20,6 +20,6 @@ class PlayerPolicy < ApplicationPolicy
   end
 
   def lock?
-    true
+    is_admin? || has_permission?('player', 'lock')
   end
 end

@@ -299,7 +299,7 @@ describe PlayersController do
 
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
-      expect(page.source).to have_selector("div a#balance_close")
+      expect(page.source).to have_selector("div a#close_to_home")
     end
 
     it '[5.2] click unauthorized action', :js => true do 
@@ -350,9 +350,9 @@ describe PlayersController do
       
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
-      expect(page.source).to have_selector("div a#balance_close")
+      expect(page.source).to have_selector("div a#close_to_home")
 
-      find("div a#balance_close").click
+      find("div a#close_to_home").click
       expect(page).to have_content @location
       expect(page).to have_content "Waiting for accounting date"
       expect(page).to have_content "Waiting for shift"
@@ -375,7 +375,7 @@ describe PlayersController do
       
       expect(page.source).to_not have_selector("div a#balance_deposit")
       expect(page.source).to_not have_selector("div a#balance_withdraw")
-      expect(page.source).to have_selector("div a#balance_close")
+      expect(page.source).to have_selector("div a#close_to_home")
     end
     
     it '[5.7] unathorized to balance enquriy ' do 
@@ -442,5 +442,236 @@ describe PlayersController do
       check_title("tree_panel.create_player")
       expect(find("form#new_player input#player_card_id").value).to eq @player.card_id.to_s
     end
+  end
+  
+  describe '[14] Edit Player' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      
+      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+    end
+
+    after(:each) do
+      Player.delete_all
+    end
+
+    it '[14.1] successfully edit player' do
+      updated_card_id = 12345678900987654321
+      updated_player_name = "updated"
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_player_name", :with => updated_player_name
+      click_button I18n.t("button.confirm")
+
+      @player.reload
+      expect(@player.card_id).to eq updated_card_id.to_s
+      expect(@player.player_name).to eq updated_player_name
+      check_profile_page
+      check_player_info
+    end
+    
+    it '[14.2] player name cannot be empty', :js => true do
+      updated_card_id = 12345678900987654321
+      updated_player_name = ""
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      wait_for_ajax
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_player_name", :with => updated_player_name
+      click_button I18n.t("button.confirm")
+      
+      labels = all("label.invisible_error")
+      expect(labels[0][:style]).to_not include("visible")
+      expect(labels[1][:style]).to include("visible")
+    end
+    
+    it '[14.3] card ID cannot be empty', :js => true do
+      updated_card_id = ""
+      updated_player_name = "updated"
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      wait_for_ajax
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_player_name", :with => updated_player_name
+      click_button I18n.t("button.confirm")
+      
+      labels = all("label.invisible_error")
+      expect(labels[0][:style]).to include("visible")
+      expect(labels[1][:style]).to_not include("visible")
+    end
+    
+    it '[14.4] duplicated card ID'do
+      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :balance => 0, :status => "active")
+      updated_card_id = 12345678901234567890
+      updated_player_name = "updated"
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_player_name", :with => updated_player_name
+      click_button I18n.t("button.confirm")
+
+      check_edit_page
+      check_flash_message I18n.t("update_player.duplicate")
+    end
+
+    it '[14.5] audit log for edit player'do
+      updated_card_id = 12345678900987654321
+      updated_player_name = "updated"
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_player_name", :with => updated_player_name
+      click_button I18n.t("button.confirm")
+
+      player = Player.find(@player.id)
+      expect(player.card_id).to eq updated_card_id.to_s
+      expect(player.player_name).to eq updated_player_name
+      
+      audit_log = AuditLog.find_by_audit_target("player")
+      audit_log.should_not be_nil
+      audit_log.audit_target.should == "player"
+      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_type.should == "update"
+      audit_log.action.should == "edit"
+      audit_log.action_status.should == "success"
+      audit_log.action_error.should be_nil
+      audit_log.ip.should_not be_nil
+      audit_log.session_id.should_not be_nil
+      audit_log.description.should_not be_nil
+    end
+    
+    it '[14.6] audit log for fail to edit player'do
+      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :balance => 0, :status => "active")
+      updated_card_id = 12345678901234567890
+      updated_player_name = "updated"
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_player_name", :with => updated_player_name
+      click_button I18n.t("button.confirm")
+
+      check_edit_page
+      check_flash_message I18n.t("update_player.duplicate")
+      
+      audit_log = AuditLog.find_by_audit_target("player")
+      audit_log.should_not be_nil
+      audit_log.audit_target.should == "player"
+      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_type.should == "update"
+      audit_log.action.should == "edit"
+      audit_log.action_status.should == "fail"
+      audit_log.action_error.should_not be_nil
+      audit_log.ip.should_not be_nil
+      audit_log.session_id.should_not be_nil
+      audit_log.description.should_not be_nil
+    end
+
+    it '[14.7] unauthorized for edit player' do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,["profile"])
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      expect(page.source).to_not have_selector("a#edit_player")
+    end
+      
+    it '[14.8] close profile'do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      find("div a#close_to_home").click
+      check_home_page
+    end
+      
+    it '[14.9] cancel edit' do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      check_search_page("profile")
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      check_edit_page
+      click_link I18n.t("button.cancel")
+      check_profile_page
+    end
+    
+    it '[14.10] unauthorized for view profile ' do 
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,[])
+      visit home_path
+      first("aside#left-panel ul li#nav_player_profile").should be_nil
+    end     
   end
 end

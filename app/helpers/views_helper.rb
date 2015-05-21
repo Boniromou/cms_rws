@@ -3,12 +3,12 @@ module ViewsHelper
     I18n.t("tree_panel.balance").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("tree_panel.fund_management") },
     I18n.t("tree_panel.profile").to_sym => { :icon_style => "glyphicon glyphicon-user", :title => I18n.t("tree_panel.player_management") }
   }
-  def close_balance
+  def close_to_home
     icon = create_icon("fa fa-times")
-    content_tag(:a, icon, :href => home_path, "data-remote".to_sym => true, :id => "balance_close", :class => "btn btn-primary")
+    content_tag(:a, icon, :href => home_path, "data-remote".to_sym => true, :id => "close_to_home", :class => "btn btn-primary")
   end
 
-  def close_fund_request
+  def close_to_balance
     icon = create_icon("fa fa-times")
     content_tag(:a, icon, :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-primary")
   end

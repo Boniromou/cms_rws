@@ -190,6 +190,8 @@ describe ShiftsController do
 
       next_shift, next_ac_date = get_next_shift_ac_date('morning', @today)
 
+      sleep 4.seconds
+
       within("body header#header") do
         expect(page).to have_content I18n.t("shift_name.#{next_shift}")
         expect(page).to have_content next_ac_date

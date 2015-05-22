@@ -84,8 +84,8 @@ en:
   create_player:
     success: "create player successful"
     exist: "The player you try to create is already exist."
-    card_id_blank_error: "Card ID can not be blank"
-    member_id_blank_error: "Membership ID can not be blank"
+    card_id_length_error: "Card ID must be 20 characters"
+    member_id_length_error: "Member ID must be 8 characters"
     name_blank_error: "Player name can not be blank"
     card_id_only_number_allowed_error: "Card ID can only input number"
     member_id_only_number_allowed_error: "Membership ID can only input number"

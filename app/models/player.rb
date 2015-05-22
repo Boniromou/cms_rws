@@ -77,8 +77,8 @@ class Player < ActiveRecord::Base
       member_id = params[:member_id]
       player_name = params[:player_name]
 
-      raise "card_id_blank_error" if card_id.nil? || card_id.blank?
-      raise "member_id_blank_error" if member_id.nil? || member_id.blank?
+      raise "card_id_length_error" if card_id.nil? || card_id.blank?
+      raise "member_id_length_error" if member_id.nil? || member_id.blank?
       raise "name_blank_error" if player_name.nil? || player_name.blank?
 
       raise "card_id_only_number_allowed_error" if !str_is_i?(card_id)

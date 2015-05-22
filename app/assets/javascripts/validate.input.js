@@ -1,7 +1,25 @@
+CARD_ID_LENGTH_LIMIT = 20;
+MEMBER_ID_LENGTH_LIMIT = 8;
+
 function validateNumberOnly(element, value) {
   var numericRegexp = /^\d+/;
 
   $(element).val(numericRegexp.exec($(element).val()));
+
+  return false;
+}
+
+function validateMaxLength(element, value, length) {
+  if ( length >= 0 ) {
+    $(element).val($(element).val().substring(0, length));
+  }
+
+  return false;
+}
+
+function validateNumberOnlyAndMaxLength(element, value, length) {
+  validateNumberOnly(element, value);
+  validateMaxLength(element, value, length);
 
   return false;
 }

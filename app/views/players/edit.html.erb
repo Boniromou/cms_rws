@@ -14,7 +14,7 @@
         </div>
         <div class='col col-3'>
           <label class='input'>
-            <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnly($(this), value)' %>
+            <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, CARD_ID_LENGTH_LIMIT)' %>
           </label>
         </div>
         <div class='col col-3'>

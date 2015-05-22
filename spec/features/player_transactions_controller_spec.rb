@@ -31,7 +31,7 @@ describe PlayersController do
       PlayerTransaction.delete_all
     end
 
-    it '[8.1] successfully generate report. (search by card ID)' do
+    xit '[8.1] successfully generate report. (search by card ID)' do
       login_as_admin
       create_player_transaction
       visit home_path

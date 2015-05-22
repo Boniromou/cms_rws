@@ -86,7 +86,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player.member_id_blank_error")
+      check_flash_message I18n.t("create_player.member_id_length_error")
     end
 
     it '[3.5] empty Player name' do
@@ -195,7 +195,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player.card_id_blank_error")
+      check_flash_message I18n.t("create_player.card_id_length_error")
     end
 
     it '[3.12] member id and card ID can only input number' do

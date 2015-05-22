@@ -42,7 +42,7 @@
       <%= t("search_error.not_found") %>
       <% if policy(Player.new).create? %>
         <%= t("search_error.create_player")%>
-        <%= link_to "create", new_player_path + "?#{@id_type}=#{@id_number}", :remote => true, :class => "btn btn-warning"%>
+        <%= link_to t("button.create"), new_player_path + "?#{@id_type}=#{@id_number}", :remote => true, :class => "btn btn-warning"%>
       <% end %>
     </div>
   </div>

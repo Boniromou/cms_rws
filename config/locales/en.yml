@@ -82,8 +82,9 @@ en:
     withdrawal: "Withdrawal"
     edit: "Edit"
   create_player:
-    success: "create player successful"
-    exist: "The player you try to create is already exist."
+    success: "Create player [%{player_name}] successful"
+    member_id_exist: "The player [Member ID = %{member_id}] you try to created is already exist."
+    card_id_exist: "The player [Card ID = %{card_id}] you try to created is already exist."
     card_id_length_error: "Card ID must be 20 characters"
     member_id_length_error: "Member ID must be 8 characters"
     name_blank_error: "Player name can not be blank"

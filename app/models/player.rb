@@ -2,6 +2,7 @@ class Player < ActiveRecord::Base
   include ActionView::Helpers
   include FundHelper
   attr_accessible :balance, :card_id, :currency_id,:member_id, :player_name, :status
+  validates_uniqueness_of :member_id, :card_id
 
   def balance_str
     to_display_amount_str(balance)
@@ -23,8 +24,9 @@ class Player < ActiveRecord::Base
     player.status = "active"
     begin
       player.save!
-    rescue
-      raise "exist"
+    rescue ActiveRecord::RecordInvalid => ex
+      duplicated_filed = ex.record.errors.keys.first.to_s
+      raise CreatePlayer::DuplicatedFieldError, duplicated_filed
     end
   end
 
@@ -77,12 +79,12 @@ class Player < ActiveRecord::Base
       member_id = params[:member_id]
       player_name = params[:player_name]
 
-      raise "card_id_length_error" if card_id.nil? || card_id.blank?
-      raise "member_id_length_error" if member_id.nil? || member_id.blank?
-      raise "name_blank_error" if player_name.nil? || player_name.blank?
+      raise CreatePlayer::ParamsError, "card_id_length_error" if card_id.nil? || card_id.blank?
+      raise CreatePlayer::ParamsError, "member_id_length_error" if member_id.nil? || member_id.blank?
+      raise CreatePlayer::ParamsError, "name_blank_error" if player_name.nil? || player_name.blank?
 
-      raise "card_id_only_number_allowed_error" if !str_is_i?(card_id)
-      raise "member_id_only_number_allowed_error" if !str_is_i?(member_id)
+      raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
+      raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)
     end
   end
 end

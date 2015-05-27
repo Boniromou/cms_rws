@@ -15,10 +15,14 @@ class PlayersController < ApplicationController
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.create_by_params(params[:player])
       end
-      flash[:success] = "create_player.success"
+      flash[:success] = {key: "create_player.success", replace: {player_name: params[:player][:player_name]}}
       redirect_to :action => 'balance', :member_id => params[:player][:member_id]
-    rescue RuntimeError => e
+    rescue CreatePlayer::ParamsError => e
       flash[:error] = "create_player." + e.message
+      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
+    rescue CreatePlayer::DuplicatedFieldError => e
+      field = e.message
+      flash[:error] = {key: "create_player." + field + "_exist", replace: {field.to_sym => params[:player][field.to_sym]}}
       redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end
   end

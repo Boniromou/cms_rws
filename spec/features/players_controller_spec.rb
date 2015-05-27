@@ -48,7 +48,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.balance")
-      check_flash_message I18n.t("create_player.success")
+      check_flash_message I18n.t("create_player.success", player_name: @player.player_name)
 
       test_player = Player.find_by_member_id(@player.member_id)
       expect(test_player).not_to be_nil
@@ -57,7 +57,7 @@ describe PlayersController do
       test_player.player_name = @player.player_name
     end
 
-    it '[3.3] player already exist' do
+    it '[3.3] player already exist (member ID)' do
       Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
       login_as_admin
       visit new_player_path
@@ -71,7 +71,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player.exist")
+      check_flash_message I18n.t("create_player.member_id_exist", member_id: @player.member_id)
     end
 
     it '[3.4] empty membership ID' do
@@ -216,6 +216,23 @@ describe PlayersController do
 
       check_title("tree_panel.create_player")
       check_flash_message I18n.t("create_player.member_id_only_number_allowed_error")
+    end
+
+    it '[3.13] player already exist (card ID)' do
+      Player.create!(:player_name => "exist", :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      login_as_admin
+      visit new_player_path
+      @player = Player.new
+      @player.card_id = 1234567890
+      @player.member_id = 123456
+      @player.player_name = "test player"
+      fill_in "player_card_id", :with => @player.card_id
+      fill_in "player_member_id", :with => @player.member_id
+      fill_in "player_player_name", :with => @player.player_name
+      click_button I18n.t("button.create")
+
+      check_title("tree_panel.create_player")
+      check_flash_message I18n.t("create_player.card_id_exist", card_id: @player.card_id)
     end
   end
   

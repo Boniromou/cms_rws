@@ -16,6 +16,7 @@ Devise::TestHelpers
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/features/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("app/helpers/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("lib/**/*.rb")].each {|f| require f}
 
 Capybara.ignore_hidden_elements = false
 RSpec.configure do |config|

@@ -23,12 +23,12 @@ describe PlayersController do
 
     def create_player_transaction
       @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 10000, :station_id => @station_id, :created_at => Time.now)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 20000, :station_id => @station_id, :created_at => Time.now + 30*60)
-      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 30000, :station_id => @station_id, :created_at => Time.now + 60*60)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 20000, :station_id => @station_id, :created_at => Time.now + 30 * 60)
+      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 30000, :station_id => @station_id, :created_at => Time.now + 60 * 60)
     end
 
     after(:each) do
-      PlayerTransaction.delete_all
+      #PlayerTransaction.delete_all
     end
 
     xit '[8.1] successfully generate report. (search by card ID)' do
@@ -49,28 +49,33 @@ describe PlayersController do
       expect(find("input#id_number").value).to eq @player.card_id
 
       find("input#search").click
-      check_player_transaction_result_items([@player_transaction1,@player_transaction3])
+      check_player_transaction_result_items([@player_transaction1, @player_transaction3])
     end
 
-    it '[8.2] successfully generate report. (search by time)' do
+    it '[8.2] successfully generate report. (search by time)', js: true do
       login_as_admin
       create_player_transaction
       visit search_transactions_path
-      check_player_transaction_page
-      fill_in "datetimepicker_start_time", :with => (Time.now + 20*60)
+      check_player_transaction_page_js
+
+      fill_in "datetimepicker_start_time", :with => (Time.now + 20 * 60)
       find("input#search").click
+      wait_for_ajax
 
-
-      check_player_transaction_result_items([@player_transaction2,@player_transaction3])
+      check_player_transaction_result_items([@player_transaction2, @player_transaction3])
     end
 
-    it '[8.3] successfully generate report. (search by transaction ID)' do
+    it '[8.3] successfully generate report. (search by transaction ID)', js: true do
       login_as_admin
       create_player_transaction
       visit search_transactions_path 
-      check_player_transaction_page
+      check_player_transaction_page_js
+
       fill_in "transaction_id", :with => @player_transaction3.id
+      find("input#selected_tab_index").set "1"
+
       find("input#search").click
+      wait_for_ajax
 
       check_player_transaction_result_items([@player_transaction3])
     end
@@ -84,14 +89,15 @@ describe PlayersController do
       expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
     end
     
-    it '[8.5] successfully generate report. (search by member ID)' do
+    it '[8.5] successfully generate report. (search by member ID)', js: true do
       login_as_admin
       create_player_transaction
       visit search_transactions_path
-      check_player_transaction_page
-      fill_search_info("member_id", @player2.member_id)
-      find("input#search").click
+      check_player_transaction_page_js
 
+      fill_search_info_js("member_id", @player2.member_id)
+      find("input#search").click
+      wait_for_ajax
 
       check_player_transaction_result_items([@player_transaction2])
     end
@@ -124,18 +130,19 @@ describe PlayersController do
       expect(page.driver.browser.window_handles.length).to eq 1
     end
     
-    it '[8.9] Re-print slip unauthorized' do
+    it '[8.9] Re-print slip unauthorized', js: true do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
       visit search_transactions_path
-      check_player_transaction_page
-      fill_in "datetimepicker_start_time", :with => (Time.now + 20*60)
+      check_player_transaction_page_js
+
+      fill_in "datetimepicker_start_time", :with => (Time.now + 20 * 60)
       find("input#search").click
+      wait_for_ajax
 
-
-      check_player_transaction_result_items([@player_transaction2,@player_transaction3],false)
+      check_player_transaction_result_items([@player_transaction2,@player_transaction3], false)
     end
     
     it '[8.10] empty search', :js => true do

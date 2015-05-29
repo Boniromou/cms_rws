@@ -1,105 +1,125 @@
 <%= form_tag(search_transactions_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
-  <fieldset>
-    <div class="row">
-      <div class="col-sm-3">
-        <section class="smart-form">
-          <div class="inline-group">
-            <label class="radio">
-              <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
-              <i>
-              </i>
-              <%= t("general.card_id") %>
+  <div id="search-tabs">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
+      <li>
+        <a class="tab-link" href="#tabs-a">By Player</a>
+      </li>
+      <li>
+        <a class="tab-link" href="#tabs-b">By Transaction</a>
+      </li>
+    </ul>
+
+    <div id="tabs-a">
+      <div class="row">
+        <div class="col-sm-3">
+          <section class="smart-form">
+            <div class="inline-group">
+              <label class="radio">
+                <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
+                <i></i>
+                <%= t("general.card_id") %>
+              </label>
+              <label class="radio">
+                <input type="radio" id="member_id" name="id_type" value="member_id">
+                <i></i>
+                <%= t("general.member_id") %>
+              </label>
+            </div>
+          </section>
+        </div>
+        
+        <div class="col-sm-5">
+          <section class="smart-form">
+            <label class="input">
+              <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
             </label>
-            <label class="radio">
-              <input type="radio" id="member_id" name="id_type" value="member_id">
-              <i>
-              </i>
-              <%= t("general.member_id") %>
-            </label>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
-      
-      <div class="col-sm-5">
-        <section class="smart-form">
-          <label class="input">
-            <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
-          </label>
-        </section>
+
+      <div class="row">
+        <div class="col-sm-1">
+          <section class="smart-form">
+          <br/>
+            <label class="label lower"><%= t("transaction_history.start_date") %></label>
+          </section>
+        </div>
+        <div class="col-sm-3">
+          <section class="smart-form">
+          <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
+          </section>
+        </div>
+        <div class="col-sm-1">
+          <section class="smart-form">
+          <br/>
+            <label class="label lower"><%= t("transaction_history.end_date") %></label>
+          </section>
+        </div>
+        <div class="col-sm-3">
+          <section class="smart-form">
+          <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
+          </section>
+        </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-1">
-        <section class="smart-form">
+    <div id="tabs-b">
+      <div class="row">
+        <div class="col-sm-1">
+          <section class="smart-form">
+            <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
+          </section>
+        </div>
+        <div class="col-sm-7">
+          <section class="smart-form">
+            <label class="input">
+              <%= text_field_tag(:"transaction_id", nil, autofocus: true) %>
+            </label>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-1">
+      <section class="smart-form">
         <br/>
-          <label class="label lower"><%= t("transaction_history.start_date") %></label>
-        </section>
-      </div>
-      <div class="col-sm-3">
-        <section class="smart-form">
-        <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
-        </section>
-      </div>
-      <div class="col-sm-1">
-        <section class="smart-form">
-        <br/>
-          <label class="label lower"><%= t("transaction_history.end_date") %></label>
-        </section>
-      </div>
-      <div class="col-sm-3">
-        <section class="smart-form">
-        <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
-        </section>
-      </div>
+        <label class="label"><%= t("report_search.limit_remark") %></label>
+      </section>
     </div>
-    
-    
-    <div class="row">
-      <div class="col-sm-1">
-        <section class="smart-form">
-          <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
-        </section>
-      </div>
-      <div class="col-sm-7">
-        <section class="smart-form">
-          <label class="input">
-            <%= text_field_tag(:"transaction_id") %>
-          </label>
-        </section>
-      </div>
-    </div>
-      
-    <div class="row">
-      <div class="col-sm-1">
-        <section class="smart-form">
-        </br>
-          <label class="label"><%= t("report_search.limit_remark") %></label>
-        </section>
-      </div>
-    </div>
-    
-  </fieldset>
-    
+  </div>
+     
   <div class="form-actions">
     <div class="row">
       <div class="col-md-12">
-        <%= hidden_field_tag 'from', search_transactions_path %>
         <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary"  %>
       </div>
     </div>
   </div>
+
+  <%= hidden_field_tag 'from', search_transactions_path %>
+  <%= hidden_field_tag 'selected_tab_index', 0 %>
 <% end %>
 
 <script>
   $(document).ready(function() {
-    $('input[autofocus="autofocus"]').focus();
+    $('div#search-tabs').tabs({
+      activate: function(event, ui) {
+        $('input[autofocus="autofocus"]', ui.newPanel).focus();
+        $('#selected_tab_index').val(ui.newTab.index());
+      },
+      create: function(event, ui) {
+        $('input[autofocus="autofocus"]', ui.panel).focus();
+        $('#selected_tab_index').val(ui.tab.index());
+      }
+    });
   });
 </script>
 
 <style type="text/css">
   .lower{
     padding-top: 7px;
-    }
+  }
 </style>
   

@@ -119,16 +119,19 @@ module StepHelper
     expect(find("label#player_status").text).to eq @player.status
   end
 
-  def check_player_transaction_page
-    expect(find("input#card_id")[:checked]).to eq "checked"
+  def check_player_transaction_page_time_picker
     expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
     expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
   end
 
+  def check_player_transaction_page
+    expect(find("input#card_id")[:checked]).to eq "checked"
+    check_player_transaction_page_time_picker
+  end
+
   def check_player_transaction_page_js
     expect(find("input#card_id")[:checked]).to eq true
-    expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
-    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
+    check_player_transaction_page_time_picker
   end
 
   def check_search_fm_page
@@ -171,6 +174,7 @@ module StepHelper
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true)
     items = all("table#datatable_col_reorder tbody tr")
+    expect(items.length).to eq transaction_list.length
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do

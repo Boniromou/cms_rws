@@ -22,4 +22,8 @@ class FundOutController < FundController
   def handle_balance_not_enough(e)
     handle_fund_error({ key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: @player.balance_str} })
   end
+
+  def call_iwms(member_id, amount, ref_trans_id, trans_date)
+    iwms_requester.withdraw(member_id, amount, ref_trans_id, trans_date)
+  end
 end

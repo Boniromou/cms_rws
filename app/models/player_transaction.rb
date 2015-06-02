@@ -71,20 +71,7 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
-    def search_query_by_player(*args)
-    end
-
-    def search_query_by_transaction(*args)
-    end
-
-    def search_query(*args)
-      id_type = args[0]
-      id_number = args[1]
-      start_time = args[2]
-      end_time = args[3]
-      transaction_id = args[4].to_i
-      search_type = args[5].to_i
-
+    def search_query_by_player(id_type, id_number, start_time, end_time)
       if id_number.empty?
         player_id = nil
       else
@@ -93,10 +80,27 @@ class PlayerTransaction < ActiveRecord::Base
         player_id = player.id unless player.nil?
       end
 
+      by_player_id(player_id).since(start_time).until(end_time)
+    end
+
+    def search_query_by_transaction(transaction_id)
+      by_transaction_id(transaction_id)
+    end
+
+    def search_query(*args)
+      search_type = args[5].to_i
+
       if search_type == 0
-        by_player_id(player_id).since(start_time).until(end_time)
+        id_type = args[0]
+        id_number = args[1]
+        start_time = args[2]
+        end_time = args[3]
+
+        search_query_by_player(id_type, id_number, start_time, end_time)
       else
-        by_transaction_id(transaction_id)
+        transaction_id = args[4].to_i
+
+        search_query_by_transaction(transaction_id)
       end
     end
 

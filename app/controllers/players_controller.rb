@@ -13,7 +13,10 @@ class PlayersController < ApplicationController
     return unless permission_granted? Player.new
     begin
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        Player.create_by_params(params[:player])
+        Player.transaction do
+          Player.create_by_params(params[:player])
+          iwms_requester.create_player(params[:player][:member_id], 'HKD')
+        end
       end
       flash[:success] = {key: "create_player.success", replace: {player_name: params[:player][:player_name]}}
       redirect_to :action => 'balance', :member_id => params[:player][:member_id]
@@ -33,6 +36,7 @@ class PlayersController < ApplicationController
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
+      @player_balance = iwms_requester.get_player_balance(member_id)
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
@@ -67,6 +71,7 @@ class PlayersController < ApplicationController
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
+      @player_balance = iwms_requester.get_player_balance(member_id)
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")

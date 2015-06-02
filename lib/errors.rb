@@ -11,3 +11,20 @@ module CreatePlayer
   class ParamsError < CreatePlayerError
   end
 end
+
+module Remote
+  class RemoteError < CageError
+  end
+
+  class WalletError < RemoteError
+  end
+
+  class GetBalanceError < WalletError
+  end
+
+  class UnexpectedResponseFormat < RemoteError
+  end
+
+  class CreatePlayerError < RemoteError
+  end
+end

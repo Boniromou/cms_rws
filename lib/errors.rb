@@ -27,4 +27,10 @@ module Remote
 
   class CreatePlayerError < RemoteError
   end
+
+  class DepositError < RemoteError
+  end
+
+  class WithdrawError < RemoteError
+  end
 end

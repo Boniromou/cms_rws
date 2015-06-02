@@ -9,6 +9,7 @@ gem 'mysql2'
 gem 'lax-support', '0.6.32', :path => "vendor/gems/lax-support-0.6.32"
 gem 'hood', :path=>"vendor/gems/hood-1.0.0"
 gem 'sequel'
+gem 'httparty'
 
 # Gems used only for assets and not required
 # in production environments by default.

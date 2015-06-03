@@ -62,7 +62,7 @@ en:
     account_balance: "Account Balance (HKD)"
   button:
     cancel: "Cancel"
-    confirm: "Confim"
+    confirm: "Confirm"
     close: "Close"
     print: "Print"
     find: "Find"
@@ -92,6 +92,13 @@ en:
     card_id_only_number_allowed_error: "Card ID can only input number"
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
+  lock_player:
+    success: "Lock player [id=%{id}] successful"
+  unlock_player:
+    success: "Unlock player [id=%{id}] successful"
+  player_status:
+    active: "Active"
+    locked: "Locked"
   update_player:
     success: "Update player successful"
     duplicate: "The Card ID has been used"

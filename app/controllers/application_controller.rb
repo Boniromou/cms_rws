@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
       format.js { render partial: "shared/error404", formats: [:js], :status => :not_found }
     end
   end
+
+  def iwms_requester
+    Requester::Standard.new(PROPERTY_ID, 'test_key', IWMS_URL + IWMS_PATH)
+  end
   
   protected
 

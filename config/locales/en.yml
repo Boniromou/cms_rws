@@ -99,6 +99,7 @@ en:
   player_status:
     active: "Active"
     locked: "Locked"
+    is_locked: "Player is locked!"
   update_player:
     success: "Update player successful"
     duplicate: "The Card ID has been used"

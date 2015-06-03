@@ -15,6 +15,10 @@ module FundHelper
     number_to_currency(amount.to_f / 100).sub("$","")
   end
 
+  def to_formatted_display_amount_str( amount )
+    "%0.2f" % amount
+  end
+
   class AmountInvalidError < Exception
   end
 

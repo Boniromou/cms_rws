@@ -4,10 +4,10 @@
 
 <% if !@player.account_locked? %>
   <% if policy(Player.new).lock? %>
-    <%= render partial: 'players/lock_player_form' %>
+    <%= render partial: 'players/lock_or_unlock_player_form', locals: {lock_or_unlock: "lock"} %>
   <% end %>
 <% else %>
   <% if policy(Player.new).unlock? %>
-    <%= render partial: 'players/unlock_player_form' %>
+    <%= render partial: 'players/lock_or_unlock_player_form', locals: {lock_or_unlock: "unlock"} %>
   <% end %>
 <% end %>

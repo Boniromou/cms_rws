@@ -6,14 +6,16 @@ class AuditLog < ActiveRecord::Base
                               :create => "player.create",
                               :deposit => "player.deposit",
                               :withdrawal => "player.withdrawal",
-                              :edit => "player.edit"},
+                              :edit => "player.edit",
+                              :lock => "player.lock",
+                              :unlock => "player.unlock"},
                  :player_transaction => { :all => "general.all",
                                           :print => "transaction_history.print" },
                  :shift => { :all => "general.all",
                              :roll_shift => "shift.roll" }}
 
   ACTION_TYPE_LIST = { 
-    :player => {:create => "create",:deposit => "update", :withdrawal => "update", :edit => "update"},
+    :player => {:create => "create", :deposit => "update", :withdrawal => "update", :edit => "update", :lock => "update", :unlock => "update"},
     :player_transaction => {:print => "read"},
     :shift => {:roll_shift => "create"}
   }

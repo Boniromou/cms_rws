@@ -23,7 +23,7 @@
         </div>
         <div class="row">
           <label class="col-xs-3 box"><strong><%= t("general.status")%> :</strong></label></td>
-          <label class="col-xs-3 box"><%= label_tag :player_status,@player.status, :id => "player_status" %></label></td>
+          <label class="col-xs-3 box"><%= label_tag :player_status, t("player_status.#{@player.status}"), :id => "player_status" %></label></td>
         </div>
         <%= content %>
         </br>

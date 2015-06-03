@@ -38,6 +38,16 @@ class Requester::Standard < Requester::Base
     parse_withdraw_response(response)
   end
 
+  def lock_player(login_name)
+    response = remote_rws_call('post', "#{@path}/#{get_api_name(:lock_player)}", :body => {:login_name => login_name})
+    parse_lock_player_response(response)
+  end
+
+  def unlock_player(login_name)
+    response = remote_rws_call('post', "#{@path}/#{get_api_name(:unlock_player)}", :body => {:login_name => login_name})
+    parse_unlock_player_response(response)
+  end
+
   protected
   
   def get_api_name(api_type)
@@ -86,6 +96,28 @@ class Requester::Standard < Requester::Base
       return 'OK'
     else
       raise Remote::WithdrawError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
+    end
+  end
+
+  def parse_lock_player_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+
+    if ['OK', 'AlreadyLocked'].include?(error_code)
+      return 'OK'
+    else
+      raise Remote::LockPlayerError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
+    end
+  end
+
+  def parse_unlock_player_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+
+    if ['OK', 'AlreadyUnlocked'].include?(error_code)
+      return 'OK'
+    else
+      raise Remote::UnlockPlayerError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
     end
   end
 end

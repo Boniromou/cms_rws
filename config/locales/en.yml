@@ -62,7 +62,7 @@ en:
     account_balance: "Account Balance (HKD)"
   button:
     cancel: "Cancel"
-    confirm: "Confim"
+    confirm: "Confirm"
     close: "Close"
     print: "Print"
     find: "Find"
@@ -73,6 +73,7 @@ en:
     roll_shift_now: "Roll Shift Now"
     edit: "Edit"
     lock: "Lock"
+    unlock: "Unlock"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -81,6 +82,8 @@ en:
     deposit: "Deposit"
     withdrawal: "Withdrawal"
     edit: "Edit"
+    lock: "Lock"
+    unlock: "Unlock"
   create_player:
     success: "Create player [%{player_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
@@ -91,6 +94,14 @@ en:
     card_id_only_number_allowed_error: "Card ID can only input number"
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
+  lock_player:
+    success: "Lock player [id=%{id}] successful"
+  unlock_player:
+    success: "Unlock player [id=%{id}] successful"
+  player_status:
+    active: "Active"
+    locked: "Locked"
+    is_locked: "Player is locked!"
   update_player:
     success: "Update player successful"
     duplicate: "The Card ID has been used"

@@ -99,4 +99,48 @@ class PlayersController < ApplicationController
       redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end
   end
+
+  def lock_account
+    return unless permission_granted? Player.new, :lock?
+
+    begin
+      member_id = params[:member_id]
+
+      AuditLog.player_log("lock", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        Player.transaction do
+          Player.find_by_member_id(member_id).lock_account!
+          iwms_requester.lock_player(member_id)
+        end
+      end
+
+      flash[:success] = { key: "lock_player.success", replace: {id: member_id}}
+      redirect_to :action => 'profile', :member_id => member_id
+    rescue Exception => e
+      p e.message
+      p e.class
+      raise e
+    end
+  end
+
+  def unlock_account
+    return unless permission_granted? Player.new, :unlock?
+
+    begin
+      member_id = params[:member_id]
+
+      AuditLog.player_log("unlock", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        Player.transaction do
+          Player.find_by_member_id(member_id).unlock_account!
+          iwms_requester.unlock_player(member_id)
+        end
+      end
+
+      flash[:success] = { key: "unlock_player.success", replace: {id: member_id}}
+      redirect_to :action => 'profile', :member_id => member_id
+    rescue Exception => e
+      p e.message
+      p e.class
+      raise e
+    end
+  end
 end

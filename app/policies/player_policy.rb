@@ -22,4 +22,8 @@ class PlayerPolicy < ApplicationPolicy
   def lock?
     is_admin? || has_permission?('player', 'lock')
   end
+
+  def unlock?
+    lock?
+  end
 end

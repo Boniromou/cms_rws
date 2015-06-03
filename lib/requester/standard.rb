@@ -103,7 +103,7 @@ class Requester::Standard < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
 
-    if ['OK'].include?(error_code)
+    if ['OK', 'AlreadyLocked'].include?(error_code)
       return 'OK'
     else
       raise Remote::LockPlayerError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
@@ -114,7 +114,7 @@ class Requester::Standard < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
 
-    if ['OK'].include?(error_code)
+    if ['OK', 'AlreadyUnlocked'].include?(error_code)
       return 'OK'
     else
       raise Remote::UnlockPlayerError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"

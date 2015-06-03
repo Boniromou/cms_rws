@@ -101,6 +101,8 @@ class PlayersController < ApplicationController
   end
 
   def lock_account
+    return unless permission_granted? Player.new, :lock?
+
     member_id = params[:member_id]
     Player.transaction do
       Player.find_by_member_id(member_id).lock_account!
@@ -111,6 +113,8 @@ class PlayersController < ApplicationController
   end
 
   def unlock_account
+    return unless permission_granted? Player.new, :unlock?
+
     member_id = params[:member_id]
     Player.transaction do
       Player.find_by_member_id(member_id).unlock_account!

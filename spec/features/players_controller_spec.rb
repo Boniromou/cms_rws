@@ -19,6 +19,9 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+
+      allow_any_instance_of(Requester::Standard).to receive(:create_player).and_return('OK')
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -32,6 +35,7 @@ describe PlayersController do
       click_link I18n.t("tree_panel.create_player")
       check_title("tree_panel.create_player")
       expect(page.source).to have_selector("form#new_player input#player_member_id")
+      expect(page.source).to have_selector("form#new_player input#player_card_id")
       expect(page.source).to have_selector("form#new_player input#player_player_name")
     end
 
@@ -241,6 +245,8 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -296,6 +302,8 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -303,6 +311,8 @@ describe PlayersController do
     end
 
     it '[5.1] view player balance enquiry' do
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+
       @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
       login_as_admin
       visit home_path
@@ -354,6 +364,8 @@ describe PlayersController do
     end     
     
     it '[5.5] Return to Cage home' do
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+
       @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
       login_as_admin
       visit home_path
@@ -376,6 +388,8 @@ describe PlayersController do
     end
 
     it '[5.6] unauthorized to all actions' do
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+
       @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
@@ -409,6 +423,8 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -468,6 +484,7 @@ describe PlayersController do
       mock_cage_info
       
       @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do

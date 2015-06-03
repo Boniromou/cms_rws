@@ -19,6 +19,8 @@ describe PlayersController do
       
       @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 0, :status => "active")
       @player2 = Player.create!(:player_name => "test2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1,:balance => 100, :status => "active")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
     def create_player_transaction

@@ -37,6 +37,9 @@ class PlayersController < ApplicationController
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
       @player_balance = iwms_requester.get_player_balance(member_id)
+      raise BalanceNotMatch if @player.balance.to_f != @player_balance * 100
+    rescue BalanceNotMatch => e
+      raise e
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")

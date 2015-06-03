@@ -37,6 +37,10 @@ module AuditLogsHelper
         "transaction_history.print"
       when "roll_shift"
         "shift.roll"
+      when "lock"
+        "player.lock"
+      when "unlock"
+        "player.unlock"
       else
         nil
     end

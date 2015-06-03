@@ -19,6 +19,9 @@ describe FundInController do
       mock_close_after_print
       @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 0, :status => "active")
       TransactionType.create!(:name => "Deposit")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')
     end
     
     after(:each) do
@@ -233,6 +236,8 @@ describe FundInController do
       expect(page).to have_selector("table")
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.0)
       
       find("button#print_slip").click
       expect(page.driver.browser.window_handles.length).to eq 1
@@ -263,6 +268,8 @@ describe FundInController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
       
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.0)
+
       find("a#close_link").click
       wait_for_ajax
       @player.balance += 10000
@@ -287,6 +294,9 @@ describe FundInController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
       mock_close_after_print
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.0)
+      
       find("button#print_slip").click
       expect(page.driver.browser.window_handles.length).to eq 1
       new_window = page.driver.browser.window_handles.last do |page|

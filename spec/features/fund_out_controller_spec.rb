@@ -18,6 +18,9 @@ describe FundOutController do
       mock_cage_info
       mock_close_after_print
       @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 20000, :status => "unlock")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(200.0)
+      allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('OK')
     end
     
     after(:each) do
@@ -245,6 +248,8 @@ describe FundOutController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
 
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.0)
+
       find("button#print_slip").click
       expect(page.driver.browser.window_handles.length).to eq 1
       new_window = page.driver.browser.window_handles.last do |page|
@@ -274,6 +279,8 @@ describe FundOutController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
       
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.0)
+
       find("a#close_link").click
       wait_for_ajax
       @player.balance -= 10000
@@ -298,6 +305,8 @@ describe FundOutController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
       
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.0)
+
       find("button#print_slip").click
       expect(page.driver.browser.window_handles.length).to eq 1
       new_window = page.driver.browser.window_handles.last do |page|

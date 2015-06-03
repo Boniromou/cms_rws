@@ -99,4 +99,24 @@ class PlayersController < ApplicationController
       redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
     end
   end
+
+  def lock_account
+    member_id = params[:member_id]
+    Player.transaction do
+      Player.find_by_member_id(member_id).lock_account!
+      iwms_requester.lock_player(member_id)
+    end
+
+    redirect_to :action => 'profile', :member_id => member_id
+  end
+
+  def unlock_account
+    member_id = params[:member_id]
+    Player.transaction do
+      Player.find_by_member_id(member_id).unlock_account!
+      iwms_requester.unlock_player(member_id)
+    end
+
+    redirect_to :action => 'profile', :member_id => member_id
+  end
 end

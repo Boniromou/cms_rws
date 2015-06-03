@@ -36,4 +36,10 @@ module Remote
 
   class WithdrawError < RemoteError
   end
+
+  class LockPlayerError < RemoteError
+  end
+
+  class UnlockPlayerError < RemoteError
+  end
 end

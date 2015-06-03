@@ -36,8 +36,10 @@ class FundController < ApplicationController
     amount = params[:player_transaction][:amount]
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount)
-      call_iwms(@member_id, amount, make_trans_id(@transaction.id), @transaction.created_at)
+      Player.transaction do
+        @transaction = do_fund_action(@member_id, server_amount)
+        call_iwms(@member_id, amount, make_trans_id(@transaction.id), @transaction.created_at)
+      end
     end
   end
 

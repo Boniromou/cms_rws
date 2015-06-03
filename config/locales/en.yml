@@ -73,6 +73,7 @@ en:
     roll_shift_now: "Roll Shift Now"
     edit: "Edit"
     lock: "Lock"
+    unlock: "Unlock"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"

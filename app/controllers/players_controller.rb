@@ -109,6 +109,7 @@ class PlayersController < ApplicationController
       iwms_requester.lock_player(member_id)
     end
 
+    flash[:success] = { key: "lock_player.success", replace: {id: member_id}}
     redirect_to :action => 'profile', :member_id => member_id
   end
 
@@ -121,6 +122,7 @@ class PlayersController < ApplicationController
       iwms_requester.unlock_player(member_id)
     end
 
+    flash[:success] = { key: "unlock_player.success", replace: {id: member_id}}
     redirect_to :action => 'profile', :member_id => member_id
   end
 end

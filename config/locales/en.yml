@@ -82,6 +82,8 @@ en:
     deposit: "Deposit"
     withdrawal: "Withdrawal"
     edit: "Edit"
+    lock: "Lock"
+    unlock: "Unlock"
   create_player:
     success: "Create player [%{player_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."

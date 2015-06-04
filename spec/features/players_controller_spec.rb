@@ -744,7 +744,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", id: @player.member_id)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", player_name: @player.player_name)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax

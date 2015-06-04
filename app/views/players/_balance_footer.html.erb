@@ -1,13 +1,13 @@
 <% if policy(PlayerTransaction.new).deposit? %>
   <% if @player.account_locked? %>
-    <%= link_to t("button.deposit"), "#" , :title => t("button.deposit"), :class => "btn btn-primary", disabled: 'disabled' %>
+    <%= link_to t("button.deposit"), "#" , :title => t("button.deposit"), :id => "balance_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
   <% else %>
     <%= link_to t("button.deposit"), fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit", :class => "btn btn-primary" %>
   <% end %>
 <% end %>
 <% if policy(PlayerTransaction.new).withdraw? %>
   <% if @player.account_locked? %>
-    <%= link_to t("button.withdrawal"), "#" , :title => t("button.withdrawal"), :class => "btn btn-primary", disabled: 'disabled' %>
+    <%= link_to t("button.withdrawal"), "#" , :title => t("button.withdrawal"), :id => "balance_withdraw", :class => "btn btn-primary", disabled: 'disabled' %>
   <% else %>
     <%= link_to t("button.withdrawal"), fund_out_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw", :class => "btn btn-primary" %>
   <% end %>

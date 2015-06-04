@@ -416,6 +416,27 @@ describe PlayersController do
       visit home_path
       first("aside#left-panel ul li#nav_balance_enquiry").should be_nil
     end     
+
+    it '[5.8] balance enquiry with locked player' do
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "locked")
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      check_search_page
+      fill_search_info("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_balance_page
+
+      expect(page).to have_selector("div a#balance_deposit")
+      expect(page).to have_selector("div a#balance_withdraw")
+      expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
+      expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
+      expect(page.source).to have_selector("div a#close_to_home")
+    end
   end
   
   describe '[12] Search player by card ID' do

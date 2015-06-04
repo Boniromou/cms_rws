@@ -708,4 +708,138 @@ describe PlayersController do
       first("aside#left-panel ul li#nav_player_profile").should be_nil
     end     
   end
+
+  describe '[15] Lock/Unlock Player' do
+    def update_lock_or_unlock
+      if @player.status == 'active'
+        @lock_or_unlock = "lock"
+      else
+        @lock_or_unlock = "unlock"
+      end
+    end
+
+    def check_lock_unlock_components
+      expect(page).to have_selector "div#confirm_#{@lock_or_unlock}_player_dialog"
+      expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to include "none"
+    end
+
+    def check_lock_unlock_page
+      @player.reload
+      update_lock_or_unlock
+
+      check_profile_page
+      check_player_info
+      check_lock_unlock_components
+    end
+
+    def search_player_profile
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      wait_for_ajax
+    end
+
+    def toggle_player_lock_status_and_check
+      check_lock_unlock_page
+
+      click_button I18n.t("button.#{@lock_or_unlock}")
+      expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to_not include "none"
+
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", id: @player.member_id)
+
+      click_button I18n.t("button.confirm")
+      wait_for_ajax
+
+      check_lock_unlock_page
+      check_flash_message expected_flash_message
+    end
+
+    def lock_or_unlock_player_and_check
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      search_player_profile
+      toggle_player_lock_status_and_check
+    end
+
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Standard).to receive(:lock_player).and_return('OK')
+      allow_any_instance_of(Requester::Standard).to receive(:unlock_player).and_return('OK')
+    end
+
+    after(:each) do
+      AuditLog.delete_all
+      Player.delete_all
+    end
+
+    it '[15.1] Successfully Lock player', js: true do
+      lock_or_unlock_player_and_check
+    end 
+
+    it '[15.2] Successfully unlock player', js: true do
+      @player.status = "locked"
+      @player.save
+
+      lock_or_unlock_player_and_check
+    end 
+
+    it '[15.3] unauthorized to lock/unlock' do 
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,["profile"])
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+
+      expect(page).to_not have_button I18n.t("button.lock")
+      expect(page).to_not have_button I18n.t("button.unlock")
+      expect(page).to_not have_selector "div#confirm_lock_player_dialog"
+      expect(page).to_not have_selector "div#confirm_unlock_player_dialog"
+    end
+
+    it '[15.4] Audit log for lock player', js: true do
+      lock_or_unlock_player_and_check
+
+      audit_log = AuditLog.find_by_audit_target("player")
+      expect(audit_log).to_not be_nil
+      expect(audit_log.audit_target).to eq "player"
+      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "lock"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to be_nil
+      expect(audit_log.ip).to_not be_nil
+      expect(audit_log.session_id).to_not be_nil
+      expect(audit_log.description).to_not be_nil
+    end
+
+    it '[15.5] audit log for unlock player', js: true do
+      @player.status = "locked"
+      @player.save
+
+      lock_or_unlock_player_and_check
+
+      audit_log = AuditLog.find_by_audit_target("player")
+      expect(audit_log).to_not be_nil
+      expect(audit_log.audit_target).to eq "player"
+      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "unlock"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to be_nil
+      expect(audit_log.ip).to_not be_nil
+      expect(audit_log.session_id).to_not be_nil
+      expect(audit_log.description).to_not be_nil
+    end
+
+  end
 end

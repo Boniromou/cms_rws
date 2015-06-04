@@ -95,9 +95,9 @@ en:
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
   lock_player:
-    success: "Lock player [id=%{id}] successful"
+    success: "Lock player [%{player_name}] successful"
   unlock_player:
-    success: "Unlock player [id=%{id}] successful"
+    success: "Unlock player [%{player_name}] successful"
   player_status:
     active: "Active"
     locked: "Locked"

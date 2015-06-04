@@ -18,7 +18,7 @@ class PlayersController < ApplicationController
           iwms_requester.create_player(params[:player][:member_id], 'HKD')
         end
       end
-      flash[:success] = {key: "create_player.success", replace: {player_name: params[:player][:player_name]}}
+      flash[:success] = {key: "create_player.success", replace: {player_name: params[:player][:player_name].upcase}}
       redirect_to :action => 'balance', :member_id => params[:player][:member_id]
     rescue CreatePlayer::ParamsError => e
       flash[:error] = "create_player." + e.message
@@ -114,7 +114,7 @@ class PlayersController < ApplicationController
         end
       end
 
-      flash[:success] = { key: "lock_player.success", replace: {player_name: player.player_name}}
+      flash[:success] = { key: "lock_player.success", replace: {player_name: player.player_name.upcase}}
       redirect_to :action => 'profile', :member_id => member_id
     rescue Exception => e
       p e.message
@@ -137,7 +137,7 @@ class PlayersController < ApplicationController
         end
       end
 
-      flash[:success] = { key: "unlock_player.success", replace: {player_name: player.player_name}}
+      flash[:success] = { key: "unlock_player.success", replace: {player_name: player.player_name.upcase}}
       redirect_to :action => 'profile', :member_id => member_id
     rescue Exception => e
       p e.message

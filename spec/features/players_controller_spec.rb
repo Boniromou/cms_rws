@@ -52,7 +52,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.balance")
-      check_flash_message I18n.t("create_player.success", player_name: @player.player_name)
+      check_flash_message I18n.t("create_player.success", player_name: @player.player_name.upcase)
 
       test_player = Player.find_by_member_id(@player.member_id)
       expect(test_player).not_to be_nil
@@ -744,7 +744,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", player_name: @player.player_name)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", player_name: @player.player_name.upcase)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax

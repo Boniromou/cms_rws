@@ -1,9 +1,6 @@
 class CageError < StandardError
 end
 
-class BalanceNotMatch < CageError
-end
-
 module CreatePlayer
   class CreatePlayerError < CageError
   end

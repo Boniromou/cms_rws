@@ -32,11 +32,5 @@ describe PlayersController do
 
       expect{ get 'balance', {member_id: 123456} }.to_not raise_error
     end
-
-    it 'should raise error when not match' do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
-
-      expect{ get 'balance', {member_id: 123456} }.to raise_error(BalanceNotMatch)
-    end
   end
 end

@@ -116,7 +116,7 @@ module StepHelper
     expect(find("label#player_name").text).to eq @player.player_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
-    expect(find("label#player_status").text).to eq @player.status
+    expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player.status}")
   end
 
   def check_player_transaction_page_time_picker

@@ -96,8 +96,10 @@ en:
     unknown_error: "Unknown error"
   lock_player:
     success: "Lock player [%{player_name}] successful"
+    confirm_msg: "Are you sure to Lock player: %{player_name}?"
   unlock_player:
     success: "Unlock player [%{player_name}] successful"
+    confirm_msg: "Are you sure to UnLock player: %{player_name}?"
   player_status:
     active: "Active"
     locked: "Locked"

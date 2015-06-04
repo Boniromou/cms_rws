@@ -8,7 +8,7 @@
   <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
     <table width='80%'>
       <tr>
-        <td>Are you sure to <%= lock_or_unlock %> player?</td>
+        <td><%= t("#{lock_or_unlock}_player.confirm_msg", player_name: @player.player_name.upcase) %></td>
       </tr>
     </table>
   </div>

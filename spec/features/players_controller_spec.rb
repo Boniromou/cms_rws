@@ -326,6 +326,8 @@ describe PlayersController do
 
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
+      expect(find("div a#balance_deposit")[:disabled]).to eq nil
+      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
       expect(page.source).to have_selector("div a#close_to_home")
     end
 

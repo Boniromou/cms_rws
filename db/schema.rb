@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150430044031) do
+ActiveRecord::Schema.define(:version => 20150604085013) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -62,10 +62,9 @@ ActiveRecord::Schema.define(:version => 20150430044031) do
     t.string   "member_id"
     t.string   "card_id"
     t.integer  "currency_id"
-    t.integer  "balance",     :limit => 8
     t.string   "status"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "players", ["card_id"], :name => "index_players_on_card_id", :unique => true

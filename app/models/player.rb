@@ -1,7 +1,7 @@
 class Player < ActiveRecord::Base
   include ActionView::Helpers
   include FundHelper
-  attr_accessible :balance, :card_id, :currency_id,:member_id, :player_name, :status
+  attr_accessible :card_id, :currency_id,:member_id, :player_name, :status
   validates_uniqueness_of :member_id, :card_id
 
   STATUS_LOCKED = 'locked'
@@ -37,7 +37,6 @@ class Player < ActiveRecord::Base
       player.card_id = card_id
       player.member_id = member_id
       player.player_name = player_name
-      player.balance = 0
       player.currency_id = 1
       player.status = STATUS_NORMAL
       begin
@@ -63,18 +62,6 @@ class Player < ActiveRecord::Base
       rescue
         raise "duplicate"
       end
-    end
-
-    def fund_in(member_id, amount)
-      player = find_by_member_id(member_id)
-      player.balance += amount
-      player.save
-    end
-    
-    def fund_out(member_id, amount)
-      player = find_by_member_id(member_id)
-      player.balance -= amount
-      player.save
     end
 
     def find_by_type_id(id_type, id_number)

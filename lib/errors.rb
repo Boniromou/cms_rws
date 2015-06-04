@@ -34,6 +34,9 @@ module Remote
   class WithdrawError < RemoteError
   end
 
+  class AmountNotEnough < WithdrawError
+  end
+
   class LockPlayerError < RemoteError
   end
 

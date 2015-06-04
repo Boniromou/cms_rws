@@ -69,11 +69,7 @@ class FundController < ApplicationController
   protected
 
   def do_fund_action(member_id, amount)
-    transaction = nil
-    Player.transaction do
-      Player.send operation_str, member_id, amount
-      transaction = PlayerTransaction.send "save_#{operation_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_station_id
-    end
+    transaction = PlayerTransaction.send "save_#{operation_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_station_id
     transaction
   end
 end

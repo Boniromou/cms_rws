@@ -94,6 +94,8 @@ class Requester::Standard < Requester::Base
 
     if ['OK'].include?(error_code)
       return 'OK'
+    elsif ['AmountNotEnough'].include?(error_code)
+      raise Remote::AmountNotEnough, result_hash[:balance]
     else
       raise Remote::WithdrawError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
     end

@@ -21,7 +21,4 @@ module FundHelper
 
   class AmountInvalidError < Exception
   end
-
-  class BalanceNotEnough < Exception
-  end
 end

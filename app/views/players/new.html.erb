@@ -73,11 +73,16 @@
   });
 
   function formValidated() {
-    function validated(comp) {
+    function validated(comp, index) {
+      var lengthLimit = [CARD_ID_LENGTH_LIMIT, MEMBER_ID_LENGTH_LIMIT, 0];
+
       if ( comp.val() == "" )
         return false;
-      else
-        return true;
+
+      if ( lengthLimit[index] > 0 && comp.val().length != lengthLimit[index] )
+        return false;
+
+      return true;
     }
 
     function targetLabel(index) {
@@ -100,7 +105,7 @@
     for (var i = 0; i < 3; i++) {
       var comp = $(formComps[i]);
 
-      if ( !validated(comp) ) {
+      if ( !validated(comp, i) ) {
         allValidated = false;
 
         showError(comp, i);

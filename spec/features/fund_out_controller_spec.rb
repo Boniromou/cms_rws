@@ -17,8 +17,9 @@ describe FundOutController do
       create_shift_data
       mock_cage_info
       mock_close_after_print
-      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 20000, :status => "unlock")
+      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
+      @player_balance = 20000
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(200.0)
       allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('OK')
     end
@@ -35,7 +36,7 @@ describe FundOutController do
       click_link I18n.t("tree_panel.balance")
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
-      check_balance_page
+      check_balance_page(@player_balance)
 
       within "div#content" do
         click_link I18n.t("button.withdrawal")
@@ -64,22 +65,28 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => ""
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdrawal")
     end
 
     it '[7.5] Invalid Withdraw (invalid balance)', :js => true do
+      allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "200.0")
+
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 300
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#confirm_fund_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
       expect(find("label#player_name").text).to eq @player.player_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      check_flash_message I18n.t("invalid_amt.no_enough_to_withdrawal", { balance: to_display_amount_str(@player.balance)})
+      check_flash_message I18n.t("invalid_amt.no_enough_to_withdrawal", { balance: to_display_amount_str(@player_balance)})
     end
 
     it '[7.6] cancel Withdraw' do
@@ -87,14 +94,16 @@ describe FundOutController do
       visit fund_out_path + "?member_id=#{@player.member_id}"
       find("a#cancel").click
 
-      check_balance_page
+      check_balance_page(@player_balance)
     end
 
     it '[7.7] Confirm Withdraw', :js => true do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -107,7 +116,9 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -125,7 +136,9 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -143,7 +156,9 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog div button#confirm").click
       wait_for_ajax
       expect(page).to have_selector("button#print_slip")
@@ -174,7 +189,7 @@ describe FundOutController do
       
       expect(find("label#player_name").text).to eq @player.player_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+      expect(find("label#player_balance").text).to eq to_display_amount_str(@player_balance)
       set_permission(@test_user,"cashier",:player,[])
       set_permission(@test_user,"cashier",:player_transaction,[])
 
@@ -200,7 +215,9 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit fund_out_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       set_permission(@test_user,"cashier",:player_transaction,[])
       find("div#confirm_fund_dialog div button#confirm").click
       wait_for_ajax
@@ -215,7 +232,9 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -234,7 +253,9 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -257,15 +278,16 @@ describe FundOutController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      @player.balance -= 10000
-      check_balance_page
+      check_balance_page(@player_balance - 10000)
     end
 
     it '[7.16] Close slip', :js => true do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -283,15 +305,16 @@ describe FundOutController do
 
       find("a#close_link").click
       wait_for_ajax
-      @player.balance -= 10000
-      check_balance_page
+      check_balance_page(@player_balance - 10000)
     end
     
     it '[7.17] audit log for print slip', :js => true do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -314,8 +337,7 @@ describe FundOutController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      @player.balance -= 10000
-      check_balance_page
+      check_balance_page(@player_balance - 10000)
       
       audit_log = AuditLog.find_by_audit_target("player_transaction")
       audit_log.should_not be_nil
@@ -334,7 +356,9 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => ""
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdrawal")
     end

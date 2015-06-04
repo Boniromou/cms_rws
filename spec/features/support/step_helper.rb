@@ -96,14 +96,14 @@ module StepHelper
     fill_in "id_number", :with => id_number
   end
 
-  def check_balance_page
+  def check_balance_page(balance = 0)
     check_title("tree_panel.balance")
-    expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+    expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
   end
 
-  def check_profile_page
+  def check_profile_page(balance = 0)
     check_title("tree_panel.profile")
-    expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+    expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
   end
 
   def check_edit_page

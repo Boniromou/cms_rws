@@ -17,7 +17,7 @@ describe PlayersController do
   describe 'Query Balance' do
     before(:each) do
       clean_dbs
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       controller.class.skip_before_filter :check_session_expiration, :authenticate_user!
       allow_any_instance_of(ApplicationController).to receive(:permission_granted?).and_return(true)
       bypass_rescue

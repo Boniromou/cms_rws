@@ -17,7 +17,7 @@ describe FundInController do
       create_shift_data
       mock_cage_info
       mock_close_after_print
-      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1,:balance => 0, :status => "active")
+      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       TransactionType.create!(:name => "Deposit")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
@@ -65,7 +65,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 0
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
@@ -83,7 +85,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -96,7 +100,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -114,7 +120,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -133,7 +141,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog div button#confirm").click
       wait_for_ajax
       expect(page).to have_selector("button#print_slip")
@@ -189,7 +199,9 @@ describe FundInController do
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       visit fund_in_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       set_permission(@test_user,"cashier",:player_transaction,[])
       find("div#confirm_fund_dialog div button#confirm").click
       wait_for_ajax
@@ -204,7 +216,9 @@ describe FundInController do
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -223,7 +237,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -246,15 +262,16 @@ describe FundInController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      @player.balance += 10000
-      check_balance_page
+      check_balance_page(10000)
     end
 
     it '[6.15] Close slip', :js => true do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -272,15 +289,16 @@ describe FundInController do
 
       find("a#close_link").click
       wait_for_ajax
-      @player.balance += 10000
-      check_balance_page
+      check_balance_page(10000)
     end
     
     it '[6.16] audit log for print slip', :js => true do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
       find("div#button_set button#confirm")[:disabled].should == "disabled"
       find("a#cancel")[:disabled].should == "disabled"
@@ -304,8 +322,7 @@ describe FundInController do
         page.execute_script "window.close()"
       end
       wait_for_ajax
-      @player.balance += 10000
-      check_balance_page
+      check_balance_page(10000)
       
       audit_log = AuditLog.find_by_audit_target("player_transaction")
       audit_log.should_not be_nil
@@ -324,7 +341,9 @@ describe FundInController do
       login_as_admin 
       visit fund_in_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => ""
-      click_button I18n.t("button.confirm")
+      within "div#button_set" do
+        click_button I18n.t("button.confirm")
+      end
       find("div#confirm_fund_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end

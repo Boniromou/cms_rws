@@ -62,7 +62,7 @@ describe PlayersController do
     end
 
     it '[3.3] player already exist (member ID)' do
-      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
+      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :status => "active")
       login_as_admin
       visit new_player_path
       @player = Player.new
@@ -134,7 +134,7 @@ describe PlayersController do
     end
 
     it '[3.7] Audit log for fail create player' do
-      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :balance => 0, :status => "active")
+      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :status => "active")
       login_as_admin
       visit new_player_path
       @player = Player.new
@@ -223,7 +223,7 @@ describe PlayersController do
     end
 
     it '[3.13] player already exist (card ID)' do
-      Player.create!(:player_name => "exist", :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      Player.create!(:player_name => "exist", :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit new_player_path
       @player = Player.new
@@ -261,7 +261,7 @@ describe PlayersController do
     end
 
     it '[4.2] successfully search player' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -313,7 +313,7 @@ describe PlayersController do
     it '[5.1] view player balance enquiry' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -322,7 +322,7 @@ describe PlayersController do
       find("#button_find").click
       
       check_player_info
-      check_balance_page
+      check_balance_page(9999)
 
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
@@ -368,7 +368,7 @@ describe PlayersController do
     it '[5.5] Return to Cage home' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -376,7 +376,7 @@ describe PlayersController do
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
       
-      check_balance_page
+      check_balance_page(9999)
       check_player_info
       
       expect(page.source).to have_selector("div a#balance_deposit")
@@ -392,7 +392,7 @@ describe PlayersController do
     it '[5.6] unauthorized to all actions' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -403,7 +403,7 @@ describe PlayersController do
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
 
-      check_balance_page
+      check_balance_page(9999)
       check_player_info
       
       expect(page.source).to_not have_selector("div a#balance_deposit")
@@ -422,7 +422,7 @@ describe PlayersController do
     it '[5.8] balance enquiry with locked player' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 9999, :status => "locked")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "locked")
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -431,7 +431,7 @@ describe PlayersController do
       find("#button_find").click
       
       check_player_info
-      check_balance_page
+      check_balance_page(9999)
 
       expect(page).to have_selector("div a#balance_deposit")
       expect(page).to have_selector("div a#balance_withdraw")
@@ -462,7 +462,7 @@ describe PlayersController do
     end
 
     it '[12.2] successfully search player' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
@@ -506,7 +506,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       
-      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
@@ -586,7 +586,7 @@ describe PlayersController do
     end
     
     it '[14.4] duplicated card ID'do
-      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :balance => 0, :status => "active")
+      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
       updated_card_id = 12345678901234567890
       updated_player_name = "updated"
       login_as_admin
@@ -644,7 +644,7 @@ describe PlayersController do
     end
     
     it '[14.6] audit log for fail to edit player'do
-      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :balance => 0, :status => "active")
+      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
       updated_card_id = 12345678901234567890
       updated_player_name = "updated"
       login_as_admin
@@ -793,7 +793,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :balance => 0, :status => "active")
+      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
       allow_any_instance_of(Requester::Standard).to receive(:lock_player).and_return('OK')

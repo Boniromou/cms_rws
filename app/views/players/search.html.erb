@@ -52,5 +52,9 @@
 <script>
   $(document).ready(function() {
     $('input[autofocus="autofocus"]').focus();
+
+    $('input:radio[name="id_type"]').click(function() {
+      $('input[autofocus="autofocus"]').focus();
+    });
   });
 </script>

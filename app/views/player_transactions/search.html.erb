@@ -1,5 +1,7 @@
 <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.player_transaction")) %>
 
+<%= javascript_include_tag "print.js" %>
+
 <div id="myTabContent1" class="tab-content padding-10">
 	<div class="tab-pane fade in active" id="player_transactions_content">
     <%= render "player_transactions/search_form" %>

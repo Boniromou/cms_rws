@@ -9,18 +9,15 @@
   <span> <%= t("button.Print")%></span>
 <% end %>
 
+<%= javascript_include_tag "print.js" %>
+
 <script type='text/javascript'>
   $('#print_slip').click(function() {
-    $('#print_link').click()
+    $('#print_link').click();
 
-    var w = window.open();
     var html = $("#slip").html();
 
-    $(w.document.body).html(html);
-    w.print();
-    if( <%= is_close_after_print %>) {
-      w.close();
-    }
+    printHtml(html);
 
     return false;
   });

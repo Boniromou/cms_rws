@@ -55,19 +55,30 @@
                   end
                 %>
               <% end %>
+              <!--
               <tr>
                 <td colspan="9"></td>
                 <td><%=to_display_amount_str(total_deposit) %></td>
                 <td><%=to_display_amount_str(total_withdraw) %></td>
                 <td><%=report_balance(total_deposit - total_withdraw) %></td>
               </tr>
+              -->
               <%
                 grand_deposit += total_deposit
                 grand_withdraw +=total_withdraw
               %>
             <% end %>
+          </table>
+          
+          <table id="datatable_col_reorder2" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+            <thead>
+                <th></th>
+                <th><%= t("transaction_history.deposit")%></th>
+                <th><%= t("transaction_history.withdrawal")%></th>
+                <th><%= t("transaction_history.balance")%></th>
+            </thead>
             <tr>
-              <td colspan="9"><%= t("fm_activity.grand_total")%></td>
+              <td><%= t("fm_activity.grand_total")%></td>
               <td><%=to_display_amount_str(grand_deposit) %></td>
               <td><%=to_display_amount_str(grand_withdraw) %></td>
               <td><%=report_balance(grand_deposit - grand_withdraw) %></td>
@@ -87,6 +98,7 @@
 </div>
 
 <%= javascript_include_tag "print.js" %>
+<%= javascript_include_tag "pagination.js" %>
 
 <script>
   $(document).ready(function() {

@@ -17,6 +17,7 @@ class FrontMoneyController < ApplicationController
     shift_type_id = ShiftType.get_id_by_name(shift_name)
     accounting_date_id = AccountingDate.get_id_by_date(@accounting_date)
     shift = Shift.find_by_accounting_date_id_and_shift_type_id(accounting_date_id, shift_type_id)
+    raise FrontMoneyHelper::NoResultException.new "shift not found" if shift.nil?
 
     @player_transaction_group = PlayerTransaction.search_transactions_group_by_station(shift.id)
     rescue FrontMoneyHelper::NoResultException => e

@@ -98,12 +98,11 @@
 </div>
 
 <%= javascript_include_tag "print.js" %>
-<%= javascript_include_tag "pagination.js" %>
 
 <script>
+  var html = $('div#fm_search_result').html();
   $(document).ready(function() {
     $('button#print_fm').click(function() {
-      var html = $('div#fm_search_result').html();
 
       printHtml(html);
 
@@ -111,3 +110,4 @@
     });
   });
 </script>
+<%= javascript_include_tag "pagination.js" %>

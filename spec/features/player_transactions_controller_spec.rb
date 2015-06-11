@@ -159,4 +159,43 @@ describe PlayersController do
       expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
     end
   end
+  
+  describe '[16] Print Transaction report' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      
+      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:player_name => "test2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+    end
+
+    def create_player_transaction
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 10000, :station_id => @station_id, :created_at => Time.now)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 20000, :station_id => @station_id, :created_at => Time.now + 30 * 60)
+      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "complete", :amount => 30000, :station_id => @station_id, :created_at => Time.now + 60 * 60)
+    end
+
+    after(:each) do
+      #PlayerTransaction.delete_all
+    end
+    
+    it '[16.2] unauthorized print transaction report', js: true do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:player,["balance"])
+      set_permission(@test_user,"cashier",:player_transaction,["search"])
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
+
+      fill_search_info_js("member_id", @player2.member_id)
+      find("input#search").click
+      wait_for_ajax
+
+      expect(page.source).to_not have_selector("button#print_player_transaction")
+    end
+  end
 end

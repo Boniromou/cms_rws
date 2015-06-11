@@ -6,7 +6,8 @@
   <div>
     <div class="widget-body no-padding">
       <% if @player_transactions.length > 0 %>
-        <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+        <div id="player_trnasaction_result">
+          <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
               <th><%= t("transaction_history.transaction_id")%></th>
               <th><%= t("transaction_history.member_name")%></th>
@@ -21,30 +22,36 @@
               <th><%= t("transaction_history.withdrawal")%></th>
               <th><%= t("transaction_history.action")%></th>
             </thead>
-          <% @player_transactions.each do |t| %>
-            <tr id="transaction_<%= t.id %>">
-              <% shift = Shift.find_by_id(t.shift_id) %>
-              <% player = Player.find_by_id(t.player_id) %>
-              <% user = User.find_by_id(t.user_id) %>
-              <td><%= t.id %></td>
-              <td><%= player.player_name.upcase %></td>
-              <td><%= player.member_id %></td>
-              <td><%= shift.accounting_date%></td>
-              <td><%= format_time(t.created_at) %></td>
-              <td><%= shift.name %></td>
-              <td><%= Station.get_name_by_id(t.station_id) %></td>
-              <td><%= user.employee_id %></td>
-              <td><%= t.status %></td>
-              <td><%= t.deposit_amt_str %></td>
-              <td><%= t.withdrawal_amt_str %></td>
-              <td>
-                <% if policy(PlayerTransaction.new).reprint? %>
-                  <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
+            <tbody>
+              <% @player_transactions.each do |t| %>
+                <tr id="transaction_<%= t.id %>">
+                  <% shift = Shift.find_by_id(t.shift_id) %>
+                  <% player = Player.find_by_id(t.player_id) %>
+                  <% user = User.find_by_id(t.user_id) %>
+                  <td><%= t.id %></td>
+                  <td><%= player.player_name.upcase %></td>
+                  <td><%= player.member_id %></td>
+                  <td><%= shift.accounting_date%></td>
+                  <td><%= format_time(t.created_at) %></td>
+                  <td><%= shift.name %></td>
+                  <td><%= Station.get_name_by_id(t.station_id) %></td>
+                  <td><%= user.employee_id %></td>
+                  <td><%= t.status %></td>
+                  <td><%= t.deposit_amt_str %></td>
+                  <td><%= t.withdrawal_amt_str %></td>
+                  <td>
+                    <% if policy(PlayerTransaction.new).reprint? %>
+                      <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <button id="print_player_transaction" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+        </div>
       <% else %>
         <br/>
         <br/>
@@ -54,6 +61,31 @@
   </div>
 </div>
 
-
+<%= javascript_include_tag "print.js" %>
 <%= javascript_include_tag "pagination" %>
+
+<script>
+  $(document).ready(function() {
+    $('button#print_player_transaction').click(function() {
+      var div = $('div#player_trnasaction_result table').clone();
+      $('thead th:last-child', div).remove();
+      $('tbody tr td:last-child', div).remove();
+      $('tr, th', div).addBack().each(function() {
+        var attributes = $.map(this.attributes, function(item) {
+            return item.name;
+        });
+
+        var element = $(this);
+        $.each(attributes, function(i, item) {
+          element.removeAttr(item);
+        });
+      });
+      var content = $('<div>').append(div).html();
+
+      printHtml(content);
+
+      return false;
+    });
+  });
+</script>
 

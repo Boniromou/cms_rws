@@ -49,9 +49,11 @@
             </tbody>
           </table>
         </div>
-        <div>
-          <button id="print_player_transaction" class="btn btn-primary pull-right"><%= t("button.print") %></button>
-        </div>
+        <% if policy(PlayerTransaction.new).print? %>
+          <div>
+            <button id="print_player_transaction" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+          </div>
+        <% end %>
       <% else %>
         <br/>
         <br/>

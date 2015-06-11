@@ -62,30 +62,17 @@
 </div>
 
 <%= javascript_include_tag "print.js" %>
-<%= javascript_include_tag "pagination" %>
 
 <script>
+  var pt_result = $('div#player_trnasaction_result').html();
+
   $(document).ready(function() {
     $('button#print_player_transaction').click(function() {
-      var div = $('div#player_trnasaction_result table').clone();
-      $('thead th:last-child', div).remove();
-      $('tbody tr td:last-child', div).remove();
-      $('tr, th', div).addBack().each(function() {
-        var attributes = $.map(this.attributes, function(item) {
-            return item.name;
-        });
-
-        var element = $(this);
-        $.each(attributes, function(i, item) {
-          element.removeAttr(item);
-        });
-      });
-      var content = $('<div>').append(div).html();
-
-      printHtml(content);
+      printHtml(pt_result);
 
       return false;
     });
   });
 </script>
 
+<%= javascript_include_tag "pagination" %>

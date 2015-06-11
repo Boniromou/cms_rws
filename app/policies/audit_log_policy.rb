@@ -1,5 +1,5 @@
 class AuditLogPolicy < ApplicationPolicy
   def search?
-    true
+    is_admin? || has_permission?('audit_log', 'search')
   end
 end

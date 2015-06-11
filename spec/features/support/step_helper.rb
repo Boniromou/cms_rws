@@ -153,7 +153,7 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.player_name
+    expect(item[1].text).to eq player.player_name.upcase
     expect(item[2].text).to eq player.member_id
     expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
@@ -225,7 +225,7 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.player_name
+    expect(item[1].text).to eq player.player_name.upcase
     expect(item[2].text).to eq player.member_id
     expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")

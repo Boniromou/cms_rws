@@ -129,7 +129,7 @@ describe PlayersController do
       
       find("div input#reprint").click
       wait_for_ajax
-      expect(page.driver.browser.window_handles.length).to eq 1
+      expect(page.source).to have_selector("iframe")
     end
     
     it '[8.9] Re-print slip unauthorized', js: true do

@@ -41,6 +41,8 @@ en:
     status: "Status"
     all: "All"
     shift: "Shift"
+    start_time: "Start Time"
+    end_time: "End Time"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -106,7 +108,7 @@ en:
     is_locked: "Player is locked!"
   update_player:
     success: "Update player successful"
-    duplicate: "The Card ID has been used"
+    duplicate: "Card ID has already existed"
   shift:
     name: "Shift"
     confirm_roll_msg: "Roll system to next shift"
@@ -146,6 +148,8 @@ en:
     balance: "Balance"
     action: "Action"
     print: "Print"
+    by_member: "by Member"
+    by_transaction_id: "by Transaction ID"
   shift_name:
     morning: "Morning"
     swing: "Swing"
@@ -159,4 +163,12 @@ en:
     search_field_blank_error: "search field can not be blank"
     no_transaction_found: "No transaction found."
     limit_remark: "** The search date range is limited to 30 days."
-
+  auditlog:
+    audit_time: "Time"
+    audit_action_by: "Action by"
+    audit_status: "Status"
+    audit_session_id: "Session ID"
+    audit_ip: "IP"
+    audit_action: "Action"
+    target: "Target"
+  

@@ -32,6 +32,8 @@ en:
   general:
     login: "Log In"
     logout: "Log Out"
+    lock: "Lock"
+    unlock: "Unlock"
     signup: "Sign Up"
     member_id: "Membership ID"
     name: "Name"

@@ -66,11 +66,16 @@
 <%= javascript_include_tag "print.js" %>
 
 <script>
-  var pt_result = $('div#player_trnasaction_result').html();
+  var raw_result = $('div#player_trnasaction_result').clone();
 
   $(document).ready(function() {
     $('button#print_player_transaction').click(function() {
-      printHtml(pt_result);
+      $('thead th:last-child', raw_result).remove();
+      $('tbody tr td:last-child', raw_result).remove();
+
+      var content = raw_result.html();
+
+      printHtml(content);
 
       return false;
     });

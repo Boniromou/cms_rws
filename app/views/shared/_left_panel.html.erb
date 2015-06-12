@@ -116,3 +116,21 @@
   color: #a8a8a8;
 }
 </style>
+
+<script type='text/javascript'>
+  $("li ul li").attr("onclick","ActiveOption(event)");
+  $("li#nav_home").attr("onclick","RemoveActiveOption()");
+  
+  function ActiveOption(e){
+    RemoveActiveOption();
+    target = e.target;
+    while(target!=null && target.nodeName!= "LI"){
+      target = target.parentNode
+    }
+    $(target).addClass("active");
+  }
+
+  function RemoveActiveOption(){
+    $("li ul li").removeClass("active");
+  }
+</script>

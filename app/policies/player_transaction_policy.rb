@@ -18,4 +18,8 @@ class PlayerTransactionPolicy < ApplicationPolicy
   def reprint?
     is_admin? || has_permission?('player_transaction', 'reprint')
   end
+
+  def print_report?
+    is_admin? || has_permission?('player_transaction', 'print_report')
+  end
 end

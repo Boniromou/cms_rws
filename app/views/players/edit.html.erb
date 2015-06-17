@@ -19,7 +19,7 @@
         </div>
         <div class='col col-3'>
           <label class='invisible_error'>
-            <%= t("create_player.card_id_blank_error") %>
+            <%= t("create_player.card_id_length_error") %>
           </label>
         </div>
       </div>
@@ -55,57 +55,11 @@
 <%= javascript_include_tag "validate.input.js" %>
 
 <script>
-  $(document).ready(function() {
-    $('input[autofocus="autofocus"]').focus();
-  });
-
-  function formValidated() {
-    function validated(comp) {
-      if ( comp.val() == "" )
-        return false;
-      else
-        return true;
-    }
-
-    function targetLabel(index) {
-      return $("form#edit_player > fieldset > div.row:eq(" + index + ") > div.col:eq(2) label");
-    }
-
-    function showError(comp, index) {
-      targetLabel(index).css('visibility', 'visible');
-      comp.parent().addClass('state-error');
-    }
-
-    function hideError(comp, index) {
-      targetLabel(index).css('visibility', 'hidden');
-      comp.parent().removeClass('state-error');
-    }
-
-    var allValidated = true;
-    var formComps = [$("form#edit_player input#player_card_id"), $("form#edit_player input#player_player_name")];
-
-    for (var i = 0; i < formComps.length; i++) {
-      var comp = $(formComps[i]);
-      console.log(comp.val());
-
-      if ( !validated(comp) ) {
-        allValidated = false;
-
-        showError(comp, i);
-      }
-      else {
-        hideError(comp, i);
-      }
-    }
-
-    return allValidated;
-  }
-
-  $('form#edit_player input#edit_player_submit').click(function(e) {
-    e.preventDefault();
-
-    if ( formValidated() ) {
-      $("form#edit_player").submit();
-    }
-  });
+  var form_id = "edit_player";
+  var lengthLimit = [CARD_ID_LENGTH_LIMIT, 0];
+  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_player_name")];
+  var submit_button = $("form#" + form_id + " input#edit_player_submit");
 </script>
+
+<%= javascript_include_tag "validate.player.info.js" %>
+

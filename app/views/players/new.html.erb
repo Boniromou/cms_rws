@@ -68,61 +68,10 @@
 <%= javascript_include_tag "validate.input.js" %>
 
 <script>
-  $(document).ready(function() {
-    $('input[autofocus="autofocus"]').focus();
-  });
-
-  function formValidated() {
-    function validated(comp, index) {
-      var lengthLimit = [CARD_ID_LENGTH_LIMIT, MEMBER_ID_LENGTH_LIMIT, 0];
-
-      if ( comp.val() == "" )
-        return false;
-
-      if ( lengthLimit[index] > 0 && comp.val().length != lengthLimit[index] )
-        return false;
-
-      return true;
-    }
-
-    function targetLabel(index) {
-      return $("form#new_player > fieldset > div.row:eq(" + index + ") > div.col:eq(2) label");
-    }
-
-    function showError(comp, index) {
-      targetLabel(index).css('visibility', 'visible');
-      comp.parent().addClass('state-error');
-    }
-
-    function hideError(comp, index) {
-      targetLabel(index).css('visibility', 'hidden');
-      comp.parent().removeClass('state-error');
-    }
-
-    var allValidated = true;
-    var formComps = [$("form#new_player input#player_card_id"), $("form#new_player input#player_member_id"), $("form#new_player input#player_player_name")];
-
-    for (var i = 0; i < 3; i++) {
-      var comp = $(formComps[i]);
-
-      if ( !validated(comp, i) ) {
-        allValidated = false;
-
-        showError(comp, i);
-      }
-      else {
-        hideError(comp, i);
-      }
-    }
-
-    return allValidated;
-  }
-
-  $('form#new_player input#create_player_submit').click(function(e) {
-    e.preventDefault();
-
-    if ( formValidated() ) {
-      $("form#new_player").submit();
-    }
-  });
+  var form_id = "new_player";
+  var lengthLimit = [CARD_ID_LENGTH_LIMIT, MEMBER_ID_LENGTH_LIMIT, 0];
+  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_member_id"), $("form#"+ form_id +" input#player_player_name")];
+  var submit_button = $("form#" + form_id + " input#create_player_submit");
 </script>
+
+<%= javascript_include_tag "validate.player.info.js" %>

@@ -44,7 +44,7 @@ CmsRws::Application.configure do
                          :compress => true }
 end
 
-SSO_URL = 'http://thomaswong01.rnd.laxino.com:3333'
+SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
 REGISTRATION_PATH = '/register'
-IWMS_URL = 'http://thomaswong01.rnd.laxino.com:4444'
+IWMS_URL = 'http://mingwong01.rnd.laxino.com:4444'
 IWMS_PATH = '/iwms'

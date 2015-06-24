@@ -53,13 +53,20 @@
 </section>
 
 <%= javascript_include_tag "validate.input.js" %>
+<%= javascript_include_tag "validate.player.info.js" %>
 
 <script>
   var form_id = "edit_player";
   var lengthLimit = [CARD_ID_LENGTH_LIMIT, 0];
   var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_player_name")];
-  var submit_button = $("form#" + form_id + " input#edit_player_submit");
+  
+  $("form#" + form_id + " input#edit_player_submit").click(function(e) {
+    e.preventDefault();
+
+    if ( formValidated(form_id, formComps, lengthLimit) ) {
+      $("form#"+ form_id).submit();
+    }
+  });
 </script>
 
-<%= javascript_include_tag "validate.player.info.js" %>
 

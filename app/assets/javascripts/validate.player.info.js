@@ -2,7 +2,7 @@
     $('input[autofocus="autofocus"]').focus();
   });
 
-  function formValidated() {
+  function formValidated(form_id, formComps, lengthLimit) {
     function validated(comp, index) {
 
       if ( comp.val() == "" )
@@ -45,11 +45,3 @@
 
     return allValidated;
   }
-
-  submit_button.click(function(e) {
-    e.preventDefault();
-
-    if ( formValidated() ) {
-      $("form#"+ form_id).submit();
-    }
-  });

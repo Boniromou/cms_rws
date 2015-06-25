@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150604085013) do
+ActiveRecord::Schema.define(:version => 20150625025622) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -34,6 +34,12 @@ ActiveRecord::Schema.define(:version => 20150604085013) do
   end
 
   create_table "currencies", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "locations", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -95,9 +101,13 @@ ActiveRecord::Schema.define(:version => 20150604085013) do
 
   create_table "stations", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "machine_id"
+    t.integer  "location_id"
   end
+
+  add_index "stations", ["location_id"], :name => "fk_location_id"
 
   create_table "transaction_types", :force => true do |t|
     t.string   "name"

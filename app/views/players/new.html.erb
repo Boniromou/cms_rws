@@ -23,23 +23,6 @@
       <div class='row' style='padding-bottom: 10px;'>
         <div class='col col-2'>
           <label class='input'>
-            <%= f.label :member_id, t("general.member_id") %>:
-          </label>
-        </div>
-        <div class='col col-3'>
-          <label class='input'>
-            <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, MEMBER_ID_LENGTH_LIMIT)' %>
-          </label>
-        </div>
-        <div class='col col-3'>
-          <label class='invisible_error'>
-            <%= t("create_player.member_id_length_error") %>
-          </label>
-        </div>
-      </div>
-      <div class='row' style='padding-bottom: 10px;'>
-        <div class='col col-2'>
-          <label class='input'>
             <%= f.label :name, t("general.name") %>:
           </label>
         </div>
@@ -54,6 +37,24 @@
           </label>
         </div>
       </div>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :member_id, t("general.member_id") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, MEMBER_ID_LENGTH_LIMIT)' %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.member_id_length_error") %>
+          </label>
+        </div>
+      </div>
+      
       <div class='row'>
         <div class='col col-5'>
           <footer>

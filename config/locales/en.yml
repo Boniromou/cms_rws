@@ -11,6 +11,9 @@ en:
       account activation
     unauthenticated: You need to sign in or sign up before continuing
     account_no_role: Your account is not ready to use, please contact the System Administrator.
+    caps_lock: The Caps Lock is turn ON
+    out_of_date_range: The search date range is limited to 30 days
+    date_not_valid: The start date must be earlier than the end date
   tree_panel:
     cage: "Cage"
     home: "Home"

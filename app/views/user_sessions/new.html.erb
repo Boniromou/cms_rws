@@ -20,6 +20,7 @@
     </section>
   </fieldset>
   <footer>
-     <%= f.submit(t("general.login"), :class => "btn btn-primary") %>
+    <%= render :partial => "shared/capslock_reminder" %>
+    <%= f.submit(t("general.login"), :class => "btn btn-primary") %>
   </footer>
 <% end %>

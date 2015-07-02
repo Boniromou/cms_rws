@@ -16,11 +16,12 @@
 
     <ul style>
       <li id="nav_home">
-        <%= link_to home_path, :title => "Home", :remote => true do %>
-          <i class="fa fa-home"></i> <span class="menu-item-parent">Home</span>
+        <%= link_to home_path, :title => t("tree_panel.home") , :remote => true do %>
+          <i class="fa fa-lg fa-home"></i>
+          <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
       </li>
-
+      
       <% if policy(Player.new).create? || policy(Player.new).profile?%>
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
@@ -119,7 +120,7 @@
 
 <script type='text/javascript'>
   $("li ul li").attr("onclick","ActiveOption(event)");
-  $("li#nav_home").attr("onclick","RemoveActiveOption()");
+  $("li#nav_home").attr("onclick","ActiveOption(event)");
   
   function ActiveOption(e){
     RemoveActiveOption();
@@ -132,5 +133,6 @@
 
   function RemoveActiveOption(){
     $("li ul li").removeClass("active");
+    $("li#nav_home").removeClass("active");
   }
 </script>

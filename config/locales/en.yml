@@ -32,6 +32,9 @@ en:
     edit: "Edit Player"
     audit: "Audit"
     audit_log: "Audit log"
+    station_management: "Station Management"
+    locations: "Locations"
+    stations: "Stations"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -39,7 +42,8 @@ en:
     unlock: "Unlock"
     signup: "Sign Up"
     member_id: "Membership ID"
-    name: "Name"
+    first name: "First Name"
+    last name: "Last Name"
     card_id: "Card ID"
     player: "Player"
     transaction_id: "Transaction ID"
@@ -92,21 +96,22 @@ en:
     lock: "Lock"
     unlock: "Unlock"
   create_player:
-    success: "Create player [%{player_name}] successful"
+    success: "Create player [%{first_name}] [%{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
     card_id_exist: "The player [Card ID = %{card_id}] you tried to create is already exist."
     card_id_length_error: "Card ID must be 20 characters"
     member_id_length_error: "Member ID must be 8 characters"
-    name_blank_error: "Player name can not be blank"
+    first_name_blank_error: "Player first name can not be blank"
+    last_name_blank_error: "Player last name can not be blank"
     card_id_only_number_allowed_error: "Card ID can only input number"
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
   lock_player:
-    success: "Lock player [%{player_name}] successful"
-    confirm_msg: "Are you sure to Lock player: %{player_name}?"
+    success: "Lock player [%{first_name}] [%{last_name}] successful"
+    confirm_msg: "Are you sure to Lock player: %{first_name} %{last_name}?"
   unlock_player:
-    success: "Unlock player [%{player_name}] successful"
-    confirm_msg: "Are you sure to UnLock player: %{player_name}?"
+    success: "Unlock player [%{first_name}] [%{last_name}] successful"
+    confirm_msg: "Are you sure to UnLock player: %{first_name} %{last_name}?"
   player_status:
     active: "Active"
     locked: "Locked"
@@ -175,5 +180,14 @@ en:
     audit_session_id: "Session ID"
     audit_ip: "IP"
     audit_action: "Action"
-    target: "Target"
-  
+    target: "Target"    
+  location:
+    active: "Active"
+    inactive: "Inactive"
+    id: "ID"
+    name: "Name"
+    updated_at: "Updated at"
+    operations: "Operations"
+    add: "Add"
+
+

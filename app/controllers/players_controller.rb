@@ -6,7 +6,8 @@ class PlayersController < ApplicationController
     @player = Player.new
     @player.card_id = params[:card_id]
     @player.member_id = params[:member_id]
-    @player.player_name = params[:player_name]
+    @player.first_name = params[:first_name]
+    @player.last_name = params[:last_name]
   end
 
   def create
@@ -18,15 +19,15 @@ class PlayersController < ApplicationController
           iwms_requester.create_player(params[:player][:member_id], 'HKD')
         end
       end
-      flash[:success] = {key: "create_player.success", replace: {player_name: params[:player][:player_name].upcase}}
+      flash[:success] = {key: "create_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
       redirect_to :action => 'balance', :member_id => params[:player][:member_id]
     rescue CreatePlayer::ParamsError => e
       flash[:error] = "create_player." + e.message
-      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
+      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
     rescue CreatePlayer::DuplicatedFieldError => e
       field = e.message
       flash[:error] = {key: "create_player." + field + "_exist", replace: {field.to_sym => params[:player][field.to_sym]}}
-      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
+      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
     end
   end
 
@@ -93,7 +94,7 @@ class PlayersController < ApplicationController
       redirect_to :action => 'profile', :member_id => params[:player][:member_id]
     rescue RuntimeError => e
       flash[:error] = "update_player." + e.message
-      redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
+      redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
     end
   end
 
@@ -134,7 +135,7 @@ class PlayersController < ApplicationController
         end
       end
 
-      flash[:success] = { key: "unlock_player.success", replace: {player_name: player.player_name.upcase}}
+      flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
       redirect_to :action => 'profile', :member_id => member_id
     rescue Exception => e
       p e.message

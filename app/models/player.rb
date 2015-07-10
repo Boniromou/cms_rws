@@ -1,7 +1,7 @@
 class Player < ActiveRecord::Base
   include ActionView::Helpers
   include FundHelper
-  attr_accessible :card_id, :currency_id,:member_id, :player_name, :status
+  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name
   validates_uniqueness_of :member_id, :card_id
 
   STATUS_LOCKED = 'locked'
@@ -31,12 +31,14 @@ class Player < ActiveRecord::Base
 
       card_id = params[:card_id]
       member_id = params[:member_id]
-      player_name = params[:player_name].downcase
+      first_name = params[:first_name].downcase
+      last_name = params[:last_name].downcase
 
       player = new
       player.card_id = card_id
       player.member_id = member_id
-      player.player_name = player_name
+      player.first_name = first_name
+      player.last_name = last_name
       player.currency_id = 1
       player.status = STATUS_NORMAL
       begin
@@ -52,11 +54,13 @@ class Player < ActiveRecord::Base
 
       card_id = params[:card_id]
       member_id = params[:member_id]
-      player_name = params[:player_name].downcase
+      first_name = params[:first_name].downcase
+      last_name = params[:last_name].downcase
 
       player = find_by_member_id(member_id)
       player.card_id = card_id
-      player.player_name = player_name
+      player.first_name = first_name
+      player.last_name = last_name
       begin
         player.save!
       rescue
@@ -83,11 +87,13 @@ class Player < ActiveRecord::Base
     def verify_player_params(params)
       card_id = params[:card_id]
       member_id = params[:member_id]
-      player_name = params[:player_name]
+      first_name = params[:first_name]
+      last_name = params[:last_name]
 
       raise CreatePlayer::ParamsError, "card_id_length_error" if card_id.nil? || card_id.blank?
       raise CreatePlayer::ParamsError, "member_id_length_error" if member_id.nil? || member_id.blank?
-      raise CreatePlayer::ParamsError, "name_blank_error" if player_name.nil? || player_name.blank?
+      raise CreatePlayer::ParamsError, "first_name_blank_error" if first_name.nil? || first_name.blank?
+      raise CreatePlayer::ParamsError, "last_name_blank_error" if last_name.nil? || last_name.blank?
 
       raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
       raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)

@@ -26,17 +26,34 @@
       <div class='row' style='padding-bottom: 10px;'>
         <div class='col col-2'>
           <label class='input'>
-            <%= f.label :name, t("general.name") %>:
+            <%= f.label :first_name, t("general.first_name") %>:
           </label>
         </div>
         <div class='col col-3'>
           <label class='input'>
-            <%= f.text_field :player_name %>
+            <%= f.text_field :first_name %>
           </label>
         </div>
         <div class='col col-3'>
           <label class='invisible_error'>
-            <%= t("create_player.name_blank_error") %>
+            <%= t("create_player.first_name_blank_error") %>
+          </label>
+        </div>
+      </div>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :last_name, t("general.last_name") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :last_name %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.last_name_blank_error") %>
           </label>
         </div>
       </div>
@@ -58,7 +75,7 @@
 <script>
   var form_id = "edit_player";
   var lengthLimit = [CARD_ID_LENGTH_LIMIT, 0];
-  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_player_name")];
+  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_first_name"), $("form#"+ form_id +" input#player_last_name")];
   
   $("form#" + form_id + " input#edit_player_submit").click(function(e) {
     e.preventDefault();

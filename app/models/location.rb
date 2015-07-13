@@ -17,6 +17,7 @@ class Location < ActiveRecord::Base
       location = new
       location.name = name_upper
       location.status = STATUS_ACTIVE
+      
       begin
         location.save!
       rescue ActiveRecord::RecordInvalid => ex

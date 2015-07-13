@@ -7,6 +7,10 @@ class Player < ActiveRecord::Base
   STATUS_LOCKED = 'locked'
   STATUS_NORMAL = 'active'
 
+  def name
+    self.first_name + " " + self.last_name
+  end
+
   def balance_str
     to_display_amount_str(balance)
   end

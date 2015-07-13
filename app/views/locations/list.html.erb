@@ -1,72 +1,11 @@
-<%= bread_crumb("fa fa-bank",t("tree_panel.station_management"),t("tree_panel.location")) %>
+<%= bread_crumb("fa fa-bank",t("tree_panel.location_management"),t("tree_panel.location")) %>
 
-<%= javascript_include_tag "print.js" %>
+<%= render partial: "locations/tab_panel", locals: { selected_tab: "active"} %>
 
 <div id="myTabContent1" class="tab-content padding-10">
-  <div class="tab-pane fade in active" id="player_transactions_content">
-      
-
-
-<div class="row">
-  <div class="col-sm-8">
-      <div id="show-tabs">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
-          <li>
-            <a id="activLocationsTab" class="tab-link" href="#tabs-a"><%= t("location.active") %></a>
-          </li>
-          <li>
-            <a id="inactiveLocationsTab" class="tab-link" href="#tabs-b"><%= t("location.inactive") %></a>
-          </li>
-        </ul>
-
-        <div id="tabs-a">
-          <%= render :partial => "locations/loactions_form", :locals => {:status => 'active', :number => 1} %>
-        
-        </div>
-          
-         
-          
-          
-          
-        
-
-        <div id="tabs-b">
-      
-          <%= render :partial => "locations/loactions_form", :locals => {:status => 'inactive', :number => 2} %>
-        </div>
-
-      
-
-      </div>
-
+  <div class="tab-pane fade in active" id="location_content">
+    <%= render :partial => "locations/location_table", locals: { locations: @locations} %>
   </div>
 </div>
 
-  </div>
-</div>
-
-<script>
-  $(document).ready(function() {
-    $('div#show-tabs').tabs({
-      activate: function(event, ui) {
-        $('input[autofocus="autofocus"]', ui.newPanel).focus();
-        $('#selected_tab_index').val(ui.newTab.index());
-      },
-      create: function(event, ui) {
-        $('input[autofocus="autofocus"]', ui.panel).focus();
-        $('#selected_tab_index').val(ui.tab.index());
-      }
-    });
-
-    $('input:radio[name="id_type"]').click(function() {
-      $('input[autofocus="autofocus"]').focus();
-    });
-  });
-</script>
-
-<style type="text/css">
-  .lower{
-    padding-top: 7px;
-  }
-</style>
-  
+<%= javascript_include_tag "pagination" %>

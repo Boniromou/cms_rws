@@ -5,15 +5,18 @@ class Location < ActiveRecord::Base
   scope :inactive, -> { where("status = ?", false) }
   scope :search, lambda { |keyword| where("description = ?", "%#{keyword}%")}
 
-  class << self
-    def create_by_params(params)
-      verify_location_params(params)
+  STATUS_ACTIVE = 'active'
+  STATUS_INACTIVE = 'inactive'
 
-      name = params[:name].upcase
+  class << self
+    def create_by_name(name)
+      verify_location_name(name)
+
+      name_upper = name.upcase
       
       location = new
-      location.name = name
-      location.status = ACTIVE
+      location.name = name_upper
+      location.status = STATUS_ACTIVE
       begin
         location.save!
       rescue ActiveRecord::RecordInvalid => ex
@@ -23,40 +26,34 @@ class Location < ActiveRecord::Base
     end
 
 
-    def verify_location_params(params)
-      name = params[:name].upcase
+    def verify_location_name(name)
+      name_upper = name.upcase
 
       duplicated_name = false
 
       self.all.each do | location |
-        if location.name == name
+        if location.name == name_upper
           duplicated_name = true
           break
         end
       end
       
-      raise CreateLocation::ParamsError, "name_length_error" if name.nil? || name.blank?
+      raise CreateLocation::ParamsError, "name_blank_error" if name.nil? || name.blank?
 
-      raise CreateLocation::ParamsError, "duplicated_name_error" if duplicated_name
+      raise CreateLocation::ParamsError, "name_exist" if duplicated_name
     end
   end
 
 
 
 
-  def disable
-  	puts "sdfdsfsdfssdf"
-  	puts "sdfdsfsdfssdf"
-  	puts "sdfdsfsdfssdf"
-  	puts "sdfdsfsdfssdf"
-  	puts "sdfdsfsdfssdf"
-  	puts "sdfdsfsdfssdf"
-  	self.status = false
-  	self.save!
+  def disable!
+  	self.status = STATUS_INACTIVE
+    self.save
   end
 
-  def enable
-  	self.status = true
-  	self.save!
+  def enable!
+  	self.status = STATUS_ACTIVE
+    self.save
   end
 end

@@ -16,6 +16,7 @@ class AuditLog < ActiveRecord::Base
 
   ACTION_TYPE_LIST = { 
     :player => {:create => "create", :deposit => "update", :withdrawal => "update", :edit => "update", :lock => "update", :unlock => "update"},
+    :location => {:create => "create", :disable => "update", :enable => "update"},
     :player_transaction => {:print => "read"},
     :shift => {:roll_shift => "create"}
   }

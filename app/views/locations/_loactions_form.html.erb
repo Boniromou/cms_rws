@@ -6,6 +6,7 @@
     <div class="widget-body no-padding">
       
         <div id="locations_form">
+          <%= form_tag(list_locations_path, :remote => true, :id => "search_form", :autocomplete => "off", :method => "post") do %>
           <table id="datatable_col_reorder<%=number%>" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
               <th><%= t("location.id")%></th>
@@ -23,7 +24,7 @@
                     <td><%= location.updated_at %></td>
                     <td>
                       <% if policy(Location.new).change_status? %>
-                        <% if status %>
+                        <% if status == 'active' %>
                           <%= link_to '', disable_locations_path + "?location_id=#{location.id}", :id => "disable_location", :class => "glyphicon glyphicon-off", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
                         <% else %>
                           <%= link_to '', enable_locations_path + "?location_id=#{location.id}", :id => "enable_location", :class => "glyphicon glyphicon-repeat", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
@@ -34,22 +35,29 @@
                   </tr>
                 <% end %>
               <% end %>
+              <% if status == 'active' %>
               <tr>
-                <%= form_tag(new_locations_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
+                
                 <td></td>
                 
-                <td><%= text_field_tag(:"name", @name, autofocus: true) %></td>
+                <td><%= text_field_tag :location_name %></td>
                 <td></td>
                 <td>
-                 <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>   
+                  
+                  
+                <%= submit_tag "+", :id => "add", :class => "btn btn-primary" %>
+               
+             
                   
                    
 
                   </td>
-                  <% end %>
+                
               </tr>
+              <% end %>
             </tbody>
           </table>
+          <% end %>
         </div>
        
      

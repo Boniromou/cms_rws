@@ -105,7 +105,7 @@
           <ul style="display:block;">
             <% if policy(Location.new).manage? %>
               <li id="nav_locations">
-                <%= link_to show_locations_path, :title => t("tree_panel.locations"), :remote => true do %>
+                <%= link_to list_locations_path, :title => t("tree_panel.locations"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.locations") %></span>
                 <% end %>
               </li>

@@ -9,7 +9,6 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <%= form_tag(show_locations_path, :remote => true, :id => "show", :autocomplete => "off") do %>
       <div id="show-tabs">
         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
           <li>
@@ -21,7 +20,7 @@
         </ul>
 
         <div id="tabs-a">
-          <%= render :partial => "locations/loactions_form", :locals => {:status => true, :number => 1} %>
+          <%= render :partial => "locations/loactions_form", :locals => {:status => 'active', :number => 1} %>
         
         </div>
           
@@ -33,20 +32,13 @@
 
         <div id="tabs-b">
       
-          <%= render :partial => "locations/loactions_form", :locals => {:status => false, :number => 2} %>
+          <%= render :partial => "locations/loactions_form", :locals => {:status => 'inactive', :number => 2} %>
         </div>
 
       
 
       </div>
 
-      
-         
-      
-
-      <%= hidden_field_tag 'from', search_transactions_path %>
-      <%= hidden_field_tag 'selected_tab_index', 0 %>
-    <% end %>
   </div>
 </div>
 

@@ -12,6 +12,17 @@ module CreatePlayer
   end
 end
 
+module CreateLocation
+  class CreateLocationError < CageError
+  end
+
+  class DuplicatedFieldError < CreateLocationError
+  end
+
+  class ParamsError < CreateLocationError
+  end
+end
+
 module Remote
   class RemoteError < CageError
   end

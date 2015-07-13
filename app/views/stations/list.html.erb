@@ -1,11 +1,13 @@
 <%= bread_crumb("fa fa-bank",t("tree_panel.station_management"),t("tree_panel.station")) %>
 
-<%= render partial: "stations/tab_panel", locals: { selected_tab: "active"} %>
+<%= render partial: "stations/tab_panel" %>
 
 <div id="myTabContent1" class="tab-content padding-10">
   <div class="tab-pane fade in active" id="station_content">
+    <%= render partial: "stations/create_form" , locals: {locations: Location.where(:status => "active") }%>
     <%= render :partial => "stations/station_table", locals: { stations: @stations} %>
   </div>
 </div>
+
 
 <%= javascript_include_tag "pagination" %>

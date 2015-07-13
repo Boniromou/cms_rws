@@ -9,8 +9,12 @@ class LocationPolicy < ApplicationPolicy
     return true
   end
 
-  def change_status?
-  return true
+  def disable?
+    return true
+  end
+
+  def enable?
+    disable?
   end
 
 end

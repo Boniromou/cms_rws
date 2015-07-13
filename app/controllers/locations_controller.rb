@@ -7,6 +7,7 @@ layout 'cage'
   end
 
   def create
+    return unless permission_granted? Location.new
     begin
       AuditLog.location_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Location.create_by_name(params[:location_name])
@@ -26,6 +27,7 @@ layout 'cage'
   
 
   def disable
+    return unless permission_granted? Location.new
     begin
     	location_id = params[:location_id]
     	location = Location.find(location_id)
@@ -43,6 +45,7 @@ layout 'cage'
   end
 
   def enable
+    return unless permission_granted? Location.new
   	begin
       location_id = params[:location_id]
       location = Location.find(location_id)

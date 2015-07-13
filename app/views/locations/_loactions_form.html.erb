@@ -23,7 +23,7 @@
                     <td><%= location.name %></td>
                     <td><%= location.updated_at %></td>
                     <td>
-                      <% if policy(Location.new).change_status? %>
+                      <% if policy(Location.new).disable? %>
                         <% if status == 'active' %>
                           <%= link_to '', disable_locations_path + "?location_id=#{location.id}", :id => "disable_location", :class => "glyphicon glyphicon-off", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
                         <% else %>

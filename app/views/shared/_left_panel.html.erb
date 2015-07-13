@@ -99,6 +99,20 @@
           </ul>
         </li>
       <% end %>
+      <% if policy(Location.new).manage? %> 
+        <li>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
+          <ul style="display:block;">
+            <% if policy(Location.new).manage? %>
+              <li id="nav_locations">
+                <%= link_to show_locations_path, :title => t("tree_panel.locations"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.locations") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
     </ul>
   </nav>
   <span class="minifyme" data-action="minifyMenu">

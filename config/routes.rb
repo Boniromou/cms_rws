@@ -55,6 +55,12 @@ CmsRws::Application.routes.draw do
   
   get 'search_audit_logs' => 'audit_logs#search'
   post 'search_audit_logs' => 'audit_logs#do_search'
+
+  get 'show_locations' => 'locations#show'
+  post 'disable_locations' => 'locations#disable'
+  post 'enable_locations' => 'locations#enable'
+  get 'new_locations' => 'locations#new'
+  post 'create_locations' => 'locations#create'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

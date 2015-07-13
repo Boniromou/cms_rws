@@ -112,7 +112,7 @@
             <% end %>
             <% if policy(Station.new).list? %>
               <li id="nav_stations">
-                <%= link_to list_stations_path, :title => t("tree_panel.station"), :remote => true do %>
+                <%= link_to list_stations_path("active"), :title => t("tree_panel.station"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.station") %></span>
                 <% end %>
               </li>

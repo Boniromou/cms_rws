@@ -4,13 +4,5 @@ class Station < ActiveRecord::Base
     def get_name_by_id( id )
       Station.find_by_id(id).name
     end
-
-    def active_stations
-      Station.where('status' => "active") || []
-    end
-    
-    def inactive_stations
-      Station.where('status' => "inactive") || []
-    end
   end
 end

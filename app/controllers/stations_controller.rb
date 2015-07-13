@@ -3,8 +3,9 @@ class StationsController < ApplicationController
 
   def list
     return unless permission_granted? Station.new
-    @active_stations = Station.active_stations
-    @inactive_stations = Station.inactive_stations
+    puts "params",params
+    @status = params[:status]
+    @stations = Station.where('status' => @status) || []
   end
 
   def create

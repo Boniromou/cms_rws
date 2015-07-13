@@ -62,7 +62,7 @@ CmsRws::Application.routes.draw do
   get 'new_locations' => 'locations#new'
   post 'create_locations' => 'locations#create'
 
-  get 'list_stations' => 'stations#list'
+  get 'list_stations/:status' => 'stations#list', :as => :list_stations
   post 'create_station' => 'stations#create'
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -112,7 +112,7 @@ class PlayersController < ApplicationController
         end
       end
 
-      flash[:success] = { key: "lock_player.success", replace: {player_name: player.player_name.upcase}}
+      flash[:success] = { key: "lock_player.success", replace: {player_name: player.first_name.upcase + " " + player.last_name.upcase}}
       redirect_to :action => 'profile', :member_id => member_id
     rescue Exception => e
       p e.message

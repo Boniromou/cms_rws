@@ -36,7 +36,8 @@ describe PlayersController do
       check_title("tree_panel.create_player")
       expect(page.source).to have_selector("form#new_player input#player_member_id")
       expect(page.source).to have_selector("form#new_player input#player_card_id")
-      expect(page.source).to have_selector("form#new_player input#player_player_name")
+      expect(page.source).to have_selector("form#new_player input#player_first_name")
+      expect(page.source).to have_selector("form#new_player input#player_last_name")
     end
 
     it '[3.2] Successfully create player' do
@@ -45,33 +46,38 @@ describe PlayersController do
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.balance")
-      check_flash_message I18n.t("create_player.success", player_name: @player.player_name.upcase)
+      check_flash_message I18n.t("create_player.success", first_name: @player.first_name.upcase, , last_name: @player.last_name.upcase)
 
       test_player = Player.find_by_member_id(@player.member_id)
       expect(test_player).not_to be_nil
       test_player.card_id = @player.card_id
       test_player.member_id = @player.member_id
-      test_player.player_name = @player.player_name
+      test_player.first_name = @player.first_name
+      test_player.last_name = @player.last_name
     end
 
     it '[3.3] player already exist (member ID)' do
-      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :status => "active")
+      Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => 123456, :currency_id => 1, :status => "active")
       login_as_admin
       visit new_player_path
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
@@ -84,28 +90,32 @@ describe PlayersController do
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
       check_flash_message I18n.t("create_player.member_id_length_error")
     end
 
-    it '[3.5] empty Player name' do
+    it '[3.5] empty Player first name' do
       login_as_admin
       visit new_player_path
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
-      check_flash_message I18n.t("create_player.name_blank_error")
+      check_flash_message I18n.t("create_player.first_name_blank_error")
     end
 
     it '[3.6] Audit log for successful create player' do
@@ -114,10 +124,12 @@ describe PlayersController do
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       audit_log = AuditLog.find_by_audit_target("player")
@@ -134,16 +146,18 @@ describe PlayersController do
     end
 
     it '[3.7] Audit log for fail create player' do
-      Player.create!(:player_name => "exist", :member_id => 123456, :currency_id => 1, :status => "active")
+      Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :currency_id => 1, :status => "active")
       login_as_admin
       visit new_player_path
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       audit_log = AuditLog.find_by_audit_target("player")
@@ -193,7 +207,8 @@ describe PlayersController do
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_member_id", :with => @player.member_id
       fill_in "player_player_name", :with => @player.player_name
       click_button I18n.t("button.create")
@@ -207,7 +222,8 @@ describe PlayersController do
       visit new_player_path
       fill_in "player_card_id", :with => '..//.-=-++-'
       fill_in "player_member_id", :with => '123456'
-      fill_in "player_player_name", :with => '$$$$@@@'
+      fill_in "player_first_name", :with => '$$$$'
+      fill_in "player_last_name", :with => '@@@@'
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
@@ -215,7 +231,8 @@ describe PlayersController do
       
       fill_in "player_card_id", :with => '1234567890'
       fill_in "player_member_id", :with => 'hahaha'
-      fill_in "player_player_name", :with => '$$$$@@@'
+      fill_in "player_first_name", :with => '$$$$'
+      fill_in "player_last_name", :with => '@@@@'
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
@@ -223,22 +240,41 @@ describe PlayersController do
     end
 
     it '[3.13] player already exist (card ID)' do
-      Player.create!(:player_name => "exist", :card_id => 1234567890, :currency_id => 1, :status => "active")
+      Player.create!(:first_name => "exist", :last_name => "player", :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit new_player_path
       @player = Player.new
       @player.card_id = 1234567890
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       fill_in "player_card_id", :with => @player.card_id
       fill_in "player_member_id", :with => @player.member_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
       check_flash_message I18n.t("create_player.card_id_exist", card_id: @player.card_id)
     end
   end
+
+      it '[3.14] empty Player last name' do
+      login_as_admin
+      visit new_player_path
+      @player = Player.new
+      @player.card_id = 1234567890
+      @player.member_id = 123456
+      @player.first_name = "test"
+      @player.last_name = "player"
+      fill_in "player_card_id", :with => @player.card_id
+      fill_in "player_member_id", :with => @player.member_id
+      fill_in "player_first_name", :with => @player.first_name
+      click_button I18n.t("button.create")
+
+      check_title("tree_panel.create_player")
+      check_flash_message I18n.t("create_player.last_name_blank_error")
+    end
   
   describe '[4] Search player by membership ID' do
     before(:each) do
@@ -261,7 +297,7 @@ describe PlayersController do
     end
 
     it '[4.2] successfully search player' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "exist", :last_name => "player",:member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -273,7 +309,8 @@ describe PlayersController do
     it '[4.3] fail to search player' do
       @player = Player.new
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -285,7 +322,8 @@ describe PlayersController do
     it '[4.4] direct to create player' do
       @player = Player.new
       @player.member_id = 123456
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -313,7 +351,7 @@ describe PlayersController do
     it '[5.1] view player balance enquiry' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -368,7 +406,7 @@ describe PlayersController do
     it '[5.5] Return to Cage home' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -392,7 +430,7 @@ describe PlayersController do
     it '[5.6] unauthorized to all actions' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -422,7 +460,7 @@ describe PlayersController do
     it '[5.8] balance enquiry with locked player' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "locked")
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "locked")
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -462,7 +500,7 @@ describe PlayersController do
     end
 
     it '[12.2] successfully search player' do
-      @player = Player.create!(:player_name => "exist", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
@@ -475,7 +513,8 @@ describe PlayersController do
       @player = Player.new
       @player.member_id = 123456
       @player.card_id = 1234567890
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
@@ -488,7 +527,8 @@ describe PlayersController do
       @player = Player.new
       @player.member_id = 123456
       @player.card_id = 1234567890
-      @player.player_name = "test player"
+      @player.first_name = "test"
+      @player.last_name = "player"
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
@@ -506,7 +546,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       
-      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
     end
 
@@ -516,7 +556,8 @@ describe PlayersController do
 
     it '[14.1] successfully edit player' do
       updated_card_id = 12345678900987654321
-      updated_player_name = "updated"
+      updated_first_name = "updated"
+      updated_last_name = "player"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -529,19 +570,21 @@ describe PlayersController do
       click_link I18n.t("button.edit")
       check_edit_page
       fill_in "player_card_id", :with => updated_card_id
-      fill_in "player_player_name", :with => updated_player_name
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
       click_button I18n.t("button.confirm")
 
       @player.reload
       expect(@player.card_id).to eq updated_card_id.to_s
-      expect(@player.player_name).to eq updated_player_name
+      expect(@player.first_name).to eq updated_first_name
+      expect(@player.last_name).to eq updated_last_name
       check_profile_page
       check_player_info
     end
     
-    it '[14.2] player name cannot be empty', :js => true do
+    it '[14.2] player first name cannot be empty', :js => true do
       updated_card_id = 12345678900987654321
-      updated_player_name = ""
+      updated_first_name = ""
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -554,7 +597,8 @@ describe PlayersController do
       wait_for_ajax
       check_edit_page
       fill_in "player_card_id", :with => updated_card_id
-      fill_in "player_player_name", :with => updated_player_name
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
       click_button I18n.t("button.confirm")
       
       labels = all("label.invisible_error")
@@ -577,7 +621,8 @@ describe PlayersController do
       wait_for_ajax
       check_edit_page
       fill_in "player_card_id", :with => updated_card_id
-      fill_in "player_player_name", :with => updated_player_name
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
       click_button I18n.t("button.confirm")
       
       labels = all("label.invisible_error")
@@ -586,7 +631,7 @@ describe PlayersController do
     end
     
     it '[14.4] duplicated card ID'do
-      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
       updated_card_id = 12345678901234567890
       updated_player_name = "updated"
       login_as_admin
@@ -601,7 +646,8 @@ describe PlayersController do
       click_link I18n.t("button.edit")
       check_edit_page
       fill_in "player_card_id", :with => updated_card_id
-      fill_in "player_player_name", :with => updated_player_name
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
       click_button I18n.t("button.confirm")
 
       check_edit_page
@@ -610,7 +656,8 @@ describe PlayersController do
 
     it '[14.5] audit log for edit player'do
       updated_card_id = 12345678900987654321
-      updated_player_name = "updated"
+      updated_first_name = "updated1"
+      updated_last_name = "updated2"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -623,12 +670,14 @@ describe PlayersController do
       click_link I18n.t("button.edit")
       check_edit_page
       fill_in "player_card_id", :with => updated_card_id
-      fill_in "player_player_name", :with => updated_player_name
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
       click_button I18n.t("button.confirm")
 
       player = Player.find(@player.id)
       expect(player.card_id).to eq updated_card_id.to_s
-      expect(player.player_name).to eq updated_player_name
+      expect(player.first_name).to eq updated_first_name
+      expect(player.last_name).to eq updated_last_name
       
       audit_log = AuditLog.find_by_audit_target("player")
       audit_log.should_not be_nil
@@ -644,9 +693,10 @@ describe PlayersController do
     end
     
     it '[14.6] audit log for fail to edit player'do
-      @player2 = Player.create!(:player_name => "test", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
       updated_card_id = 12345678901234567890
-      updated_player_name = "updated"
+      updated_first_name = "updated1"
+      updated_last_name = "updated2"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -659,7 +709,8 @@ describe PlayersController do
       click_link I18n.t("button.edit")
       check_edit_page
       fill_in "player_card_id", :with => updated_card_id
-      fill_in "player_player_name", :with => updated_player_name
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
       click_button I18n.t("button.confirm")
 
       check_edit_page
@@ -729,6 +780,30 @@ describe PlayersController do
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
       first("aside#left-panel ul li#nav_player_profile").should be_nil
+    end
+
+    it '[14.11] player last name cannot be empty', :js => true do
+      updated_card_id = 12345678900987654321
+      updated_last_name = ""
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+
+      click_link I18n.t("button.edit")
+      wait_for_ajax
+      check_edit_page
+      fill_in "player_card_id", :with => updated_card_id
+      fill_in "player_first_name", :with => updated_first_name
+      fill_in "player_last_name", :with => updated_last_name
+      click_button I18n.t("button.confirm")
+      
+      labels = all("label.invisible_error")
+      expect(labels[0][:style]).to_not include("visible")
+      expect(labels[1][:style]).to include("visible")
     end     
   end
 
@@ -767,7 +842,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", player_name: @player.player_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
@@ -793,7 +868,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      @player = Player.create!(:player_name => "test", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
       allow_any_instance_of(Requester::Standard).to receive(:lock_player).and_return('OK')

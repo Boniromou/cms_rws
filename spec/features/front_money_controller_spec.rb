@@ -16,8 +16,8 @@ describe FrontMoneyController do
       clean_dbs
       create_shift_data
       
-      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:player_name => "test2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
 
       @station2 = Station.create!(:name => 'window#2')
     end
@@ -83,8 +83,8 @@ describe FrontMoneyController do
       clean_dbs
       create_shift_data
       
-      @player = Player.create!(:player_name => "test", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:player_name => "test2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
 
       @station2 = Station.create!(:name => 'window#2')
     end

@@ -76,8 +76,8 @@ class ApplicationController < ActionController::Base
     @from = params[:from]
     Rails.logger.error "#{e.message}"
     Rails.logger.error "#{e.backtrace.inspect}"
-    puts e.message
     puts e.backtrace
+    puts e.message
     respond_to do |format|
       format.html { render partial: "shared/error500", formats: [:html], layout: "error_page", :status => :internal_server_error }
       format.js { render partial: "shared/error500", formats: [:js], :status => :internal_server_error }

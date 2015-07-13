@@ -1,0 +1,25 @@
+          <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+            <thead>
+              <th><%= t("station.station_id")%></th>
+              <th><%= t("station.location")%></th>
+              <th><%= t("station.station")%></th>
+              <th><%= t("station.machine")%></th>
+              <th><%= t("station.updated_at")%></th>
+              <th><%= t("station.status")%></th>
+              <th><%= t("station.operation")%></th>
+            </thead>
+            <tbody>
+              <% stations.each do |station| %>
+                <tr id="station_<%= station.id %>">
+                  <% location = Location.find(station.location_id) %>
+                  <td><%= station.id %></td>
+                  <td><%= location.name %></td>
+                  <td><%= station.name %></td>
+                  <td><%= station.machine_id%></td>
+                  <td><%= station.updated_at %></td>
+                  <td><%= station.status %></td>
+                  <td><%=  %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>

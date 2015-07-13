@@ -6,11 +6,11 @@ class Station < ActiveRecord::Base
     end
 
     def active_stations
-      Station.find_by_status("active")
+      Station.where('status' => "active") || []
     end
     
     def inactive_stations
-      Station.find_by_status("inactive")
+      Station.where('status' => "inactive") || []
     end
   end
 end

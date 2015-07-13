@@ -52,6 +52,8 @@ en:
     shift: "Shift"
     start_time: "Start Time"
     end_time: "End Time"
+    active: "Active"
+    inactive: "Inactive"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -189,5 +191,12 @@ en:
     updated_at: "Updated at"
     operations: "Operations"
     add: "Add"
-
+  station:
+    station: "Station ID"
+    location: "Cage Location"
+    station: "Station"
+    machine: "Machine"
+    updated_at: "Update at"
+    status: "Status"
+    operation: "Operations"
 

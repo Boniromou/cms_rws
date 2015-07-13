@@ -104,9 +104,16 @@
           <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
           <ul style="display:block;">
             <% if policy(Location.new).manage? %>
-              <li id="nav_locations">
-                <%= link_to show_locations_path, :title => t("tree_panel.locations"), :remote => true do %>
-                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.locations") %></span>
+              <li id="nav_location">
+                <%= link_to show_locations_path, :title => t("tree_panel.location"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.location") %></span>
+                <% end %>
+              </li>
+            <% end %>
+            <% if policy(Station.new).list? %>
+              <li id="nav_stations">
+                <%= link_to list_stations_path, :title => t("tree_panel.station"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.station") %></span>
                 <% end %>
               </li>
             <% end %>

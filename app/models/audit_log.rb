@@ -42,6 +42,10 @@ class AuditLog < ActiveRecord::Base
     compose_log(action, action_by, "player", ip, session_id, options, &block)
   end
 
+  def self.location_log(action, action_by, ip, session_id, options={}, &block)
+    compose_log(action, action_by, "location", ip, session_id, options, &block)
+  end
+
   def self.fund_in_out_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "player", ip, session_id, options, &block)
   end

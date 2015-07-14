@@ -17,10 +17,10 @@ layout 'cage'
       end
 
       flash[:success] = {key: "create_location.success", replace: {name: params[:location_name].upcase}}
-      redirect_to :action => list_locations_path('active')
+      redirect_to list_locations_path('active')
       rescue CreateLocation::ParamsError => e
         flash[:error] = "create_location." + e.message
-        redirect_to :action => list_locations_path('active')
+        redirect_to list_locations_path('active')
       rescue CreateLocation::DuplicatedFieldError => e
         field = e.message
         flash[:error] = {key: "create_location." + field + "_exist", replace: {field.to_sym => params[field.to_sym]}}
@@ -35,7 +35,7 @@ layout 'cage'
     	location_id = params[:location_id]
     	location = Location.find(location_id)
     	AuditLog.location_log("disable", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        location.disable!
+        location.disable! unless location.has_active_station?
       end
 
       flash[:success] = { key: "disable_location.success", replace: {name: location.name.upcase}}

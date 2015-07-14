@@ -10,7 +10,7 @@ class Station < ActiveRecord::Base
       verify_params(params)
       
       location_id = params[:location_id]
-      name = params[:name]
+      name = params[:name].upcase
       begin
         Station.create!(:location_id => location_id, :name => name, :status => "active")
       rescue ActiveRecord::RecordInvalid => ex

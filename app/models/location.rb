@@ -1,9 +1,12 @@
 class Location < ActiveRecord::Base
   attr_accessible :name, :status
+
+  has_many :stations, :dependent => :destroy
+
   
   scope :active, -> { where("status = ?", true)	}
   scope :inactive, -> { where("status = ?", false) }
-  scope :search, lambda { |keyword| where("description = ?", "%#{keyword}%")}
+ 
 
   STATUS_ACTIVE = 'active'
   STATUS_INACTIVE = 'inactive'
@@ -47,6 +50,9 @@ class Location < ActiveRecord::Base
 
 
 
+  def has_active_station?
+    self.stations.active != nil
+  end
 
   def disable!
   	self.status = STATUS_INACTIVE

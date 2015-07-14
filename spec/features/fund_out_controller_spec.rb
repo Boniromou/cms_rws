@@ -84,7 +84,7 @@ describe FundOutController do
       find("div#confirm_fund_dialog")[:style].include?("block").should == true
       find("div#confirm_fund_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
-      expect(find("label#player_name").text).to eq @player.player_name.upcase
+      expect(find("label#player_full_name").text).to eq @player.full_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       check_flash_message I18n.t("invalid_amt.no_enough_to_withdrawal", { balance: to_display_amount_str(@player_balance)})
     end
@@ -187,7 +187,7 @@ describe FundOutController do
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
       
-      expect(find("label#player_name").text).to eq @player.player_name.upcase
+      expect(find("label#player_full_name").text).to eq @player.full_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       expect(find("label#player_balance").text).to eq to_display_amount_str(@player_balance)
       set_permission(@test_user,"cashier",:player,[])

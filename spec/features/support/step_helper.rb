@@ -114,8 +114,7 @@ module StepHelper
   end
 
   def check_player_info
-    expect(find("label#player_first_name").text).to eq @player.first_name.upcase
-    expect(find("label#player_last_name").text).to eq @player.last_name.upcase
+    expect(find("label#player_full_name").text).to eq @player.full_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
     expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player.status}")
@@ -155,18 +154,17 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.first_name.upcase
-    expect(item[2].text).to eq player.last_name.upcase
-    expect(item[3].text).to eq player.member_id
-    expect(item[4].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
-    expect(item[5].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[6].text).to eq shift.name
-    expect(item[7].text).to eq station.name
-    expect(item[8].text).to eq user.employee_id
-    expect(item[9].text).to eq player_transaction.status
-    expect(item[10].text).to eq deposit_str
-    expect(item[11].text).to eq withdraw_str
-    within item[12] do
+    expect(item[1].text).to eq player.full_name.upcase
+    expect(item[2].text).to eq player.member_id
+    expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[5].text).to eq shift.name
+    expect(item[6].text).to eq station.name
+    expect(item[7].text).to eq user.employee_id
+    expect(item[8].text).to eq player_transaction.status
+    expect(item[9].text).to eq deposit_str
+    expect(item[10].text).to eq withdraw_str
+    within item[11] do
       if reprint_granted
         expect(page.source).to have_selector("input#reprint")
       else
@@ -228,7 +226,7 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.player_name.upcase
+    expect(item[1].text).to eq player.full_name.upcase
     expect(item[2].text).to eq player.member_id
     expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")

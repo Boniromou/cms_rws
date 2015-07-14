@@ -7,7 +7,7 @@ class Player < ActiveRecord::Base
   STATUS_LOCKED = 'locked'
   STATUS_NORMAL = 'active'
 
-  def name
+  def full_name
     self.first_name + " " + self.last_name
   end
 

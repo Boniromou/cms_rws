@@ -35,7 +35,7 @@
                   <% player = Player.find_by_id(t.player_id) %>
                   <% user = User.find_by_id(t.user_id) %>
                   <td><%= t.id %></td>
-                  <td><%= player.player_name.upcase %></td>
+                  <td><%= player.full_name.upcase %></td>
                   <td><%= player.member_id %></td>
                   <td><%= shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>

@@ -55,7 +55,7 @@ describe PlayersController do
       click_button I18n.t("button.create")
 
       check_title("tree_panel.balance")
-      check_flash_message I18n.t("create_player.success", first_name: @player.first_name.upcase, , last_name: @player.last_name.upcase)
+      check_flash_message I18n.t("create_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
 
       test_player = Player.find_by_member_id(@player.member_id)
       expect(test_player).not_to be_nil
@@ -189,6 +189,7 @@ describe PlayersController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit new_player_path
+      wait_for_ajax
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     
@@ -210,7 +211,8 @@ describe PlayersController do
       @player.first_name = "test"
       @player.last_name = "player"
       fill_in "player_member_id", :with => @player.member_id
-      fill_in "player_player_name", :with => @player.player_name
+      fill_in "player_first_name", :with => @player.first_name
+      fill_in "player_last_name", :with => @player.last_name
       click_button I18n.t("button.create")
 
       check_title("tree_panel.create_player")
@@ -585,6 +587,7 @@ describe PlayersController do
     it '[14.2] player first name cannot be empty', :js => true do
       updated_card_id = 12345678900987654321
       updated_first_name = ""
+      updated_last_name = "updated"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -608,7 +611,8 @@ describe PlayersController do
     
     it '[14.3] card ID cannot be empty', :js => true do
       updated_card_id = ""
-      updated_player_name = "updated"
+      updated_first_name = "updated"
+      updated_last_name = "updated2"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -633,7 +637,8 @@ describe PlayersController do
     it '[14.4] duplicated card ID'do
       @player2 = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123457, :card_id => 12345678901234567890, :currency_id => 1, :status => "active")
       updated_card_id = 12345678901234567890
-      updated_player_name = "updated"
+      updated_first_name = "updated"
+      updated_last_name = "updated2"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -785,6 +790,7 @@ describe PlayersController do
     it '[14.11] player last name cannot be empty', :js => true do
       updated_card_id = 12345678900987654321
       updated_last_name = ""
+      updated_first_name = "update"
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -803,7 +809,8 @@ describe PlayersController do
       
       labels = all("label.invisible_error")
       expect(labels[0][:style]).to_not include("visible")
-      expect(labels[1][:style]).to include("visible")
+      expect(labels[1][:style]).to_not include("visible")
+      expect(labels[2][:style]).to include("visible")
     end     
   end
 

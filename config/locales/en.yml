@@ -98,21 +98,21 @@ en:
     lock: "Lock"
     unlock: "Unlock"
   create_player:
-    success: "Create player [%{first_name}] [%{last_name}] successful"
+    success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
     card_id_exist: "The player [Card ID = %{card_id}] you tried to create is already exist."
     card_id_length_error: "Card ID must be 20 characters"
     member_id_length_error: "Member ID must be 8 characters"
     first_name_blank_error: "Player first name can not be blank"
-    lasnet_name_blank_error: "Player last name can not be blank"
+    last_name_blank_error: "Player last name can not be blank"
     card_id_only_number_allowed_error: "Card ID can only input number"
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
   lock_player:
-    success: "Lock player [%{first_name}] [%{last_name}] successful"
+    success: "Lock player [%{first_name} %{last_name}] successful"
     confirm_msg: "Are you sure to Lock player: %{first_name} %{last_name}?"
   unlock_player:
-    success: "Unlock player [%{first_name}] [%{last_name}] successful"
+    success: "Unlock player [%{first_name} %{last_name}] successful"
     confirm_msg: "Are you sure to UnLock player: %{first_name} %{last_name}?"
   player_status:
     active: "Active"

@@ -7,7 +7,7 @@
                   <section class="smart-form">
                     <label class="label"><%= t("station.location") %></label>
                     <label class="select">
-                      <select class="input-sm" name="location" id="location">
+                      <select class="input-sm" name="location_id" id="location_id">
                         <% locations.each do |location| %>
                           <option value=<%= location.id %>><%= location.name %></option>
                         <% end %>

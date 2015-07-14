@@ -39,6 +39,12 @@ class Location < ActiveRecord::Base
 
       raise CreateLocation::ParamsError, "duplicated_name_error" if duplicated_name
     end
+
+    def get_name_by_id(id)
+      location = Location.find(id)
+      return null unless location
+      location.name
+    end
   end
 
 

@@ -192,6 +192,7 @@ en:
     updated_at: "Updated at"
     operations: "Operations"
     add: "Add"
+    cant_blank: "Location cannot be blank"
   station:
     add_success: "add Station %{name} to %{location} successful"
     already_existed: "the station %{name} is already existed"

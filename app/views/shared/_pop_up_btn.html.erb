@@ -1,0 +1,38 @@
+<div id="button_set">
+  <%= button_tag t("button.confirm"), :id => button_id, :class => "btn btn-primary"%>
+</div>
+
+
+<%= javascript_include_tag "block.enter.js" %>
+<script type='text/javascript'>
+  $('#<%= button_id %>').click(function() {
+    if( true){
+      $('#pop_up_content').html('<%= content %>');
+      $('#pop_up_dialog').css("display", "block");
+      $('#pop_up_dialog #confirm').focus();
+    }
+    return false;
+  });
+
+  $('#pop_up_dialog #confirm').click(function() {
+    $('#<%= form_id %>').submit();
+
+    return false;
+  });
+
+
+  $('#pop_up_dialog #cancel').click(function() {
+    $('#pop_up_dialog').css("display", "none");
+
+    return false;
+  });
+
+  function blockEnter(event){ 
+    if (event.keyCode == 13) {
+      $('button#<%= button_id %>').click();
+      return false;
+    }
+  }
+
+  $('form#<%= form_id %>').keydown(blockEnter);
+</script>

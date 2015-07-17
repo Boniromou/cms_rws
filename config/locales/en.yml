@@ -74,6 +74,7 @@ en:
   balance_enquiry:
     account_balance: "Account Balance (HKD)"
   button:
+    add: "Add"
     cancel: "Cancel"
     confirm: "Confirm"
     close: "Close"
@@ -191,16 +192,16 @@ en:
     updated_at: "Updated at"
     operations: "Operations"
     add: "Add"
-  create_location:
-    success: "Create location [%{name}] successful"
-    name_exist: "The location [Name = %{name}] you tried to create is already exist."
-    name_blank_error: "Location name can not be blank"
-  disable_location:
-    success: "Disable loacation [%{name}] successful"
-    confirm_msg: "Are you sure to Disable location: %{name}?"
-  enable_player:
-    success: "Enable location [%{name}] successful"
-    confirm_msg: "Are you sure to Enable location: %{name}?"
+    add_success: "Add location [%{name}] successful"
+    already_existed: "The location [%{name}] is already exist."
+    cant_blank: "Location can not be blank"
+    disable_success: "Disable loacation [%{name}] successful"
+    disable_confirm_msg: "Are you sure to Disable location: [%{name}?]"
+    disable_fail: "You cannot disable this location while there are active stations under this location"
+    enable_success: "Enable location [%{name}] successful"
+    enable_confirm_msg: "Are you sure to Enable location: [%{name}?]"
+    already_enabled: "The location [%{name}] is already enabled"
+    already_disabled: "The location [%{name}] is already disabled"
   station:
     station: "Station ID"
     location: "Cage Location"

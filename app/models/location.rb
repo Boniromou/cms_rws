@@ -21,12 +21,10 @@ class Location < ActiveRecord::Base
       location.name = name_upper
       location.status = STATUS_ACTIVE
       
-      begin
+     
         location.save!
-      rescue ActiveRecord::RecordInvalid => ex
-        duplicated_filed = ex.record.errors.keys.first.to_s
-        raise CreateLocation::DuplicatedFieldError, duplicated_filed
-      end
+     
+    
     end
 
 
@@ -42,24 +40,28 @@ class Location < ActiveRecord::Base
         end
       end
       
-      raise CreateLocation::ParamsError, "name_blank_error" if name.nil? || name.blank?
+      raise AddLocation::CantBlankError, "cant_blank" if name.nil? || name.blank?
 
-      raise CreateLocation::ParamsError, "name_exist" if duplicated_name
+      raise AddLocation::AlreadyExistedError, "already_existed" if duplicated_name
     end
   end
 
 
 
   def has_active_station?
-    self.stations.active != nil
+    self.stations.active != []
   end
 
   def disable!
+    raise DisableLocation::DisableFailError, "disable_fail" if has_active_station?
+    raise DisableLocation::AlreadyDisabledError, "already_disabled" if self.status == STATUS_INACTIVE
   	self.status = STATUS_INACTIVE
     self.save
+
   end
 
   def enable!
+    raise EnableLocation::AlreadyEnabledError, "already_disabled" if self.status == STATUS_ACTIVE
   	self.status = STATUS_ACTIVE
     self.save
   end

@@ -12,14 +12,33 @@ module CreatePlayer
   end
 end
 
-module CreateLocation
-  class CreateLocationError < CageError
+module AddLocation
+  class AddLocationError < CageError
   end
 
-  class DuplicatedFieldError < CreateLocationError
+  class AlreadyExistedError < AddLocationError
   end
 
-  class ParamsError < CreateLocationError
+  class CantBlankError < AddLocationError
+  end
+end
+
+module DisableLocation
+  class DisableLocationError < CageError
+  end
+
+  class DisableFailError < DisableLocationError
+  end
+
+  class AlreadyDisabledError < DisableLocationError
+  end
+end
+
+module EnableLocation
+  class EnableLocationError < CageError
+  end
+
+  class AlreadyEnabledError < EnableLocationError
   end
 end
 

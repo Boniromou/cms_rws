@@ -30,7 +30,13 @@
     </tbody>
   </table>
 
-  <button id="roll_shift" class="btn btn-primary"><%= t("button.roll_shift_now") %></button>
+  <div class="form-actions">
+    <div class="row">
+      <div class="col-md-12"> 
+        <button id="roll_shift" class="btn btn-primary"><%= t("button.roll_shift_now") %></button>
+      </div>
+    </div>
+  </div>
   <%= form_for :shift, remote: true, html: { id: "confirm_roll_shift_form", style: 'display: none;' } do |f| %>
     <%= f.hidden_field :current_shift_id, value: @current_shift.id %>
   <% end %>
@@ -56,6 +62,7 @@
         </table>
       </div>
     </div>
+
 
     <div align="center" style='height: 20%;'>
       <button id="confirm" class="btn btn-primary"><%= t("shift.confirm_roll_msg") %></button>

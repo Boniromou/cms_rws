@@ -75,7 +75,7 @@
       <div class='row'>
         <div class='col col-5'>
           <footer>
-            <%= f.submit t("button.create"), class: 'btn btn-primary pull-right', id: 'create_player_submit' %>
+            <%= f.submit t("button.create"), class: 'btn btn-primary', id: 'create_player_submit' %>
           </footer>
         </div>
       <div>
@@ -88,8 +88,8 @@
 
 <script>
   var form_id = "new_player";
-  var lengthLimit = [CARD_ID_LENGTH_LIMIT, MEMBER_ID_LENGTH_LIMIT, 0];
-  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_member_id"), $("form#"+ form_id +" input#player_first_name"), $("form#"+ form_id +" input#player_last_name")];
+  var lengthLimit = [CARD_ID_LENGTH_LIMIT, 0, 0, MEMBER_ID_LENGTH_LIMIT];
+  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_first_name"), $("form#"+ form_id +" input#player_last_name"), $("form#"+ form_id +" input#player_member_id")];
 
   $("form#" + form_id + " input#create_player_submit").click(function(e) {
     e.preventDefault();

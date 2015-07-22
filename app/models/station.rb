@@ -1,5 +1,5 @@
 class Station < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :location_id, :machine_id, :status
 
   belongs_to :location
 

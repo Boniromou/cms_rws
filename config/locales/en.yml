@@ -54,6 +54,8 @@ en:
     end_time: "End Time"
     active: "Active"
     inactive: "Inactive"
+    location: "Location"
+    station: "Station"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -175,7 +177,8 @@ en:
   report_search:
     search_field_blank_error: "search field can not be blank"
     no_transaction_found: "No transaction found."
-    limit_remark: "** The search date range is limited to 30 days."
+    limit_remark: "The search date range is limited to 30 days."
+    datetime_error: "The start date must be earlier than the end date"
   auditlog:
     audit_time: "Time"
     audit_action_by: "Action by"
@@ -202,6 +205,8 @@ en:
     enable_confirm_msg: "Are you sure to Enable location: [%{name}?]"
     already_enabled: "The location [%{name}] is already enabled"
     already_disabled: "The location [%{name}] is already disabled"
+    enable: "Enable"
+    disable: "Disable"
   station:
     station: "Station ID"
     location: "Cage Location"

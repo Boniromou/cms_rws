@@ -12,6 +12,25 @@ module CreatePlayer
   end
 end
 
+module SearchPlayerTransaction
+  class SearchPlayerTransactionError < CageError
+  end
+
+  class OverRangeError < SearchPlayerTransactionError
+  end
+
+  class DateTimeError < SearchPlayerTransactionError
+  end
+end
+
+module DatetimeParse
+  class DatetimeParseError < CageError
+  end
+
+  class FormatError < DatetimeParseError
+  end
+end
+
 module AddLocation
   class AddLocationError < CageError
   end

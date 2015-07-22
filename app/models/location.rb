@@ -44,6 +44,12 @@ class Location < ActiveRecord::Base
 
       raise AddLocation::AlreadyExistedError, "already_existed" if duplicated_name
     end
+
+    def get_name_by_id(id)
+      location = Location.find(id)
+      return null unless location
+      location.name
+    end
   end
 
 

@@ -6,4 +6,3 @@ function blockEnter(event){
 }
 
 
-$('form#fund_request').keydown(blockEnter);

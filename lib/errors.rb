@@ -42,6 +42,17 @@ module EnableLocation
   end
 end
 
+module CreateStation
+  class CreateStationError < CageError
+  end
+
+  class DuplicatedFieldError < CreateStationError
+  end
+
+  class ParamsError < CreateStationError
+  end
+end
+
 module Remote
   class RemoteError < CageError
   end

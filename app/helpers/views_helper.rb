@@ -38,4 +38,11 @@ module ViewsHelper
     title = BREAD_CRUMB_LIST[subtitle.to_sym][:title]
     bread_crumb(icon_style, title, subtitle)
   end
+
+  def pop_up_btn(params, &block)
+    btn_id = params[:id]
+    form_id = params[:form_id]
+    c = capture(&block).to_s.gsub("\n","").html_safe
+    concat render partial: "shared/pop_up_btn" , locals: {:button_id => btn_id, :form_id => form_id, :content => c }
+  end
 end

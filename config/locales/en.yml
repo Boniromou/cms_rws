@@ -209,4 +209,5 @@ en:
     updated_at: "Update at"
     status: "Status"
     operation: "Operations"
-
+  confirm_box:
+    add_station: "Confirm to add station"

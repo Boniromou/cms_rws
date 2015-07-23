@@ -41,8 +41,9 @@ module ViewsHelper
 
   def pop_up_btn(params, &block)
     btn_id = params[:id]
+    btn_str = params[:str]
     form_id = params[:form_id]
     c = capture(&block).to_s.gsub("\n","").html_safe
-    concat render partial: "shared/pop_up_btn" , locals: {:button_id => btn_id, :form_id => form_id, :content => c }
+    concat render partial: "shared/pop_up_btn" , locals: {:btn_id => btn_id,:btn_str => btn_str, :form_id => form_id, :content => c }
   end
 end

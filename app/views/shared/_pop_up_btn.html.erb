@@ -1,11 +1,11 @@
 <div id="button_set">
-  <%= button_tag t("button.confirm"), :id => button_id, :class => "btn btn-primary"%>
+  <%= button_tag btn_str, :id => btn_id, :class => "btn btn-primary"%>
 </div>
 
 
 <%= javascript_include_tag "block.enter.js" %>
 <script type='text/javascript'>
-  $('#<%= button_id %>').click(function() {
+  $('#<%= btn_id %>').click(function() {
     if( true){
       $('#pop_up_content').html('<%= content %>');
       $('#pop_up_dialog').css("display", "block");
@@ -29,7 +29,7 @@
 
   function blockEnter(event){ 
     if (event.keyCode == 13) {
-      $('button#<%= button_id %>').click();
+      $('button#<%= btn_id %>').click();
       return false;
     }
   }

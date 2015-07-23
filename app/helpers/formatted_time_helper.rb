@@ -25,7 +25,7 @@ module FormattedTimeHelper
     begin
       Time.strptime(datetime_str, "%Y-%m-%d %H:%M:%S").utc
     rescue ArgumentError
-      default_time
+      raise ArgumentError 
     end
   end
 end

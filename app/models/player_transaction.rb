@@ -72,6 +72,13 @@ class PlayerTransaction < ActiveRecord::Base
     end
 
     def search_query_by_player(id_type, id_number, start_time, end_time)
+      puts "XXXXXXXXXXXXXXXXX"
+      puts "XXXXXXXXXXXXXXXXX"
+      puts "XXXXXXXXXXXXXXXXX"
+      puts "XXXXXXXXXXXXXXXXX"
+      puts "XXXXXXXXXXXXXXXXX"
+      raise SearchPlayerTransaction::OverRangeError, "limit_remark" if end_time - start_time > 2592200
+      raise SearchPlayerTransaction::DateTimeError, "datetime_error" if end_time < start_time
       if id_number.empty?
         player_id = nil
       else

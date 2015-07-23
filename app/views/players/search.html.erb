@@ -1,10 +1,13 @@
 <%= search_page_bread_crumb(t(@search_title)) %>
-<div class="row">
-  <div class="col-sm-6">
+
+    <div class="row">
+      <div class="col-md-4">
+       
+
     <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
       <fieldset>
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-md-6">
             <section class="smart-form">
               <div class="inline-group">
                 <label class="radio">
@@ -23,7 +26,7 @@
             </section>
           </div>
 
-          <div class="col-sm-8">
+          <div class="col-md-6">
             <section class="smart-form">
               <label class="input">
                 <%= text_field_tag(:"id_number", @id_number, autofocus: true) %>
@@ -40,8 +43,9 @@
         </div>
       </fieldset>
     <% end %>
-  </div>
-</div>
+
+
+
 <br/>
 <% if @found == "false" %>
   <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
@@ -56,6 +60,10 @@
   </div>
   <% end %>
 <% end %>
+
+  </div>
+</div>
+
 
 <script>
   $(document).ready(function() {

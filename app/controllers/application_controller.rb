@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
 
   rescue_from Exception, :with => :handle_fatal_error
 
+  STATUS_ACTIVE = 'active'
+  STATUS_INACTIVE = 'inactive'
+
   def client_ip
     if Rails.env.development?
       request.remote_ip

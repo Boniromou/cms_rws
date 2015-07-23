@@ -9,23 +9,32 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def do_search
-   
     return unless permission_granted? PlayerTransaction.new, :search?
+        
+    begin
     @start_time = parse_datetime(params[:start_time], today_start_time)
     @end_time = parse_datetime(params[:end_time], today_end_time)
-
-   
-   
+      
     id_type = params[:id_type]
     id_number = params[:id_number]
     
     transaction_id = params[:transaction_id]
     selected_tab_index = params[:selected_tab_index]
     @player_transactions = PlayerTransaction.search_query(id_type, id_number, @start_time, @end_time, transaction_id, selected_tab_index)
+       
+    rescue SearchPlayerTransaction::OverRangeError => e
+      flash[:error] = "report_search." + e.message
+    rescue SearchPlayerTransaction::DateTimeError => e
+      flash[:error] = "report_search." + e.message
+    rescue ArgumentError 
+      flash[:error] = "Datetime format is not correct"
+    end
+
     respond_to do |format|
       format.html { render partial: "player_transactions/search_result", formats: [:html] }
       format.js { render partial: "player_transactions/search_result", formats: [:js] }
     end
+
   end
 
   def print

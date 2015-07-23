@@ -1,20 +1,14 @@
 class LocationPolicy < ApplicationPolicy
-  def create?
-    # is_admin? || has_permission?('location', 'create')
-    return true
+  def add?
+    is_admin? || has_permission?('location', 'add')
   end
 
   def list?
-    return true
-  end
-  
-  def manage?
-    # is_admin? || has_permission?('location', 'create')
-    return true
+    is_admin? || has_permission?('location', 'list')
   end
 
   def disable?
-    return true
+    is_admin? || has_permission?('location', 'disable')
   end
 
   def enable?

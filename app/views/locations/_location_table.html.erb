@@ -18,13 +18,13 @@
                 <tr id="location_<%= location.id %>">
                   <td><%= location.id %></td>
                   <td><%= location.name %></td>
-                  <td><%= location.updated_at %></td>
+                  <td><%= format_time(location.updated_at) %></td>
                   <td>
                     <% if policy(Location.new).disable? %>
                       <% if @status == 'active' %>
-                        <%= link_to '', disable_locations_path + "?location_id=#{location.id}", :id => "disable_location_#{location.id}", :class => "glyphicon glyphicon-off", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
+                        <%= link_to 'Disable', disable_locations_path + "?location_id=#{location.id}", :id => "disable_location_#{location.id}", :class => "btn btn-primary", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
                       <% else %>
-                        <%= link_to '', enable_locations_path + "?location_id=#{location.id}", :id => "enable_location_#{location.id}", :class => "glyphicon glyphicon-repeat", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
+                        <%= link_to 'Enable', enable_locations_path + "?location_id=#{location.id}", :id => "enable_location_#{location.id}", :class => "btn btn-primary", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
                       <% end %>
                     <% end %>
                   </td>
@@ -32,3 +32,21 @@
               <% end %>
             </tbody>
           </table>
+
+             <script>
+            $(document).ready(function() {
+         
+
+           $('#location_name').keyup(function(){
+            $("#add_location_submit").attr("disabled", false);
+            
+            if (!$("#location_name").val().match(/\S/))
+            {
+              $("#add_location_submit").attr("disabled", true);
+            }
+             
+          
+
+       });
+      });
+            </script>

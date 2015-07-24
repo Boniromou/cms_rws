@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-sm-8">
+ <div class="col-md-4">
     <%= form_tag(search_transactions_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
       <div id="search-tabs">
         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
@@ -12,8 +12,9 @@
         </ul>
 
         <div id="tabs-a">
+          <br/>
           <div class="row">
-            <div class="col-sm-3">
+            <div class="col-md-6">
               <section class="smart-form">
                 <div class="inline-group">
                   <label class="radio">
@@ -30,7 +31,7 @@
               </section>
             </div>
             
-            <div class="col-sm-9">
+            <div class="col-md-6">
               <section class="smart-form">
                 <label class="input">
                   <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
@@ -38,28 +39,22 @@
               </section>
             </div>
           </div>
-
+<br/>
           <div class="row">
-            <div class="col-sm-1">
+            <div class="col-md-6">
               <section class="smart-form">
-              <br/>
+              
+        
                 <label class="label lower"><%= t("transaction_history.start_date") %></label>
+                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
               </section>
             </div>
-            <div class="col-sm-5">
+            
+            <div class="col-md-6">
               <section class="smart-form">
-              <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
-              </section>
-            </div>
-            <div class="col-sm-1">
-              <section class="smart-form">
-              <br/>
+           
                 <label class="label lower"><%= t("transaction_history.end_date") %></label>
-              </section>
-            </div>
-            <div class="col-sm-5">
-              <section class="smart-form">
-              <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
+                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
               </section>
             </div>
           </div>
@@ -72,18 +67,19 @@
               </section>
             </div>
           </div> -->
-          <div id="dateRangeWarning1" class="warning note note-error" style="display: none; color: #C7254E; font-size: 125%"><i class="fa fa-warning"></i><%= t("alert.out_of_date_range") %></div>
-          <div id="dateRangeWarning2" class="warning note note-error" style="display: none; color: #C7254E; font-size: 125%"><i class="fa fa-warning"></i><%= t("alert.date_not_valid") %></div>
+          <!-- <div id="dateRangeWarning1" class="warning note note-error" style="display: none; color: #C7254E; font-size: 125%"><i class="fa fa-warning"></i><%= t("alert.out_of_date_range") %></div>
+          <div id="dateRangeWarning2" class="warning note note-error" style="display: none; color: #C7254E; font-size: 125%"><i class="fa fa-warning"></i><%= t("alert.date_not_valid") %></div> -->
         </div>
 
         <div id="tabs-b">
+          <br/>
           <div class="row">
-            <div class="col-sm-2">
+            <div class="col-md-3">
               <section class="smart-form">
                 <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
               </section>
             </div>
-            <div class="col-sm-10">
+            <div class="col-md-9">
               <section class="smart-form">
                 <label class="input">
                   <%= text_field_tag(:"transaction_id", nil, autofocus: true) %>
@@ -91,7 +87,7 @@
               </section>
             </div>
           </div>
-          
+          <br/>
         </div>
 
       
@@ -111,70 +107,82 @@
       <%= hidden_field_tag 'from', search_transactions_path %>
       <%= hidden_field_tag 'selected_tab_index', 0 %>
     <% end %>
-  </div>
 </div>
+</div>
+</br>
+
+
 
 <script>
-  function getTimeGap() {
-    var start_time = new Date($("#datetimepicker_start_time").val()),
-        end_time = new Date($("#datetimepicker_end_time").val());
-    return (end_time - start_time)
-  }
+  // function getTimeGap() {
+  //   var start_time = new Date($("#datetimepicker_start_time").val()),
+  //       end_time = new Date($("#datetimepicker_end_time").val());
+  //   return (end_time - start_time)
+  // }
 
-   function hideWarning() {
-    document.getElementById('dateRangeWarning1').style.display = 'none';
-    document.getElementById('dateRangeWarning2').style.display = 'none';
-  }
+  //  function hideWarning() {
+  //   document.getElementById('dateRangeWarning1').style.display = 'none';
+  //   document.getElementById('dateRangeWarning2').style.display = 'none';
+  // }
   
   
 
   $(document).ready(function() {
     $("#byTransactionIDTab").click(function(){
       $("#search").attr("disabled", false);
+      document.getElementById('flash_message').style.display = 'none';
     });
 
     $("#byMemberTab").click(function(){
-      hideWarning();
+    
       $("#search").attr("disabled", false);
+      document.getElementById('flash_message').style.display = 'block';
     });
 
-    $("#datetimepicker_start_time").change(function(){
-      hideWarning();
-      $("#search").attr("disabled", false);
-      var timeGap = getTimeGap();
+$("#search").click(function(){
+    
+     
+      document.getElementById('flash_message').className = 'row col-md-4';
+      document.getElementById('flash_message').style.marginLeft = '10px';
+    });
+ 
+    // $("#datetimepicker_start_time").change(function(){
+    //   hideWarning();
+    //   $("#search").attr("disabled", false);
+    //   var timeGap = getTimeGap();
 
-      if (timeGap >= 0) {
-        if (timeGap >= 2591999000) {
-          document.getElementById('dateRangeWarning1').style.display = 'block';
-          $("#search").attr("disabled", true);
-        }
-      } else {
-        document.getElementById('dateRangeWarning2').style.display = 'block';
-        $("#search").attr("disabled", true);
-      }
+    //   if (timeGap >= 0) {
+    //     if (timeGap >= 2591999000) {
+    //       document.getElementById('dateRangeWarning1').style.display = 'block';
+    //       $("#search").attr("disabled", true);
+    //     }
+    //   } else {
+    //     document.getElementById('dateRangeWarning2').style.display = 'block';
+    //     $("#search").attr("disabled", true);
+    //   }
         
       
 
-    });
+    // });
 
-    $("#datetimepicker_end_time").change(function(){
-      hideWarning();
-      $("#search").attr("disabled", false);
-      var timeGap = getTimeGap();
+    // $("#datetimepicker_end_time").change(function(){
+    //   hideWarning();
+    //   $("#search").attr("disabled", false);
+    //   var timeGap = getTimeGap();
 
-      if (timeGap >= 0) {
-        if (timeGap >= 2591999000) {
-          document.getElementById('dateRangeWarning1').style.display = 'block';
-          $("#search").attr("disabled", true);
-        }
-      } else {
-        document.getElementById('dateRangeWarning2').style.display = 'block';
-        $("#search").attr("disabled", true);
-      }
+    //   if (timeGap >= 0) {
+    //     if (timeGap >= 2591999000) {
+    //       document.getElementById('dateRangeWarning1').style.display = 'block';
+    //       $("#search").attr("disabled", true);
+    //     }
+    //   } else {
+    //     document.getElementById('dateRangeWarning2').style.display = 'block';
+    //     $("#search").attr("disabled", true);
+    //   }
         
 
 
-    });
+    // });
     
 
     $('div#search-tabs').tabs({

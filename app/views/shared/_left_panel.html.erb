@@ -152,6 +152,15 @@
     $(target).addClass("active");
   }
 
+$(document).ready(function() {
+  $("a").click(function(){
+    
+       document.getElementById('flash_message').style.display = 'block';
+       document.getElementById('flash_message').className = '';
+      document.getElementById('flash_message').style.marginLeft = '';
+    });
+});
+
   function RemoveActiveOption(){
     $("li ul li").removeClass("active");
     $("li#nav_home").removeClass("active");

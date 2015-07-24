@@ -16,12 +16,11 @@ class StationsController < ApplicationController
         Station.create_by_params(params)
       end
       flash[:success] = {key: "station.add_success", replace: {:name => name, :location => Location.get_name_by_id(location_id)}}
-      redirect_to list_stations_path("active")
     rescue StationError::ParamsError => e
-      flash[:error] = e.message
-      redirect_to list_stations_path("active")
+      flash[:error] = "station." + e.message
     rescue StationError::DuplicatedFieldError => e
       flash[:error] = {key: "station.already_existed", replace: {:name => name, :location => Location.get_name_by_id(location_id)}}
+    ensure
       redirect_to list_stations_path("active")
     end
   end
@@ -45,12 +44,11 @@ class StationsController < ApplicationController
         station.change_status(target_status)
       end
       flash[:success] = {key: "station." + action_str + "_success", replace: {:name => station.name}}
-      redirect_to list_stations_path(redirect_page)
     rescue StationError::EnableFailError => e
       flash[:error] = "station." + e.message
-      redirect_to list_stations_path(redirect_page)
     rescue StationError::AlreadyEnabledError => e
       flash[:error] = {key: "station.already_" + action_str + "d", replace: {:name => station.name}}
+    ensure
       redirect_to list_stations_path(redirect_page)
     end
   end

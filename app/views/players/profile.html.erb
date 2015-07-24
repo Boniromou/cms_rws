@@ -1,7 +1,6 @@
 <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.profile")) %>
 
-<% back_button = close_to_home %>
 <% footer = render "players/profile_footer" %>
 <% content = render "players/balance_amt" %>
-<%= render partial:"shared/player_info" , :locals => {:show_balance => true, :back_button => back_button, :content => content, :footer => footer} %>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => true, :content => content, :footer => footer} %>
 </div>

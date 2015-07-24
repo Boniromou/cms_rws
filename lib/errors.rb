@@ -42,7 +42,7 @@ module EnableLocation
   end
 end
 
-module CreateStation
+module StationError
   class CreateStationError < CageError
   end
 
@@ -50,6 +50,12 @@ module CreateStation
   end
 
   class ParamsError < CreateStationError
+  end
+  
+  class EnableStationError < CageError
+  end
+
+  class AlreadyEnabledError < EnableStationError
   end
 end
 

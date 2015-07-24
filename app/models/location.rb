@@ -7,10 +7,6 @@ class Location < ActiveRecord::Base
   scope :active, -> { where("status = ?", true)	}
   scope :inactive, -> { where("status = ?", false) }
  
-
-  STATUS_ACTIVE = 'active'
-  STATUS_INACTIVE = 'inactive'
-
   class << self
     def create_by_name(name)
       verify_location_name(name)

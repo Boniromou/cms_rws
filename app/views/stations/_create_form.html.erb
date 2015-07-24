@@ -1,0 +1,57 @@
+
+            <fieldset>
+              <div class="row">
+                
+              <%= form_tag(create_station_path, :remote => true, :id => "add_station") do %>
+                <div class="col-sm-2">
+                  <section class="smart-form">
+                    <label class="label"><%= t("station.location") %></label>
+                    <label class="select">
+                      <select class="input-sm" name="location_id" id="location_id">
+                        <% locations.each do |location| %>
+                          <option value=<%= location.id %>><%= location.name %></option>
+                        <% end %>
+                      </select>
+                    </label>
+                  </section>
+                </div>
+
+                <div class="col-sm-2">
+                  <section class="smart-form">
+                    <label class="label"><%= t("station.station") %></label>
+                    <label class="input">
+                      <%= text_field_tag(:name) %>
+                    </label>
+                  </section>
+                </div>
+              <% end %>
+            
+                <div class="col-sm-2">
+                  <section class="smart-form">
+                    <label class="label" style='visibility: hidden;'><%= t("button.add") %></label>
+                  </section>
+                  <% pop_up_btn :id => "add_station_confirm", :str => t("button.confirm"), :form_id => "add_station" do %>
+                    <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                      <table>
+                        <tr>
+                          <td><p><%= t("confirm_box.add_station")%>&nbsp</p></td>
+                          <td><p id="station_name"></p></td> 
+                          <td><p>?</p></td> 
+                        </tr>
+                      </table>
+                    </div>
+                  <% end %>
+                
+            </fieldset>
+
+<script type='text/javascript'>
+  function updateStationName(){
+    name = $('form#add_station input#name').val()
+    $('#pop_up_dialog #station_name').text(name);
+  }
+  
+  $('#add_station_confirm').click(function() {
+    updateStationName();
+  });
+
+</script>

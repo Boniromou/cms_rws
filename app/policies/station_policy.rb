@@ -8,7 +8,7 @@ class StationPolicy < ApplicationPolicy
     return true
   end
   
-  def enable?
+  def change_status?
   return true
   end
 

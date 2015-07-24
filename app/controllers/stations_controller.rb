@@ -9,7 +9,7 @@ class StationsController < ApplicationController
 
   def create
     return unless permission_granted? Station.new
-    name = params[:name]
+    name = params[:name].upcase
     location_id = params[:location_id]
     begin
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
@@ -28,46 +28,30 @@ class StationsController < ApplicationController
 
   def change_status
     return unless permission_granted? Station.new
-    puts "params",params
-    p "change_status"
+    target_status = params[:target_status]
+    station_id = params[:station_id]
+    station = Station.find(station_id)
     begin
-      target_status = params[:change_to_status]
-    	station_id = params[:station_id]
-    	station = Station.find(station_id)
       action_str = ""
-      action_str = "disable" if target_status == "inactive"
-      action_str = "enable" if target_status == "active"
+      redirect_page = "active"
+      if target_status == "inactive"
+        action_str = "disable"
+        redirect_page = "active"
+      elsif target_status == "active"
+        action_str = "enable"
+        redirect_page = "inactive"
+      end
     	AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.change_status(target_status)
       end
-      flash[:success] = { key: "station.disable_success", replace: {name: station.name.upcase}}
-      redirect_to list_stations_path('active')
-    rescue StationError::EnableStationError => e
+      flash[:success] = {key: "station." + action_str + "_success", replace: {:name => station.name}}
+      redirect_to list_stations_path(redirect_page)
+    rescue StationError::EnableFailError => e
       flash[:error] = "station." + e.message
-      redirect_to list_stations_path('active')
+      redirect_to list_stations_path(redirect_page)
     rescue StationError::AlreadyEnabledError => e
-      flash[:error] = { key: "station.already_disabled", replace: {name: station.name.upcase}}
-      redirect_to list_stations_path('active')
-    end
-  end
-
-  
-  def disable
-    return unless permission_granted? Station.new
-    begin
-    	station_id = params[:station_id]
-    	station = Station.find(station_id)
-    	AuditLog.station_log("disable", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        station.disable!
-      end
-      flash[:success] = { key: "station.disable_success", replace: {name: station.name.upcase}}
-      redirect_to list_stations_path('active')
-    rescue DisableStation::DisableFailError => e
-      flash[:error] = "station." + e.message
-      redirect_to list_stations_path('active')
-    rescue DisableStation::AlreadyDisabledError => e
-      flash[:error] = { key: "station.already_disabled", replace: {name: station.name.upcase}}
-      redirect_to list_stations_path('active')
+      flash[:error] = {key: "station.already_" + action_str + "d", replace: {:name => station.name}}
+      redirect_to list_stations_path(redirect_page)
     end
   end
 end

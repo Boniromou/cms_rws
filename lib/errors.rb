@@ -57,6 +57,9 @@ module StationError
 
   class AlreadyEnabledError < EnableStationError
   end
+  
+  class EnableFailError < EnableStationError
+  end
 end
 
 module Remote

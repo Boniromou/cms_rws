@@ -17,6 +17,7 @@ class AuditLog < ActiveRecord::Base
   ACTION_TYPE_LIST = { 
     :player => {:create => "create", :deposit => "update", :withdrawal => "update", :edit => "update", :lock => "update", :unlock => "update"},
     :location => {:add => "add", :disable => "update", :enable => "update"},
+    :station => {:add => "add", :disable => "update", :enable => "update"},
     :player_transaction => {:print => "read"},
     :shift => {:roll_shift => "create"}
   }
@@ -47,6 +48,10 @@ class AuditLog < ActiveRecord::Base
     compose_log(action, action_by, "location", ip, session_id, options, &block)
   end
 
+  def self.station_log(action, action_by, ip, session_id, options={}, &block)
+    compose_log(action, action_by, "station", ip, session_id, options, &block)
+  end
+  
   def self.fund_in_out_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "player", ip, session_id, options, &block)
   end

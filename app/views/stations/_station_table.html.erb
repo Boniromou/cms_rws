@@ -5,10 +5,17 @@
               <th><%= t("station.station")%></th>
               <th><%= t("station.machine")%></th>
               <th><%= t("station.updated_at")%></th>
-              <th><%= t("station.status")%></th>
               <th><%= t("station.operation")%></th>
             </thead>
             <tbody>
+                      <% if stations.length > 0 && stations[0].status == "active" 
+                          target_status = "inactive"
+                          action_str = "disable"
+                        else
+                          target_status = "active"
+                          action_str = "enable"
+                        end
+                      %>
               <% stations.each do |station| %>
                 <tr id="station_<%= station.id %>">
                   <% location = Location.find(station.location_id) %>
@@ -17,9 +24,29 @@
                   <td><%= station.name %></td>
                   <td><%= station.machine_id%></td>
                   <td><%= station.updated_at %></td>
-                  <td><%= station.status %></td>
-                  <td><%=  %></td>
+                  <td>
+                  <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button.confirm"), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
+                    <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
+                  <% end %>
+                    
+                  </td>
                 </tr>
               <% end %>
             </tbody>
           </table>
+        <%= form_tag(change_station_status_path, :remote => true, :id => "change_station_status", :style => 'display: none;') do |f|%>
+          <%= hidden_field_tag :station_id, 0 %>
+          <%= hidden_field_tag :target_status, target_status %>
+        <% end %>
+
+<script type='text/javascript'>
+  function updateChangeStatusForm(station_id){
+    $('form#change_station_status input#station_id').val(station_id);
+  }
+  
+  $('button.change_station_status_btn').click(function() {
+    station_id = event.target.id.replace("change_station_status_","");
+    updateChangeStatusForm(station_id);
+  });
+
+</script>

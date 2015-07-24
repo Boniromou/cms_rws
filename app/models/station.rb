@@ -7,9 +7,9 @@ class Station < ActiveRecord::Base
   scope :inactive, -> { where("status = ?", 'inactive') }
 
   def change_status(target_status)
-    raise EnableStation::AlreadyEnabledError, "already_disabled" if self.status == target_status
-    raise EnableStation::EnableFailError, "enable_fail" if self.location_inactive?
-  	self.status = "active"
+    raise StationError::AlreadyEnabledError, "already_disabled" if self.status == target_status
+    raise StationError::EnableFailError, "location_invalid" if self.location_inactive?
+  	self.status = target_status
     p "change status",self.status
     self.save
   end

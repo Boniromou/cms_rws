@@ -22,6 +22,10 @@ class Location < ActiveRecord::Base
      
     
     end
+    
+    def get_name_by_id( id )
+      Location.find_by_id(id).name
+    end
 
 
     def verify_location_name(name)

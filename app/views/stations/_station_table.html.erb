@@ -25,7 +25,7 @@
                   <td><%= station.machine_id%></td>
                   <td><%= station.updated_at %></td>
                   <td>
-                  <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button.confirm"), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
+                  <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button." + action_str), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
                     <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
                   <% end %>
                     

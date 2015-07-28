@@ -10,7 +10,7 @@ module ViewsHelper
 
   def close_to_balance
     icon = create_icon("fa fa-times")
-    content_tag(:a, icon, :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-primary")
+    content_tag(:a, "Cancel", :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
   end
 
   def create_icon(style)

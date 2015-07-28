@@ -60,7 +60,7 @@ CmsRws::Application.routes.draw do
   post 'disable_locations' => 'locations#disable'
   post 'enable_locations' => 'locations#enable'
   get 'list_locations/:status' => 'locations#list', :as => :list_locations
-  post 'create_location' => 'locations#create'
+  post 'add_location' => 'locations#add'
   
   get 'list_stations/:status' => 'stations#list', :as => :list_stations
   post 'create_station' => 'stations#create'

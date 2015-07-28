@@ -9,7 +9,7 @@ layout 'cage'
     @locations = Location.where('status' => @status) || []
   end
 
-  def create
+  def add
     return unless permission_granted? Location.new
     begin
       AuditLog.location_log("add", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
@@ -58,7 +58,7 @@ layout 'cage'
       end
       flash[:success] = { key: "location.enable_success", replace: {name: location.name.upcase}}
       redirect_to list_locations_path('inactive')
-    rescue DisableLocation::AlreadyEnabledError => e
+    rescue EnableLocation::AlreadyEnabledError => e
       flash[:error] = { key: "location.already_enabled", replace: {name: location.name.upcase}}
       redirect_to list_locations_path('inactive')
     end

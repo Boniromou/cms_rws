@@ -61,7 +61,7 @@
         <div class='col col-5'>
           <footer>
             <%= f.submit t("button.confirm"), class: 'btn btn-primary pull-right', id: 'edit_player_submit' %>
-            <%= link_to  t("button.cancel"), profile_path + "?member_id=#{@player.member_id}", :remote => true, class: 'btn btn-primary pull-right', id: 'edit_player_cancel' %>
+            <%= link_to  t("button.cancel"), profile_path + "?member_id=#{@player.member_id}", :remote => true, class: 'btn btn-default pull-right', id: 'edit_player_cancel' %>
           </footer>
         </div>
       <div>

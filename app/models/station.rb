@@ -11,13 +11,24 @@ class Station < ActiveRecord::Base
     raise StationError::AlreadyEnabledError, "already_disabled" if self.status == target_status
     raise StationError::EnableFailError, "location_invalid" if self.location_inactive?
   	self.status = target_status
-    p "change status",self.status
+    self.save
+  end
+
+  def register(machine_id)
+    raise StationError::StationAlreadyRegisterError, "already_register" unless self.machine_id.nil?
+    raise StationError::MachineAlreadyRegisterError, "machine_already_register" if Station.machine_registered?(machine_id)
+    self.machine_id = machine_id
     self.save
   end
 
   def location_inactive?
     return true if self.location.status == "inactive"
     false
+  end
+
+  def full_name
+    location_name = self.location.name
+    location_name + "-" + name
   end
 
   class << self
@@ -36,11 +47,17 @@ class Station < ActiveRecord::Base
         raise StationError::DuplicatedFieldError, "station.already_existed"
       end
     end
+
     def verify_params(params)
       location_id = params[:location_id]
       name = params[:name]
       raise StationError::ParamsError, "location.cant_blank" if location_id.nil? || location_id.blank?
       raise StationError::ParamsError, "station.cant_blank" if name.nil? || name.blank?
+    end
+
+    def machine_registered?(machine_id)
+      result = self.find_by_machine_id(machine_id)
+      return !result.nil?
     end
   end
 end

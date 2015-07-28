@@ -52,8 +52,8 @@
           <%= hidden_field_tag :target_status, target_status %>
         <% end %>
         <%= form_tag(register_machine_path, :remote => true, :id => "register_machine", :style => 'display: none;') do |f|%>
+          <%= hidden_field_tag :station_id, 0 %>
           <%= hidden_field_tag :machine_id, 0 %>
-          <%= hidden_field_tag :target_status, target_status %>
         <% end %>
 
 <%= javascript_include_tag "machine.id.js" %>
@@ -67,14 +67,16 @@
     updateChangeStatusForm(station_id);
   });
   
-  function updateMachineId(machine_id){
+  function updateMachineId(station_id,machine_id){
     $('form#register_machine input#machine_id').val(machine_id);
+    $('form#register_machine input#station_id').val(station_id);
     $('#pop_up_dialog #machine_id').text(machine_id);
   }
   
   $('button.register_machine_btn').click(function() {
     machine_id = getMachineId();
-    updateMachineId(machine_id);
+    station_id = event.target.id.replace("register_machine_","");
+    updateMachineId(station_id,machine_id);
   });
 
 </script>

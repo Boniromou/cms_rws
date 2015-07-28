@@ -12,4 +12,7 @@ class StationPolicy < ApplicationPolicy
   return true
   end
 
+  def register?
+  return true
+  end
 end

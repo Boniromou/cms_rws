@@ -79,6 +79,15 @@ module StationError
   
   class EnableFailError < EnableStationError
   end
+
+  class RegisterError < CageError
+  end
+
+  class StationAlreadyRegisterError < RegisterError
+  end
+
+  class MachineAlreadyRegisterError < RegisterError
+  end
 end
 
 module Remote

@@ -234,3 +234,6 @@ en:
   machine_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"
+    register_success: "Register machine to station %{station_name} successful"
+    station_already_reg: "The station has been registered, please refresh your page."
+    machine_already_reg: "register machine fail"

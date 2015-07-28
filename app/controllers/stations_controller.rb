@@ -1,6 +1,11 @@
 class StationsController < ApplicationController
   layout 'cage'
 
+  STATION_STATUS = { 
+    :active => { :action_str => "enable", :redirect_page => "inactive"},
+    :inactive => { :action_str => "disable", :redirect_page => "active"}
+    }
+
   def list
     return unless permission_granted? Station.new
     @status = params[:status]
@@ -30,15 +35,8 @@ class StationsController < ApplicationController
     target_status = params[:target_status]
     station_id = params[:station_id]
     station = Station.find(station_id)
-    action_str = ""
-    redirect_page = "active"
-    if target_status == "inactive"
-      action_str = "disable"
-      redirect_page = "active"
-    elsif target_status == "active"
-      action_str = "enable"
-      redirect_page = "inactive"
-    end
+    action_str = STATION_STATUS[target_status.to_sym][:action_str]
+    redirect_page = STATION_STATUS[target_status.to_sym][:redirect_page]
     begin
     	AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.change_status(target_status)
@@ -88,11 +86,7 @@ class StationsController < ApplicationController
     rescue StationError::StationAlreadyUnregisterError => e
       flash[:error] = "machine_id.unregister_fail"
     ensure
-      if station.status == "active"
-        redirect_to list_stations_path("active")
-      else
-        redirect_to list_stations_path("inactive")
-      end
+      redirect_to list_stations_path(station.status)
     end
   end
 

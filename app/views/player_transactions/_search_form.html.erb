@@ -58,17 +58,6 @@
               </section>
             </div>
           </div>
-          
-          <!-- <div class="row">
-            <div class="col-sm-1">
-              <section class="smart-form">
-              <br/>
-              <label class="label"><%= t("report_search.limit_remark") %></label>
-              </section>
-            </div>
-          </div> -->
-          <!-- <div id="dateRangeWarning1" class="warning note note-error" style="display: none; color: #C7254E; font-size: 125%"><i class="fa fa-warning"></i><%= t("alert.out_of_date_range") %></div>
-          <div id="dateRangeWarning2" class="warning note note-error" style="display: none; color: #C7254E; font-size: 125%"><i class="fa fa-warning"></i><%= t("alert.date_not_valid") %></div> -->
         </div>
 
         <div id="tabs-b">
@@ -89,13 +78,8 @@
           </div>
           <br/>
         </div>
-
-      
-
       </div>
-
-      
-         
+              
       <div class="form-actions">
         <div class="row">
           <div class="col-md-12">
@@ -107,26 +91,11 @@
       <%= hidden_field_tag 'from', search_transactions_path %>
       <%= hidden_field_tag 'selected_tab_index', 0 %>
     <% end %>
-</div>
+  </div>
 </div>
 </br>
 
-
-
 <script>
-  // function getTimeGap() {
-  //   var start_time = new Date($("#datetimepicker_start_time").val()),
-  //       end_time = new Date($("#datetimepicker_end_time").val());
-  //   return (end_time - start_time)
-  // }
-
-  //  function hideWarning() {
-  //   document.getElementById('dateRangeWarning1').style.display = 'none';
-  //   document.getElementById('dateRangeWarning2').style.display = 'none';
-  // }
-  
-  
-
   $(document).ready(function() {
     $("#byTransactionIDTab").click(function(){
       $("#search").attr("disabled", false);
@@ -134,56 +103,14 @@
     });
 
     $("#byMemberTab").click(function(){
-    
       $("#search").attr("disabled", false);
       document.getElementById('flash_message').style.display = 'block';
     });
 
-$("#search").click(function(){
-    
-     
+    $("#search").click(function(){
       document.getElementById('flash_message').className = 'row col-md-4';
       document.getElementById('flash_message').style.marginLeft = '10px';
-    });
- 
-    // $("#datetimepicker_start_time").change(function(){
-    //   hideWarning();
-    //   $("#search").attr("disabled", false);
-    //   var timeGap = getTimeGap();
-
-    //   if (timeGap >= 0) {
-    //     if (timeGap >= 2591999000) {
-    //       document.getElementById('dateRangeWarning1').style.display = 'block';
-    //       $("#search").attr("disabled", true);
-    //     }
-    //   } else {
-    //     document.getElementById('dateRangeWarning2').style.display = 'block';
-    //     $("#search").attr("disabled", true);
-    //   }
-        
-      
-
-    // });
-
-    // $("#datetimepicker_end_time").change(function(){
-    //   hideWarning();
-    //   $("#search").attr("disabled", false);
-    //   var timeGap = getTimeGap();
-
-    //   if (timeGap >= 0) {
-    //     if (timeGap >= 2591999000) {
-    //       document.getElementById('dateRangeWarning1').style.display = 'block';
-    //       $("#search").attr("disabled", true);
-    //     }
-    //   } else {
-    //     document.getElementById('dateRangeWarning2').style.display = 'block';
-    //     $("#search").attr("disabled", true);
-    //   }
-        
-
-
-    // });
-    
+    });    
 
     $('div#search-tabs').tabs({
       activate: function(event, ui) {

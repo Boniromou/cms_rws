@@ -1,13 +1,13 @@
 <%= search_page_bread_crumb(t(@search_title)) %>
 
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
        
 
     <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
       <fieldset>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <section class="smart-form">
               <div class="inline-group">
                 <label class="radio">
@@ -26,7 +26,7 @@
             </section>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <section class="smart-form">
               <label class="input">
                 <%= text_field_tag(:"id_number", @id_number, autofocus: true) %>
@@ -36,7 +36,7 @@
         </div>
         <div class="form-actions">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= submit_tag t("button.search"), :id => "button_find", :class => "btn btn-primary"  %>
             </div>
           </div>

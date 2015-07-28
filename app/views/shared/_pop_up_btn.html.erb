@@ -2,28 +2,10 @@
   <%= button_tag btn_str, :id => btn_id, :class => "btn btn-primary " + style%>
 </div>
 
-
-<%= javascript_include_tag "block.enter.js" %>
 <script type='text/javascript'>
   $('#<%= btn_id %>').click(function() {
-    if( true){
-      $('#pop_up_content').html('<%= content %>');
-      $('#pop_up_dialog').css("display", "block");
-      $('#pop_up_dialog #confirm').focus();
-    }
-  
-    $('#pop_up_dialog #confirm').click(function() {
-      $('#<%= form_id %>').submit();
+    registerPopUpPanel('#<%= form_id %>','<%= content %>');
 
-      return false;
-    });
-
-
-    $('#pop_up_dialog #cancel').click(function() {
-      $('#pop_up_dialog').css("display", "none");
-
-      return false;
-    });
     return false;
   });
 

@@ -30,16 +30,28 @@
                     <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
                   <% end %>
                     
-                  <% pop_up_btn :id => "register_machine_" + station.id.to_s, :str => t("button.register"), :form_id => "register_machine", :style => "register_machine_btn" do %>
-                    <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
-                      <table>
-                        <tr>
-                          <td><p><%= t("machine_id.confirm_reg1") %>&nbsp</p></td>
-                          <td><p id="machine_id"></p></td> 
-                          <td><p>&nbsp<%= t("machine_id.confirm_reg2", {:name => location.name + "-" + station.name}) %></p></td> 
-                        </tr>
-                      </table>
-                    </div>
+                  <% if station.machine_id.nil? %>
+                    <% pop_up_btn :id => "register_machine_" + station.id.to_s, :str => t("button.register"), :form_id => "register_machine", :style => "register_machine_btn" do %>
+                      <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                        <table>
+                          <tr>
+                            <td><p><%= t("machine_id.confirm_reg1") %>&nbsp</p></td>
+                            <td><p id="machine_id"></p></td> 
+                            <td><p>&nbsp<%= t("machine_id.confirm_reg2", {:name => location.name + "-" + station.name}) %></p></td> 
+                          </tr>
+                        </table>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <% pop_up_btn :id => "unregister_machine_" + station.id.to_s, :str => t("button.unregister"), :form_id => "unregister_machine", :style => "unregister_machine_btn" do %>
+                      <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                        <table>
+                          <tr>
+                            <td><p><%= t("machine_id.confirm_unreg", {:name => station.full_name, :machine_id => station.machine_id}) %></p></td>
+                          </tr>
+                        </table>
+                      </div>
+                    <% end %>
                   <% end %>
                   </div>
                   </td>
@@ -54,6 +66,9 @@
         <%= form_tag(register_machine_path, :remote => true, :id => "register_machine", :style => 'display: none;') do |f|%>
           <%= hidden_field_tag :station_id, 0 %>
           <%= hidden_field_tag :machine_id, 0 %>
+        <% end %>
+        <%= form_tag(unregister_machine_path, :remote => true, :id => "unregister_machine", :style => 'display: none;') do |f|%>
+          <%= hidden_field_tag :station_id, 0 %>
         <% end %>
 
 <%= javascript_include_tag "machine.id.js" %>
@@ -70,11 +85,17 @@
   function updateMachineId(station_id,machine_id){
     $('form#register_machine input#machine_id').val(machine_id);
     $('form#register_machine input#station_id').val(station_id);
+    $('form#unregister_machine input#station_id').val(station_id);
     $('#pop_up_dialog #machine_id').text(machine_id);
   }
   
   $('button.register_machine_btn').click(function() {
     machine_id = getMachineId();
+    station_id = event.target.id.replace("register_machine_","");
+    updateMachineId(station_id,machine_id);
+  });
+
+  $('button.unregister_machine_btn').click(function() {
     station_id = event.target.id.replace("register_machine_","");
     updateMachineId(station_id,machine_id);
   });

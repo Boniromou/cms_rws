@@ -94,6 +94,7 @@ en:
     enable: "Enable"
     disable: "Disable"
     register: "Register"
+    unregister: "Unregister"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -234,6 +235,7 @@ en:
   machine_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"
+    confirm_unreg: "Confirm to un-register %{machine_id} from station %{name}?"
     register_success: "Register machine to station %{station_name} successful"
     station_already_reg: "The station has been registered, please refresh your page."
     machine_already_reg: "register machine fail"

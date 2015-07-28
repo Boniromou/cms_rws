@@ -93,6 +93,7 @@ en:
     add: "Add"
     enable: "Enable"
     disable: "Disable"
+    register: "Register"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -230,3 +231,6 @@ en:
     add_station: "Confirm to add station"
     enable_station: "Confirm to enable location %{name}?"
     disable_station: "Confirm to disable station %{name}?"
+  machine_id:
+    confirm_reg1: "Confirm to register "
+    confirm_reg2: " to station %{name}?"

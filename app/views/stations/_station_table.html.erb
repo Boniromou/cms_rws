@@ -25,10 +25,23 @@
                   <td><%= station.machine_id%></td>
                   <td><%= station.updated_at %></td>
                   <td>
+                  <div>
                   <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button." + action_str), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
                     <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
                   <% end %>
                     
+                  <% pop_up_btn :id => "register_machine_" + station.id.to_s, :str => t("button.register"), :form_id => "register_machine", :style => "register_machine_btn" do %>
+                    <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                      <table>
+                        <tr>
+                          <td><p><%= t("machine_id.confirm_reg1") %>&nbsp</p></td>
+                          <td><p id="machine_id"></p></td> 
+                          <td><p>&nbsp<%= t("machine_id.confirm_reg2", {:name => location.name + "-" + station.name}) %></p></td> 
+                        </tr>
+                      </table>
+                    </div>
+                  <% end %>
+                  </div>
                   </td>
                 </tr>
               <% end %>
@@ -38,7 +51,12 @@
           <%= hidden_field_tag :station_id, 0 %>
           <%= hidden_field_tag :target_status, target_status %>
         <% end %>
+        <%= form_tag(register_machine_path, :remote => true, :id => "register_machine", :style => 'display: none;') do |f|%>
+          <%= hidden_field_tag :machine_id, 0 %>
+          <%= hidden_field_tag :target_status, target_status %>
+        <% end %>
 
+<%= javascript_include_tag "machine.id.js" %>
 <script type='text/javascript'>
   function updateChangeStatusForm(station_id){
     $('form#change_station_status input#station_id').val(station_id);
@@ -47,6 +65,16 @@
   $('button.change_station_status_btn').click(function() {
     station_id = event.target.id.replace("change_station_status_","");
     updateChangeStatusForm(station_id);
+  });
+  
+  function updateMachineId(machine_id){
+    $('form#register_machine input#machine_id').val(machine_id);
+    $('#pop_up_dialog #machine_id').text(machine_id);
+  }
+  
+  $('button.register_machine_btn').click(function() {
+    machine_id = getMachineId();
+    updateMachineId(machine_id);
   });
 
 </script>

@@ -12,6 +12,10 @@ module AuditLogsHelper
 
   def display_target(target_name)
     case target_name
+      when "location"
+        "general.location"
+      when "station"
+        "general.station"
       when "player"
         "general.player"
       when "player_transaction"
@@ -41,6 +45,12 @@ module AuditLogsHelper
         "player.lock"
       when "unlock"
         "player.unlock"
+      when "add"
+        "location.add"
+      when "enable"
+        "location.enable"
+      when "disable"
+        "location.disable"
       else
         nil
     end

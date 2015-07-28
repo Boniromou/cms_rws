@@ -239,3 +239,4 @@ en:
     register_success: "Register machine to station %{station_name} successful"
     station_already_reg: "The station has been registered, please refresh your page."
     machine_already_reg: "register machine fail"
+    unregister_fail: "There is no registered machine on this station, please refresh your page."

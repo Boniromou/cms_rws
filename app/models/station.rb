@@ -21,6 +21,12 @@ class Station < ActiveRecord::Base
     self.save
   end
 
+  def unregister
+    raise StationError::StationAlreadyUnregisterError, "already_unregister" if self.machine_id.nil?
+    self.machine_id = nil
+    self.save
+  end
+
   def location_inactive?
     return true if self.location.status == "inactive"
     false

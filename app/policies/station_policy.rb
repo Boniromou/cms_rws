@@ -15,4 +15,8 @@ class StationPolicy < ApplicationPolicy
   def register?
   return true
   end
+  
+  def unregister?
+  return true
+  end
 end

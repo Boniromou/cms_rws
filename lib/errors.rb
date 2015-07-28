@@ -88,6 +88,10 @@ module StationError
 
   class MachineAlreadyRegisterError < RegisterError
   end
+  
+  class StationAlreadyUnregisterError < RegisterError
+  end
+
 end
 
 module Remote

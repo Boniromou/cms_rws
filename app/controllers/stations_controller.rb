@@ -75,4 +75,25 @@ class StationsController < ApplicationController
       end
     end
   end
+
+  def unregister
+    return unless permission_granted? Station.new
+    station_id = params[:station_id]
+    station = Station.find(station_id)
+    begin
+    	AuditLog.station_log("unregister", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        station.unregister
+      end
+      flash[:success] = {key: "machine_id.register_success", replace: {:station_name => station.full_name}}
+    rescue StationError::StationAlreadyUnregisterError => e
+      flash[:error] = "machine_id.unregister_fail"
+    ensure
+      if station.status == "active"
+        redirect_to list_stations_path("active")
+      else
+        redirect_to list_stations_path("inactive")
+      end
+    end
+  end
+
 end

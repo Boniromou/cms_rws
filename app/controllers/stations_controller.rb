@@ -1,5 +1,6 @@
 class StationsController < ApplicationController
   layout 'cage'
+  skip_before_filter :check_session_expiration, :authenticate_user!, :only => :current
 
   STATION_STATUS = { 
     :active => { :action_str => "enable", :redirect_page => "inactive"},
@@ -89,5 +90,12 @@ class StationsController < ApplicationController
       redirect_to list_stations_path(station.status)
     end
   end
-
+  
+  def current
+    machine_id = params[:machine_id]
+    @current_station = Station.get_full_name_by_machine_id(machine_id)
+    respond_to do |format|
+      format.html { render "stations/current", :layout => false }
+    end
+  end
 end

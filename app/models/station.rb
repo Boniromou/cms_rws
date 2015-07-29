@@ -42,6 +42,12 @@ class Station < ActiveRecord::Base
       Station.find_by_id(id).name
     end
 
+    def get_full_name_by_machine_id(machine_id)
+      station = Station.find_by_machine_id(machine_id)
+      return "no station" if station.nil?
+      station.full_name
+    end
+
     def create_by_params(params)
       verify_params(params)
       

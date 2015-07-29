@@ -57,6 +57,7 @@ class Station < ActiveRecord::Base
         Station.create!(:location_id => location_id, :name => name, :status => "active")
       rescue ActiveRecord::RecordInvalid => ex
         raise StationError::DuplicatedFieldError, "station.already_existed" if ex.message == "Validation failed: Name has already been taken"
+        raise ex
       end
     end
 

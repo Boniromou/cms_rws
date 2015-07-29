@@ -16,6 +16,7 @@ class Location < ActiveRecord::Base
         Location.create!(:name => name.upcase, :status => "active")
       rescue ActiveRecord::RecordInvalid => ex
         raise LocationError::AlreadyExistedError, "already_existed" if ex.message == "Validation failed: Name has already been taken"
+        raise ex
       end
     
     end

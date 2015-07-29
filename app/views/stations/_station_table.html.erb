@@ -71,7 +71,6 @@
           <%= hidden_field_tag :station_id, 0 %>
         <% end %>
 
-<%= javascript_include_tag "machine.id.js" %>
 <script type='text/javascript'>
   function updateChangeStatusForm(station_id){
     $('form#change_station_status input#station_id').val(station_id);

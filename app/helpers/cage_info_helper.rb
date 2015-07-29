@@ -11,6 +11,10 @@ module CageInfoHelper
     polling_interval
   end
 
+  def update_station_interval
+    polling_interval
+  end
+
   def default_shift_widget_message
     "Waiting for shift"
   end
@@ -19,11 +23,15 @@ module CageInfoHelper
     "Waiting for accounting date"
   end
 
+  def default_station_widget_message
+    "No location"
+  end
+
   protected
 
   def polling_interval
     #milliseconds
-    60 * 1000 + rand(1..500)
+    6 * 1000 + rand(1..500)
   end
 
   def current_station

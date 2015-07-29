@@ -31,7 +31,8 @@ module DatetimeParse
   end
 end
 
-module AddLocation
+
+module LocationError
   class AddLocationError < CageError
   end
 
@@ -40,24 +41,14 @@ module AddLocation
 
   class CantBlankError < AddLocationError
   end
-end
-
-module DisableLocation
-  class DisableLocationError < CageError
+  
+  class ChangeStatusError < CageError
   end
 
-  class DisableFailError < DisableLocationError
+  class DisableFailError < ChangeStatusError
   end
 
-  class AlreadyDisabledError < DisableLocationError
-  end
-end
-
-module EnableLocation
-  class EnableLocationError < CageError
-  end
-
-  class AlreadyEnabledError < EnableLocationError
+  class DuplicatedChangeStatusError < ChangeStatusError
   end
 end
 

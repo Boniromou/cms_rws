@@ -18,49 +18,34 @@ layout 'cage'
 
     flash[:success] = {key: "location.add_success", replace: {name: params[:location_name].upcase}}
     redirect_to list_locations_path('active')
-    rescue AddLocation::AlreadyExistedError => e
+    rescue LocationError::AlreadyExistedError => e
       flash[:error] = { key: "location.already_existed", replace: {name: params[:location_name].upcase}}
       redirect_to list_locations_path('active')
-    rescue AddLocation::CantBlankError => e
+    rescue LocationError::CantBlankError => e
       flash[:error] = "location." + e.message
       redirect_to list_locations_path('active')
     end
   end
   
-
-  def disable
+  def change_status
     return unless permission_granted? Location.new
+    target_status = params[:target_status]
+    location_id = params[:location_id]
+    location = Location.find(location_id)
+    action_str = CHANGE_STATUS_HELPER[target_status.to_sym][:action_str]
+    redirect_page = CHANGE_STATUS_HELPER[target_status.to_sym][:redirect_page]
     begin
-    	location_id = params[:location_id]
-    	location = Location.find(location_id)
-    	AuditLog.location_log("disable", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        location.disable!
+      AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        location.change_status(target_status)
       end
-
-      flash[:success] = { key: "location.disable_success", replace: {name: location.name.upcase}}
-      redirect_to list_locations_path('active')
-    rescue DisableLocation::DisableFailError => e
+      flash[:success] = {key: "location." + action_str + "_success", replace: {:name => location.name.upcase}}
+    rescue LocationError::DisableFailError => e
       flash[:error] = "location." + e.message
-      redirect_to list_locations_path('active')
-    rescue DisableLocation::AlreadyDisabledError => e
-      flash[:error] = { key: "location.already_disabled", replace: {name: location.name.upcase}}
-      redirect_to list_locations_path('active')
+    rescue LocationError::DuplicatedChangeStatusError => e
+      flash[:error] = {key: "location.already_" + action_str + "d", replace: {:name => location.name.upcase}}
+    ensure
+      redirect_to list_locations_path(redirect_page)
     end
   end
 
-  def enable
-    return unless permission_granted? Location.new
-  	begin
-      location_id = params[:location_id]
-      location = Location.find(location_id)
-      AuditLog.location_log("enable", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        location.enable!
-      end
-      flash[:success] = { key: "location.enable_success", replace: {name: location.name.upcase}}
-      redirect_to list_locations_path('inactive')
-    rescue EnableLocation::AlreadyEnabledError => e
-      flash[:error] = { key: "location.already_enabled", replace: {name: location.name.upcase}}
-      redirect_to list_locations_path('inactive')
-    end
-  end
 end

@@ -229,9 +229,12 @@ en:
     status: "Status"
     operation: "Operations"
   confirm_box:
+    add_location: "Confirm to add location"
     add_station: "Confirm to add station"
-    enable_station: "Confirm to enable location %{name}?"
+    enable_station: "Confirm to enable station %{name}?"
     disable_station: "Confirm to disable station %{name}?"
+    enable_location: "Confirm to enable location %{name}?"
+    disable_location: "Confirm to disable location %{name}?"
   machine_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"

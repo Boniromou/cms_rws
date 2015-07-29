@@ -1,11 +1,16 @@
 <%= bread_crumb("fa fa-bank",t("tree_panel.location_management"),t("tree_panel.location")) %>
 
-<%= render partial: "locations/tab_panel", locals: { selected_tab: "active"} %>
+<%= render partial: "locations/tab_panel" %>
 
 <div id="myTabContent1" class="tab-content padding-10">
   <div class="tab-pane fade in active" id="location_content">
+  	<% if @status == "active" %>
+      <%= render partial: "locations/add_form" %>
+    <% end %>
     <%= render :partial => "locations/location_table", locals: { locations: @locations} %>
   </div>
 </div>
+
+<%= render partial: "shared/pop_up_panel" , locals: {form_id: "add_location" }%>
 
 <%= javascript_include_tag "pagination" %>

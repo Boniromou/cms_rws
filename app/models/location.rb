@@ -1,5 +1,6 @@
 class Location < ActiveRecord::Base
   attr_accessible :name, :status
+  validates_uniqueness_of :name
 
   has_many :stations, :dependent => :destroy
 
@@ -11,15 +12,11 @@ class Location < ActiveRecord::Base
     def create_by_name(name)
       verify_location_name(name)
 
-      name_upper = name.upcase
-      
-      location = new
-      location.name = name_upper
-      location.status = STATUS_ACTIVE
-      
-     
-        location.save!
-     
+      begin
+        Location.create!(:name => name.upcase, :status => "active")
+      rescue ActiveRecord::RecordInvalid => ex
+        raise LocationError::AlreadyExistedError, "already_existed" if ex.message == "Validation failed: Name has already been taken"
+      end
     
     end
     
@@ -27,22 +24,8 @@ class Location < ActiveRecord::Base
       Location.find_by_id(id).name
     end
 
-
-    def verify_location_name(name)
-      name_upper = name.upcase
-
-      duplicated_name = false
-
-      self.all.each do | location |
-        if location.name == name_upper
-          duplicated_name = true
-          break
-        end
-      end
-      
-      raise AddLocation::CantBlankError, "cant_blank" if name.nil? || name.blank?
-
-      raise AddLocation::AlreadyExistedError, "already_existed" if duplicated_name
+    def verify_location_name(name)   
+      raise LocationError::CantBlankError, "cant_blank" if name.nil? || name.blank?
     end
   end
 
@@ -52,17 +35,11 @@ class Location < ActiveRecord::Base
     self.stations.active != []
   end
 
-  def disable!
-    raise DisableLocation::DisableFailError, "disable_fail" if has_active_station?
-    raise DisableLocation::AlreadyDisabledError, "already_disabled" if self.status == STATUS_INACTIVE
-  	self.status = STATUS_INACTIVE
-    self.save
-
-  end
-
-  def enable!
-    raise EnableLocation::AlreadyEnabledError, "already_disabled" if self.status == STATUS_ACTIVE
-  	self.status = STATUS_ACTIVE
+  def change_status(target_status)
+    raise LocationError::DisableFailError, "disable_fail" if has_active_station? && target_status == "inactive"
+    raise LocationError::DuplicatedChangeStatusError if self.status == target_status
+    self.status = target_status
     self.save
   end
+
 end

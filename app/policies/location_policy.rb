@@ -7,12 +7,8 @@ class LocationPolicy < ApplicationPolicy
     is_admin? || has_permission?('location', 'list')
   end
 
-  def disable?
-    is_admin? || has_permission?('location', 'disable')
-  end
-
-  def enable?
-    disable?
+  def change_status?
+    return true
   end
 
 end

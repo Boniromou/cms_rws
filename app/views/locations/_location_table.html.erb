@@ -1,30 +1,28 @@
-          <% p policy(Location.new).add? %>
-          <% if @status == 'active' && policy(Location.new).add? %>
-            <%= form_tag(add_location_path, :remote => true, :id => "search_form", :autocomplete => "off", :method => "post") do %>
-              <%= text_field_tag :location_name %>                  
-              <%= submit_tag t("button.add"), :class => "btn btn-primary", :id => "add_location_submit"  %>
-            <% end %>
-
-          <% end %>
           <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
               <th><%= t("location.id")%></th>
               <th><%= t("location.name")%></th>
-              <th><%= t("station.updated_at")%></th>
-              <th><%= t("station.operation")%></th>
+              <th><%= t("location.updated_at")%></th>
+              <th><%= t("location.operation")%></th>
             </thead>
             <tbody>
+                      <% if locations.length > 0 && locations[0].status == "active" 
+                          target_status = "inactive"
+                          action_str = "disable"
+                        else
+                          target_status = "active"
+                          action_str = "enable"
+                        end
+                      %>
               <% locations.each do |location| %>
                 <tr id="location_<%= location.id %>">
                   <td><%= location.id %></td>
                   <td><%= location.name %></td>
                   <td><%= format_time(location.updated_at) %></td>
                   <td>
-                    <% if policy(Location.new).disable? %>
-                      <% if @status == 'active' %>
-                        <%= link_to 'Disable', disable_locations_path + "?location_id=#{location.id}", :id => "disable_location_#{location.id}", :class => "btn btn-primary", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
-                      <% else %>
-                        <%= link_to 'Enable', enable_locations_path + "?location_id=#{location.id}", :id => "enable_location_#{location.id}", :class => "btn btn-primary", :method => "post", :remote => true, data: { confirm: 'Are you sure?' } %> </td>
+                    <% if policy(Location.new).change_status? %>
+                      <% pop_up_btn :id => "change_location_status_" + location.id.to_s, :str => t("button." + action_str), :form_id => "change_location_status", :style => "change_location_status_btn" do %>
+                        <p><%= t("confirm_box." + action_str + "_location", {:name => location.name.upcase }) %></p>
                       <% end %>
                     <% end %>
                   </td>
@@ -32,21 +30,20 @@
               <% end %>
             </tbody>
           </table>
+          <%= form_tag(change_location_status_path, :remote => true, :id => "change_location_status", :style => 'display: none;') do |f|%>
+          <%= hidden_field_tag :location_id, 0 %>
+          <%= hidden_field_tag :target_status, target_status %>
+        <% end %>
 
-             <script>
-            $(document).ready(function() {
-         
+<script>
 
-           $('#location_name').keyup(function(){
-            $("#add_location_submit").attr("disabled", false);
-            
-            if (!$("#location_name").val().match(/\S/))
-            {
-              $("#add_location_submit").attr("disabled", true);
-            }
+  function updateChangeStatusForm(location_id){
+    $('form#change_location_status input#location_id').val(location_id);
+  }
+  
+  $('button.change_location_status_btn').click(function() {
+    location_id = event.target.id.replace("change_location_status_","");
+    updateChangeStatusForm(location_id);
+  });
+</script>
              
-          
-
-       });
-      });
-            </script>

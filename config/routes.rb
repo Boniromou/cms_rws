@@ -57,8 +57,7 @@ CmsRws::Application.routes.draw do
   post 'search_audit_logs' => 'audit_logs#do_search'
 
   get 'list_locations' => 'locations#list'
-  post 'disable_locations' => 'locations#disable'
-  post 'enable_locations' => 'locations#enable'
+  post 'change_location_status' => 'locations#change_status'
   get 'list_locations/:status' => 'locations#list', :as => :list_locations
   post 'add_location' => 'locations#add'
   

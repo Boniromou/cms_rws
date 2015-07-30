@@ -5,6 +5,8 @@
 <script>
   function updateStation() {
     machine_id = getMachineId();
+    if( machine_id == "")
+      return false 
     $.ajax({
       url: '/stations/current/' + machine_id,
       type: 'get',

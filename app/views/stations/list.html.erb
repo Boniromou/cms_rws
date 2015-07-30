@@ -4,8 +4,8 @@
 
 <div id="myTabContent1" class="tab-content padding-10">
   <div class="tab-pane fade in active" id="station_content">
-    <% if @status == "active" %>
-      <%= render partial: "stations/create_form" , locals: {locations: Location.where(:status => "active") }%>
+    <% if policy(Station.new).create? && @status == "active" %>
+      <%= render :partial => "stations/create_form" , locals: {locations: Location.where(:status => "active") }%>
     <% end %>
     <%= render :partial => "stations/station_table", locals: { stations: @stations} %>
   </div>

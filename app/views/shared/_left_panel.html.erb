@@ -99,7 +99,7 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(Location.new).list? %> 
+      <% if policy(Location.new).list? || policy(Station.new).list? %> 
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
           <ul style="display:block;">

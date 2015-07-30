@@ -13,13 +13,13 @@ layout 'cage'
     return unless permission_granted? Location.new
     begin
       AuditLog.location_log("add", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-      Location.create_by_name(params[:location_name])
+      Location.create_by_name(params[:name])
     end
 
-    flash[:success] = {key: "location.add_success", replace: {name: params[:location_name].upcase}}
+    flash[:success] = {key: "location.add_success", replace: {name: params[:name].upcase}}
     redirect_to list_locations_path('active')
     rescue LocationError::AlreadyExistedError => e
-      flash[:error] = { key: "location.already_existed", replace: {name: params[:location_name].upcase}}
+      flash[:error] = { key: "location.already_existed", replace: {name: params[:name].upcase}}
       redirect_to list_locations_path('active')
     rescue LocationError::CantBlankError => e
       flash[:error] = "location." + e.message

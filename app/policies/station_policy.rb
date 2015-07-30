@@ -1,22 +1,22 @@
 class StationPolicy < ApplicationPolicy
   
   def list?
-    return true
+    is_admin? || has_permission?('player', 'list')
   end
 
   def create?
-    return true
+    is_admin? || has_permission?('player', 'create')
   end
   
   def change_status?
-  return true
+    is_admin? || has_permission?('player', 'change_status')
   end
 
   def register?
-  return true
+    is_admin? || has_permission?('player', 'register')
   end
   
   def unregister?
-  return true
+    register?
   end
 end

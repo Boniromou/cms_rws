@@ -7,7 +7,7 @@
                   <section class="smart-form">
                     <label class="label"><%= t("general.location") %></label>
                     <label class="input">
-                      <%= text_field_tag(:location_name) %>
+                      <%= text_field_tag :name %>
                     </label>
                   </section>
                 </div>
@@ -17,7 +17,7 @@
                   <section class="smart-form">
                     <label class="label" style='visibility: hidden;'><%= t("button.add") %></label>
                   </section>
-                  <% pop_up_btn :id => "add_location_confirm", :str => t("button.add"), :form_id => "add_location" do %>
+                  <% pop_up_btn :id => "add_location_confirm", :str => t("button.add"), :form_id => "add_location", :style => "disabled" do %>
                     <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
                       <table>
                         <tr>
@@ -33,7 +33,7 @@
 
 <script type='text/javascript'>
   function updateLocationName(){
-    name = $('form#add_location input#location_name').val()
+    name = $('form#add_location input#name').val()
     $('#pop_up_dialog #location_name').text(name);
   }
   
@@ -42,11 +42,12 @@
   });
 
   $(document).ready(function(){
-    $('#location_name').keyup(function(){
-      $("#add_location_confirm").attr("disabled", false);
-      if (!$("#location_name").val().match(/\S/)){
-        $("#add_location_confirm").attr("disabled", true);
+    $('form#add_location input#name').keyup(function(){
+      $("#add_location_confirm").removeClass("disabled");
+      if (!$('form#add_location input#name').val().match(/\S/)){
+        $("#add_location_confirm").addClass("disabled");
       }
     });
   });
+
 </script>

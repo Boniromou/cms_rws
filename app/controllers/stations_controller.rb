@@ -13,7 +13,7 @@ class StationsController < ApplicationController
     name = params[:name].upcase
     location_id = params[:location_id]
     begin
-      AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.station_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Station.create_by_params(params)
       end
       flash[:success] = {key: "station.add_success", replace: {:name => name, :location => Location.get_name_by_id(location_id)}}

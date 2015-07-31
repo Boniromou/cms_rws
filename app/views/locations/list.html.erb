@@ -4,7 +4,7 @@
 
 <div id="myTabContent1" class="tab-content padding-10">
   <div class="tab-pane fade in active" id="location_content">
-  	<% if @status == "active" %>
+  	<% if @status == "active" && policy(Location.new).add? %>
       <%= render partial: "locations/add_form" %>
     <% end %>
     <%= render :partial => "locations/location_table", locals: { locations: @locations} %>

@@ -26,33 +26,36 @@
                   <td><%= station.updated_at %></td>
                   <td>
                   <div>
-                  <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button." + action_str), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
-                    <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
-                  <% end %>
-                    
-                  <% if station.machine_id.nil? %>
-                    <% pop_up_btn :id => "register_machine_" + station.id.to_s, :str => t("button.register"), :form_id => "register_machine", :style => "register_machine_btn" do %>
-                      <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
-                        <table>
-                          <tr>
-                            <td><p><%= t("machine_id.confirm_reg1") %>&nbsp</p></td>
-                            <td><p id="machine_id"></p></td> 
-                            <td><p>&nbsp<%= t("machine_id.confirm_reg2", {:name => location.name + "-" + station.name}) %></p></td> 
-                          </tr>
-                        </table>
-                      </div>
+                    <% if policy(Station.new).change_status? %>
+                      <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button." + action_str), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
+                        <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
+                      <% end %>
                     <% end %>
-                  <% else %>
-                    <% pop_up_btn :id => "unregister_machine_" + station.id.to_s, :str => t("button.unregister"), :form_id => "unregister_machine", :style => "unregister_machine_btn" do %>
-                      <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
-                        <table>
-                          <tr>
-                            <td><p><%= t("machine_id.confirm_unreg", {:name => station.full_name, :machine_id => station.machine_id}) %></p></td>
-                          </tr>
-                        </table>
-                      </div>
+                    <% if policy(Station.new).register? %>
+                      <% if station.machine_id.nil? %>
+                        <% pop_up_btn :id => "register_machine_" + station.id.to_s, :str => t("button.register"), :form_id => "register_machine", :style => "register_machine_btn" do %>
+                          <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                            <table>
+                              <tr>
+                                <td><p><%= t("machine_id.confirm_reg1") %>&nbsp</p></td>
+                                <td><p id="machine_id"></p></td> 
+                                <td><p>&nbsp<%= t("machine_id.confirm_reg2", {:name => location.name + "-" + station.name}) %></p></td> 
+                              </tr>
+                            </table>
+                          </div>
+                        <% end %>
+                      <% else %>
+                        <% pop_up_btn :id => "unregister_machine_" + station.id.to_s, :str => t("button.unregister"), :form_id => "unregister_machine", :style => "unregister_machine_btn" do %>
+                          <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                            <table>
+                              <tr>
+                                <td><p><%= t("machine_id.confirm_unreg", {:name => station.full_name, :machine_id => station.machine_id}) %></p></td>
+                              </tr>
+                            </table>
+                          </div>
+                        <% end %>
+                      <% end %>
                     <% end %>
-                  <% end %>
                   </div>
                   </td>
                 </tr>

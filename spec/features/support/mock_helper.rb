@@ -5,7 +5,7 @@ module MockHelper
   end
 
   def mock_cage_info
-    @location = "Main Cage - Window #1"
+    @location = "No location"
     @accounting_date = "2015-04-15"
     @shift = "morning"
 

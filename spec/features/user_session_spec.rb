@@ -74,7 +74,7 @@ describe UserSessionsController do
       within '#cage_info' do
         expect(page).to have_content @location
         expect(page).to have_content @accounting_date
-        expect(page).to have_content @shift.capitalize
+        # expect(page).to have_content @shift.capitalize
         expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       end
     end

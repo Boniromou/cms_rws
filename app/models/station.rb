@@ -64,8 +64,10 @@ class Station < ActiveRecord::Base
     def verify_params(params)
       location_id = params[:location_id]
       name = params[:name]
+      location = Location.find(location_id)
       raise StationError::ParamsError, "location.cant_blank" if location_id.nil? || location_id.blank?
       raise StationError::ParamsError, "station.cant_blank" if name.nil? || name.blank?
+      raise StationError::InvalidLocationError, "station.location_invalid" if location.status != "active"
     end
 
     def machine_registered?(machine_id)

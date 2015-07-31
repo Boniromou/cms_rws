@@ -61,6 +61,9 @@ module StationError
 
   class ParamsError < CreateStationError
   end
+
+  class InvalidLocationError < CreateStationError
+  end
   
   class EnableStationError < CageError
   end

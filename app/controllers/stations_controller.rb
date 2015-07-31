@@ -19,6 +19,8 @@ class StationsController < ApplicationController
       flash[:success] = {key: "station.add_success", replace: {:name => name, :location => Location.get_name_by_id(location_id)}}
     rescue StationError::ParamsError => e
       flash[:error] = "station." + e.message
+    rescue StationError::InvalidLocationError
+      flash[:error] = "station.location_invalid"
     rescue StationError::DuplicatedFieldError => e
       flash[:error] = {key: "station.already_existed", replace: {:name => name, :location => Location.get_name_by_id(location_id)}}
     ensure

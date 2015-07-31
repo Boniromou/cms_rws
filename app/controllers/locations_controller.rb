@@ -35,7 +35,7 @@ layout 'cage'
     action_str = CHANGE_STATUS_HELPER[target_status.to_sym][:action_str]
     redirect_page = CHANGE_STATUS_HELPER[target_status.to_sym][:redirect_page]
     begin
-      AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.location_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         location.change_status(target_status)
       end
       flash[:success] = {key: "location." + action_str + "_success", replace: {:name => location.name.upcase}}

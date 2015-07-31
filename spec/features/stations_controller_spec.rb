@@ -25,7 +25,6 @@ describe StationsController do
     end
 
     after(:each) do
-      AuditLog.delete_all
       Station.delete_all
       Location.delete_all
     end
@@ -68,73 +67,96 @@ describe StationsController do
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
 		end
+  end
 
-  	end
+  describe '[23] Add station' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+    end
 
-    describe '[20] Add location' do
-	    before(:each) do
-	      clean_dbs
-	      create_shift_data
-	      mock_cage_info
-	    end
+    after(:each) do
+      AuditLog.delete_all
+      Station.delete_all
+      Location.delete_all
+    end
 
-	    after(:each) do
-	      AuditLog.delete_all
-	      Location.delete_all
-	    end
+    it '[23.1] Add location success', :js => true do
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      login_as_admin
+      visit list_stations_path("active")
+      @station1 = Station.new
+      @station1.name = "STATION1"
+      fill_in "name", :with => @station1.name
+      
+      content_list = [I18n.t("confirm_box.add_station"),@station1.name]
+      click_pop_up_confirm("add_station_confirm", content_list)
 
-	    it '[20.1] Add location success' do
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	@location = Location.new
-	    	@location.name = "test"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+      check_title("tree_panel.station")
+      check_flash_message I18n.t("station.add_success", {location: @location1.name, name: @station1.name})
+      
+      @station1 = Station.find_by_name(@station1.name)
+      station_list = [@station1]
+      permission_list = {:change_status => true, :register => true}
+      check_stations_table_items(station_list,permission_list)
+    end
 
-	    	check_title("tree_panel.location")
-	    	check_flash_message I18n.t("location.add_success", name: @location.name.upcase)
+    it '[23.2] Duplicate station name', :js => true do
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      @station1 = Station.create!(:name => "STATION1", :status => "active", :location_id => @location1.id)
+      login_as_admin
+      visit list_stations_path("active")
+      fill_in "name", :with => @station1.name
+      
+      content_list = [I18n.t("confirm_box.add_station"),@station1.name]
+      click_pop_up_confirm("add_station_confirm",content_list)
 
-	    	test_location = Location.find_by_name(@location.name.upcase)
-	    	expect(test_location).not_to be_nil
-	    	test_location.name = @location.name
-	    end
+      check_title("tree_panel.station")
+      check_flash_message I18n.t("station.already_existed", {name: @station1.name})
+    end
 
-	    it '[20.2] Duplicate location name' do
-	    	Location.create!(:name => "AAA", :status => "active")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	@location = Location.new
-	    	@location.name = "aaa"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+    it '[23.3] Add station with no active location', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      fill_in "name", :with => "station1"
+      confirm_btn = find("button#add_station_confirm")
+      expect(confirm_btn[:class]).to have_content "disabled"	    	
+    end
 
-	    	check_title("tree_panel.location")
-	    	check_flash_message I18n.t("location.already_existed", name: @location.name.upcase)
-	    end
+    it '[23.4] Add station with no station name', :js => true do
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      login_as_admin
+      visit list_stations_path("active")
+      confirm_btn = find("button#add_station_confirm")
+      expect(confirm_btn[:class]).to have_content "disabled"	    	
+    end
 
-	    it '[20.3] Add location with no location name', :js => true do
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	@location = Location.new
-	    	@location.name = " "
-	    	fill_in "location_name", :with => @location.name
-	    	abc = find("#add_location_submit")
-	    	expect(abc[:disabled]).to eq "disabled"	    	
-	    end
+    it '[23.5] add station with disable location', :js => true do
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      login_as_admin
+      visit list_stations_path("active")
+      fill_in "name", :with => "station1"
+      
+      content_list = [I18n.t("confirm_box.add_station"),@station1.name]
+      click_pop_up_confirm("add_station_confirm",content_list)
 
-	    it '[20.4] Unauthorized add location' do
-	    	User.delete_all
-	    	@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
-			set_permission(@test_user,"cashier",:location, ["list"])
-			login_as_admin
-			#login_as_not_admin(@test_user)
-			click_link I18n.t("tree_panel.location")
-			check_title("tree_panel.location")
-	    	expect(page.source).to have_selector("table#datatable_col_reorder")
-			expect(page.source).to_not have_selector("input#location_name")
-			expect(page.source).to_not have_selector("input#add_location_submit")
-			User.delete_all
-	    end
+      check_title("tree_panel.station")
+      check_flash_message I18n.t("station.location_invalid")
+    end
+
+    it '[23.6] Unauthorized add station' do
+      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      set_permission(@test_user,"cashier",:location, ["list"])
+      login_as_admin
+      #login_as_not_admin(@test_user)
+      click_link I18n.t("tree_panel.location")
+      check_title("tree_panel.location")
+        expect(page.source).to have_selector("table#datatable_col_reorder")
+      expect(page.source).to_not have_selector("input#location_name")
+      expect(page.source).to_not have_selector("input#add_location_submit")
+      User.delete_all
+    end
 
 	    it '[20.5] Audit log for add location' do
 	    	login_as_admin

@@ -267,6 +267,16 @@ module StepHelper
       end
     end
   end
+
+  def click_pop_up_confirm(btn_id, content_list)
+    find("div#button_set button##{btn_id}").click
+    within ("div#pop_up_content") do
+      content_list.each do |str|
+        expect(page).to have_content str
+      end
+    end
+    find("div#pop_up_confirm_btn button#confirm").click
+  end
 end
 RSpec.configure do |config|
   config.include StepHelper, type: :feature

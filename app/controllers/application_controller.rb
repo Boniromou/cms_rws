@@ -70,7 +70,8 @@ class ApplicationController < ActionController::Base
     rescue NotAuthorizedError => e
       flash[:alert] = "flash_message.not_authorize"
       respond_to do |format|
-        format.js { render template: "home/unauthorized", formats: [:js] }
+        format.html { render "home/index", formats: [:html] }
+        format.js { render "home/unauthorized", formats: [:js] }
       end
       return false
     end

@@ -8,7 +8,7 @@ class LocationPolicy < ApplicationPolicy
   end
 
   def change_status?
-    return true
+    is_admin? || has_permission?('location', 'change_status')
   end
 
 end

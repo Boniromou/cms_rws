@@ -368,7 +368,7 @@ describe PlayersController do
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
-      expect(page.source).to have_selector("div a#close_to_home")
+      # expect(page.source).to have_selector("div a#close_to_home")
     end
 
     it '[5.2] click unauthorized action', :js => true do 
@@ -421,12 +421,10 @@ describe PlayersController do
       
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
-      expect(page.source).to have_selector("div a#close_to_home")
+      # expect(page.source).to have_selector("div a#close_to_home")
 
-      find("div a#close_to_home").click
-      expect(page).to have_content @location
-      expect(page).to have_content "Waiting for accounting date"
-      expect(page).to have_content "Waiting for shift"
+      click_link I18n.t("tree_panel.home")
+      check_home_page
     end
 
     it '[5.6] unauthorized to all actions' do
@@ -448,7 +446,7 @@ describe PlayersController do
       
       expect(page.source).to_not have_selector("div a#balance_deposit")
       expect(page.source).to_not have_selector("div a#balance_withdraw")
-      expect(page.source).to have_selector("div a#close_to_home")
+      # expect(page.source).to have_selector("div a#close_to_home")
     end
     
     it '[5.7] unathorized to balance enquriy ' do 
@@ -477,7 +475,7 @@ describe PlayersController do
       expect(page).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
-      expect(page.source).to have_selector("div a#close_to_home")
+      # expect(page.source).to have_selector("div a#close_to_home")
     end
   end
   
@@ -759,7 +757,8 @@ describe PlayersController do
       check_profile_page
       check_player_info
 
-      find("div a#close_to_home").click
+      # find("div a#close_to_home").click
+      click_link I18n.t("tree_panel.home")
       check_home_page
     end
       

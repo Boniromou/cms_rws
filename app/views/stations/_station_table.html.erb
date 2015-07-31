@@ -23,7 +23,7 @@
                   <td><%= location.name %></td>
                   <td><%= station.name %></td>
                   <td><%= station.machine_id%></td>
-                  <td><%= station.updated_at %></td>
+                  <td><%= format_time(station.updated_at) %></td>
                   <td>
                   <div>
                     <% if policy(Station.new).change_status? %>

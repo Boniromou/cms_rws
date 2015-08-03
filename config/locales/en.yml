@@ -193,6 +193,7 @@ en:
     audit_action: "Action"
     target: "Target"    
   location:
+    location_name: "Location name"
     active: "Active"
     inactive: "Inactive"
     id: "ID"

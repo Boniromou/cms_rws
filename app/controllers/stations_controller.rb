@@ -39,11 +39,11 @@ class StationsController < ApplicationController
     	AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.change_status(target_status)
       end
-      flash[:success] = {key: "station." + action_str + "_success", replace: {:name => station.name}}
+      flash[:success] = {key: "station." + action_str + "_success", replace: {:name => station.full_name}}
     rescue StationError::EnableFailError => e
       flash[:error] = "station." + e.message
     rescue StationError::AlreadyEnabledError => e
-      flash[:error] = {key: "station.already_" + action_str + "d", replace: {:name => station.name}}
+      flash[:error] = {key: "station.already_" + action_str + "d", replace: {:name => station.full_name}}
     ensure
       redirect_to list_stations_path(redirect_page)
     end
@@ -80,7 +80,7 @@ class StationsController < ApplicationController
     	AuditLog.station_log("unregister", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.unregister
       end
-      flash[:success] = {key: "machine_id.register_success", replace: {:station_name => station.full_name}}
+      flash[:success] = {key: "machine_id.unregister_success", replace: {:station_name => station.full_name}}
     rescue StationError::StationAlreadyUnregisterError => e
       flash[:error] = "machine_id.unregister_fail"
     ensure

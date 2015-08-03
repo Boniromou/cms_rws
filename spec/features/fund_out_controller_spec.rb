@@ -116,8 +116,9 @@ describe FundOutController do
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
       find("div#pop_up_dialog div button#cancel").click
-      find("div#pop_up_dialog")[:style].include?("none").should == true
+      sleep(5)
       find("div#pop_up_dialog")[:class].include?("fadeOut").should == true
+      find("div#pop_up_dialog")[:style].include?("none").should == true   
     end
 
 

@@ -109,7 +109,7 @@ describe FundInController do
 
       find("div#pop_up_dialog div button#cancel").click
       find("div#pop_up_dialog")[:class].include?("fadeOut").should == true
-
+      sleep(5)
       find("div#pop_up_dialog")[:style].include?("none").should == true
       
     end

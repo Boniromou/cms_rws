@@ -155,8 +155,9 @@ describe PlayersController do
       fill_in "datetimepicker_start_time", :with => "abc"
       find("input#search").click
       wait_for_ajax
-      check_player_transaction_result_items([@player_transaction1,@player_transaction2,@player_transaction3])
-      expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
+      check_flash_message I18n.t("report_search.datetime_format_not_valid")
+      expect(page).to_not have_selector("div#wid-id-2")
+      # expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
     end
   end
   

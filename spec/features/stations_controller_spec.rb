@@ -82,7 +82,7 @@ describe StationsController do
       Location.delete_all
     end
 
-    it '[23.1] Add location success', :js => true do
+    it '[23.1] Add station success', :js => true do
       @location1 = Location.create!(:name => "LOCATION1", :status => "active")
       login_as_admin
       visit list_stations_path("active")
@@ -138,7 +138,10 @@ describe StationsController do
       visit list_stations_path("active")
       fill_in "name", :with => "station1"
       
-      content_list = [I18n.t("confirm_box.add_station"),@station1.name]
+      @location1.status = "inactive"
+      @location1.save
+
+      content_list = [I18n.t("confirm_box.add_station"),"station1"]
       click_pop_up_confirm("add_station_confirm",content_list)
 
       check_title("tree_panel.station")
@@ -147,213 +150,354 @@ describe StationsController do
 
     it '[23.6] Unauthorized add station' do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
-      set_permission(@test_user,"cashier",:location, ["list"])
-      login_as_admin
-      #login_as_not_admin(@test_user)
-      click_link I18n.t("tree_panel.location")
-      check_title("tree_panel.location")
-        expect(page.source).to have_selector("table#datatable_col_reorder")
-      expect(page.source).to_not have_selector("input#location_name")
-      expect(page.source).to_not have_selector("input#add_location_submit")
-      User.delete_all
+      set_permission(@test_user,"cashier",:station, ["list"])
+      login_as_not_admin(@test_user)
+      visit home_path
+      click_link I18n.t("tree_panel.station")
+      check_title("tree_panel.station")
+      expect(page.source).to have_selector("table#datatable_col_reorder")
+      expect(page.source).to_not have_selector("form#addstation")
     end
 
-	    it '[20.5] Audit log for add location' do
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	@location = Location.new
-	    	@location.name = "test"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+    it '[23.7] Audit log for add sation', :js => true do
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      login_as_admin
+      visit list_stations_path("active")
+      @station1 = Station.new
+      @station1.name = "STATION1"
+      fill_in "name", :with => @station1.name
+      
+      content_list = [I18n.t("confirm_box.add_station"),@station1.name]
+      click_pop_up_confirm("add_station_confirm", content_list)
 
-	    	audit_log = AuditLog.find_by_audit_target("location")
-      		audit_log.should_not be_nil
-      		audit_log.audit_target.should == "location"
-      		audit_log.action_by.should == @root_user.employee_id
-      		audit_log.action_type.should == "add"
-      		audit_log.action.should == "add"
-      		audit_log.action_status.should == "success"
-      		audit_log.action_error.should be_nil
-      		audit_log.ip.should_not be_nil
-      		audit_log.session_id.should_not be_nil
-      		audit_log.description.should_not be_nil
-	    end
+      check_title("tree_panel.station")
+      check_flash_message I18n.t("station.add_success", {location: @location1.name, name: @station1.name})
 
-	    it '[20.6] Audit log for fail to add location' do
-	    	Location.create!(:name => "AAA", :status => "active")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	@location = Location.new
-	    	@location.name = "aaa"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+      audit_log = AuditLog.find_by_audit_target("station")
+      audit_log.should_not be_nil
+      audit_log.audit_target.should == "station"
+      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_type.should == "create"
+      audit_log.action.should == "create"
+      audit_log.action_status.should == "success"
+      audit_log.action_error.should be_nil
+      audit_log.ip.should_not be_nil
+      audit_log.session_id.should_not be_nil
+      audit_log.description.should_not be_nil
+    end
 
-	    	audit_log = AuditLog.find_by_audit_target("location")
-      		audit_log.should_not be_nil
-      		audit_log.audit_target.should == "location"
-      		audit_log.action_by.should == @root_user.employee_id
-      		audit_log.action_type.should == "add"
-      		audit_log.action.should == "add"
-      		audit_log.action_status.should == "fail"
-      		audit_log.action_error.should_not be_nil
-      		audit_log.ip.should_not be_nil
-      		audit_log.session_id.should_not be_nil
-      		audit_log.description.should_not be_nil
-	    end
+    it '[23.8] Audit log for fail to add sation', :js => true do
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      @station1 = Station.create!(:name => "STATION1", :status => "active", :location_id => @location1.id)
+      login_as_admin
+      visit list_stations_path("active")
+      fill_in "name", :with => @station1.name
+      
+      content_list = [I18n.t("confirm_box.add_station"),@station1.name]
+      click_pop_up_confirm("add_station_confirm",content_list)
+
+      check_title("tree_panel.station")
+      check_flash_message I18n.t("station.already_existed", {name: @station1.name})
+
+      audit_log = AuditLog.find_by_audit_target("station")
+      audit_log.should_not be_nil
+      audit_log.audit_target.should == "station"
+      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_type.should == "create"
+      audit_log.action.should == "create"
+      audit_log.action_status.should == "fail"
+      audit_log.action_error.should_not be_nil
+      audit_log.ip.should_not be_nil
+      audit_log.session_id.should_not be_nil
+      audit_log.description.should_not be_nil
+    end
 	end
 
-	describe '[21] Enable/Disable Location' do
+	describe '[24] Enable/Disable Station' do
 		before(:each) do
-	      clean_dbs
-	      create_shift_data
-	      mock_cage_info
-	    end
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station1 = Station.create!(:name => "STATION1", :status => "active", :location_id => @location1.id, :machine_id => "111122223333JJJJ")
+      @station2 = Station.create!(:name => "STATION2", :status => "inactive", :location_id => @location1.id)
+      @station3 = Station.create!(:name => "STATION3", :status => "active", :location_id => @location2.id)
+      @station4 = Station.create!(:name => "STATION4", :status => "inactive", :location_id => @location2.id)
+    end
 
-	    after(:each) do
-	      AuditLog.delete_all
-	      Location.delete_all
-	    end
+    after(:each) do
+      AuditLog.delete_all
+      Station.delete_all
+      Location.delete_all
+    end
 
-	    it '[21.1] Enable location success' do
-	    	@location = Location.create!(:name => "AAA", :status => "inactive")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.inactive")
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.enable_success", name: @location.name.upcase)
-	    end
+    it '[24.1] Enable stcation success', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      click_link I18n.t("general.inactive")
+      
+      content_list = [I18n.t("confirm_box.enable_station", name: @station2.full_name)]
+      click_pop_up_confirm("change_station_status_" + @station2.id.to_s, content_list)
+      
+      check_flash_message I18n.t("station.enable_success", name: @station2.full_name)
+    end
 
-	    it '[21.2] Enable location fail case' do
-	    	@location = Location.create!(:name => "AAA", :status => "inactive")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.inactive")
-	    	@location.status = "active"
-	    	@location.save!
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.already_enabled", name: @location.name.upcase)
+    it '[24.2] Disable stcation success', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      
+      content_list = [I18n.t("confirm_box.disable_station", name: @station1.full_name)]
+      click_pop_up_confirm("change_station_status_" + @station1.id.to_s, content_list)
+      
+      check_flash_message I18n.t("station.disable_success", name: @station1.full_name)
+    end
 
-	    end
-
-	    it '[21.3] Disable location success' do
-			@location = Location.create!(:name => "AAA", :status => "active")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.disable_success", name: @location.name.upcase)
+    it '[24.3] Enable station fail case', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      click_link I18n.t("general.inactive")
+      @station2.status = "active"
+      @station2.save
+      
+      content_list = [I18n.t("confirm_box.enable_station", name: @station2.full_name)]
+      click_pop_up_confirm("change_station_status_" + @station2.id.to_s, content_list)
+      
+      check_flash_message I18n.t("station.already_enabled", name: @station2.full_name)
 		end
 
-		it '[21.4] Disable location with active station (fail)' do
-			@location = Location.create!(:name => "AAA", :status => "active")
-			@station = Station.create!(:name => "test_station", :location_id => @location.id, :status => "active" )
-			login_as_admin
-	    	visit list_locations_path("active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.disable_fail")
-	    	Station.delete_all
+		it '[24.4] Unauthorized enable/disable station' do
+			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:station,["list","register"])
+
+      visit home_path
+      click_link I18n.t("tree_panel.station")
+      check_title("tree_panel.station")
+      station_list = [@station1,@station3]
+      permission_list = {:change_status => false, :register => true}
+      check_stations_table_items(station_list,permission_list)
 		end
 
-		it '[21.5] Unauthorized enable/disable location' do
+		it '[24.5] Audit log for enable/disable sttion (success case)', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      click_link I18n.t("general.inactive")
+      
+      content_list = [I18n.t("confirm_box.enable_station", name: @station2.full_name)]
+      click_pop_up_confirm("change_station_status_" + @station2.id.to_s, content_list)
+      
+      check_flash_message I18n.t("station.enable_success", name: @station2.full_name)
 
+      audit_log = AuditLog.find_by_audit_target("station")
+      expect(audit_log).to_not be_nil
+      expect(audit_log.audit_target).to eq "station"
+      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "enable"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to be_nil
+      expect(audit_log.ip).to_not be_nil
+      expect(audit_log.session_id).to_not be_nil
+      expect(audit_log.description).to_not be_nil
 		end
 
-		it '[21.6] Audit log for enable/disable location (success case)' do
-			@location = Location.create!(:name => "AAA", :status => "inactive")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.inactive")
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.enable_success", name: @location.name.upcase)
+		it '[24.6] Audit log for enable/disable sttion (fail case)', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      click_link I18n.t("general.inactive")
+      @station2.status = "active"
+      @station2.save
+      
+      content_list = [I18n.t("confirm_box.enable_station", name: @station2.full_name)]
+      click_pop_up_confirm("change_station_status_" + @station2.id.to_s, content_list)
+      
+      check_flash_message I18n.t("station.already_enabled", name: @station2.full_name)
 
-	    	audit_log = AuditLog.find_by_audit_target("location")
-      		expect(audit_log).to_not be_nil
-     		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
-      		expect(audit_log.action_type).to eq "update"
-      		expect(audit_log.action).to eq "enable"
-      		expect(audit_log.action_status).to eq "success"
-      		expect(audit_log.action_error).to be_nil
-      		expect(audit_log.ip).to_not be_nil
-      		expect(audit_log.session_id).to_not be_nil
-      		expect(audit_log.description).to_not be_nil
-
-      		AuditLog.delete_all
-	     	Location.delete_all
-
-      		@location = Location.create!(:name => "BBB", :status => "active")
-	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.disable_success", name: @location.name.upcase)
-
-	    	audit_log = AuditLog.find_by_audit_target("location")
-      		expect(audit_log).to_not be_nil
-     		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
-      		expect(audit_log.action_type).to eq "update"
-      		expect(audit_log.action).to eq "disable"
-      		expect(audit_log.action_status).to eq "success"
-      		expect(audit_log.action_error).to be_nil
-      		expect(audit_log.ip).to_not be_nil
-      		expect(audit_log.session_id).to_not be_nil
-      		expect(audit_log.description).to_not be_nil
+      audit_log = AuditLog.find_by_audit_target("station")
+      expect(audit_log).to_not be_nil
+      expect(audit_log.audit_target).to eq "station"
+      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "enable"
+      expect(audit_log.action_status).to eq "fail"
+      expect(audit_log.action_error).to_not be_nil
+      expect(audit_log.ip).to_not be_nil
+      expect(audit_log.session_id).to_not be_nil
+      expect(audit_log.description).to_not be_nil
 		end
 
-		it '[21.7] Audit log for fail to enable/disable location' do
-			@location = Location.create!(:name => "AAA", :status => "inactive")
-	    	login_as_admin
-	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.inactive")
-	    	@location.status = "active"
-	    	@location.save!
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.already_enabled", name: @location.name.upcase)
-
-	    	audit_log = AuditLog.find_by_audit_target("location")
-      		expect(audit_log).to_not be_nil
-     		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
-      		expect(audit_log.action_type).to eq "update"
-      		expect(audit_log.action).to eq "enable"
-      		expect(audit_log.action_status).to eq "fail"
-      		expect(audit_log.action_error).to_not be_nil
-      		expect(audit_log.ip).to_not be_nil
-      		expect(audit_log.session_id).to_not be_nil
-      		expect(audit_log.description).to_not be_nil
-
-      		AuditLog.delete_all
-	     	Location.delete_all
-
-	     	@location = Location.create!(:name => "AAA", :status => "active")
-			@station = Station.create!(:name => "test_station", :location_id => @location.id, :status => "active" )
-	    	visit list_locations_path("active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.disable_fail")
-	    	Station.delete_all
-
-	    	audit_log = AuditLog.find_by_audit_target("location")
-      		expect(audit_log).to_not be_nil
-     		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
-      		expect(audit_log.action_type).to eq "update"
-      		expect(audit_log.action).to eq "disable"
-      		expect(audit_log.action_status).to eq "fail"
-      		expect(audit_log.action_error).to_not be_nil
-      		expect(audit_log.ip).to_not be_nil
-      		expect(audit_log.session_id).to_not be_nil
-      		expect(audit_log.description).to_not be_nil
+    it '[24.7] Enable station fail when location is disabled', :js => true do
+      @location1.status = "inactive"
+      @location1.save
+      login_as_admin
+      visit list_stations_path("active")
+      click_link I18n.t("general.inactive")
+      
+      content_list = [I18n.t("confirm_box.enable_station", name: @station2.full_name)]
+      click_pop_up_confirm("change_station_status_" + @station2.id.to_s, content_list)
+      
+      check_flash_message I18n.t("station.location_invalid", name: @station2.full_name)
 		end
-
 	end
+	
+  describe '[25] Register/un-register Machine' do
+		before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      @location1 = Location.create!(:name => "LOCATION1", :status => "active")
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station1 = Station.create!(:name => "STATION1", :status => "active", :location_id => @location1.id)
+      @station2 = Station.create!(:name => "STATION2", :status => "inactive", :location_id => @location1.id)
+      @station3 = Station.create!(:name => "STATION3", :status => "active", :location_id => @location2.id)
+      @station4 = Station.create!(:name => "STATION4", :status => "inactive", :location_id => @location2.id)
+    end
 
+    after(:each) do
+      AuditLog.delete_all
+      Station.delete_all
+      Location.delete_all
+    end
+
+    it '[25.1] Register machine (success case)', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      machine_id = "AAAABBBBCCCCDDDD"
+      set_machine_id(machine_id)
+      content_list = [I18n.t("machine_id.confirm_reg1"), machine_id, I18n.t("machine_id.confirm_reg2", name: @station1.full_name)]
+      click_pop_up_confirm("register_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.register_success", station_name: @station1.full_name)
+      @station1.reload
+      expect(@station1.machine_id).to eq machine_id
+    end
+    
+    it '[25.2] Register machine (fail case, station already register)', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      machine_id = "AAAABBBBCCCCDDDD"
+      set_machine_id(machine_id)
+      @station1.machine_id = machine_id
+      @station1.save
+
+      content_list = [I18n.t("machine_id.confirm_reg1"), machine_id, I18n.t("machine_id.confirm_reg2", name: @station1.full_name)]
+      click_pop_up_confirm("register_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.station_already_reg")
+    end
+    
+    it '[25.3] Register machine (fail case, machine_id already register)', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      machine_id = "AAAABBBBCCCCDDDD"
+      set_machine_id(machine_id)
+      @station2.machine_id = machine_id
+      @station2.save
+
+      content_list = [I18n.t("machine_id.confirm_reg1"), machine_id, I18n.t("machine_id.confirm_reg2", name: @station1.full_name)]
+      click_pop_up_confirm("register_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.machine_already_reg")
+    end
+
+		it '[25.4] unauthorized Register machine' do
+			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:station,["list","change_status"])
+
+      visit home_path
+      click_link I18n.t("tree_panel.station")
+      check_title("tree_panel.station")
+      station_list = [@station1,@station3]
+      permission_list = {:change_status => true, :register => false}
+      check_stations_table_items(station_list,permission_list)
+		end
+
+    it '[25.5] Un-Register machine (success case)', :js => true do
+      machine_id = "AAAABBBBCCCCDDDD"
+      @station1.machine_id = machine_id
+      @station1.save
+      login_as_admin
+      visit list_stations_path("active")
+
+      content_list = [I18n.t("machine_id.confirm_unreg", :name => @station1.full_name, :machine_id => machine_id)]
+      click_pop_up_confirm("unregister_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.unregister_success", station_name: @station1.full_name)
+      @station1.reload
+      expect(@station1.machine_id).to be_nil
+    end
+
+    it '[25.6] Un-Register machine ( clase)', :js => true do
+      machine_id = "AAAABBBBCCCCDDDD"
+      @station1.machine_id = machine_id
+      @station1.save
+      login_as_admin
+      visit list_stations_path("active")
+
+      @station1.machine_id = nil
+      @station1.save
+
+      content_list = [I18n.t("machine_id.confirm_unreg", :name => @station1.full_name, :machine_id => machine_id)]
+      click_pop_up_confirm("unregister_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.unregister_fail")
+      @station1.reload
+      expect(@station1.machine_id).to be_nil
+    end
+		
+    it '[25.7] audit log for register machine', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      machine_id = "AAAABBBBCCCCDDDD"
+      set_machine_id(machine_id)
+      content_list = [I18n.t("machine_id.confirm_reg1"), machine_id, I18n.t("machine_id.confirm_reg2", name: @station1.full_name)]
+      click_pop_up_confirm("register_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.register_success", station_name: @station1.full_name)
+      @station1.reload
+      expect(@station1.machine_id).to eq machine_id
+
+      audit_log = AuditLog.find_by_audit_target("station")
+      expect(audit_log).to_not be_nil
+      expect(audit_log.audit_target).to eq "station"
+      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "register"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to be_nil
+      expect(audit_log.ip).to_not be_nil
+      expect(audit_log.session_id).to_not be_nil
+      expect(audit_log.description).to_not be_nil
+		end
+		
+    it '[25.8] audit log for fail to register machine', :js => true do
+      login_as_admin
+      visit list_stations_path("active")
+      machine_id = "AAAABBBBCCCCDDDD"
+      set_machine_id(machine_id)
+      @station1.machine_id = machine_id
+      @station1.save
+
+      content_list = [I18n.t("machine_id.confirm_reg1"), machine_id, I18n.t("machine_id.confirm_reg2", name: @station1.full_name)]
+      click_pop_up_confirm("register_machine_" + @station1.id.to_s, content_list)
+
+      check_flash_message I18n.t("machine_id.station_already_reg")
+
+      audit_log = AuditLog.find_by_audit_target("station")
+      expect(audit_log).to_not be_nil
+      expect(audit_log.audit_target).to eq "station"
+      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "register"
+      expect(audit_log.action_status).to eq "fail"
+      expect(audit_log.action_error).to_not be_nil
+      expect(audit_log.ip).to_not be_nil
+      expect(audit_log.session_id).to_not be_nil
+      expect(audit_log.description).to_not be_nil
+		end
+  end
 
 
 end

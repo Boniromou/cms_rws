@@ -277,6 +277,10 @@ module StepHelper
     end
     find("div#pop_up_confirm_btn button#confirm").click
   end
+
+  def set_machine_id(machine_id)
+    visit page.current_url + "?machine_id=" + machine_id
+  end
 end
 RSpec.configure do |config|
   config.include StepHelper, type: :feature

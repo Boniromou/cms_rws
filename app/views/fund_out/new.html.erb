@@ -4,6 +4,7 @@
 <% content = render partial: "shared/fund_request_form" , :locals => {:fund_request_path => fund_out_path }%>
 <% footer = render "shared/confirm_fund_panel" %>
 <%= render partial:"shared/player_info" , :locals => {:show_balance => true, :back_button => back_button, :content => content, :footer => footer} %>
+<%= render partial: "shared/pop_up_panel" %>
 
 <%= javascript_include_tag "validate.input.js" %>
 <%= javascript_include_tag "block.enter.js" %>

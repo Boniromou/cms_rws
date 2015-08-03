@@ -65,10 +65,8 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => ""
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      find("div#confirm_fund_dialog")[:style].include?("block").should == false
+      find("button#confirm_fund").click
+      find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdrawal")
     end
 
@@ -78,11 +76,9 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 300
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      find("div#confirm_fund_dialog")[:style].include?("block").should == true
-      find("div#confirm_fund_dialog div button#confirm").click
+      find("button#confirm_fund").click
+      find("div#pop_up_dialog")[:style].include?("block").should == true
+      find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
       expect(find("label#player_full_name").text).to eq @player.full_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
@@ -101,34 +97,27 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      find("div#confirm_fund_dialog")[:style].include?("block").should == true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      find("div#pop_up_dialog")[:style].include?("block").should == true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
     end
 
-    it '[7.8] cancel dialog box Withdraw', :js => true do
+    it '[7.8] Cancel dialog box Withdraw', :js => true do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      find("div#confirm_fund_dialog")[:style].include?("block").should == true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      find("div#pop_up_dialog")[:style].include?("block").should == true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
-      find("div#confirm_fund_dialog div button#cancel").click
-      find("div#confirm_fund_dialog")[:style].include?("none").should == true
-      find("div#button_set button#confirm")[:disabled].should be_nil
-      find("a#cancel")[:disabled].should be_nil
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#cancel").click
+      find("div#pop_up_dialog")[:style].include?("none").should == true
+      find("div#pop_up_dialog")[:class].include?("fadeOut").should == true
     end
 
 
@@ -136,16 +125,13 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
-      find("div#confirm_fund_dialog div button#confirm").click
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
       expect(page).to have_selector("table")
       expect(page).to have_selector("button#print_slip")
@@ -156,10 +142,8 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      find("div#confirm_fund_dialog div button#confirm").click
+      find("button#confirm_fund").click
+      find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
@@ -215,11 +199,9 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit fund_out_path + "?member_id=" + @player.member_id
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
+      find("button#confirm_fund").click
       set_permission(@test_user,"cashier",:player_transaction,[])
-      find("div#confirm_fund_dialog div button#confirm").click
+      find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 
       check_home_page
@@ -232,16 +214,13 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
-      find("div#confirm_fund_dialog div button#confirm").click
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#confirm").click
       
       check_title("tree_panel.fund_out")
       expect(page).to have_selector("table")
@@ -253,16 +232,13 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
-      find("div#confirm_fund_dialog div button#confirm").click
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#confirm").click
       
       check_title("tree_panel.fund_out")
       expect(page).to have_selector("table")
@@ -281,16 +257,13 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
-      find("div#confirm_fund_dialog div button#confirm").click
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#confirm").click
       
       check_title("tree_panel.fund_out")
       expect(page).to have_selector("table")
@@ -308,16 +281,13 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => 100
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      expect(find("div#confirm_fund_dialog")[:style].include?("block")).to eq true
-      find("div#button_set button#confirm")[:disabled].should == "disabled"
-      find("a#cancel")[:disabled].should == "disabled"
+      find("button#confirm_fund").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
-      expect(page).to have_selector("div#confirm_fund_dialog div button#confirm")
-      expect(page).to have_selector("div#confirm_fund_dialog div button#cancel")
-      find("div#confirm_fund_dialog div button#confirm").click
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#confirm").click
       
       check_title("tree_panel.fund_out")
       expect(page).to have_selector("table")
@@ -348,10 +318,8 @@ describe FundOutController do
       login_as_admin 
       visit fund_out_path + "?member_id=#{@player.member_id}"
       fill_in "player_transaction_amount", :with => ""
-      within "div#button_set" do
-        click_button I18n.t("button.confirm")
-      end
-      find("div#confirm_fund_dialog")[:style].include?("block").should == false
+      find("button#confirm_fund").click
+      find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdrawal")
     end
   end

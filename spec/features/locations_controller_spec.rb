@@ -160,7 +160,7 @@ describe LocationsController do
       		audit_log.should_not be_nil
       		audit_log.audit_target.should == "location"
       		audit_log.action_by.should == @root_user.employee_id
-      		audit_log.action_type.should == "add"
+      		audit_log.action_type.should == "create"
       		audit_log.action.should == "add"
       		audit_log.action_status.should == "success"
       		audit_log.action_error.should be_nil
@@ -185,7 +185,7 @@ describe LocationsController do
       		audit_log.should_not be_nil
       		audit_log.audit_target.should == "location"
       		audit_log.action_by.should == @root_user.employee_id
-      		audit_log.action_type.should == "add"
+      		audit_log.action_type.should == "create"
       		audit_log.action.should == "add"
       		audit_log.action_status.should == "fail"
       		audit_log.action_error.should_not be_nil

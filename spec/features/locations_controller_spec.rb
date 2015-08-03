@@ -56,8 +56,10 @@ describe LocationsController do
 			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
 			login_as_not_admin(@test_user)
 			set_permission(@test_user,"cashier",:location,[])
-			visit home_path
-			expect(page.source).to_not have_selector("li#nav_location")
+			visit list_locations_path("active")
+      		wait_for_ajax
+      		check_home_page
+      		check_flash_message I18n.t("flash_message.not_authorize")
 			User.delete_all
 
 		end
@@ -70,6 +72,7 @@ describe LocationsController do
       		wait_for_ajax
       		check_home_page
       		check_flash_message I18n.t("flash_message.not_authorize")
+      		User.delete_all
 		end
 
   	end
@@ -86,13 +89,15 @@ describe LocationsController do
 	      Location.delete_all
 	    end
 
-	    it '[20.1] Add location success' do
+	    it '[20.1] Add location success', :js => true do
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	@location = Location.new
 	    	@location.name = "test"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+	    	fill_in "name", :with => @location.name
+
+	    	content_list = [I18n.t("confirm_box.add_location"), @location.name]
+     		click_pop_up_confirm("add_location_confirm", content_list)
 
 	    	check_title("tree_panel.location")
 	    	check_flash_message I18n.t("location.add_success", name: @location.name.upcase)
@@ -102,14 +107,16 @@ describe LocationsController do
 	    	test_location.name = @location.name
 	    end
 
-	    it '[20.2] Duplicate location name' do
+	    it '[20.2] Duplicate location name', :js => true do
 	    	Location.create!(:name => "AAA", :status => "active")
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	@location = Location.new
 	    	@location.name = "aaa"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+	    	fill_in "name", :with => @location.name
+
+	    	content_list = [I18n.t("confirm_box.add_location"), @location.name]
+     		click_pop_up_confirm("add_location_confirm", content_list)
 
 	    	check_title("tree_panel.location")
 	    	check_flash_message I18n.t("location.already_existed", name: @location.name.upcase)
@@ -120,32 +127,34 @@ describe LocationsController do
 	    	visit list_locations_path("active")
 	    	@location = Location.new
 	    	@location.name = " "
-	    	fill_in "location_name", :with => @location.name
-	    	abc = find("#add_location_submit")
-	    	expect(abc[:disabled]).to eq "disabled"	    	
+	    	fill_in "name", :with => @location.name
+	    	expect(find("#add_location_confirm")[:class]).to eq "btn btn-primary disabled"	    	
 	    end
 
 	    it '[20.4] Unauthorized add location' do
 	    	User.delete_all
 	    	@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
 			set_permission(@test_user,"cashier",:location, ["list"])
-			login_as_admin
-			#login_as_not_admin(@test_user)
+			login_as_not_admin(@test_user)
+			visit home_path
 			click_link I18n.t("tree_panel.location")
 			check_title("tree_panel.location")
 	    	expect(page.source).to have_selector("table#datatable_col_reorder")
-			expect(page.source).to_not have_selector("input#location_name")
-			expect(page.source).to_not have_selector("input#add_location_submit")
+			expect(page.source).to_not have_selector("input#name")
+			expect(page.source).to_not have_selector("input#add_location_confirm")
 			User.delete_all
 	    end
 
-	    it '[20.5] Audit log for add location' do
+	    it '[20.5] Audit log for add location', :js => true do
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	@location = Location.new
 	    	@location.name = "test"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+	    	fill_in "name", :with => @location.name
+	    	
+	    	content_list = [I18n.t("confirm_box.add_location"), @location.name]
+     		click_pop_up_confirm("add_location_confirm", content_list)
+     		wait_for_ajax
 
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		audit_log.should_not be_nil
@@ -160,14 +169,17 @@ describe LocationsController do
       		audit_log.description.should_not be_nil
 	    end
 
-	    it '[20.6] Audit log for fail to add location' do
+	    it '[20.6] Audit log for fail to add location', :js => true do
 	    	Location.create!(:name => "AAA", :status => "active")
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	@location = Location.new
 	    	@location.name = "aaa"
-	    	fill_in "location_name", :with => @location.name
-	    	click_button I18n.t("button.add")
+	    	fill_in "name", :with => @location.name
+	    	
+	    	content_list = [I18n.t("confirm_box.add_location"), @location.name]
+     		click_pop_up_confirm("add_location_confirm", content_list)
+     		wait_for_ajax
 
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		audit_log.should_not be_nil
@@ -188,6 +200,7 @@ describe LocationsController do
 	      clean_dbs
 	      create_shift_data
 	      mock_cage_info
+	      Location.delete_all
 	    end
 
 	    after(:each) do
@@ -195,61 +208,89 @@ describe LocationsController do
 	      Location.delete_all
 	    end
 
-	    it '[21.1] Enable location success' do
+	    it '[21.1] Enable location success', :js => true  do
 	    	@location = Location.create!(:name => "AAA", :status => "inactive")
 	    	login_as_admin
 	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.inactive")
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
+	    	click_link I18n.t("general.inactive")	    	
+
+	    	content_list = [I18n.t("confirm_box.enable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
 	    	check_flash_message I18n.t("location.enable_success", name: @location.name.upcase)
 	    end
 
-	    it '[21.2] Enable location fail case' do
+	    it '[21.2] Enable location fail case', :js => true do
 	    	@location = Location.create!(:name => "AAA", :status => "inactive")
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	click_link I18n.t("general.inactive")
+	    	wait_for_ajax
 	    	@location.status = "active"
 	    	@location.save!
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
-	    	check_flash_message I18n.t("location.already_enabled", name: @location.name.upcase)
 
+	    	content_list = [I18n.t("confirm_box.enable_location", {:name => @location.name.upcase })]
+     	 	click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     	 	wait_for_ajax
+
+	    	check_flash_message I18n.t("location.already_enabled", name: @location.name.upcase)
 	    end
 
-	    it '[21.3] Disable location success' do
+	    it '[21.3] Disable location success', :js => true do
 			@location = Location.create!(:name => "AAA", :status => "active")
 	    	login_as_admin
 	    	visit list_locations_path("active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
+	    	
+	    	content_list = [I18n.t("confirm_box.disable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
 	    	check_flash_message I18n.t("location.disable_success", name: @location.name.upcase)
 		end
 
-		it '[21.4] Disable location with active station (fail)' do
+		it '[21.4] Disable location with active station (fail)', :js => true do
 			@location = Location.create!(:name => "AAA", :status => "active")
 			@station = Station.create!(:name => "test_station", :location_id => @location.id, :status => "active" )
 			login_as_admin
 	    	visit list_locations_path("active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
+	    	
+	    	content_list = [I18n.t("confirm_box.disable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
 	    	check_flash_message I18n.t("location.disable_fail")
 	    	Station.delete_all
 		end
 
 		it '[21.5] Unauthorized enable/disable location' do
-
+			User.delete_all
+	    	@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+	    	@location = Location.create!(:name => "AAA", :status => "inactive")
+			set_permission(@test_user,"cashier",:location, ["list"])
+			login_as_not_admin(@test_user)
+			visit home_path
+			click_link I18n.t("tree_panel.location")
+			check_title("tree_panel.location")
+	    	expect(page.source).to have_selector("table#datatable_col_reorder")
+			expect(page.source).to_not have_selector("input#name")
+			expect(page.source).to_not have_selector("input#add_location_confirm")
+			expect(page.source).to_not have_selector("button#change_location_status_#{@location.id.to_s}")
+			User.delete_all
 		end
 
-		it '[21.6] Audit log for enable/disable location (success case)' do
+		it '[21.6] Audit log for enable location (success case)', :js => true do
 			@location = Location.create!(:name => "AAA", :status => "inactive")
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	click_link I18n.t("general.inactive")
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
+	    	
+	    	content_list = [I18n.t("confirm_box.enable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
 	    	check_flash_message I18n.t("location.enable_success", name: @location.name.upcase)
+
 
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		expect(audit_log).to_not be_nil
@@ -263,14 +304,18 @@ describe LocationsController do
       		expect(audit_log.session_id).to_not be_nil
       		expect(audit_log.description).to_not be_nil
 
-      		AuditLog.delete_all
-	     	Location.delete_all
+      	end
+
+      	it '[21.8] Audit log for disable location (success case)', :js => true do
 
       		@location = Location.create!(:name => "BBB", :status => "active")
+      		login_as_admin
 	    	visit list_locations_path("active")
-	    	click_link I18n.t("general.active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
+	    	
+			content_list = [I18n.t("confirm_box.disable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
 	    	check_flash_message I18n.t("location.disable_success", name: @location.name.upcase)
 
 	    	audit_log = AuditLog.find_by_audit_target("location")
@@ -286,15 +331,20 @@ describe LocationsController do
       		expect(audit_log.description).to_not be_nil
 		end
 
-		it '[21.7] Audit log for fail to enable/disable location' do
+		it '[21.7] Audit log for fail to enable location', :js => true do
 			@location = Location.create!(:name => "AAA", :status => "inactive")
 	    	login_as_admin
 	    	visit list_locations_path("active")
 	    	click_link I18n.t("general.inactive")
+	    	wait_for_ajax
 	    	@location.status = "active"
 	    	@location.save!
-	    	str = "#enable_location_" + @location.id.to_s
-	    	find(str).click
+	    	
+			content_list = [I18n.t("confirm_box.enable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
+
 	    	check_flash_message I18n.t("location.already_enabled", name: @location.name.upcase)
 
 	    	audit_log = AuditLog.find_by_audit_target("location")
@@ -308,15 +358,19 @@ describe LocationsController do
       		expect(audit_log.ip).to_not be_nil
       		expect(audit_log.session_id).to_not be_nil
       		expect(audit_log.description).to_not be_nil
+      	end
 
-      		AuditLog.delete_all
-	     	Location.delete_all
+      	it '[21.9] Audit log for fail to disable location', :js => true do
 
 	     	@location = Location.create!(:name => "AAA", :status => "active")
 			@station = Station.create!(:name => "test_station", :location_id => @location.id, :status => "active" )
+	    	login_as_admin
 	    	visit list_locations_path("active")
-	    	str = "#disable_location_" + @location.id.to_s
-	    	find(str).click
+
+	    	content_list = [I18n.t("confirm_box.disable_location", {:name => @location.name.upcase })]
+     		click_pop_up_confirm("change_location_status_#{@location.id.to_s}", content_list)
+     		wait_for_ajax
+
 	    	check_flash_message I18n.t("location.disable_fail")
 	    	Station.delete_all
 

@@ -53,15 +53,15 @@ describe StationsController do
 		it '[22.3] Unauthorized list active/inactive station', js: true do
 			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
 			login_as_not_admin(@test_user)
-			set_permission(@test_user,"cashier",:location,[])
+			set_permission(@test_user,"cashier",:station,[])
 			visit home_path
 			expect(page.source).to_not have_selector("li#nav_station")
 		end
 
-		it '[22.4] Click link to the list location page', js: true do
+		it '[22.4] Click link to the list station page', js: true do
 			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
-      set_permission(@test_user,"cashier",:player,[])
+      set_permission(@test_user,"cashier",:station,[])
       visit list_stations_path("active")
       wait_for_ajax
       check_home_page

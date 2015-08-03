@@ -3,9 +3,10 @@
 </div>
 
 <script type='text/javascript'>
-  $('#<%= btn_id %>').click(function() {
+ $('#<%= btn_id %>').click(function() {
+  if (<%= form_valid_function %>){
     registerPopUpPanel('#<%= form_id %>','<%= content %>');
-
+    }
     return false;
   });
 

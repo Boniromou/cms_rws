@@ -44,7 +44,8 @@ module ViewsHelper
     btn_str = params[:str]
     form_id = params[:form_id]
     style = params[:style] || ""
+    form_valid_function = params[:form_valid_function] || "true"
     c = capture(&block).to_s.gsub("\n","").html_safe
-    concat render partial: "shared/pop_up_btn" , locals: {:btn_id => btn_id,:btn_str => btn_str, :form_id => form_id, :style => style, :content => c }
+    concat render partial: "shared/pop_up_btn" , locals: {:btn_id => btn_id,:btn_str => btn_str, :form_id => form_id, :style => style, :form_valid_function => form_valid_function, :content => c }
   end
 end

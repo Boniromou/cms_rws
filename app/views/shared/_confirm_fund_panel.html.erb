@@ -1,6 +1,6 @@
 <div id="button_set">
   <%= close_to_balance %>
-  <% pop_up_btn :id => "confirm", :str => t("button.confirm"), :form_id => "confirm_fund", :style => "confirm_fund_btn", :form_valid_function => "formValid()" do %>
+  <% pop_up_btn :id => "confirm_fund", :str => t("button.confirm"), :form_id => "fund_request", :style => "confirm_fund_btn", :form_valid_function => "formValid()" do %>
     <p><%= t("deposit_withdrawal."+@operation+"_amt") %></p>
     <p style="font-size: 18px;" id="fund_amt"></p>
   <% end %>
@@ -26,7 +26,7 @@
     $("label.invisible_error").css('visibility', 'hidden');
   }
 
-  $('#confirm').click(function() {
+  $('#confirm_fund').click(function() {
     if( formValid()){
       hideError();
             

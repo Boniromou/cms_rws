@@ -184,6 +184,7 @@ en:
     no_transaction_found: "No transaction found."
     limit_remark: "The search date range is limited to 30 days."
     datetime_error: "The start date must be earlier than the end date"
+    datetime_format_not_valid: "Datetime format is not correct!"
   auditlog:
     audit_time: "Time"
     audit_action_by: "Action by"
@@ -196,7 +197,7 @@ en:
     location_name: "Location name"
     active: "Active"
     inactive: "Inactive"
-    id: "ID"
+    location_id: "Location ID"
     name: "Name"
     updated_at: "Updated at"
     operations: "Operations"

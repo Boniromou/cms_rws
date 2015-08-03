@@ -27,7 +27,7 @@ class PlayerTransactionsController < ApplicationController
     rescue SearchPlayerTransaction::DateTimeError => e
       flash[:error] = "report_search." + e.message
     rescue ArgumentError 
-      flash[:error] = "Datetime format is not correct"
+      flash[:error] = "report_search.datetime_format_not_valid"
     end
 
     respond_to do |format|

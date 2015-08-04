@@ -7,9 +7,9 @@ class AddLocationMachineidToStation < ActiveRecord::Migration
   end
 
   def down
+    execute "ALTER TABLE stations DROP FOREIGN KEY fk_location_id;"
     remove_column :stations, :machine_id
     remove_column :stations, :location_id
     
-    execute "ALTER TABLE stations DROP FOREIGN KEY fk_location_id;"
   end
 end

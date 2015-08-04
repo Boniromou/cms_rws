@@ -15,6 +15,7 @@ class InsertInitData < ActiveRecord::Migration
   end
 
   def down
+    PlayerTransaction.delete_all
     Shift.delete_all
     ShiftType.delete_all
     AccountingDate.delete_all

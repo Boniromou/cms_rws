@@ -254,7 +254,7 @@ module StepHelper
     expect(item[0].text).to eq station.id.to_s
     expect(item[1].text).to eq station.location.name
     expect(item[2].text).to eq station.name
-    expect(item[3].text).to eq station.machine_id || ""
+    expect(item[3].text).to eq station.terminal_id || ""
     expect(item[4].text).to eq station.updated_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     within item[5] do
       if permission_list[:change_status]
@@ -262,7 +262,7 @@ module StepHelper
       end
       if permission_list[:register]
         btn_prefix = ""
-        btn_prefix = "un" unless station.machine_id.nil?
+        btn_prefix = "un" unless station.terminal_id.nil?
         expect(page.source).to have_selector("button##{btn_prefix}register_machine_#{station.id}")
       end
     end
@@ -278,8 +278,8 @@ module StepHelper
     find("div#pop_up_confirm_btn button#confirm").click
   end
 
-  def set_machine_id(machine_id)
-    visit page.current_url + "?machine_id=" + machine_id
+  def set_terminal_id(terminal_id)
+    visit page.current_url + "?terminal_id=" + terminal_id
   end
 end
 RSpec.configure do |config|

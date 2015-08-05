@@ -1,5 +1,5 @@
 function getMachineId(){
   params= window.location.search.replace("?", "");
-  machine_id = params.replace("machine_id=","");
-  return machine_id;
+  terminal_id = params.replace("terminal_id=","");
+  return terminal_id;
 }

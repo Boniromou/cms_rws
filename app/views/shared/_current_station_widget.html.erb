@@ -4,11 +4,11 @@
 
 <script>
   function updateStation() {
-    machine_id = getMachineId();
-    if( machine_id == "")
+    terminal_id = getMachineId();
+    if( terminal_id == "")
       return false 
     $.ajax({
-      url: '/stations/current/' + machine_id,
+      url: '/stations/current/' + terminal_id,
       type: 'get',
       success: function(data) {
         $('.station_widget').each(function(index, element) {

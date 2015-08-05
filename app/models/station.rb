@@ -1,5 +1,5 @@
 class Station < ActiveRecord::Base
-  attr_accessible :name, :location_id, :machine_id, :status
+  attr_accessible :name, :location_id, :terminal_id, :status
   validates_uniqueness_of :name, :scope => :location_id
 
   belongs_to :location
@@ -14,16 +14,16 @@ class Station < ActiveRecord::Base
     self.save
   end
 
-  def register(machine_id)
-    raise StationError::StationAlreadyRegisterError, "already_register" unless self.machine_id.nil?
-    raise StationError::MachineAlreadyRegisterError, "machine_already_register" if Station.machine_registered?(machine_id)
-    self.machine_id = machine_id
+  def register(terminal_id)
+    raise StationError::StationAlreadyRegisterError, "already_register" unless self.terminal_id.nil?
+    raise StationError::MachineAlreadyRegisterError, "machine_already_register" if Station.machine_registered?(terminal_id)
+    self.terminal_id = terminal_id
     self.save
   end
 
   def unregister
-    raise StationError::StationAlreadyUnregisterError, "already_unregister" if self.machine_id.nil?
-    self.machine_id = nil
+    raise StationError::StationAlreadyUnregisterError, "already_unregister" if self.terminal_id.nil?
+    self.terminal_id = nil
     self.save
   end
 
@@ -42,8 +42,8 @@ class Station < ActiveRecord::Base
       Station.find_by_id(id).name
     end
 
-    def get_full_name_by_machine_id(machine_id)
-      station = Station.find_by_machine_id(machine_id)
+    def get_full_name_by_terminal_id(terminal_id)
+      station = Station.find_by_terminal_id(terminal_id)
       return "no station" if station.nil?
       station.full_name
     end
@@ -70,8 +70,8 @@ class Station < ActiveRecord::Base
       raise StationError::InvalidLocationError, "station.location_invalid" if location.status != "active"
     end
 
-    def machine_registered?(machine_id)
-      result = self.find_by_machine_id(machine_id)
+    def machine_registered?(terminal_id)
+      result = self.find_by_terminal_id(terminal_id)
       return !result.nil?
     end
   end

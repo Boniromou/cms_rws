@@ -52,18 +52,18 @@ class StationsController < ApplicationController
 
   def register
     return unless permission_granted? Station.new
-    machine_id = params[:machine_id]
+    terminal_id = params[:terminal_id]
     station_id = params[:station_id]
     station = Station.find(station_id)
     begin
     	AuditLog.station_log("register", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        station.register(machine_id)
+        station.register(terminal_id)
       end
-      flash[:success] = {key: "machine_id.register_success", replace: {:station_name => station.full_name}}
+      flash[:success] = {key: "terminal_id.register_success", replace: {:station_name => station.full_name}}
     rescue StationError::StationAlreadyRegisterError => e
-      flash[:error] = "machine_id.station_already_reg"
+      flash[:error] = "terminal_id.station_already_reg"
     rescue StationError::MachineAlreadyRegisterError => e
-      flash[:error] = "machine_id.machine_already_reg"
+      flash[:error] = "terminal_id.machine_already_reg"
     ensure
       if station.status == "active"
         redirect_to list_stations_path("active")
@@ -81,17 +81,17 @@ class StationsController < ApplicationController
     	AuditLog.station_log("unregister", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.unregister
       end
-      flash[:success] = {key: "machine_id.unregister_success", replace: {:station_name => station.full_name}}
+      flash[:success] = {key: "terminal_id.unregister_success", replace: {:station_name => station.full_name}}
     rescue StationError::StationAlreadyUnregisterError => e
-      flash[:error] = "machine_id.unregister_fail"
+      flash[:error] = "terminal_id.unregister_fail"
     ensure
       redirect_to list_stations_path(station.status)
     end
   end
   
   def current
-    machine_id = params[:machine_id]
-    @current_station = Station.get_full_name_by_machine_id(machine_id)
+    terminal_id = params[:terminal_id]
+    @current_station = Station.get_full_name_by_terminal_id(terminal_id)
     respond_to do |format|
       format.html { render "stations/current", :layout => false }
     end

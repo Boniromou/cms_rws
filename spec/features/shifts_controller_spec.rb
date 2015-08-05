@@ -94,7 +94,7 @@ describe ShiftsController do
 
       visit shifts_path
       expect(page).to_not have_content I18n.t("tree_panel.roll_shift")
-      expect(current_path).to eq home_path
+      check_home_page
     end
 
     it '[9.1] successfully roll shift (morning to swing)', js: true do

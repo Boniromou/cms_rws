@@ -62,8 +62,8 @@ class StationsController < ApplicationController
       flash[:success] = {key: "terminal_id.register_success", replace: {:station_name => station.full_name}}
     rescue StationError::StationAlreadyRegisterError => e
       flash[:error] = "terminal_id.station_already_reg"
-    rescue StationError::MachineAlreadyRegisterError => e
-      flash[:error] = "terminal_id.machine_already_reg"
+    rescue StationError::TerminalAlreadyRegisterError => e
+      flash[:error] = "terminal_id.terminal_already_reg"
     ensure
       if station.status == "active"
         redirect_to list_stations_path("active")

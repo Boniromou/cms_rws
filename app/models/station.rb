@@ -16,7 +16,7 @@ class Station < ActiveRecord::Base
 
   def register(terminal_id)
     raise StationError::StationAlreadyRegisterError, "already_register" unless self.terminal_id.nil?
-    raise StationError::MachineAlreadyRegisterError, "machine_already_register" if Station.machine_registered?(terminal_id)
+    raise StationError::TerminalAlreadyRegisterError, "terminal_already_register" if Station.terminal_registered?(terminal_id)
     self.terminal_id = terminal_id
     self.save
   end
@@ -70,7 +70,7 @@ class Station < ActiveRecord::Base
       raise StationError::InvalidLocationError, "station.location_invalid" if location.status != "active"
     end
 
-    def machine_registered?(terminal_id)
+    def terminal_registered?(terminal_id)
       result = self.find_by_terminal_id(terminal_id)
       return !result.nil?
     end

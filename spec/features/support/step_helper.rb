@@ -263,7 +263,7 @@ module StepHelper
       if permission_list[:register]
         btn_prefix = ""
         btn_prefix = "un" unless station.terminal_id.nil?
-        expect(page.source).to have_selector("button##{btn_prefix}register_machine_#{station.id}")
+        expect(page.source).to have_selector("button##{btn_prefix}register_terminal_#{station.id}")
       end
     end
   end

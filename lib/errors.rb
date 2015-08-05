@@ -80,7 +80,7 @@ module StationError
   class StationAlreadyRegisterError < RegisterError
   end
 
-  class MachineAlreadyRegisterError < RegisterError
+  class TerminalAlreadyRegisterError < RegisterError
   end
   
   class StationAlreadyUnregisterError < RegisterError

@@ -4,4 +4,3 @@
 //=require bootstrap/bootstrap.min
 //=require plugin/jquery-validate/jquery.validate.min
 //=require plugin/masked-input/jquery.maskedinput.min
-//=require app.min

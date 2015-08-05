@@ -1,6 +1,7 @@
 class StationsController < ApplicationController
   layout 'cage'
   skip_before_filter :check_session_expiration, :authenticate_user!, :only => :current
+  include StationHelper
 
   def list
     return unless permission_granted? Station.new
@@ -33,8 +34,8 @@ class StationsController < ApplicationController
     target_status = params[:target_status]
     station_id = params[:station_id]
     station = Station.find(station_id)
-    action_str = CHANGE_STATUS_HELPER[target_status.to_sym][:action_str]
-    redirect_page = CHANGE_STATUS_HELPER[target_status.to_sym][:redirect_page]
+    action_str = STATUS_HELPER[target_status.to_sym][:action_str]
+    redirect_page = STATUS_HELPER[target_status.to_sym][:opposite]
     begin
     	AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.change_status(target_status)

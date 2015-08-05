@@ -8,14 +8,10 @@
               <th><%= t("station.operation")%></th>
             </thead>
             <tbody>
-                      <% if stations.length > 0 && stations[0].status == "active" 
-                          target_status = "inactive"
-                          action_str = "disable"
-                        else
-                          target_status = "active"
-                          action_str = "enable"
-                        end
-                      %>
+              <% if stations.length > 0 %> 
+                <% target_status = StationHelper::STATUS_HELPER[stations[0].status.to_sym][:opposite] %>
+                <% action_str = StationHelper::STATUS_HELPER[target_status.to_sym][:action_str] %>
+              <% end %>
               <% stations.each do |station| %>
                 <tr id="station_<%= station.id %>">
                   <% location = Location.find(station.location_id) %>

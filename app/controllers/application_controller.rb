@@ -9,11 +9,6 @@ class ApplicationController < ActionController::Base
 
   rescue_from Exception, :with => :handle_fatal_error
 
-  CHANGE_STATUS_HELPER = { 
-    :active => { :action_str => "enable", :redirect_page => "inactive"},
-    :inactive => { :action_str => "disable", :redirect_page => "active"}
-    }
-
   def client_ip
     if Rails.env.development?
       request.remote_ip

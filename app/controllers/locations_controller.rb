@@ -1,6 +1,6 @@
 class LocationsController < ApplicationController
 layout 'cage'
-  include FormattedTimeHelper
+  include StationHelper
 
   def list
     return unless permission_granted? Location.new
@@ -32,8 +32,8 @@ layout 'cage'
     target_status = params[:target_status]
     location_id = params[:location_id]
     location = Location.find(location_id)
-    action_str = CHANGE_STATUS_HELPER[target_status.to_sym][:action_str]
-    redirect_page = CHANGE_STATUS_HELPER[target_status.to_sym][:redirect_page]
+    action_str = STATUS_HELPER[target_status.to_sym][:action_str]
+    redirect_page = STATUS_HELPER[target_status.to_sym][:opposite]
     begin
       AuditLog.location_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         location.change_status(target_status)

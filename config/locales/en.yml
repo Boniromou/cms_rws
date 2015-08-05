@@ -12,8 +12,6 @@ en:
     unauthenticated: You need to sign in or sign up before continuing
     account_no_role: Your account is not ready to use, please contact the System Administrator.
     caps_lock: The Caps Lock is turn ON
-    out_of_date_range: The search date range is limited to 30 days
-    date_not_valid: The start date must be earlier than the end date
   tree_panel:
     cage: "Cage"
     home: "Home"
@@ -194,7 +192,7 @@ en:
     audit_action: "Action"
     target: "Target"    
   location:
-    location_name: "Location name"
+    location: "Cage Location"
     active: "Active"
     inactive: "Inactive"
     location_id: "Location ID"
@@ -206,10 +204,8 @@ en:
     already_existed: "The location [%{name}] is already exist."
     cant_blank: "Location can not be blank"
     disable_success: "Disable loacation [%{name}] successful"
-    disable_confirm_msg: "Are you sure to Disable location: [%{name}?]"
     disable_fail: "You cannot disable this location while there are active stations under this location"
     enable_success: "Enable location [%{name}] successful"
-    enable_confirm_msg: "Are you sure to Enable location: [%{name}?]"
     already_enabled: "The location [%{name}] is already enabled"
     already_disabled: "The location [%{name}] is already disabled"
     enable: "Enable"
@@ -227,7 +223,7 @@ en:
     location: "Cage Location"
     station: "Station"
     machine: "Machine"
-    updated_at: "Update at"
+    updated_at: "Updated at"
     status: "Status"
     operation: "Operations"
   confirm_box:

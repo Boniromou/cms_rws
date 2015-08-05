@@ -1,4 +1,4 @@
-<article class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+<article class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
   <div class="jarviswidget jarviswidget-color-blueDark jarviswidget-sortable" id="wid-id-12" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" role="widget">
     <header role="heading">
       <span class="widget-icon"> <i class="glyphicon glyphicon-user"></i> </span>
@@ -14,20 +14,20 @@
         </div>
       <div class="widget-body">
         <div class="row">
-          <label class="col-xs-3 box"><strong><%= t("general.card_id")%> :</strong></label>
-          <label class="col-xs-3 box"><%= label_tag :player_card_id, @player.card_id, :id => "player_card_id" %></label>
+          <div><label class="col-xs-3 box"><strong><%= t("general.card_id")%> :</strong></label></div>
+          <div><label class="col-xs-3 box"><%= label_tag :player_card_id, @player.card_id, :id => "player_card_id" %></label></div>
         </div>
         <div class="row">
-          <label class="col-xs-3 box"><strong><%= t("general.member_id")%> :</strong></label>
-          <label class="col-xs-3 box"><%= label_tag :player_member_id, @player.member_id, :id => "player_member_id" %></label>
+          <div><label class="col-xs-3 box"><strong><%= t("general.member_id")%> :</strong></label></div>
+          <div><label class="col-xs-3 box"><%= label_tag :player_member_id, @player.member_id, :id => "player_member_id" %></label></div>
         </div>
         <div class="row">
-          <label class="col-xs-3 box"><strong><%= t("general.status")%> :</strong></label>
-          <label class="col-xs-3 box">
+          <div><label class="col-xs-3 box"><strong><%= t("general.status")%> :</strong></label></div>
+          <div><label class="col-xs-3 box">
             <span class="badge <%= @player.account_locked? ? "bg-color-red" : "bg-color-greenLight"  %>">
               <%= label_tag :player_status, t("player_status.#{@player.status}"), :id => "player_status" %>
             </span>
-          </label>
+          </label></div>
         </div>
         <%= content %>
         </br>

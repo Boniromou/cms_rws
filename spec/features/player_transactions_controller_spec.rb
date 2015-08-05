@@ -159,6 +159,36 @@ describe PlayersController do
       expect(page).to_not have_selector("div#wid-id-2")
       # expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
     end
+
+    it '[8.11] search data out of range', js: true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
+
+      fill_in "datetimepicker_start_time", :with => (Time.now - 2592300)
+      fill_in "datetimepicker_end_time", :with => (Time.now)
+      find("input#search").click
+      wait_for_ajax
+
+      check_flash_message I18n.t("report_search.limit_remark")
+      expect(page).to_not have_selector("div#wid-id-2")
+    end
+
+    it '[8.12] search data incorrect time period', js: true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
+
+      fill_in "datetimepicker_start_time", :with => (Time.now)
+      fill_in "datetimepicker_end_time", :with => (Time.now - 1000)
+      find("input#search").click
+      wait_for_ajax
+
+      check_flash_message I18n.t("report_search.datetime_error")
+      expect(page).to_not have_selector("div#wid-id-2")
+    end
   end
   
   describe '[16] Print Transaction report' do

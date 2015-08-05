@@ -259,9 +259,8 @@ describe PlayersController do
       check_title("tree_panel.create_player")
       check_flash_message I18n.t("create_player.card_id_exist", card_id: @player.card_id)
     end
-  end
 
-      it '[3.14] empty Player last name' do
+    it '[3.14] empty Player last name' do
       login_as_admin
       visit new_player_path
       @player = Player.new
@@ -277,6 +276,7 @@ describe PlayersController do
       check_title("tree_panel.create_player")
       check_flash_message I18n.t("create_player.last_name_blank_error")
     end
+  end
   
   describe '[4] Search player by membership ID' do
     before(:each) do

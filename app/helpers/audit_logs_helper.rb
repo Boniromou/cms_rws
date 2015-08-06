@@ -53,6 +53,8 @@ module AuditLogsHelper
         "button.unregister"
       when "register"
         "button.register"
+      when "add"
+        "button.add"
       else
         nil
     end

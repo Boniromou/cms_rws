@@ -257,8 +257,10 @@ describe StationsController do
       login_as_admin
       visit list_stations_path("active")
       click_link I18n.t("general.inactive")
+      sleep(5 )
       @station2.status = "active"
       @station2.save
+      
       
       content_list = [I18n.t("confirm_box.enable_station", name: @station2.full_name)]
       click_pop_up_confirm("change_station_status_" + @station2.id.to_s, content_list)

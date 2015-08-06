@@ -8,6 +8,7 @@ module ShiftHelper
     Station.delete_all
     AuditLog.delete_all
     Player.delete_all
+    Location.delete_all
   end
 
   def create_shift_data

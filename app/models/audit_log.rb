@@ -12,7 +12,18 @@ class AuditLog < ActiveRecord::Base
                  :player_transaction => { :all => "general.all",
                                           :print => "transaction_history.print" },
                  :shift => { :all => "general.all",
-                             :roll_shift => "shift.roll" }}
+                             :roll_shift => "shift.roll" },
+                 :location => { :all => "general.all",
+                                :create => "button.create",
+                                :enable => "button.enable",
+                                :disable => "button.disable"},
+                 :station => { :all => "general.all",
+                               :create => "button.create",
+                               :enable => "button.enable",
+                               :disable => "button.disable",
+                               :register => "button.register",
+                               :unregister => "button.unregister"}
+  }
 
   ACTION_TYPE_LIST = { 
     :player => {:create => "create", :deposit => "update", :withdrawal => "update", :edit => "update", :lock => "update", :unlock => "update"},

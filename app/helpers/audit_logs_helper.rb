@@ -45,12 +45,14 @@ module AuditLogsHelper
         "player.lock"
       when "unlock"
         "player.unlock"
-      when "add"
-        "location.add"
       when "enable"
-        "location.enable"
+        "button.enable"
       when "disable"
-        "location.disable"
+        "button.disable"
+      when "unregister"
+        "button.unregister"
+      when "register"
+        "button.register"
       else
         nil
     end

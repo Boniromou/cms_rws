@@ -87,7 +87,7 @@
       <% end %>
       <% if policy(AuditLog.new).search? %>
         <li>
-          <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
           <ul style="display:block;">
             <% if policy(AuditLog.new).search? %>
               <li id="nav_audit_log">
@@ -101,7 +101,7 @@
       <% end %>
       <% if policy(Location.new).list? || policy(Station.new).list? %> 
         <li>
-          <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-map-marker"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
           <ul style="display:block;">
             <% if policy(Location.new).list? %>
               <li id="nav_location">

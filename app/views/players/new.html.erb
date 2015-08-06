@@ -9,7 +9,7 @@
             <%= f.label :card_id, t("general.card_id") %>:
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-2'>
           <label class='input'>
             <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, CARD_ID_LENGTH_LIMIT)' %>
           </label>
@@ -26,7 +26,7 @@
             <%= f.label :first_name, t("general.first_name") %>:
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-2'>
           <label class='input'>
             <%= f.text_field :first_name %>
           </label>
@@ -43,7 +43,7 @@
             <%= f.label :last_name, t("general.last_name") %>:
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-2'>
           <label class='input'>
             <%= f.text_field :last_name %>
           </label>
@@ -60,7 +60,7 @@
             <%= f.label :member_id, t("general.member_id") %>:
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-2'>
           <label class='input'>
             <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, MEMBER_ID_LENGTH_LIMIT)' %>
           </label>
@@ -73,7 +73,7 @@
       </div>
       
       <div class='row'>
-        <div class='col col-5'>
+        <div class='col col-4'>
           <footer>
             <%= f.submit t("button.create"), class: 'btn btn-primary', id: 'create_player_submit' %>
           </footer>

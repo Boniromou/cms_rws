@@ -88,7 +88,7 @@
   }
   
   $('button.register_terminal_btn').click(function() {
-    terminal_id = getTerminalId();
+    terminal_id = getTerminalID();
     station_id = event.target.id.replace("register_terminal_","");
     updateTerminalId(station_id,terminal_id);
   });

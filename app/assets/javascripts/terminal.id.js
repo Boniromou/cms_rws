@@ -1,5 +1,6 @@
-function getTerminalId(){
-  params= window.location.search.replace("?", "");
-  terminal_id = params.replace("terminal_id=","");
-  return terminal_id;
+function getTerminalID()
+{ 
+	var fp = new Fingerprint();
+ 	var terminalID = fp.get();
+   	return terminalID;
 }

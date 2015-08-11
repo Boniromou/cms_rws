@@ -26,15 +26,19 @@ class Requester::Standard < Requester::Base
     parse_get_player_balance_response(response)
   end
 
-  def deposit(login_name, amount, ref_trans_id, trans_date)
+  def deposit(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, employee_id)
     response = remote_rws_call('post', "#{@path}/#{get_api_name(:deposit)}", :body => {:login_name => login_name, :amt => amount,
-                                                                                       :ref_trans_id => ref_trans_id, :trans_date => trans_date})
+                                                                                       :ref_trans_id => ref_trans_id, :trans_date => trans_date,
+                                                                                       :shift_id => shift_id, :device_id => station_id,
+                                                                                       :issuer_id => employee_id})
     parse_deposit_response(response)
   end
 
   def withdraw(login_name, amount, ref_trans_id, trans_date)
     response = remote_rws_call('post', "#{@path}/#{get_api_name(:withdraw)}", :body => {:login_name => login_name, :amt => amount,
-                                                                                        :ref_trans_id => ref_trans_id, :trans_date => trans_date})
+                                                                                        :ref_trans_id => ref_trans_id, :trans_date => trans_date,
+                                                                                        :shift_id => shift_id, :device_id => station_id,
+                                                                                        :issuer_id => employee_id})
     parse_withdraw_response(response)
   end
 

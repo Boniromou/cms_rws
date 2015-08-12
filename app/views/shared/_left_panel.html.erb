@@ -15,8 +15,8 @@
     -->
 
     <ul style>
-      <li id="nav_home">
-        <%= link_to home_path, :title => t("tree_panel.home") , :remote => true do %>
+      <li id="nav_home" style="background: rgba(69,69,69,0.6);padding: 7px 0">
+        <%= link_to home_path, :title => t("tree_panel.home") , :id => "home_link", :remote => true do %>
           <i class="fa fa-lg fa-home"></i>
           <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
@@ -43,7 +43,7 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(Player.new).balance? || policy(PlayerTransaction.new).search? %>
+      <% if policy(Player.new).balance? || policy(PlayerTransaction.instance).search? %>
         <li>
           <a href="#" class="unlink"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
           <ul style="display:block;">
@@ -54,7 +54,7 @@
                 <% end %>
               </li>
             <% end %>
-            <% if policy(PlayerTransaction.new).search? %>
+            <% if policy(PlayerTransaction.instance).search? %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
@@ -122,7 +122,7 @@
       <% end %>
     </ul>
   </nav>
-  <span class="minifyme" data-action="minifyMenu">
+  <span class="minifyme" data-action="minifyMenu" id="miniMenu">
     <i class="fa fa-arrow-circle-left hit"></i>
   </span>
 </aside>
@@ -142,7 +142,7 @@
 <script type='text/javascript'>
   $("li ul li").attr("onclick","ActiveOption(event)");
   $("li#nav_home").attr("onclick","ActiveOption(event)");
-  
+
   function ActiveOption(e){
     RemoveActiveOption();
     target = e.target;
@@ -152,14 +152,35 @@
     $(target).addClass("active");
   }
 
-$(document).ready(function() {
-  $("a").click(function(){
-    
-       document.getElementById('flash_message').style.display = 'block';
-       document.getElementById('flash_message').className = '';
+  $(document).ready(function(){
+    function changeHomeBackground(){
+      if ($("body").hasClass('desktop-detected pace-done minified')) {
+         document.getElementById('nav_home').style.background = 'rgba(69,69,69,0.6)';
+         document.getElementById('nav_home').style.padding =  '7px 0'
+      } else {
+        document.getElementById('nav_home').style.background = '';
+        document.getElementById('nav_home').style.padding =  ''
+      }
+    }
+
+    $("#miniMenu").click(function(){
+      setTimeout(changeHomeBackground(), 1000);
+    });
+
+    $('#home_link').mouseover(function(){
+      $('#home_link').css("background-color","rgba(70,70,70,1)");
+    });
+      
+    $('#home_link').mouseleave(function(){
+      $('#home_link').css("background-color","rgba(69,69,69,0)");
+    });
+
+    $("a").click(function(){
+      document.getElementById('flash_message').style.display = 'block';
+      document.getElementById('flash_message').className = '';
       document.getElementById('flash_message').style.marginLeft = '';
     });
-});
+  });
 
   function RemoveActiveOption(){
     $("li ul li").removeClass("active");

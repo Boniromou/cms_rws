@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :check_session_expiration, :authenticate_user!
+  before_filter :check_session_expiration, :authenticate_user!, :pass_terminal_id
 
   layout false
 
@@ -38,6 +38,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def pass_terminal_id
+    @station = Station.find_by_terminal_id(request.headers['TerminalID'])
+    if @station
+      current_user.set_have_enable_station(true) if current_user && @station.status == 'active'
+    end
+  end
+
   def sid
     request.session_options[:id]
   end
@@ -51,8 +58,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_station_id
-    #TODO
-    1
+    @current_station = Station.find_by_terminal_id(request.headers['TerminalID'])
+    return @current_station.id if @current_station
   end
 
   def permission_granted?(model, operation = nil)

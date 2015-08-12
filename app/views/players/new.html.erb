@@ -1,71 +1,72 @@
 <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.create_player")) %>
-
+<div class='row'>
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
 <section class='smart-form'>
   <%= form_for @player, :remote => true, html: {autocomplete: :off } do |f| %>
     <fieldset style='padding: 1px;'>
       <div class='row' style='padding-bottom: 10px;'>
-        <div class='col col-2'>
+        <div class='col col-xs-3 col-sm-3 col-md-2 col-lg-3'>
           <label class='input'>
             <%= f.label :card_id, t("general.card_id") %>:
           </label>
         </div>
-        <div class='col col-2'>
+        <div class='col col-xs-5 col-sm-5 col-md-5 col-lg-5'>
           <label class='input'>
             <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, CARD_ID_LENGTH_LIMIT)' %>
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-xs-4 col-sm-4 col-md-4 col-lg-4'>
           <label class='invisible_error'>
             <%= t("create_player.card_id_length_error") %>
           </label>
         </div>
       </div>
       <div class='row' style='padding-bottom: 10px;'>
-        <div class='col col-2'>
+        <div class='col col-xs-3 col-sm-3 col-md-2 col-lg-3'>
           <label class='input'>
             <%= f.label :first_name, t("general.first_name") %>:
           </label>
         </div>
-        <div class='col col-2'>
+        <div class='col col-xs-5 col-sm-5 col-md-5 col-lg-5'>
           <label class='input'>
             <%= f.text_field :first_name %>
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-xs-4 col-sm-4 col-md-4 col-lg-4'>
           <label class='invisible_error'>
             <%= t("create_player.first_name_blank_error") %>
           </label>
         </div>
       </div>
       <div class='row' style='padding-bottom: 10px;'>
-        <div class='col col-2'>
+        <div class='col col-xs-3 col-sm-3 col-md-2 col-lg-3'>
           <label class='input'>
             <%= f.label :last_name, t("general.last_name") %>:
           </label>
         </div>
-        <div class='col col-2'>
+        <div class='col col-xs-5 col-sm-5 col-md-5 col-lg-5'>
           <label class='input'>
             <%= f.text_field :last_name %>
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-xs-4 col-sm-4 col-md-4 col-lg-4'>
           <label class='invisible_error'>
             <%= t("create_player.last_name_blank_error") %>
           </label>
         </div>
       </div>
       <div class='row' style='padding-bottom: 10px;'>
-        <div class='col col-2'>
+        <div class='col col-xs-3 col-sm-3 col-md-2 col-lg-3'>
           <label class='input'>
             <%= f.label :member_id, t("general.member_id") %>:
           </label>
         </div>
-        <div class='col col-2'>
+        <div class='col col-xs-5 col-sm-5 col-md-5 col-lg-5'>
           <label class='input'>
             <%= f.text_field :member_id, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, MEMBER_ID_LENGTH_LIMIT)' %>
           </label>
         </div>
-        <div class='col col-3'>
+        <div class='col col-xs-4 col-sm-4 col-md-4 col-lg-4'>
           <label class='invisible_error'>
             <%= t("create_player.member_id_length_error") %>
           </label>
@@ -73,7 +74,7 @@
       </div>
       
       <div class='row'>
-        <div class='col col-4'>
+        <div class='col col-xs-8 col-sm-8 col-md-8 col-lg-8'>
           <footer>
             <%= f.submit t("button.create"), class: 'btn btn-primary', id: 'create_player_submit' %>
           </footer>
@@ -82,6 +83,8 @@
     </fieldset>
   <% end %>
 </section>
+</div>
+</div>
 
 <%= javascript_include_tag "validate.input.js" %>
 <%= javascript_include_tag "validate.player.info.js" %>

@@ -1,6 +1,6 @@
 class StationsController < ApplicationController
   layout 'cage'
-  skip_before_filter :check_session_expiration, :authenticate_user!, :only => :current
+  skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id, :only => :current
   include StationHelper
 
   def list
@@ -63,7 +63,7 @@ class StationsController < ApplicationController
     rescue StationError::StationAlreadyRegisterError => e
       flash[:error] = "terminal_id.station_already_reg"
     rescue StationError::TerminalAlreadyRegisterError => e
-      flash[:error] = "terminal_id.terminal_already_reg"
+      flash[:error] = {key: "terminal_id.terminal_already_reg", replace: {:station_name => Station.get_full_name_by_terminal_id(terminal_id)}}
     ensure
       if station.status == "active"
         redirect_to list_stations_path("active")

@@ -38,8 +38,10 @@ class Station < ActiveRecord::Base
   end
 
   class << self
-    def get_name_by_id( id )
-      Station.find_by_id(id).name
+    def get_name_by_id(id)
+      if Station.find_by_id(id)
+        Station.find_by_id(id).name
+      end
     end
 
     def get_full_name_by_terminal_id(terminal_id)

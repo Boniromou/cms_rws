@@ -35,6 +35,8 @@ module CageInfoHelper
   end
 
   def current_station
-    "Main Cage - Window#1"
+    @station = Station.find(current_station_id) if current_station_id
+    return @station.full_name if @station
+    'No station'
   end
 end

@@ -124,7 +124,7 @@ en:
     locked: "Locked"
     is_locked: "Player is locked!"
   update_player:
-    success: "Update player successful"
+    success: "Edit player [%{first_name} %{last_name}] successful"
     duplicate: "Card ID has already existed"
   shift:
     name: "Shift"
@@ -235,6 +235,6 @@ en:
     confirm_unreg: "Confirm to un-register %{terminal_id} from station %{name}?"
     register_success: "Register terminal to station %{station_name} successful"
     station_already_reg: "The station has been registered, please refresh your page."
-    terminal_already_reg: "register terminal fail"
+    terminal_already_reg: "This machine has been registered on station %{station_name}. (each machine can only register 1 station) "
     unregister_success: "Remove terminal from station %{station_name} successful"
     unregister_fail: "There is no registered terminal on this station, please refresh your page."

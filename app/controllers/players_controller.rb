@@ -90,7 +90,7 @@ class PlayersController < ApplicationController
       AuditLog.player_log("edit", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.update_by_params(params[:player])
       end
-      flash[:success] = "update_player.success"
+      flash[:success] = {key: "update_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
       redirect_to :action => 'profile', :member_id => params[:player][:member_id]
     rescue RuntimeError => e
       flash[:error] = "update_player." + e.message

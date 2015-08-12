@@ -400,7 +400,7 @@ describe StationsController do
       content_list = [I18n.t("terminal_id.confirm_reg1"), terminal_id, I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
       click_pop_up_confirm("register_terminal_" + @station1.id.to_s, content_list)
 
-      check_flash_message I18n.t("terminal_id.terminal_already_reg")
+      check_flash_message I18n.t("terminal_id.terminal_already_reg", station_name: @station2.full_name)
     end
 
 		it '[25.4] unauthorized Register terminal' do

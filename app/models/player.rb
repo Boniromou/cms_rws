@@ -30,6 +30,11 @@ class Player < ActiveRecord::Base
   end
 
   class << self
+    def instance
+      @player = Player.new unless @player
+      @player
+    end
+
     def create_by_params(params)
       verify_player_params(params)
 

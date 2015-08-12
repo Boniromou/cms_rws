@@ -9,6 +9,11 @@ class Location < ActiveRecord::Base
   scope :inactive, -> { where("status = ?", false) }
  
   class << self
+    def instance
+      @location = Location.new unless @location
+      @location
+    end
+
     def create_by_name(name)
       verify_location_name(name)
 

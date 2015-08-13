@@ -319,4 +319,102 @@ describe FundInController do
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
   end
+
+  describe '[28] Unauthorized permission without location (Deposit, Withdraw)' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_close_after_print
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      TransactionType.create!(:name => "Deposit")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')
+    end
+    
+    after(:each) do
+      AuditLog.delete_all
+      PlayerTransaction.delete_all
+      Player.delete_all
+      Station.delete_all
+      Location.delete_all
+    end
+
+    it '[28.1] Disappear deposit, withdraw button', :js => true do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      fill_search_info_js("member_id", @player.member_id)
+      
+      find("#button_find").click
+      check_balance_page
+
+      expect(page.source).to_not have_selector("#balance_deposit")
+      expect(page.source).to_not have_selector("#balance_withdraw")
+    end
+
+    it '[28.2] Deposit with removed station', :js => true do
+      login_as_admin
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+      visit list_stations_path("active")
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
+      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+
+      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
+      @station2.reload
+      expect(@station2.terminal_id).to_not eq nil
+
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      fill_search_info_js("member_id", @player.member_id)
+      
+      find("#button_find").click
+      check_balance_page
+
+      expect(page.source).to have_selector("#balance_deposit")
+      @station2.terminal_id = nil
+      @station2.save
+
+      within "div#content" do
+        click_link I18n.t("button.deposit")
+      end
+
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+
+    it '[28.3] Withdraw with removed station', :js => true do
+      login_as_admin
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+      visit list_stations_path("active")
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
+      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+
+      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
+      @station2.reload
+      expect(@station2.terminal_id).to_not eq nil
+
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      fill_search_info_js("member_id", @player.member_id)
+      
+      find("#button_find").click
+      check_balance_page
+
+      expect(page.source).to have_selector("#balance_withdraw")
+      @station2.terminal_id = nil
+      @station2.save
+
+      within "div#content" do
+        click_link I18n.t("button.withdrawal")
+      end
+
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+  end
 end

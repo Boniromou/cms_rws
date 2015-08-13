@@ -350,15 +350,27 @@ describe PlayersController do
       Player.delete_all
     end
 
-    it '[5.1] view player balance enquiry' do
+    it '[5.1] view player balance enquiry', :js => true do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
+
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+      visit list_stations_path("active")
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
+      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+
+      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
+      @station2.reload
+      expect(@station2.terminal_id).to_not eq nil
+
       visit home_path
       click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
       check_search_page
-      fill_search_info("member_id", @player.member_id)
+      fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
       
       check_player_info
@@ -368,7 +380,9 @@ describe PlayersController do
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
-      # expect(page.source).to have_selector("div a#close_to_home")
+
+      Station.delete_all
+      Location.delete_all        
     end
 
     it '[5.2] click unauthorized action', :js => true do 
@@ -405,15 +419,29 @@ describe PlayersController do
       expect(page.source).to_not have_content(I18n.t("search_error.create_player"))
     end     
     
-    it '[5.5] Return to Cage home' do
+    it '[5.5] Return to Cage home', :js => true do
+      Station.delete_all
+      Location.delete_all
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
+
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+      visit list_stations_path("active")
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
+      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+
+      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
+      @station2.reload
+      expect(@station2.terminal_id).to_not eq nil
+
       visit home_path
       click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
       check_search_page
-      fill_search_info("member_id", @player.member_id)
+      fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
       
       check_balance_page(9999)
@@ -421,10 +449,11 @@ describe PlayersController do
       
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
-      # expect(page.source).to have_selector("div a#close_to_home")
 
       click_link I18n.t("tree_panel.home")
       check_home_page
+      Station.delete_all
+      Location.delete_all
     end
 
     it '[5.6] unauthorized to all actions' do
@@ -446,7 +475,6 @@ describe PlayersController do
       
       expect(page.source).to_not have_selector("div a#balance_deposit")
       expect(page.source).to_not have_selector("div a#balance_withdraw")
-      # expect(page.source).to have_selector("div a#close_to_home")
     end
     
     it '[5.7] unathorized to balance enquriy ' do 
@@ -457,15 +485,29 @@ describe PlayersController do
       first("aside#left-panel ul li#nav_balance_enquiry").should be_nil
     end     
 
-    it '[5.8] balance enquiry with locked player' do
+    it '[5.8] balance enquiry with locked player', :js => true do
+      Station.delete_all
+      Location.delete_all
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "locked")
       login_as_admin
+
+      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+      visit list_stations_path("active")
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
+      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+
+      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
+      @station2.reload
+      expect(@station2.terminal_id).to_not eq nil
+
       visit home_path
       click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
       check_search_page
-      fill_search_info("member_id", @player.member_id)
+      fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
       
       check_player_info
@@ -475,7 +517,8 @@ describe PlayersController do
       expect(page).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
-      # expect(page.source).to have_selector("div a#close_to_home")
+      Station.delete_all
+      Location.delete_all
     end
   end
   

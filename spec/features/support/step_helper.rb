@@ -275,7 +275,7 @@ module StepHelper
         expect(page).to have_content str
       end
     end
-    find("div#pop_up_confirm_btn button#confirm").click
+    find("div#pop_up_dialog div#pop_up_confirm_btn button#confirm").trigger('click')
   end
 
   def set_terminal_id(terminal_id)

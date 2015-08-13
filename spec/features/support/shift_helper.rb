@@ -22,8 +22,8 @@ module ShiftHelper
 
     Shift.create!(:shift_type_id => @shift_type_id, :accounting_date_id => @accounting_date_id)
 
-    @station_id = Station.create!(:name => 'window#1').id
-    allow_any_instance_of(ApplicationController).to receive(:current_station_id).and_return(@station_id)
+    # @station_id = Station.create!(:name => 'window#1').id
+    # allow_any_instance_of(ApplicationController).to receive(:current_station_id).and_return(@station_id)
   end
 
 end

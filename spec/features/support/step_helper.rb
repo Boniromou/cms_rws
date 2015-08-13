@@ -281,6 +281,18 @@ module StepHelper
   def set_terminal_id(terminal_id)
     visit page.current_url + "?terminal_id=" + terminal_id
   end
+
+  def register_terminal
+    @location2 = Location.create!(:name => "LOCATION2", :status => "active")
+    @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+    visit list_stations_path("active")
+    content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
+    click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+
+    check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
+    @station2.reload
+    expect(@station2.terminal_id).to_not eq nil
+  end
 end
 RSpec.configure do |config|
   config.include StepHelper, type: :feature

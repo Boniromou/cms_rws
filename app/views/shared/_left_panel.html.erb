@@ -20,12 +20,11 @@
           <i class="fa fa-lg fa-home"></i>
           <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
-      </li>
-      
+      </li> 
       <% if policy(Player.instance).create? || policy(Player.instance).profile?%>
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
-          <ul style="display:block;">
+          <ul style="display:block;"> 
             <% if policy(Player.instance).create? %>
               <li id="nav_create_player">
                 <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
@@ -156,15 +155,15 @@
     function changeHomeBackground(){
       if ($("body").hasClass('desktop-detected pace-done minified')) {
          document.getElementById('nav_home').style.background = 'rgba(69,69,69,0.6)';
-         document.getElementById('nav_home').style.padding =  '7px 0'
+         document.getElementById('nav_home').style.padding =  '7px 0';
       } else {
         document.getElementById('nav_home').style.background = '';
-        document.getElementById('nav_home').style.padding =  ''
+        document.getElementById('nav_home').style.padding =  '';
       }
     }
 
     $("#miniMenu").click(function(){
-      setTimeout(changeHomeBackground(), 1000);
+      setTimeout(changeHomeBackground(), 3000);
     });
 
     $('#home_link').mouseover(function(){
@@ -189,4 +188,3 @@
 </script>
 
 <%= javascript_include_tag "setTerminalIDToRequestHeader" %>
-

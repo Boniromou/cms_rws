@@ -364,15 +364,7 @@ describe StationsController do
 
     it '[25.1] Register terminal (success case)', :js => true do
       login_as_admin
-      visit list_stations_path("active")
-      terminal_id = "AAAABBBBCCCCDDDD"
-      set_terminal_id(terminal_id)
-      content_list = [I18n.t("terminal_id.confirm_reg1"), terminal_id, I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
-      click_pop_up_confirm("register_terminal_" + @station1.id.to_s, content_list)
-
-      check_flash_message I18n.t("terminal_id.register_success", station_name: @station1.full_name)
-      @station1.reload
-      expect(@station1.terminal_id).to eq terminal_id
+      register_terminal
     end
     
     it '[25.2] Register terminal (fail case, station already register)', :js => true do
@@ -383,7 +375,7 @@ describe StationsController do
       @station1.terminal_id = terminal_id
       @station1.save
 
-      content_list = [I18n.t("terminal_id.confirm_reg1"), terminal_id, I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
       click_pop_up_confirm("register_terminal_" + @station1.id.to_s, content_list)
 
       check_flash_message I18n.t("terminal_id.station_already_reg")
@@ -391,16 +383,13 @@ describe StationsController do
     
     it '[25.3] Register terminal (fail case, terminal_id already register)', :js => true do
       login_as_admin
+      register_terminal
+      sleep(5)
       visit list_stations_path("active")
-      terminal_id = "AAAABBBBCCCCDDDD"
-      set_terminal_id(terminal_id)
-      @station2.terminal_id = terminal_id
-      @station2.save
-
-      content_list = [I18n.t("terminal_id.confirm_reg1"), terminal_id, I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
       click_pop_up_confirm("register_terminal_" + @station1.id.to_s, content_list)
 
-      check_flash_message I18n.t("terminal_id.terminal_already_reg", station_name: @station2.full_name)
+      check_flash_message I18n.t("terminal_id.terminal_already_reg", station_name: @station5.full_name)
     end
 
 		it '[25.4] unauthorized Register terminal' do
@@ -417,49 +406,37 @@ describe StationsController do
 		end
 
     it '[25.5] Un-Register terminal (success case)', :js => true do
-      terminal_id = "AAAABBBBCCCCDDDD"
-      @station1.terminal_id = terminal_id
-      @station1.save
       login_as_admin
+      register_terminal
       visit list_stations_path("active")
 
-      content_list = [I18n.t("terminal_id.confirm_unreg", :name => @station1.full_name, :terminal_id => terminal_id)]
-      click_pop_up_confirm("unregister_terminal_" + @station1.id.to_s, content_list)
+      content_list = [I18n.t("terminal_id.confirm_unreg1"), I18n.t("terminal_id.confirm_unreg2", name: @station5.full_name)]
+      click_pop_up_confirm("unregister_terminal_" + @station5.id.to_s, content_list)
 
-      check_flash_message I18n.t("terminal_id.unregister_success", station_name: @station1.full_name)
-      @station1.reload
-      expect(@station1.terminal_id).to be_nil
+      check_flash_message I18n.t("terminal_id.unregister_success", station_name: @station5.full_name)
+      @station5.reload
+      expect(@station5.terminal_id).to be_nil
     end
 
-    it '[25.6] Un-Register terminal ( clase)', :js => true do
-      terminal_id = "AAAABBBBCCCCDDDD"
-      @station1.terminal_id = terminal_id
-      @station1.save
+    it '[25.6] Un-Register terminal (fail case)', :js => true do
       login_as_admin
+      register_terminal
       visit list_stations_path("active")
 
-      @station1.terminal_id = nil
-      @station1.save
+      @station5.terminal_id = nil
+      @station5.save
 
-      content_list = [I18n.t("terminal_id.confirm_unreg", :name => @station1.full_name, :terminal_id => terminal_id)]
-      click_pop_up_confirm("unregister_terminal_" + @station1.id.to_s, content_list)
+      content_list = [I18n.t("terminal_id.confirm_unreg1"), I18n.t("terminal_id.confirm_unreg2", name: @station5.full_name)]
+      click_pop_up_confirm("unregister_terminal_" + @station5.id.to_s, content_list)
 
       check_flash_message I18n.t("terminal_id.unregister_fail")
-      @station1.reload
-      expect(@station1.terminal_id).to be_nil
+      @station5.reload
+      expect(@station5.terminal_id).to be_nil
     end
 		
     it '[25.7] audit log for register terminal', :js => true do
       login_as_admin
-      visit list_stations_path("active")
-      terminal_id = "AAAABBBBCCCCDDDD"
-      set_terminal_id(terminal_id)
-      content_list = [I18n.t("terminal_id.confirm_reg1"), terminal_id, I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
-      click_pop_up_confirm("register_terminal_" + @station1.id.to_s, content_list)
-
-      check_flash_message I18n.t("terminal_id.register_success", station_name: @station1.full_name)
-      @station1.reload
-      expect(@station1.terminal_id).to eq terminal_id
+      register_terminal
 
       audit_log = AuditLog.find_by_audit_target("station")
       expect(audit_log).to_not be_nil
@@ -478,11 +455,10 @@ describe StationsController do
       login_as_admin
       visit list_stations_path("active")
       terminal_id = "AAAABBBBCCCCDDDD"
-      set_terminal_id(terminal_id)
       @station1.terminal_id = terminal_id
       @station1.save
 
-      content_list = [I18n.t("terminal_id.confirm_reg1"), terminal_id, I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
+      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station1.full_name)]
       click_pop_up_confirm("register_terminal_" + @station1.id.to_s, content_list)
 
       check_flash_message I18n.t("terminal_id.station_already_reg")

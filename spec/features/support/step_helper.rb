@@ -283,15 +283,15 @@ module StepHelper
   end
 
   def register_terminal
-    @location2 = Location.create!(:name => "LOCATION2", :status => "active")
-    @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
+    @location5 = Location.create!(:name => "LOCATION5", :status => "active")
+    @station5 = Station.create!(:name => "STATION5", :status => "active", :location_id => @location5.id)
     visit list_stations_path("active")
-    content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
-    click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
+    content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station5.full_name)]
+    click_pop_up_confirm("register_terminal_" + @station5.id.to_s, content_list)
 
-    check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
-    @station2.reload
-    expect(@station2.terminal_id).to_not eq nil
+    check_flash_message I18n.t("terminal_id.register_success", station_name: @station5.full_name)
+    @station5.reload
+    expect(@station5.terminal_id).to_not eq nil
   end
 end
 RSpec.configure do |config|

@@ -39,9 +39,13 @@ class ApplicationController < ActionController::Base
   end
 
   def pass_terminal_id
+    current_user.set_have_enable_station(true) if is_have_enable_station
+  end
+
+  def is_have_enable_station
     @station = Station.find_by_terminal_id(request.headers['TerminalID'])
     if @station
-      current_user.set_have_enable_station(true) if current_user && @station.status == 'active' && request.headers['TerminalID'] != nil
+      return current_user && @station.status == 'active' && request.headers['TerminalID'] != nil
     end
   end
 

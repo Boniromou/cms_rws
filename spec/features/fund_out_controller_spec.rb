@@ -18,7 +18,6 @@ describe FundOutController do
       mock_cage_info
       mock_close_after_print
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-
       @player_balance = 20000
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(200.0)
       allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('OK')
@@ -30,40 +29,37 @@ describe FundOutController do
       Player.delete_all
     end
 
-    it '[7.1] show Withdraw page' do
+    it '[7.1] show Withdraw page', :js => true do
       login_as_admin
-      visit home_path
-      click_link I18n.t("tree_panel.balance")
-      fill_search_info("member_id", @player.member_id)
-      find("#button_find").click
-      check_balance_page(@player_balance)
-
-      within "div#content" do
-        click_link I18n.t("button.withdrawal")
-      end
-      check_player_info
+      mock_have_enable_station
+      go_to_withdraw_page
+      wait_for_ajax
       check_title("tree_panel.fund_out")
+      check_player_info
       expect(page.source).to have_selector("button#confirm")
       expect(page.source).to have_selector("button#cancel")
     end
     
     it '[7.2] Invalid Withdraw', :js => true do
-      login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      login_as_admin
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 1.111
       expect(find("input#player_transaction_amount").value).to eq "1.11"
     end
 
     it '[7.3] Invalid Withdraw(eng)', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => "abc3de"
       expect(find("input#player_transaction_amount").value).to eq ""
     end
 
     it '[7.4] Invalid Withdraw (input 0 amount)', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
@@ -74,7 +70,8 @@ describe FundOutController do
       allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "200.0")
 
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
@@ -85,17 +82,20 @@ describe FundOutController do
       check_flash_message I18n.t("invalid_amt.no_enough_to_withdrawal", { balance: to_display_amount_str(@player_balance)})
     end
 
-    it '[7.6] cancel Withdraw' do
+    it '[7.6] cancel Withdraw', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       find("a#cancel").click
 
+      wait_for_ajax
       check_balance_page(@player_balance)
     end
 
     it '[7.7] Confirm Withdraw', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
@@ -107,7 +107,8 @@ describe FundOutController do
 
     it '[7.8] Cancel dialog box Withdraw', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
@@ -124,7 +125,8 @@ describe FundOutController do
 
     it '[7.9] Confirm Withdraw', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -141,7 +143,8 @@ describe FundOutController do
 
     it '[7.10] audit log for confirm dialog box Withdraw', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=" + @player.member_id
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog div button#confirm").click
@@ -165,6 +168,7 @@ describe FundOutController do
     it '[7.11] click unauthorized action (Withdraw)' do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
+      mock_have_enable_station 
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit home_path
@@ -187,6 +191,7 @@ describe FundOutController do
     it '[7.12] click link to the unauthorized page' do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
+      mock_have_enable_station 
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_out_path + "?member_id=#{@player.member_id}"
       check_home_page
@@ -196,9 +201,10 @@ describe FundOutController do
     it '[7.13] click unauthorized action (confirm dialog box Withdraw)', :js => true do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
+      mock_have_enable_station 
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
-      visit fund_out_path + "?member_id=" + @player.member_id
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -212,8 +218,9 @@ describe FundOutController do
     it '[7.14] click unauthorized action (print slip)', :js => true do
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
+      mock_have_enable_station 
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -230,8 +237,9 @@ describe FundOutController do
     end
 
     it '[7.15] Print slip', :js => true do
-      login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      login_as_admin
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -256,7 +264,8 @@ describe FundOutController do
 
     it '[7.16] Close slip', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -280,7 +289,8 @@ describe FundOutController do
     
     it '[7.17] audit log for print slip', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -317,7 +327,8 @@ describe FundOutController do
     
     it '[7.18] Invalid Withdrawal (empty)', :js => true do
       login_as_admin 
-      visit fund_out_path + "?member_id=#{@player.member_id}"
+      mock_have_enable_station 
+      go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == false

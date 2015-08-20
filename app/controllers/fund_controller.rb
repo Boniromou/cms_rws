@@ -16,12 +16,6 @@ class FundController < ApplicationController
     raise NotImplementedError
   end
 
-  def make_trans_id(id)
-    str = ("0x%08x" % (id + 0x80000000))
-    str = str[2, str.length - 2] if str.start_with?('0x')
-    "C#{str.upcase}"
-  end
-
   def new
     return unless permission_granted? PlayerTransaction.new, operation_sym
 
@@ -46,7 +40,7 @@ class FundController < ApplicationController
     AuditLog.fund_in_out_log(action_str, current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
       Player.transaction do
         @transaction = do_fund_action(@member_id, server_amount)
-        call_iwms(@member_id, amount, make_trans_id(@transaction.id), @transaction.created_at, current_shift.id, current_station_id, current_user.employee_id)
+        call_iwms(@member_id, amount, make_trans_id(@transaction.id), @transaction.trans_date, current_shift.id, current_station_id, current_user.employee_id)
       end
     end
   end

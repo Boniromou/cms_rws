@@ -35,6 +35,7 @@ class PlayerTransaction < ActiveRecord::Base
   scope :by_station_id, -> station_id { where( "station_id = ?", station_id) if station_id.present? }
 
   class << self
+  include FundHelper
     def instance
       @player_transaction = PlayerTransaction.new unless @player_transaction
       @player_transaction
@@ -52,6 +53,9 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction.save
+      transaction.reload
+      transaction[:ref_trans_id] = make_trans_id(transaction.id)
+      transaction.save
       transaction
     end
 
@@ -66,6 +70,9 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:transaction_type_id] = TransactionType.find_by_name("Withdrawal").id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
+      transaction.save
+      transaction.reload
+      transaction[:ref_trans_id] = make_trans_id(transaction.id)
       transaction.save
       transaction
     end

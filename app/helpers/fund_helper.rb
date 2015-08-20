@@ -19,6 +19,12 @@ module FundHelper
     "%0.2f" % amount
   end
 
+  def make_trans_id(id)
+    str = ("0x%08x" % (id + 0x80000000))
+    str = str[2, str.length - 2] if str.start_with?('0x')
+    "C#{str.upcase}"
+  end
+
   class AmountInvalidError < Exception
   end
 end

@@ -19,17 +19,21 @@ describe FrontMoneyController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
 
-      @station2 = Station.create!(:name => 'window#2')
+      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
+      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
+      @station2 = Station.create!(:name => 'window#2', :status => "active", :location_id => @location6.id)
     end
 
     def create_player_transaction
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station_id, :created_at => Time.now)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @station_id, :created_at => Time.now + 30*60)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @station6.id, :created_at => Time.now + 30*60)
       @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :station_id => @station2.id, :created_at => Time.now + 60*60)
     end
 
     after(:each) do
       PlayerTransaction.delete_all
+      Station.delete_all
+      Location.delete_all
     end
 
     it '[11.1] Successfully generate FM Actiivty Report', :js => true do
@@ -41,7 +45,7 @@ describe FrontMoneyController do
       
       find("input#search").click
       wait_for_ajax
-      transaction_hash = { @station_id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
+      transaction_hash = { @station6.id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
       check_fm_report_result_items(transaction_hash)
     end
 
@@ -72,7 +76,7 @@ describe FrontMoneyController do
       
       find("input#search").click
       wait_for_ajax
-      transaction_hash = { @station_id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
+      transaction_hash = { @station6.id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
       check_fm_report_result_items(transaction_hash)
       expect(find("input#accounting_date").value).to eq AccountingDate.current.accounting_date.strftime("%Y-%m-%d")
     end
@@ -86,17 +90,21 @@ describe FrontMoneyController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
 
-      @station2 = Station.create!(:name => 'window#2')
+      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
+      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
+      @station2 = Station.create!(:name => 'window#2', :status => "active", :location_id => @location6.id)
     end
 
     def create_player_transaction
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station_id, :created_at => Time.now)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @station_id, :created_at => Time.now + 30*60)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @station6.id, :created_at => Time.now + 30*60)
       @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :station_id => @station2.id, :created_at => Time.now + 60*60)
     end
 
     after(:each) do
       PlayerTransaction.delete_all
+      Station.delete_all
+      Location.delete_all
     end
 
     it '[17.2] unauthorized print FM Activity report', :js => true do
@@ -110,7 +118,7 @@ describe FrontMoneyController do
       
       find("input#search").click
       wait_for_ajax
-      transaction_hash = { @station_id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
+      transaction_hash = { @station6.id => [@player_transaction1,@player_transaction2], @station2.id => [@player_transaction3] }
       check_fm_report_result_items(transaction_hash)
       
       expect(page.source).to_not have_selector("button#print_fm")

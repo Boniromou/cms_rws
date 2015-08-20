@@ -293,6 +293,29 @@ module StepHelper
     @station5.reload
     expect(@station5.terminal_id).to_not eq nil
   end
+
+  def go_to_deposit_page
+    visit home_path
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+    check_balance_page
+
+    within "div#content" do
+        click_link I18n.t("button.deposit")
+    end
+  end
+
+  def go_to_withdraw_page
+    visit home_path
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+
+    within "div#content" do
+        click_link I18n.t("button.withdrawal")
+    end
+  end
 end
 RSpec.configure do |config|
   config.include StepHelper, type: :feature

@@ -30,17 +30,10 @@ describe FundInController do
       Player.delete_all
     end
 
-    it '[6.1] show Deposit page' do
+    it '[6.1] show Deposit page', :js => true do
       login_as_admin
-      visit home_path
-      click_link I18n.t("tree_panel.balance")
-      fill_search_info("member_id", @player.member_id)
-      find("#button_find").click
-      check_balance_page
-
-      within "div#content" do
-        click_link I18n.t("button.deposit")
-      end
+      register_terminal
+      go_to_deposit_page
       check_title("tree_panel.fund_in")
       check_player_info
       expect(page.source).to have_selector("button#confirm")
@@ -48,22 +41,25 @@ describe FundInController do
     end
     
     it '[6.2] Invalid Deposit', :js => true do
-      login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      login_as_admin
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 1.111
       expect(find("input#player_transaction_amount").value).to eq "1.11"
     end
 
     it '[6.3] Invalid Deposit(eng)', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => "abc3de"
       expect(find("input#player_transaction_amount").value).to eq ""
     end
 
     it '[6.4] Invalid Deposit (input 0 amount)', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 0
       find("button#confirm_fund").click
 
@@ -73,7 +69,8 @@ describe FundInController do
 
     it '[6.5] cancel Deposit', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       find("a#cancel").click
       
       wait_for_ajax
@@ -82,7 +79,8 @@ describe FundInController do
 
     it '[6.6] Confirm Deposit', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
 
@@ -96,7 +94,8 @@ describe FundInController do
 
     it '[6.7] cancel dialog box Deposit', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
 
@@ -114,10 +113,10 @@ describe FundInController do
       
     end
 
-
     it '[6.8] Confirm Deposit', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -134,8 +133,9 @@ describe FundInController do
     end
 
     it '[6.9] audit log for confirm dialog box Deposit', :js => true do
-      login_as_admin 
-      visit fund_in_path + "?member_id=" + @player.member_id
+      login_as_admin
+      register_terminal
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog div button#confirm").click
@@ -156,28 +156,32 @@ describe FundInController do
       audit_log.description.should_not be_nil
     end
 
-    it '[6.10] click unauthorized action (Deposit)' do
+    it '[6.10] click unauthorized action (Deposit)', :js => true do
+      mock_have_enable_station
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       visit home_path
       click_link I18n.t("tree_panel.balance")
-      fill_search_info("member_id", @player.member_id)
+      fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
       
       check_balance_page
       check_player_info
       set_permission(@test_user,"cashier",:player,[])
       set_permission(@test_user,"cashier",:player_transaction,[])
-
-      find("div a#balance_deposit").click
+      sleep(5)
+      within "div#content" do
+        click_link I18n.t("button.deposit")
+      end
 
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
 
     it '[6.11] click link to the unauthorized page' do
+      mock_have_enable_station
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -187,11 +191,12 @@ describe FundInController do
     end
 
     it '[6.12] click unauthorized action (confirm dialog box Deposit)', :js => true do
+      mock_have_enable_station
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
-      visit fund_in_path + "?member_id=" + @player.member_id
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -203,10 +208,11 @@ describe FundInController do
     end
     
     it '[6.13] click unauthorized action (print slip)', :js => true do
+      mock_have_enable_station
       @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -223,8 +229,9 @@ describe FundInController do
     end
 
     it '[6.14] Print slip', :js => true do
-      login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      login_as_admin
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
 
@@ -250,7 +257,8 @@ describe FundInController do
 
     it '[6.15] Close slip', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -274,7 +282,8 @@ describe FundInController do
     
     it '[6.16] audit log for print slip', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -312,7 +321,8 @@ describe FundInController do
 
     it '[6.17] Invalid Deposit (empty)', :js => true do
       login_as_admin 
-      visit fund_in_path + "?member_id=#{@player.member_id}"
+      register_terminal 
+      go_to_deposit_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == false

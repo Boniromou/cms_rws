@@ -12,14 +12,14 @@ class AddPurgeAtForEtl < ActiveRecord::Migration
   end
 
   def down
-  	remove_column :player_transactions, :purge_at, :datetime
-  	remove_column :transaction_types, :purge_at, :datetime
-  	remove_column :accounting_dates, :purge_at, :datetime
-  	remove_column :stations, :purge_at, :datetime
-  	remove_column :locations, :purge_at, :datetime
-  	remove_column :players, :purge_at, :datetime
-  	remove_column :shifts, :purge_at, :datetime
-  	remove_column :shift_types, :purge_at, :datetime
-  	remove_column :users, :purge_at, :datetime
+  	remove_column :player_transactions, :purge_at
+  	remove_column :transaction_types, :purge_at
+  	remove_column :accounting_dates, :purge_at
+  	remove_column :stations, :purge_at
+  	remove_column :locations, :purge_at
+  	remove_column :players, :purge_at
+  	remove_column :shifts, :purge_at
+  	remove_column :shift_types, :purge_at
+  	remove_column :users, :purge_at
   end
 end

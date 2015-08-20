@@ -5,7 +5,7 @@ module MockHelper
   end
 
   def mock_cage_info
-    @location = "Main Cage - Window #1"
+    @location = "No location"
     @accounting_date = "2015-04-15"
     @shift = "morning"
 
@@ -19,6 +19,10 @@ module MockHelper
 
   def mock_close_after_print
     allow_any_instance_of(PlayerTransactionsHelper).to receive(:is_close_after_print).and_return(false)
+  end
+
+  def mock_have_enable_station
+    allow_any_instance_of(ApplicationController).to receive(:is_have_enable_station).and_return(true)
   end
 end
 

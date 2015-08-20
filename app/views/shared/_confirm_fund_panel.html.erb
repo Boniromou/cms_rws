@@ -1,31 +1,16 @@
 <div id="button_set">
-  <%= button_tag t("button.confirm"), :id => "confirm", :class => "btn btn-primary"%>
+  <%= close_to_balance %>
+  <% pop_up_btn :id => "confirm_fund", :str => t("button.confirm"), :form_id => "fund_request", :style => "confirm_fund_btn", :form_valid_function => "formValid()" do %>
+    <p><%= t("deposit_withdrawal."+@operation+"_amt") %></p>
+    <p style="font-size: 18px;" id="fund_amt"></p>
+  <% end %>
 </div>
 
-<div id="confirm_fund_dialog" class="ui-dialog" style="height: 150px; width: 600px; top: 150px; left: 250px; display: none;">
-  <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
-    <table width='80%'>
-      <tr>
-        <td width='60%'><p style="font-size: 18px;"><%= t("deposit_withdrawal."+@operation+"_amt")%>:</p></td>
-        <td width='40%'><p style="font-size: 18px;" id="fund_amt"></p></td> 
-      </tr>
-    </table>
-  </div>
-  <div align="center">
-    <table>
-      <tr>
-        <td><button id="cancel" class="btn btn-default">Cancel</button></td>
-        <td width='20%'></td>
-        <td><button id="confirm" class="btn btn-primary">Confirm</button></td>
-      </tr>
-    </table>
-  </div>
-</div>
 <%= javascript_include_tag "format.number.js" %>
 <script type='text/javascript'>
   function updateConfirmAmt(){
     amt = $('#player_transaction_amount').val()
-    $('#confirm_fund_dialog #fund_amt').text(formatNum(amt));
+    $('#pop_up_content #fund_amt').text(formatNum(amt));
   }
 
   function formValid(){
@@ -41,37 +26,16 @@
     $("label.invisible_error").css('visibility', 'hidden');
   }
 
-  $('#confirm').click(function() {
+  $('#confirm_fund').click(function() {
     if( formValid()){
       hideError();
-      $('#confirm_fund_dialog').css("display", "block");
-      $('#confirm_fund_dialog #confirm').focus();
-
-      $('#confirm').attr('disabled','disabled');
-      $('#cancel').attr('disabled','disabled');
-      $('#player_transaction_amount').attr('readonly','readonly');
+            
       updateConfirmAmt();
-    }else{
+    } else {
       showError();
     }
 
     return false;
   });
 
-  $('#confirm_fund_dialog #confirm').click(function() {
-    $('#fund_request').submit();
-
-    return false;
-  });
-
-
-  $('#confirm_fund_dialog #cancel').click(function() {
-    $('#confirm_fund_dialog').css("display", "none");
-
-    $('#confirm').removeAttr('disabled');
-    $('#cancel').removeAttr('disabled');
-    $('#player_transaction_amount').removeAttr('readonly','readonly');
-
-    return false;
-  });
 </script>

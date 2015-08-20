@@ -28,6 +28,11 @@ class Shift < ActiveRecord::Base
   end
 
   class << self
+    def instance
+      @shift = Shift.new unless @shift
+      @shift
+    end
+
     SHIFT_NAME = %w(morning swing night)
 
     def current

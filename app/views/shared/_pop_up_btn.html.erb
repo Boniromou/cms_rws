@@ -1,0 +1,22 @@
+<div id="button_set" style="display:inline">
+  <%= button_tag btn_str, :id => btn_id, :class => "btn btn-primary " + style %>
+</div>
+
+<script type='text/javascript'>
+ $('#<%= btn_id %>').click(function() {
+  if (<%= form_valid_function %>){
+    registerPopUpPanel('#<%= form_id %>','<%= content %>');
+    }
+    return false;
+  });
+
+
+  function blockEnter(event){ 
+    if (event.keyCode == 13) {
+      $('button#<%= btn_id %>').click();
+      return false;
+    }
+  }
+
+  $('form#<%= form_id %>').keydown(blockEnter);
+</script>

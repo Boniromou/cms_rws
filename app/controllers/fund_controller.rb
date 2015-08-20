@@ -18,6 +18,7 @@ class FundController < ApplicationController
 
   def new
     return unless permission_granted? PlayerTransaction.new, operation_sym
+
     member_id = params[:member_id]
     @operation = operation_str
     @player = Player.find_by_member_id(member_id)
@@ -25,12 +26,22 @@ class FundController < ApplicationController
 
   def create
     return unless permission_granted? PlayerTransaction.new, operation_sym
+
     @member_id = params[:player][:member_id]
     @player = Player.find_by_member_id(@member_id)
+
+    if @player.account_locked?
+      handle_fund_error("player_status.is_locked")
+      return
+    end
+
     amount = params[:player_transaction][:amount]
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount)
+      Player.transaction do
+        @transaction = do_fund_action(@member_id, server_amount)
+        call_iwms(@member_id, amount, make_trans_id(@transaction.id), @transaction.trans_date, current_shift.id, current_station_id, current_user.employee_id)
+      end
     end
   end
 
@@ -52,11 +63,7 @@ class FundController < ApplicationController
   protected
 
   def do_fund_action(member_id, amount)
-    transaction = nil
-    Player.transaction do
-      Player.send operation_str, member_id, amount
-      transaction = PlayerTransaction.send "save_#{operation_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_station_id
-    end
+    transaction = PlayerTransaction.send "save_#{operation_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_station_id
     transaction
   end
 end

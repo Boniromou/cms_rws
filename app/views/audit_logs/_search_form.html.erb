@@ -1,0 +1,72 @@
+          <!--form-->
+          <%= form_tag(search_audit_logs_path, :remote => true, :id => "search_form") do %>
+            <fieldset>
+              <div class="row">
+                  <%= render "shared/date_range_picker" %>
+              </div>
+              
+              <div class="row">
+                <div class="col-sm-4">
+                  <section class="smart-form">
+                    <label class="label"><%= t("auditlog.audit_action_by") %></label>
+                    <label class="input">
+                      <%= text_field_tag(:action_by) %>
+                    </label>
+                  </section>
+                </div>
+                
+                <div class="col-sm-4">
+                  <section class="smart-form">
+                    <label class="label"><%= t("auditlog.target") %></label>
+                    <label class="select">
+                      <select class="input-sm" name="target_name" id="target_name">
+                        <option value="all"><%= t("general.all") %></option>
+                        <option value="player"><%= t("general.player") %></option>
+                        <option value="player_transaction"><%= t("general.player_transaction") %></option>
+                        <option value="shift"><%= t("general.shift") %></option>
+                        <option value="location"><%= t("general.location") %></option>
+                        <option value="station"><%= t("general.station") %></option>
+                      </select>
+                      <i></i>
+                    </label>
+                  </section>
+                </div>
+                
+                <div class="col-sm-4">
+                  <section class="smart-form">
+                    <label class="label"><%= t("auditlog.audit_action") %></label>
+                    <label class="select">
+                      <select class="input-sm" name="action_list" id="action_list">
+                        <option value="all"><%= t("general.all") %></option>
+                      </select>
+                      <i></i>
+                    </label>
+                  </section>
+                </div>
+              </div>
+              
+            </fieldset>
+              
+            <div class="form-actions">
+              <div class="row">
+                <div class="col-md-12">
+                  <%= hidden_field_tag 'from', search_audit_logs_path %>
+                  <%= submit_tag t("button.search"), :class => "btn btn-primary", :remote => true  %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <!--/form-->
+
+          <%= gen_hidden_action_list(@action_lists) -%>
+          
+          <script type="text/javascript">
+            //dynamic action menu
+            $(document).ready(function(){
+               $("select#target_name").change(function() {
+                 var target = $(this).val();
+                 var action_list = $("div#action_lists_to_load div#" + target).html();
+                 $("select#action_list").html(action_list);
+               });
+            });
+          </script>

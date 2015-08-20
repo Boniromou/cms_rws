@@ -15,38 +15,45 @@
     -->
 
     <ul style>
-      <li id="nav_home">
-        <%= link_to home_path, :title => "Home", :remote => true do %>
-          <i class="fa fa-home"></i> <span class="menu-item-parent">Home</span>
+      <li id="nav_home" style="background: rgba(69,69,69,0.6);padding: 7px 0">
+        <%= link_to home_path, :title => t("tree_panel.home") , :id => "home_link", :remote => true do %>
+          <i class="fa fa-lg fa-home"></i>
+          <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
-      </li>
-
-      <% if policy(Player.new).create? %>
+      </li> 
+      <% if policy(Player.instance).create? || policy(Player.instance).profile?%>
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
-          <ul style="display:block;">
-            <% if policy(Player.new).create? %>
+          <ul style="display:block;"> 
+            <% if policy(Player.instance).create? %>
               <li id="nav_create_player">
                 <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.create_player")%></span>
                 <% end %>
               </li>
             <% end %>
+            <% if policy(Player.instance).profile? %>
+              <li id="nav_player_profile">
+                <%= link_to players_search_path + "?operation=profile", :title => t("tree_panel.profile") , :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.profile")%></span>
+                <% end %>
+              </li>
+            <% end %>
           </ul>
         </li>
       <% end %>
-      <% if policy(Player.new).balance? || policy(PlayerTransaction.new).search? %>
+      <% if policy(Player.instance).balance? || policy(PlayerTransaction.instance).search? %>
         <li>
           <a href="#" class="unlink"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
           <ul style="display:block;">
-            <% if policy(Player.new).balance? %>
+            <% if policy(Player.instance).balance? %>
               <li id="nav_balance_enquiry">
                 <%= link_to players_search_path + "?operation=balance", :title => t("tree_panel.balance"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
                 <% end %>
               </li>
             <% end %>
-            <% if policy(PlayerTransaction.new).search? %>
+            <% if policy(PlayerTransaction.instance).search? %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
@@ -56,18 +63,18 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(Shift.new).roll? || policy(Shift.new).search_fm? %>
+      <% if policy(Shift.instance).roll? || policy(Shift.instance).search_fm? %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>
           <ul style="display:block;">
-            <% if policy(Shift.new).roll? %>
+            <% if policy(Shift.instance).roll? %>
               <li id="nav_roll_shift">
                 <%= link_to shifts_path, :title => t("tree_panel.roll_shift"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.roll_shift") %></span>
                 <% end %>
               </li>
             <% end %>
-            <% if policy(Shift.new).search_fm? %>
+            <% if policy(Shift.instance).search_fm? %>
               <li id="nav_front_money">
                 <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.front_money") %></span>
@@ -77,9 +84,44 @@
           </ul>
         </li>
       <% end %>
+      <% if policy(AuditLog.instance).search? %>
+        <li>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
+          <ul style="display:block;">
+            <% if policy(AuditLog.instance).search? %>
+              <li id="nav_audit_log">
+                <%= link_to search_audit_logs_path, :title => t("tree_panel.audit_log"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.audit_log") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+      <% if policy(Location.instance).list? || policy(Station.instance).list? %> 
+        <li>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-map-marker"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
+          <ul style="display:block;">
+            <% if policy(Location.instance).list? %>
+              <li id="nav_location">
+                <%= link_to list_locations_path("active"), :title => t("tree_panel.location"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.location") %></span>
+                <% end %>
+              </li>
+            <% end %>
+            <% if policy(Station.instance).list? %>
+              <li id="nav_stations">
+                <%= link_to list_stations_path("active"), :title => t("tree_panel.station"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.station") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
     </ul>
   </nav>
-  <span class="minifyme" data-action="minifyMenu">
+  <span class="minifyme" data-action="minifyMenu" id="miniMenu">
     <i class="fa fa-arrow-circle-left hit"></i>
   </span>
 </aside>
@@ -95,3 +137,54 @@
   color: #a8a8a8;
 }
 </style>
+
+<script type='text/javascript'>
+  $("li ul li").attr("onclick","ActiveOption(event)");
+  $("li#nav_home").attr("onclick","ActiveOption(event)");
+
+  function ActiveOption(e){
+    RemoveActiveOption();
+    target = e.target;
+    while(target!=null && target.nodeName!= "LI"){
+      target = target.parentNode
+    }
+    $(target).addClass("active");
+  }
+
+  $(document).ready(function(){
+    function changeHomeBackground(){
+      if ($("body").hasClass('desktop-detected pace-done minified')) {
+         document.getElementById('nav_home').style.background = 'rgba(69,69,69,0.6)';
+         document.getElementById('nav_home').style.padding =  '7px 0';
+      } else {
+        document.getElementById('nav_home').style.background = '';
+        document.getElementById('nav_home').style.padding =  '';
+      }
+    }
+
+    $("#miniMenu").click(function(){
+      setTimeout(changeHomeBackground(), 3000);
+    });
+
+    $('#home_link').mouseover(function(){
+      $('#home_link').css("background-color","rgba(70,70,70,1)");
+    });
+      
+    $('#home_link').mouseleave(function(){
+      $('#home_link').css("background-color","rgba(69,69,69,0)");
+    });
+
+    $("a").click(function(){
+      document.getElementById('flash_message').style.display = 'block';
+      document.getElementById('flash_message').className = '';
+      document.getElementById('flash_message').style.marginLeft = '';
+    });
+  });
+
+  function RemoveActiveOption(){
+    $("li ul li").removeClass("active");
+    $("li#nav_home").removeClass("active");
+  }
+</script>
+
+<%= javascript_include_tag "setTerminalIDToRequestHeader" %>

@@ -1,5 +1,6 @@
 CmsRws::Application.routes.draw do
 
+
   devise_for :users, controllers: {:sessions => "user_sessions"}
 
   devise_scope :user do
@@ -16,6 +17,11 @@ CmsRws::Application.routes.draw do
   get "balance" => 'players#balance'
   get "search" => 'players#search' ,:as => :players_search
   post "search" => "players#do_search"
+  get "profile" => "players#profile"
+  get "edit" => "players#edit"
+  post "lock_account" => "players#lock_account"
+  post "unlock_account" => "players#unlock_account"
+  post "update" => "players#update"
   resources :players
 
   get 'fund_in' => 'fund_in#new'
@@ -46,7 +52,22 @@ CmsRws::Application.routes.draw do
       get 'current'
     end
   end
+  
+  get 'search_audit_logs' => 'audit_logs#search'
+  post 'search_audit_logs' => 'audit_logs#do_search'
 
+  get 'list_locations' => 'locations#list'
+  post 'change_location_status' => 'locations#change_status'
+  get 'list_locations/:status' => 'locations#list', :as => :list_locations
+  post 'add_location' => 'locations#add'
+  
+  get 'list_stations/:status' => 'stations#list', :as => :list_stations
+  post 'create_station' => 'stations#create'
+  post 'change_station_status' => 'stations#change_status'
+  post 'register_terminal' => 'stations#register'
+  post 'unregister_terminal' => 'stations#unregister'
+  get 'stations/current/:terminal_id' => 'stations#current'
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

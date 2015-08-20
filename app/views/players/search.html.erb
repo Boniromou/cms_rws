@@ -1,38 +1,50 @@
-<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t(@search_title)) %>
-<%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
-  <fieldset>
-    <div class="row">
-      <div class="col-sm-3">
-        <section class="smart-form">
-          <div class="inline-group">
-            <label class="radio">
-              <input type="radio" id="card_id" name="id_type" value="card_id" <%= checked="checked" if @id_type != "member_id" %>>
-              <i>
-              </i>
-              <%= t("general.card_id") %>
-            </label>
-            <label class="radio">
-              <input type="radio" id="member_id" name="id_type" value="member_id" <%= checked="checked" if @id_type == "member_id" %>>
-              <i>
-              </i>
-              <%= t("general.member_id") %>
-            </label>
-          </div>
-        </section>
-      </div>
+<%= search_page_bread_crumb(t(@search_title)) %>
 
-      <div class="col-sm-4">
-        <section class="smart-form">
-          <label class="input">
-            <%= text_field_tag(:"id_number", @id_number, autofocus: true) %>
-          </label>
-        </section>
-      </div>
-      <%= content_tag(:button, create_icon("fa fa-fw fa-search fa-lg"), :class => "btn btn-primary", :id=> "button_find")%>
-    </div>
-    
-  </fieldset>
-<% end %>
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
+       
+
+    <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
+      <fieldset>
+        <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <section class="smart-form">
+              <div class="inline-group">
+                <label class="radio">
+                  <input type="radio" id="card_id" name="id_type" value="card_id" <%= checked="checked" if @id_type != "member_id" %>>
+                  <i>
+                  </i>
+                  <%= t("general.card_id") %>
+                </label>
+                <label class="radio">
+                  <input type="radio" id="member_id" name="id_type" value="member_id" <%= checked="checked" if @id_type == "member_id" %>>
+                  <i>
+                  </i>
+                  <%= t("general.member_id") %>
+                </label>
+              </div>
+            </section>
+          </div>
+
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <section class="smart-form">
+              <label class="input">
+                <%= text_field_tag(:"id_number", @id_number, autofocus: true) %>
+              </label>
+            </section>
+          </div>
+        </div>
+        <div class="form-actions">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <%= submit_tag t("button.search"), :id => "button_find", :class => "btn btn-primary"  %>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
+
+
 
 <br/>
 <% if @found == "false" %>
@@ -42,15 +54,23 @@
       <%= t("search_error.not_found") %>
       <% if policy(Player.new).create? %>
         <%= t("search_error.create_player")%>
-        <%= link_to "create", new_player_path + "?#{@id_type}=#{@id_number}", :remote => true, :class => "btn btn-warning"%>
+        <%= link_to t("button.create"), new_player_path + "?#{@id_type}=#{@id_number}", :remote => true, :class => "btn btn-warning"%>
       <% end %>
     </div>
   </div>
   <% end %>
 <% end %>
 
+  </div>
+</div>
+
+
 <script>
   $(document).ready(function() {
     $('input[autofocus="autofocus"]').focus();
+
+    $('input:radio[name="id_type"]').click(function() {
+      $('input[autofocus="autofocus"]').focus();
+    });
   });
 </script>

@@ -1,0 +1,89 @@
+<%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),[t("tree_panel.profile"),t("tree_panel.edit")]) %>
+
+<section class='smart-form'>
+  <%= form_for @player, :remote => true, html: {id: :edit_player, autocomplete: :off } do |f| %>
+    <fieldset style='padding: 1px;'>
+    <div>
+      <%= hidden_field(:player, :member_id) %>
+    </div>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :card_id, t("general.card_id") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :card_id, autofocus: true, pattern: '^\d+$', oninput: 'validateNumberOnlyAndMaxLength($(this), value, CARD_ID_LENGTH_LIMIT)' %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.card_id_length_error") %>
+          </label>
+        </div>
+      </div>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :first_name, t("general.first_name") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :first_name %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.first_name_blank_error") %>
+          </label>
+        </div>
+      </div>
+      <div class='row' style='padding-bottom: 10px;'>
+        <div class='col col-2'>
+          <label class='input'>
+            <%= f.label :last_name, t("general.last_name") %>:
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='input'>
+            <%= f.text_field :last_name %>
+          </label>
+        </div>
+        <div class='col col-3'>
+          <label class='invisible_error'>
+            <%= t("create_player.last_name_blank_error") %>
+          </label>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col col-5'>
+          <footer>
+            <%= f.submit t("button.confirm"), class: 'btn btn-primary pull-right', id: 'edit_player_submit' %>
+            <%= link_to  t("button.cancel"), profile_path + "?member_id=#{@player.member_id}", :remote => true, class: 'btn btn-default pull-right', id: 'edit_player_cancel' %>
+          </footer>
+        </div>
+      <div>
+    </fieldset>
+  <% end %>
+</section>
+
+<%= javascript_include_tag "validate.input.js" %>
+<%= javascript_include_tag "validate.player.info.js" %>
+
+<script>
+  var form_id = "edit_player";
+  var lengthLimit = [CARD_ID_LENGTH_LIMIT, 0];
+  var formComps = [$("form#"+ form_id +" input#player_card_id"), $("form#"+ form_id +" input#player_first_name"), $("form#"+ form_id +" input#player_last_name")];
+  
+  $("form#" + form_id + " input#edit_player_submit").click(function(e) {
+    e.preventDefault();
+
+    if ( formValidated(form_id, formComps, lengthLimit) ) {
+      $("form#"+ form_id).submit();
+    }
+  });
+</script>
+
+

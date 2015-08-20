@@ -1,5 +1,6 @@
 class FundOutController < FundController
-  rescue_from BalanceNotEnough, :with => :handle_balance_not_enough
+  rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
+
   def operation_sym
     :withdraw?
   end
@@ -12,14 +13,11 @@ class FundOutController < FundController
     "withdrawal"
   end
 
-  def get_server_amount(amount)
-    server_amount = super(amount)
-    balance = @player.balance
-    validate_balance_enough( server_amount, balance )
-    server_amount
-  end
-  
   def handle_balance_not_enough(e)
-    handle_fund_error({ key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: @player.balance_str} })
+    handle_fund_error({ key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: to_formatted_display_amount_str(e.message)} })
+  end
+
+  def call_iwms(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, employee_id)
+    iwms_requester.withdraw(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, employee_id)
   end
 end

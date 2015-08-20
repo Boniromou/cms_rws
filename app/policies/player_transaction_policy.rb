@@ -1,10 +1,10 @@
 class PlayerTransactionPolicy < ApplicationPolicy
   def deposit?
-    is_admin? || has_permission?('player_transaction', 'deposit')
+    (is_admin? || has_permission?('player_transaction', 'deposit')) && @user.have_enable_station
   end
 
   def withdraw?
-    is_admin? || has_permission?('player_transaction', 'withdraw')
+    (is_admin? || has_permission?('player_transaction', 'withdraw')) && @user.have_enable_station
   end
 
   def print?
@@ -17,5 +17,9 @@ class PlayerTransactionPolicy < ApplicationPolicy
   
   def reprint?
     is_admin? || has_permission?('player_transaction', 'reprint')
+  end
+
+  def print_report?
+    is_admin? || has_permission?('player_transaction', 'print_report')
   end
 end

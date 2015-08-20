@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :check_session_expiration, :authenticate_user!
+  before_filter :check_session_expiration, :authenticate_user!, :pass_terminal_id
 
   layout false
 
@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
       format.js { render partial: "shared/error404", formats: [:js], :status => :not_found }
     end
   end
+
+  def iwms_requester
+    Requester::Standard.new(PROPERTY_ID, 'test_key', IWMS_URL + IWMS_PATH)
+  end
   
   protected
 
@@ -31,6 +35,17 @@ class ApplicationController < ActionController::Base
       reset_session
     else
       session[:accessed_at] = Time.now.utc
+    end
+  end
+
+  def pass_terminal_id
+    current_user.set_have_enable_station(true) if is_have_enable_station
+  end
+
+  def is_have_enable_station
+    @station = Station.find_by_terminal_id(request.headers['TerminalID'])
+    if @station
+      return current_user && @station.status == 'active' && request.headers['TerminalID'] != nil
     end
   end
 
@@ -47,8 +62,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_station_id
-    #TODO
-    1
+    @current_station = Station.find_by_terminal_id(request.headers['TerminalID'])
+    return @current_station.id if @current_station
   end
 
   def permission_granted?(model, operation = nil)
@@ -60,7 +75,10 @@ class ApplicationController < ActionController::Base
       end
     rescue NotAuthorizedError => e
       flash[:alert] = "flash_message.not_authorize"
-      redirect_to home_path
+      respond_to do |format|
+        format.html { render "home/index", formats: [:html] }
+        format.js { render "home/unauthorized", formats: [:js] }
+      end
       return false
     end
     true
@@ -70,6 +88,8 @@ class ApplicationController < ActionController::Base
     @from = params[:from]
     Rails.logger.error "#{e.message}"
     Rails.logger.error "#{e.backtrace.inspect}"
+    puts e.backtrace
+    puts e.message
     respond_to do |format|
       format.html { render partial: "shared/error500", formats: [:html], layout: "error_page", :status => :internal_server_error }
       format.js { render partial: "shared/error500", formats: [:js], :status => :internal_server_error }

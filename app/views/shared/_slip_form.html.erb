@@ -8,7 +8,8 @@
   </div>
   <div class="row">
     <div class="col-sm-2">Player Name:</div>
-    <div class="col-sm-2"><%=@player.player_name  %></div>
+    <div class="col-sm-2"><%=@player.first_name  %></div>
+    <div class="col-sm-2"><%=@player.last_name  %></div>
     <div class="col-sm-2">Date/Time:</div>
     <div class="col-sm-2"><%= format_time(@transaction.created_at) %></div>
   </div>

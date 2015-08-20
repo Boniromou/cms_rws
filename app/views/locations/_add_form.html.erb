@@ -1,0 +1,53 @@
+
+            <fieldset>
+              <div class="row">
+                
+              <%= form_tag(add_location_path, :remote => true, :id => "add_location") do %>
+                <div class="col-xs-8 col-sm-6 col-md-6 col-lg-2">
+                  <section class="smart-form">
+                    <label class="label"><%= t("location.location") %></label>
+                    <label class="input">
+                      <%= text_field_tag :name %>
+                    </label>
+                  </section>
+                </div>
+              <% end %>
+            
+                <div class="col-sm-2">
+                  <section class="smart-form">
+                    <label class="label" style='visibility: hidden;'><%= t("button.add") %></label>
+                  </section>
+                  <% pop_up_btn :id => "add_location_confirm", :str => t("button.add"), :form_id => "add_location", :style => "disabled" do %>
+                    <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">
+                      <table>
+                        <tr>
+                          <td><p><%= t("confirm_box.add_location")%>&nbsp</p></td>
+                          <td><p id="location_name"></p></td> 
+                          <td><p>?</p></td> 
+                        </tr>
+                      </table>
+                    </div>
+                  <% end %>
+                
+            </fieldset>
+
+<script type='text/javascript'>
+  function updateLocationName(){
+    name = $('form#add_location input#name').val()
+    $('#pop_up_dialog #location_name').text(name);
+  }
+  
+  $('#add_location_confirm').click(function() {
+    updateLocationName();
+  });
+
+  $(document).ready(function(){
+    $('form#add_location input#name').keyup(function(){
+      $("#add_location_confirm").removeClass("disabled");
+      if (!$('form#add_location input#name').val().match(/\S/)){
+        $("#add_location_confirm").addClass("disabled");
+      }
+    });
+  });
+
+</script>

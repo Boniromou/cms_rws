@@ -1,105 +1,137 @@
-<%= form_tag(search_transactions_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
-  <fieldset>
-    <div class="row">
-      <div class="col-sm-3">
-        <section class="smart-form">
-          <div class="inline-group">
-            <label class="radio">
-              <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
-              <i>
-              </i>
-              <%= t("general.card_id") %>
-            </label>
-            <label class="radio">
-              <input type="radio" id="member_id" name="id_type" value="member_id">
-              <i>
-              </i>
-              <%= t("general.member_id") %>
-            </label>
-          </div>
-        </section>
-      </div>
-      
-      <div class="col-sm-5">
-        <section class="smart-form">
-          <label class="input">
-            <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
-          </label>
-        </section>
-      </div>
-    </div>
+<div class="row">
+ <div class="col-xs-12 col-sm-8 col-md-8 col-lg-5">
+    <%= form_tag(search_transactions_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
+      <div id="search-tabs">
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
+          <li>
+            <a id="byMemberTab" class="tab-link" href="#tabs-a"><%= t("transaction_history.by_member") %></a>
+          </li>
+          <li>
+            <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_transaction_id") %></a>
+          </li>
+        </ul>
 
-    <div class="row">
-      <div class="col-sm-1">
-        <section class="smart-form">
-        <br/>
-          <label class="label lower"><%= t("transaction_history.start_date") %></label>
-        </section>
+        <div id="tabs-a">
+          <br/>
+          <div class="row">
+            <div class="col-md-5">
+              <section class="smart-form">
+                <div class="inline-group">
+                  <label class="radio">
+                    <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
+                    <i></i>
+                    <%= t("general.card_id") %>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" id="member_id" name="id_type" value="member_id">
+                    <i></i>
+                    <%= t("general.member_id") %>
+                  </label>
+                </div>
+              </section>
+            </div>
+            
+            <div class="col-md-7">
+              <section class="smart-form">
+                <label class="input">
+                  <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
+                </label>
+              </section>
+            </div>
+          </div>
+<br/>
+          <div class="row">
+            <div class="col-md-6">
+              <section class="smart-form">
+              
+        
+                <label class="label lower"><%= t("transaction_history.start_date") %></label>
+                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
+              </section>
+            </div>
+            
+            <div class="col-md-6">
+              <section class="smart-form">
+           
+                <label class="label lower"><%= t("transaction_history.end_date") %></label>
+                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div id="tabs-b">
+          <br/>
+          <div class="row">
+            <div class="col-md-3">
+              <section class="smart-form">
+                <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
+              </section>
+            </div>
+            <div class="col-md-9">
+              <section class="smart-form">
+                <label class="input">
+                  <%= text_field_tag(:"transaction_id", nil, autofocus: true) %>
+                </label>
+              </section>
+            </div>
+          </div>
+          <br/>
+        </div>
       </div>
-      <div class="col-sm-3">
-        <section class="smart-form">
-        <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
-        </section>
+              
+      <div class="form-actions">
+        <div class="row">
+          <div class="col-md-12">
+            <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>
+          </div>
+        </div>
       </div>
-      <div class="col-sm-1">
-        <section class="smart-form">
-        <br/>
-          <label class="label lower"><%= t("transaction_history.end_date") %></label>
-        </section>
-      </div>
-      <div class="col-sm-3">
-        <section class="smart-form">
-        <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
-        </section>
-      </div>
-    </div>
-    
-    
-    <div class="row">
-      <div class="col-sm-1">
-        <section class="smart-form">
-          <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
-        </section>
-      </div>
-      <div class="col-sm-7">
-        <section class="smart-form">
-          <label class="input">
-            <%= text_field_tag(:"transaction_id") %>
-          </label>
-        </section>
-      </div>
-    </div>
-      
-    <div class="row">
-      <div class="col-sm-1">
-        <section class="smart-form">
-        </br>
-          <label class="label"><%= t("report_search.limit_remark") %></label>
-        </section>
-      </div>
-    </div>
-    
-  </fieldset>
-    
-  <div class="form-actions">
-    <div class="row">
-      <div class="col-md-12">
-        <%= hidden_field_tag 'from', search_transactions_path %>
-        <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary"  %>
-      </div>
-    </div>
+
+      <%= hidden_field_tag 'from', search_transactions_path %>
+      <%= hidden_field_tag 'selected_tab_index', 0 %>
+    <% end %>
   </div>
-<% end %>
+</div>
+</br>
 
 <script>
   $(document).ready(function() {
-    $('input[autofocus="autofocus"]').focus();
+    $("#byTransactionIDTab").click(function(){
+      $("#search").attr("disabled", false);
+      document.getElementById('flash_message').style.display = 'none';
+    });
+
+    $("#byMemberTab").click(function(){
+      $("#search").attr("disabled", false);
+      document.getElementById('flash_message').style.display = 'block';
+    });
+
+    $("#search").click(function(){
+      document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-8 col-lg-5';
+      document.getElementById('flash_message').style.marginLeft = '0px';
+    });    
+
+    $('div#search-tabs').tabs({
+      activate: function(event, ui) {
+        $('input[autofocus="autofocus"]', ui.newPanel).focus();
+        $('#selected_tab_index').val(ui.newTab.index());
+      },
+      create: function(event, ui) {
+        $('input[autofocus="autofocus"]', ui.panel).focus();
+        $('#selected_tab_index').val(ui.tab.index());
+      }
+    });
+
+    $('input:radio[name="id_type"]').click(function() {
+      $('input[autofocus="autofocus"]').focus();
+    });
   });
 </script>
 
 <style type="text/css">
   .lower{
     padding-top: 7px;
-    }
+  }
 </style>
   

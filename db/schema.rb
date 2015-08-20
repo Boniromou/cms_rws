@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150430044031) do
+ActiveRecord::Schema.define(:version => 20150804021563) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -39,6 +39,13 @@ ActiveRecord::Schema.define(:version => 20150430044031) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "locations", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "status"
+  end
+
   create_table "player_transactions", :force => true do |t|
     t.integer  "shift_id"
     t.integer  "player_id"
@@ -58,14 +65,14 @@ ActiveRecord::Schema.define(:version => 20150430044031) do
   add_index "player_transactions", ["user_id"], :name => "fk_playerTransaction_user_id"
 
   create_table "players", :force => true do |t|
-    t.string   "player_name"
     t.string   "member_id"
     t.string   "card_id"
     t.integer  "currency_id"
-    t.integer  "balance",     :limit => 8
     t.string   "status"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
   add_index "players", ["card_id"], :name => "index_players_on_card_id", :unique => true
@@ -96,9 +103,14 @@ ActiveRecord::Schema.define(:version => 20150430044031) do
 
   create_table "stations", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "machine_id"
+    t.integer  "location_id"
+    t.string   "status"
   end
+
+  add_index "stations", ["location_id"], :name => "fk_location_id"
 
   create_table "transaction_types", :force => true do |t|
     t.string   "name"

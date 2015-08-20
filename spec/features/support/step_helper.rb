@@ -41,7 +41,11 @@ module StepHelper
   def set_permission(user,role,target,permissions)
     cache_key = "#{APP_NAME}:permissions:#{user.uid}"
     origin_permissions = Rails.cache.fetch cache_key
-    origin_perm_hash = origin_permissions[:permissions][:permissions]
+    if origin_permissions.nil?
+      origin_perm_hash = {}
+    else
+      origin_perm_hash = origin_permissions[:permissions][:permissions]
+    end
     perm_hash = origin_perm_hash.merge({target => permissions})
     permission = {:permissions => {:role => role, :permissions => perm_hash}}
     Rails.cache.write cache_key,permission
@@ -62,16 +66,18 @@ module StepHelper
       rescue RSpec::Expectations::ExpectationNotMetError => e
         expect(page).to have_content "Waiting for accounting date"
       end
-      begin
-        expect(page).to have_content I18n.t("shift.#{@shift}")
-      rescue RSpec::Expectations::ExpectationNotMetError => e
-        expect(page).to have_content "Waiting for shift"
-      end
+      # begin
+      #   expect(page).to have_content I18n.t("shift.#{@shift}")
+      # rescue RSpec::Expectations::ExpectationNotMetError => e
+      #   expect(page).to have_content "Waiting for shift"
+      # end
     end
   end
 
-  def check_search_page
-    check_title("tree_panel.balance")
+  def check_search_page(title = "balance")
+    check_title("tree_panel.#{title}")
+    expect(page.source).to have_selector("input#card_id")
+    expect(page.source).to have_selector("input#member_id")
     expect(page.source).to have_selector("input#id_number")
   end
 
@@ -90,27 +96,43 @@ module StepHelper
     fill_in "id_number", :with => id_number
   end
 
-  def check_balance_page
+  def check_balance_page(balance = 0)
     check_title("tree_panel.balance")
-    expect(find("label#player_balance").text).to eq to_display_amount_str(@player.balance)
+    expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
+  end
+
+  def check_profile_page(balance = 0)
+    check_title("tree_panel.profile")
+    expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
+  end
+
+  def check_edit_page
+    check_title("tree_panel.edit")
+    expect(page.source).to have_selector("input#player_card_id")
+    expect(page.source).to have_selector("input#player_first_name")
+    expect(page.source).to have_selector("input#player_last_name")
   end
 
   def check_player_info
-    expect(find("label#player_name").text).to eq @player.player_name.upcase
+    expect(find("label#player_full_name").text).to eq @player.full_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
+    expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player.status}")
+  end
+
+  def check_player_transaction_page_time_picker
+    expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
+    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
   end
 
   def check_player_transaction_page
     expect(find("input#card_id")[:checked]).to eq "checked"
-    expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
-    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
+    check_player_transaction_page_time_picker
   end
 
   def check_player_transaction_page_js
     expect(find("input#card_id")[:checked]).to eq true
-    expect(find("input#datetimepicker_start_time").value).to eq Time.now.strftime("%Y-%m-%d 00:00:00")
-    expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
+    check_player_transaction_page_time_picker
   end
 
   def check_search_fm_page
@@ -132,7 +154,7 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.player_name
+    expect(item[1].text).to eq player.full_name.upcase
     expect(item[2].text).to eq player.member_id
     expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
@@ -153,6 +175,7 @@ module StepHelper
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true)
     items = all("table#datatable_col_reorder tbody tr")
+    expect(items.length).to eq transaction_list.length
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
@@ -179,12 +202,12 @@ module StepHelper
         end
         i += 1
       end
-      within items[i] do
-        tds = all("td")
-        expect(tds[1].text).to eq to_display_amount_str(total_deposit)
-        expect(tds[2].text).to eq to_display_amount_str(total_withdraw)
-      end
-      i += 1
+#      within items[i] do
+#        tds = all("td")
+#        expect(tds[1].text).to eq to_display_amount_str(total_deposit)
+#        expect(tds[2].text).to eq to_display_amount_str(total_withdraw)
+#      end
+#      i += 1
     end
   end
 
@@ -203,7 +226,7 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.player_name
+    expect(item[1].text).to eq player.full_name.upcase
     expect(item[2].text).to eq player.member_id
     expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
@@ -214,6 +237,84 @@ module StepHelper
     expect(item[9].text).to eq deposit_str
     expect(item[10].text).to eq withdraw_str
     expect(item[11].text).to eq to_display_amount_str(player_transaction.amount)
+  end
+
+  def check_stations_table_items(station_list,permission_list)
+    items = all("table#datatable_col_reorder tbody tr")
+    expect(items.length).to eq station_list.length
+    items.length.times do |i|
+      expect(items[i][:id]).to eq "station_#{station_list[i].id}"
+      within items[i] do
+        check_stations_table_contents(all("td"),station_list[i],permission_list)
+      end
+    end
+  end
+
+  def check_stations_table_contents(item, station, permission_list)
+    expect(item[0].text).to eq station.id.to_s
+    expect(item[1].text).to eq station.location.name
+    expect(item[2].text).to eq station.name
+    expect(item[3].text).to eq station.terminal_id || ""
+    expect(item[4].text).to eq station.updated_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    within item[5] do
+      if permission_list[:change_status]
+        expect(page.source).to have_selector("button#change_station_status_#{station.id}")
+      end
+      if permission_list[:register]
+        btn_prefix = ""
+        btn_prefix = "un" unless station.terminal_id.nil?
+        expect(page.source).to have_selector("button##{btn_prefix}register_terminal_#{station.id}")
+      end
+    end
+  end
+
+  def click_pop_up_confirm(btn_id, content_list)
+    find("div#button_set button##{btn_id}").click
+    within ("div#pop_up_content") do
+      content_list.each do |str|
+        expect(page).to have_content str
+      end
+    end
+    find("div#pop_up_dialog div#pop_up_confirm_btn button#confirm").trigger('click')
+  end
+
+  def set_terminal_id(terminal_id)
+    visit page.current_url + "?terminal_id=" + terminal_id
+  end
+
+  def register_terminal
+    @location5 = Location.create!(:name => "LOCATION5", :status => "active")
+    @station5 = Station.create!(:name => "STATION5", :status => "active", :location_id => @location5.id)
+    visit list_stations_path("active")
+    content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station5.full_name)]
+    click_pop_up_confirm("register_terminal_" + @station5.id.to_s, content_list)
+
+    check_flash_message I18n.t("terminal_id.register_success", station_name: @station5.full_name)
+    @station5.reload
+    expect(@station5.terminal_id).to_not eq nil
+  end
+
+  def go_to_deposit_page
+    visit home_path
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+    check_balance_page
+
+    within "div#content" do
+        click_link I18n.t("button.deposit")
+    end
+  end
+
+  def go_to_withdraw_page
+    visit home_path
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+
+    within "div#content" do
+        click_link I18n.t("button.withdrawal")
+    end
   end
 end
 RSpec.configure do |config|

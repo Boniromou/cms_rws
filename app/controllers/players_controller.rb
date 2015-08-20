@@ -6,20 +6,28 @@ class PlayersController < ApplicationController
     @player = Player.new
     @player.card_id = params[:card_id]
     @player.member_id = params[:member_id]
-    @player.player_name = params[:player_name]
+    @player.first_name = params[:first_name]
+    @player.last_name = params[:last_name]
   end
 
   def create
     return unless permission_granted? Player.new
     begin
       AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        Player.create_by_params(params[:player])
+        Player.transaction do
+          Player.create_by_params(params[:player])
+          iwms_requester.create_player(params[:player][:member_id], 'HKD')
+        end
       end
-      flash[:success] = "create_player.success"
+      flash[:success] = {key: "create_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
       redirect_to :action => 'balance', :member_id => params[:player][:member_id]
-    rescue RuntimeError => e
+    rescue CreatePlayer::ParamsError => e
       flash[:error] = "create_player." + e.message
-      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :player_name => params[:player][:player_name]
+      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
+    rescue CreatePlayer::DuplicatedFieldError => e
+      field = e.message
+      flash[:error] = {key: "create_player." + field + "_exist", replace: {field.to_sym => params[:player][field.to_sym]}}
+      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
     end
   end
 
@@ -29,6 +37,7 @@ class PlayersController < ApplicationController
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
+      @player_balance = iwms_requester.get_player_balance(member_id)
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
@@ -56,6 +65,82 @@ class PlayersController < ApplicationController
       redirect_to :action => 'search', :found => false, :id_number => id_number, :id_type => id_type, :operation => @operation
     else
       redirect_to eval( @operation + "_path" )  + "?member_id=" + member_id
+    end
+  end
+
+  def profile
+    begin
+      member_id = params[:member_id]
+      @player = Player.find_by_member_id(member_id)
+      @player_balance = iwms_requester.get_player_balance(member_id)
+    rescue Exception => e
+      flash[:alert] = "player not found"
+      redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
+    end
+  end
+
+  def edit
+    member_id = params[:member_id]
+    @player = Player.find_by_member_id(member_id)
+  end
+
+  def update
+    return unless permission_granted? Player.new
+    begin
+      AuditLog.player_log("edit", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        Player.update_by_params(params[:player])
+      end
+      flash[:success] = {key: "update_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
+      redirect_to :action => 'profile', :member_id => params[:player][:member_id]
+    rescue RuntimeError => e
+      flash[:error] = "update_player." + e.message
+      redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
+    end
+  end
+
+  def lock_account
+    return unless permission_granted? Player.new, :lock?
+
+    begin
+      member_id = params[:member_id]
+      player = Player.find_by_member_id(member_id)
+
+      AuditLog.player_log("lock", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        Player.transaction do
+          player.lock_account!
+          iwms_requester.lock_player(member_id)
+        end
+      end
+
+      flash[:success] = { key: "lock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
+      redirect_to :action => 'profile', :member_id => member_id
+    rescue Exception => e
+      p e.message
+      p e.class
+      raise e
+    end
+  end
+
+  def unlock_account
+    return unless permission_granted? Player.new, :unlock?
+
+    begin
+      member_id = params[:member_id]
+      player = Player.find_by_member_id(member_id)
+
+      AuditLog.player_log("unlock", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+        Player.transaction do
+          player.unlock_account!
+          iwms_requester.unlock_player(member_id)
+        end
+      end
+
+      flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
+      redirect_to :action => 'profile', :member_id => member_id
+    rescue Exception => e
+      p e.message
+      p e.class
+      raise e
     end
   end
 end

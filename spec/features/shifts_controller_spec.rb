@@ -94,7 +94,7 @@ describe ShiftsController do
 
       visit shifts_path
       expect(page).to_not have_content I18n.t("tree_panel.roll_shift")
-      expect(current_path).to eq home_path
+      check_home_page
     end
 
     it '[9.1] successfully roll shift (morning to swing)', js: true do
@@ -189,6 +189,8 @@ describe ShiftsController do
       roll_shift_and_check('morning', @today)
 
       next_shift, next_ac_date = get_next_shift_ac_date('morning', @today)
+
+      sleep 4.seconds
 
       within("body header#header") do
         expect(page).to have_content I18n.t("shift_name.#{next_shift}")

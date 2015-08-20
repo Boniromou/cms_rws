@@ -1,5 +1,5 @@
 <br/>
-<% if policy(PlayerTransaction.new).print? %>
+<% if policy(PlayerTransaction.instance).print? %>
   <button id="print_slip" class="btn btn-primary">Print</button>
 <% end %>
 <%= link_to balance_path + "?member_id=#{@player.member_id}" , :title => t("button.close"), :remote => true, :id => "close_link", :class => "btn btn-primary" do %>
@@ -9,18 +9,15 @@
   <span> <%= t("button.Print")%></span>
 <% end %>
 
+<%= javascript_include_tag "print.js" %>
+
 <script type='text/javascript'>
   $('#print_slip').click(function() {
-    $('#print_link').click()
+    $('#print_link').click();
 
-    var w = window.open();
     var html = $("#slip").html();
 
-    $(w.document.body).html(html);
-    w.print();
-    if( <%= is_close_after_print %>) {
-      w.close();
-    }
+    printHtml(html);
 
     return false;
   });

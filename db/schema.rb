@@ -11,12 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150709014032) do
+ActiveRecord::Schema.define(:version => 20150814044858) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.datetime "purge_at"
   end
 
   create_table "audit_logs", :force => true do |t|
@@ -44,6 +45,7 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "status"
+    t.datetime "purge_at"
   end
 
   create_table "player_transactions", :force => true do |t|
@@ -57,6 +59,8 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.datetime "updated_at",                       :null => false
     t.integer  "station_id"
     t.string   "ref_trans_id"
+    t.datetime "trans_date"
+    t.datetime "purge_at"
   end
 
   add_index "player_transactions", ["player_id"], :name => "fk_player_id"
@@ -73,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.datetime "updated_at",  :null => false
     t.string   "first_name"
     t.string   "last_name"
+    t.datetime "purge_at"
   end
 
   add_index "players", ["card_id"], :name => "index_players_on_card_id", :unique => true
@@ -83,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.datetime "purge_at"
   end
 
   create_table "shifts", :force => true do |t|
@@ -94,6 +100,7 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.datetime "updated_at",               :null => false
     t.integer  "accounting_date_id"
     t.integer  "lock_version"
+    t.datetime "purge_at"
   end
 
   add_index "shifts", ["accounting_date_id"], :name => "fk_accounting_date_id"
@@ -105,9 +112,10 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.string   "name"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.string   "machine_id"
+    t.string   "terminal_id"
     t.integer  "location_id"
     t.string   "status"
+    t.datetime "purge_at"
   end
 
   add_index "stations", ["location_id"], :name => "fk_location_id"
@@ -116,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.datetime "purge_at"
   end
 
   create_table "users", :force => true do |t|
@@ -123,6 +132,7 @@ ActiveRecord::Schema.define(:version => 20150709014032) do
     t.string   "uid"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.datetime "purge_at"
   end
 
 end

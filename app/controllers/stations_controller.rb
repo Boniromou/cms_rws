@@ -14,7 +14,7 @@ class StationsController < ApplicationController
     name = params[:name].upcase
     location_id = params[:location_id]
     begin
-      AuditLog.station_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.station_log("create", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Station.create_by_params(params)
       end
       flash[:success] = {key: "station.add_success", replace: {:name => name, :location => Location.get_name_by_id(location_id)}}
@@ -37,7 +37,7 @@ class StationsController < ApplicationController
     action_str = STATUS_HELPER[target_status.to_sym][:action_str]
     redirect_page = STATUS_HELPER[target_status.to_sym][:opposite]
     begin
-    	AuditLog.station_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+    	AuditLog.station_log(action_str, current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.change_status(target_status)
       end
       flash[:success] = {key: "station." + action_str + "_success", replace: {:name => station.full_name}}
@@ -56,7 +56,7 @@ class StationsController < ApplicationController
     station_id = params[:station_id]
     station = Station.find(station_id)
     begin
-    	AuditLog.station_log("register", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+    	AuditLog.station_log("register", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.register(terminal_id)
       end
       flash[:success] = {key: "terminal_id.register_success", replace: {:station_name => station.full_name}}
@@ -78,7 +78,7 @@ class StationsController < ApplicationController
     station_id = params[:station_id]
     station = Station.find(station_id)
     begin
-    	AuditLog.station_log("unregister", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+    	AuditLog.station_log("unregister", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         station.unregister
       end
       flash[:success] = {key: "terminal_id.unregister_success", replace: {:station_name => station.full_name}}

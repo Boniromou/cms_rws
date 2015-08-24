@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   devise :registerable
 
-  attr_accessible :employee_id, :uid
+  attr_accessible :name, :uid
 
   def set_have_enable_station(have_enable_station)
   	@have_enable_station = have_enable_station

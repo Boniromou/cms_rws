@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  employee_id: MyString
+  name: MyString
 
 two:
-  employee_id: MyString
+  name: MyString

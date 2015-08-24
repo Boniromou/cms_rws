@@ -6,16 +6,16 @@ module StepHelper
   end
 
   def login_as_root
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
     login_as(@root_user)
   end
 =begin
   def login_as(user)
     Rails.cache.write user.uid.to_s, {:status => true, :admin => true}
-    result = {'success' => true, 'system_user' => {'id' => user.uid, 'username' => user.employee_id}}
+    result = {'success' => true, 'system_user' => {'id' => user.uid, 'username' => user.name}}
     UserManagement.stub(:authenticate).and_return(result)
     visit '/login'
-    fill_in "user_username", :with => user.employee_id
+    fill_in "user_username", :with => user.name
     fill_in "user_password", :with => 'secret'
     click_button I18n.t("general.login")
   end
@@ -160,7 +160,7 @@ module StepHelper
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[5].text).to eq shift.name
     expect(item[6].text).to eq station.name
-    expect(item[7].text).to eq user.employee_id
+    expect(item[7].text).to eq user.name
     expect(item[8].text).to eq player_transaction.status
     expect(item[9].text).to eq deposit_str
     expect(item[10].text).to eq withdraw_str
@@ -232,7 +232,7 @@ module StepHelper
     expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[5].text).to eq shift.name
     expect(item[6].text).to eq station.name
-    expect(item[7].text).to eq user.employee_id
+    expect(item[7].text).to eq user.name
     expect(item[8].text).to eq player_transaction.status
     expect(item[9].text).to eq deposit_str
     expect(item[10].text).to eq withdraw_str

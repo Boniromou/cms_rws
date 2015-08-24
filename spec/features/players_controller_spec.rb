@@ -5,7 +5,7 @@ describe PlayersController do
     include Warden::Test::Helpers
     Warden.test_mode!
     PlayerTransaction.delete_all
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -135,7 +135,7 @@ describe PlayersController do
       audit_log = AuditLog.find_by_audit_target("player")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "create"
       audit_log.action.should == "create"
       audit_log.action_status.should == "success"
@@ -163,7 +163,7 @@ describe PlayersController do
       audit_log = AuditLog.find_by_audit_target("player")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "create"
       audit_log.action.should == "create"
       audit_log.action_status.should == "fail"
@@ -174,7 +174,7 @@ describe PlayersController do
     end
 
     it '[3.8] click unauthorized action', js: true do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["create"])
       visit home_path
@@ -185,7 +185,7 @@ describe PlayersController do
     end     
     
     it '[3.9] click link to the unauthorized page', js: true do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit new_player_path
@@ -195,7 +195,7 @@ describe PlayersController do
     end     
     
     it '[3.10] unauthorization for create player', js: true do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
@@ -386,7 +386,7 @@ describe PlayersController do
     end
 
     it '[5.2] click unauthorized action', :js => true do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       visit home_path
@@ -398,7 +398,7 @@ describe PlayersController do
     end     
     
     it '[5.3] click link to the unauthorized page', :js => true do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit balance_path
@@ -408,7 +408,7 @@ describe PlayersController do
     end     
     
     it '[5.4] authorized to search and unauthorized to create' do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       visit players_search_path + "?operation=balance"
@@ -460,7 +460,7 @@ describe PlayersController do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -478,7 +478,7 @@ describe PlayersController do
     end
     
     it '[5.7] unathorized to balance enquriy ' do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
@@ -728,7 +728,7 @@ describe PlayersController do
       audit_log = AuditLog.find_by_audit_target("player")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "update"
       audit_log.action.should == "edit"
       audit_log.action_status.should == "success"
@@ -765,7 +765,7 @@ describe PlayersController do
       audit_log = AuditLog.find_by_audit_target("player")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "update"
       audit_log.action.should == "edit"
       audit_log.action_status.should == "fail"
@@ -776,7 +776,7 @@ describe PlayersController do
     end
 
     it '[14.7] unauthorized for edit player' do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["profile"])
       visit home_path
@@ -822,7 +822,7 @@ describe PlayersController do
     end
     
     it '[14.10] unauthorized for view profile ' do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
@@ -941,7 +941,7 @@ describe PlayersController do
     end 
 
     it '[15.3] unauthorized to lock/unlock' do 
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["profile"])
       visit home_path
@@ -959,7 +959,7 @@ describe PlayersController do
       audit_log = AuditLog.find_by_audit_target("player")
       expect(audit_log).to_not be_nil
       expect(audit_log.audit_target).to eq "player"
-      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_by).to eq @root_user.name
       expect(audit_log.action_type).to eq "update"
       expect(audit_log.action).to eq "lock"
       expect(audit_log.action_status).to eq "success"
@@ -978,7 +978,7 @@ describe PlayersController do
       audit_log = AuditLog.find_by_audit_target("player")
       expect(audit_log).to_not be_nil
       expect(audit_log.audit_target).to eq "player"
-      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_by).to eq @root_user.name
       expect(audit_log.action_type).to eq "update"
       expect(audit_log.action).to eq "unlock"
       expect(audit_log.action_status).to eq "success"

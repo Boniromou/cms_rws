@@ -17,7 +17,7 @@
               <th><%= t("transaction_history.date")%></th>
               <th><%= t("transaction_history.shift")%></th>
               <th><%= t("transaction_history.station")%></th>
-              <th><%= t("transaction_history.employee_id")%></th>
+              <th><%= t("transaction_history.name")%></th>
               <th><%= t("transaction_history.status")%></th>
               <th><%= t("transaction_history.deposit")%></th>
               <th><%= t("transaction_history.withdrawal")%></th>
@@ -36,7 +36,7 @@
                   <td><%= format_time(t.created_at) %></td>
                   <td><%= shift.name %></td>
                   <td><%= Station.get_name_by_id(t.station_id) %></td>
-                  <td><%= user.employee_id %></td>
+                  <td><%= user.name %></td>
                   <td><%= t.status %></td>
                   <td><%= t.deposit_amt_str %></td>
                   <td><%= t.withdrawal_amt_str %></td>

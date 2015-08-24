@@ -13,7 +13,7 @@ class PlayersController < ApplicationController
   def create
     return unless permission_granted? Player.new
     begin
-      AuditLog.player_log("create", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.transaction do
           Player.create_by_params(params[:player])
           iwms_requester.create_player(params[:player][:member_id], 'HKD')
@@ -87,7 +87,7 @@ class PlayersController < ApplicationController
   def update
     return unless permission_granted? Player.new
     begin
-      AuditLog.player_log("edit", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.player_log("edit", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.update_by_params(params[:player])
       end
       flash[:success] = {key: "update_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
@@ -105,7 +105,7 @@ class PlayersController < ApplicationController
       member_id = params[:member_id]
       player = Player.find_by_member_id(member_id)
 
-      AuditLog.player_log("lock", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.transaction do
           player.lock_account!
           iwms_requester.lock_player(member_id)
@@ -128,7 +128,7 @@ class PlayersController < ApplicationController
       member_id = params[:member_id]
       player = Player.find_by_member_id(member_id)
 
-      AuditLog.player_log("unlock", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.transaction do
           player.unlock_account!
           iwms_requester.unlock_player(member_id)

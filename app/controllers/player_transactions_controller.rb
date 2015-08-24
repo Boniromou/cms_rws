@@ -39,7 +39,7 @@ class PlayerTransactionsController < ApplicationController
 
   def print
     return unless permission_granted? PlayerTransaction.new
-    AuditLog.print_log("print", current_user.employee_id, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
+    AuditLog.print_log("print", current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
     end
     member_id = params[:member_id]
     redirect_to balance_path + "?member_id=#{member_id}"

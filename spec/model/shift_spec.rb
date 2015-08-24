@@ -23,9 +23,9 @@ describe Shift do
 
       Shift.create!(:shift_type_id => @shift_type_id, :accounting_date_id => @accounting_date_id)
 
-      @employee_id = 10000
+      @name = 10000
 
-      @user_id = User.create!(:employee_id => @employee_id, :uid => 1).id
+      @user_id = User.create!(:name => @name, :uid => 1).id
 
       @station_id = Station.create!(:name => 'window#1').id
     end

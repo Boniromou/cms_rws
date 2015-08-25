@@ -4,7 +4,7 @@ describe PlayersController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -109,7 +109,7 @@ describe PlayersController do
     end
 
     it '[8.6] Transaction history unauthorized' do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -137,7 +137,7 @@ describe PlayersController do
     end
     
     it '[8.9] Re-print slip unauthorized', js: true do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
@@ -222,7 +222,7 @@ describe PlayersController do
     end
     
     it '[16.2] unauthorized print transaction report', js: true do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["search"])

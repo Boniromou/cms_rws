@@ -12,7 +12,7 @@ layout 'cage'
   def add
     return unless permission_granted? Location.new
     begin
-      AuditLog.location_log("add", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.location_log("add", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
       Location.create_by_name(params[:name])
     end
 
@@ -35,7 +35,7 @@ layout 'cage'
     action_str = STATUS_HELPER[target_status.to_sym][:action_str]
     redirect_page = STATUS_HELPER[target_status.to_sym][:opposite]
     begin
-      AuditLog.location_log(action_str, current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.location_log(action_str, current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         location.change_status(target_status)
       end
       flash[:success] = {key: "location." + action_str + "_success", replace: {:name => location.name.upcase}}
@@ -47,5 +47,4 @@ layout 'cage'
       redirect_to list_locations_path(redirect_page)
     end
   end
-
 end

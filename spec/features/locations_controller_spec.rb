@@ -4,7 +4,7 @@ describe LocationsController do
 	before(:all) do
     	include Warden::Test::Helpers
     	Warden.test_mode!
-    	@root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    	@root_user = User.create!(:uid => 1, :name => 'portal.admin')
   	end
 
   	after(:all) do
@@ -53,7 +53,7 @@ describe LocationsController do
 		end
 
 		it '[19.3] Unauthorized list active/inactive location', js: true do
-			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+			@test_user = User.create!(:uid => 2, :name => 'test.user')
 			login_as_not_admin(@test_user)
 			set_permission(@test_user,"cashier",:location,[])
 			visit list_locations_path("active")
@@ -65,7 +65,7 @@ describe LocationsController do
 		end
 
 		it '[19.4] Click link to the list location page', js: true do
-			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+			@test_user = User.create!(:uid => 2, :name => 'test.user')
       		login_as_not_admin(@test_user)
       		set_permission(@test_user,"cashier",:player,[])
       		visit list_locations_path("active")
@@ -133,7 +133,7 @@ describe LocationsController do
 
 	    it '[20.4] Unauthorized add location' do
 	    	User.delete_all
-	    	@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+	    	@test_user = User.create!(:uid => 2, :name => 'test.user')
 			set_permission(@test_user,"cashier",:location, ["list"])
 			login_as_not_admin(@test_user)
 			visit home_path
@@ -159,7 +159,7 @@ describe LocationsController do
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		audit_log.should_not be_nil
       		audit_log.audit_target.should == "location"
-      		audit_log.action_by.should == @root_user.employee_id
+      		audit_log.action_by.should == @root_user.name
       		audit_log.action_type.should == "create"
       		audit_log.action.should == "add"
       		audit_log.action_status.should == "success"
@@ -184,7 +184,7 @@ describe LocationsController do
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		audit_log.should_not be_nil
       		audit_log.audit_target.should == "location"
-      		audit_log.action_by.should == @root_user.employee_id
+      		audit_log.action_by.should == @root_user.name
       		audit_log.action_type.should == "create"
       		audit_log.action.should == "add"
       		audit_log.action_status.should == "fail"
@@ -265,7 +265,7 @@ describe LocationsController do
 
 		it '[21.5] Unauthorized enable/disable location' do
 			User.delete_all
-	    	@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+	    	@test_user = User.create!(:uid => 2, :name => 'test.user')
 	    	@location = Location.create!(:name => "AAA", :status => "inactive")
 			set_permission(@test_user,"cashier",:location, ["list"])
 			login_as_not_admin(@test_user)
@@ -295,7 +295,7 @@ describe LocationsController do
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		expect(audit_log).to_not be_nil
      		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
+      		expect(audit_log.action_by).to eq @root_user.name
       		expect(audit_log.action_type).to eq "update"
       		expect(audit_log.action).to eq "enable"
       		expect(audit_log.action_status).to eq "success"
@@ -321,7 +321,7 @@ describe LocationsController do
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		expect(audit_log).to_not be_nil
      		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
+      		expect(audit_log.action_by).to eq @root_user.name
       		expect(audit_log.action_type).to eq "update"
       		expect(audit_log.action).to eq "disable"
       		expect(audit_log.action_status).to eq "success"
@@ -350,7 +350,7 @@ describe LocationsController do
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		expect(audit_log).to_not be_nil
      		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
+      		expect(audit_log.action_by).to eq @root_user.name
       		expect(audit_log.action_type).to eq "update"
       		expect(audit_log.action).to eq "enable"
       		expect(audit_log.action_status).to eq "fail"
@@ -377,7 +377,7 @@ describe LocationsController do
 	    	audit_log = AuditLog.find_by_audit_target("location")
       		expect(audit_log).to_not be_nil
      		expect(audit_log.audit_target).to eq "location"
-      		expect(audit_log.action_by).to eq @root_user.employee_id
+      		expect(audit_log.action_by).to eq @root_user.name
       		expect(audit_log.action_type).to eq "update"
       		expect(audit_log.action).to eq "disable"
       		expect(audit_log.action_status).to eq "fail"

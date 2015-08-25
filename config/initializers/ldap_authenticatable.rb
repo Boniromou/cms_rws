@@ -14,7 +14,7 @@ module Devise
         if result['success']
           user = User.find_by_uid(result['system_user']['id'])
           if !user
-            user = User.create!(:uid => result['system_user']['id'], :employee_id => result['system_user']['username'])
+            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'])
           end
           success!(user)
           return

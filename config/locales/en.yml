@@ -158,7 +158,7 @@ en:
     date: "Date"
     shift: "Shift"
     station: "Location"
-    employee_id: "Employee ID"
+    name: "Name"
     status: "Status"
     deposit: "Deposit"
     withdrawal: "Withdrawal"

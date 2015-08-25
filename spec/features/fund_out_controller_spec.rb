@@ -4,7 +4,7 @@ describe FundOutController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -155,7 +155,7 @@ describe FundOutController do
       audit_log = AuditLog.find_by_audit_target("player")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "update"
       audit_log.action.should == "withdrawal"
       audit_log.action_status.should == "success"
@@ -166,7 +166,7 @@ describe FundOutController do
     end
 
     it '[7.11] click unauthorized action (Withdraw)' do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       mock_have_enable_station 
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -189,7 +189,7 @@ describe FundOutController do
     end
 
     it '[7.12] click link to the unauthorized page' do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       mock_have_enable_station 
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -199,7 +199,7 @@ describe FundOutController do
     end
 
     it '[7.13] click unauthorized action (confirm dialog box Withdraw)', :js => true do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       mock_have_enable_station 
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -216,7 +216,7 @@ describe FundOutController do
     end
     
     it '[7.14] click unauthorized action (print slip)', :js => true do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       mock_have_enable_station 
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
@@ -315,7 +315,7 @@ describe FundOutController do
       audit_log = AuditLog.find_by_audit_target("player_transaction")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player_transaction"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "read"
       audit_log.action.should == "print"
       audit_log.action_status.should == "success"

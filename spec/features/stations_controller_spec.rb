@@ -4,7 +4,7 @@ describe StationsController do
 	before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -51,7 +51,7 @@ describe StationsController do
     end
 
 		it '[22.3] Unauthorized list active/inactive station', js: true do
-			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+			@test_user = User.create!(:uid => 2, :name => 'test.user')
 			login_as_not_admin(@test_user)
 			set_permission(@test_user,"cashier",:station,[])
 			visit home_path
@@ -59,7 +59,7 @@ describe StationsController do
 		end
 
 		it '[22.4] Click link to the list station page', js: true do
-			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+			@test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:station,[])
       visit list_stations_path("active")
@@ -149,7 +149,7 @@ describe StationsController do
     end
 
     it '[23.6] Unauthorized add station' do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       set_permission(@test_user,"cashier",:station, ["list"])
       login_as_not_admin(@test_user)
       visit home_path
@@ -176,7 +176,7 @@ describe StationsController do
       audit_log = AuditLog.find_by_audit_target("station")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "station"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "create"
       audit_log.action.should == "create"
       audit_log.action_status.should == "success"
@@ -202,7 +202,7 @@ describe StationsController do
       audit_log = AuditLog.find_by_audit_target("station")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "station"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "create"
       audit_log.action.should == "create"
       audit_log.action_status.should == "fail"
@@ -269,7 +269,7 @@ describe StationsController do
 		end
 
 		it '[24.4] Unauthorized enable/disable station' do
-			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+			@test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:station,["list","register"])
 
@@ -294,7 +294,7 @@ describe StationsController do
       audit_log = AuditLog.find_by_audit_target("station")
       expect(audit_log).to_not be_nil
       expect(audit_log.audit_target).to eq "station"
-      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_by).to eq @root_user.name
       expect(audit_log.action_type).to eq "update"
       expect(audit_log.action).to eq "enable"
       expect(audit_log.action_status).to eq "success"
@@ -319,7 +319,7 @@ describe StationsController do
       audit_log = AuditLog.find_by_audit_target("station")
       expect(audit_log).to_not be_nil
       expect(audit_log.audit_target).to eq "station"
-      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_by).to eq @root_user.name
       expect(audit_log.action_type).to eq "update"
       expect(audit_log.action).to eq "enable"
       expect(audit_log.action_status).to eq "fail"
@@ -393,7 +393,7 @@ describe StationsController do
     end
 
 		it '[25.4] unauthorized Register terminal' do
-			@test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+			@test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:station,["list","change_status"])
 
@@ -441,7 +441,7 @@ describe StationsController do
       audit_log = AuditLog.find_by_audit_target("station")
       expect(audit_log).to_not be_nil
       expect(audit_log.audit_target).to eq "station"
-      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_by).to eq @root_user.name
       expect(audit_log.action_type).to eq "update"
       expect(audit_log.action).to eq "register"
       expect(audit_log.action_status).to eq "success"
@@ -466,7 +466,7 @@ describe StationsController do
       audit_log = AuditLog.find_by_audit_target("station")
       expect(audit_log).to_not be_nil
       expect(audit_log.audit_target).to eq "station"
-      expect(audit_log.action_by).to eq @root_user.employee_id
+      expect(audit_log.action_by).to eq @root_user.name
       expect(audit_log.action_type).to eq "update"
       expect(audit_log.action).to eq "register"
       expect(audit_log.action_status).to eq "fail"

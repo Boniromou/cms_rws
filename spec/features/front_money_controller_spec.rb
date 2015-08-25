@@ -4,7 +4,7 @@ describe FrontMoneyController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -50,7 +50,7 @@ describe FrontMoneyController do
     end
 
     it '[11.2] Search FM Activity Report Unauthorized' do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shift,[""])
       visit home_path
@@ -108,7 +108,7 @@ describe FrontMoneyController do
     end
 
     it '[17.2] unauthorized print FM Activity report', :js => true do
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shift,["search_fm"])
       create_player_transaction

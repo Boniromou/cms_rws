@@ -4,7 +4,7 @@ describe FundInController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :employee_id => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -32,8 +32,9 @@ describe FundInController do
 
     it '[6.1] show Deposit page', :js => true do
       login_as_admin
-      register_terminal
+      mock_have_enable_station
       go_to_deposit_page
+      wait_for_ajax
       check_title("tree_panel.fund_in")
       check_player_info
       expect(page.source).to have_selector("button#confirm")
@@ -42,7 +43,7 @@ describe FundInController do
     
     it '[6.2] Invalid Deposit', :js => true do
       login_as_admin
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 1.111
       expect(find("input#player_transaction_amount").value).to eq "1.11"
@@ -50,7 +51,7 @@ describe FundInController do
 
     it '[6.3] Invalid Deposit(eng)', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => "abc3de"
       expect(find("input#player_transaction_amount").value).to eq ""
@@ -58,7 +59,7 @@ describe FundInController do
 
     it '[6.4] Invalid Deposit (input 0 amount)', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station 
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 0
       find("button#confirm_fund").click
@@ -69,7 +70,7 @@ describe FundInController do
 
     it '[6.5] cancel Deposit', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       find("a#cancel").click
       
@@ -79,7 +80,7 @@ describe FundInController do
 
     it '[6.6] Confirm Deposit', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -94,7 +95,7 @@ describe FundInController do
 
     it '[6.7] cancel dialog box Deposit', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station 
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -115,7 +116,7 @@ describe FundInController do
 
     it '[6.8] Confirm Deposit', :js => true do
       login_as_admin 
-      register_terminal
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -134,7 +135,7 @@ describe FundInController do
 
     it '[6.9] audit log for confirm dialog box Deposit', :js => true do
       login_as_admin
-      register_terminal
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -158,7 +159,7 @@ describe FundInController do
 
     it '[6.10] click unauthorized action (Deposit)', :js => true do
       mock_have_enable_station
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
@@ -182,7 +183,7 @@ describe FundInController do
 
     it '[6.11] click link to the unauthorized page' do
       mock_have_enable_station
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_in_path + "?member_id=#{@player.member_id}"
@@ -192,7 +193,7 @@ describe FundInController do
 
     it '[6.12] click unauthorized action (confirm dialog box Deposit)', :js => true do
       mock_have_enable_station
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
@@ -209,7 +210,7 @@ describe FundInController do
     
     it '[6.13] click unauthorized action (print slip)', :js => true do
       mock_have_enable_station
-      @test_user = User.create!(:uid => 2, :employee_id => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       go_to_deposit_page
@@ -230,7 +231,7 @@ describe FundInController do
 
     it '[6.14] Print slip', :js => true do
       login_as_admin
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -257,7 +258,7 @@ describe FundInController do
 
     it '[6.15] Close slip', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -282,7 +283,7 @@ describe FundInController do
     
     it '[6.16] audit log for print slip', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
@@ -309,7 +310,7 @@ describe FundInController do
       audit_log = AuditLog.find_by_audit_target("player_transaction")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player_transaction"
-      audit_log.action_by.should == @root_user.employee_id
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "read"
       audit_log.action.should == "print"
       audit_log.action_status.should == "success"
@@ -321,7 +322,7 @@ describe FundInController do
 
     it '[6.17] Invalid Deposit (empty)', :js => true do
       login_as_admin 
-      register_terminal 
+      mock_have_enable_station 
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_fund").click

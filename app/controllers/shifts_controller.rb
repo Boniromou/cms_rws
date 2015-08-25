@@ -35,7 +35,7 @@ class ShiftsController < ApplicationController
       current_shift_id = params[:shift][:current_shift_id].to_i
       current_shift = Shift.find_by_id(current_shift_id)
 
-      AuditLog.shift_log("roll_shift", current_user.employee_id, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.shift_log("roll_shift", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         #TODO: Station id
         current_shift.roll!(current_station_id, current_user.id)
       end

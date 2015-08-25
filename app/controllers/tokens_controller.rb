@@ -9,4 +9,8 @@ class TokensController < ApplicationController
     handle_request(:validate_token)
   end
 
+  def retrieve_player_info
+    handle_request(:retrieve_player_info)
+  end
+
 end

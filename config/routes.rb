@@ -70,6 +70,7 @@ CmsRws::Application.routes.draw do
   
 
   get 'validate_token' => 'tokens#validate'
+  post 'retrieve_player_info' => 'tokens#retrieve_player_info'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

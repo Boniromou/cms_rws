@@ -61,6 +61,9 @@ module Hood
         logger.fatal "  Exception\n  [#{exception.class}] #{exception.message}\n  " +
           get_clean_backtrace(exception.backtrace) +
           "\n"
+        puts "  Exception\n  [#{exception.class}] #{exception.message}\n  " +
+          get_clean_backtrace(exception.backtrace) +
+          "\n"
       end
 
       def get_clean_backtrace(backtrace)

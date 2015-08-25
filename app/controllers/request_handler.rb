@@ -38,7 +38,7 @@ require 'singleton'
       #TODO gen a real token
       session_token = 'abm39492i9jd9wjn'
 
-      {:login_name => login_name, :currency => currency, :balance => balance}
+      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
     end
 
   end

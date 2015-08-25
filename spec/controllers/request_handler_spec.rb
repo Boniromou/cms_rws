@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe TokensController do
+describe RequestHandler do
   def clean_dbs
     Player.delete_all    
   end
@@ -27,18 +27,17 @@ describe TokensController do
 
     it 'success retrieve player info' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
-      get 'validate', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
-      result = response.body
+      inbound = {:_event_name => 'retrieve_player_info', :card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
+      result = RequestHandler.instance.update(inbound)
       expect(result[:error_code]).to eq 'OK'
-      expect(result[:message]).to eq 'Request is carried out successfully'
-      expect(result[:session_token]).to eq 'abc123'
-      expect(result[:login_name]).to eq @player.member_id
-      expect(result[:curency]).to eq Currency.find(@player.currency_id)
-      expect(result[:balance]).to eq "100.00"
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      #expect(result[:session_token]).to eq 'abc123'
+      expect(result[:login_name]).to eq @player.member_id.to_s
+      expect(result[:currency]).to eq @player.currency.name
+      expect(result[:balance]).to eq 100.0
     end
     
     it 'validate token' do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
     end
   end
 end

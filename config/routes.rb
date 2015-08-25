@@ -68,6 +68,9 @@ CmsRws::Application.routes.draw do
   post 'unregister_terminal' => 'stations#unregister'
   get 'stations/current/:terminal_id' => 'stations#current'
   
+
+  get 'validate_token' => 'tokens#validate'
+  post 'retrieve_player_info' => 'tokens#retrieve_player_info'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

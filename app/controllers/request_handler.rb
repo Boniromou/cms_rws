@@ -31,6 +31,7 @@ require 'singleton'
       property_id = @inbound[:property_id]
 
       player = Player.find_by_card_id(card_id)
+      return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
       login_name = player.member_id
       currency = player.currency.name
       balance = @iwms_requester.get_player_balance(player.member_id)

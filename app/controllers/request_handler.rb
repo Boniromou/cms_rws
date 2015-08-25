@@ -34,6 +34,8 @@ require 'singleton'
       login_name = player.member_id
       currency = player.currency.name
       balance = @iwms_requester.get_player_balance(player.member_id)
+      #TODO gen a real token
+      session_token = 'abm39492i9jd9wjn'
 
       {:login_name => login_name, :currency => currency, :balance => balance}
     end

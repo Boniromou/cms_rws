@@ -87,7 +87,9 @@ describe ShiftsController do
     end
 
     it '[9.0] unauthorized roll shift redirect to home page' do
-      login_as_root
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:shfit,["roll"])
 
       visit home_path
       expect(page).to_not have_content I18n.t("tree_panel.roll_shift")
@@ -107,7 +109,9 @@ describe ShiftsController do
     end
     
     it '[9.2] unauthorized roll shift' do
-      login_as_root
+      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      login_as_not_admin(@test_user)
+      set_permission(@test_user,"cashier",:shfit,["roll"])
 
       visit home_path
       expect(page).to_not have_content I18n.t("tree_panel.roll_shift")

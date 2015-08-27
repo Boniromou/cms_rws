@@ -379,8 +379,8 @@ describe FundInController do
       check_balance_page
 
       expect(page.source).to have_selector("#balance_deposit")
-      @station2.terminal_id = nil
-      @station2.save
+      @station5.terminal_id = nil
+      @station5.save
 
       within "div#content" do
         click_link I18n.t("button.deposit")
@@ -403,8 +403,8 @@ describe FundInController do
       check_balance_page
 
       expect(page.source).to have_selector("#balance_withdraw")
-      @station2.terminal_id = nil
-      @station2.save
+      @station5.terminal_id = nil
+      @station5.save
 
       within "div#content" do
         click_link I18n.t("button.withdrawal")

@@ -17,7 +17,6 @@ describe FundInController do
       mock_cage_info
       mock_close_after_print
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      TransactionType.create!(:name => "Deposit")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
       allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')

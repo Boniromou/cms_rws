@@ -10,6 +10,19 @@ describe UserSessionsController do
     Warden.test_reset!
   end
 
+  def login_by_front_page
+    @root_user_name = 'portal.admin'
+    @root_user_password = '123456'
+
+    allow(UserManagement).to receive(:authenticate).and_return({'success' => true, 'system_user' => {'username' => @root_user_name, 'id' => 1}})
+    allow_any_instance_of(ApplicationPolicy).to receive(:is_admin?).and_return(true)
+
+    visit login_path
+    fill_in "user_username", with: @root_user_name
+    fill_in "user_password", with: @root_user_password
+    click_button I18n.t("general.login")
+  end
+
   describe '[1] Authentication' do
     before(:each) do
       mock_cage_info
@@ -35,13 +48,13 @@ describe UserSessionsController do
     end
 
     it '[1.3] Successfully login with role authorized' do
-      login_as_admin
+      login_by_front_page
 
       expect(current_path).to eq "/home"
     end
 
     it '[1.4] Successfully logout' do
-      login_as_admin
+      login_by_front_page
 
       expect(page).to have_link I18n.t("general.logout")
       click_link I18n.t("general.logout")

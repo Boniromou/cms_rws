@@ -125,7 +125,7 @@ describe ShiftsController do
       audit_log = AuditLog.find_by_audit_target("shift")
       audit_log.should_not be_nil
       audit_log.audit_target.should == "shift"
-      audit_log.action_by.should == @root_user_name
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "create"
       audit_log.action.should == "roll_shift"
       audit_log.action_status.should == "success"

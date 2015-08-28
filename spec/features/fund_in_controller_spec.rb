@@ -4,7 +4,6 @@ describe FundInController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -147,7 +146,7 @@ describe FundInController do
       audit_log = AuditLog.last
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user_name
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "update"
       audit_log.action.should == "deposit"
       audit_log.action_status.should == "success"

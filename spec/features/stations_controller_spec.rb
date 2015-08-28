@@ -4,7 +4,6 @@ describe StationsController do
 	before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do

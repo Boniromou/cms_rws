@@ -5,7 +5,6 @@ describe PlayersController do
     include Warden::Test::Helpers
     Warden.test_mode!
     PlayerTransaction.delete_all
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do

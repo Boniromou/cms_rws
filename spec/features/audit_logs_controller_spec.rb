@@ -5,7 +5,6 @@ describe AuditLogsController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -32,7 +31,7 @@ describe AuditLogsController do
     end
     
     it '[13.1] Search audit log by time' do
-      login_as(@root_user)
+      login_as_admin
       visit '/search_audit_logs'
       fill_in "from", :with => "2014-9-29"
       fill_in "to", :with => "2014-9-29"
@@ -56,7 +55,7 @@ describe AuditLogsController do
     end
     
     it '[13.2] search audit log by actioner' do
-      login_as(@root_user)
+      login_as_admin
       visit '/search_audit_logs'
       fill_in "action_by", :with => "portal.admin"
       click_button I18n.t("button.search")
@@ -65,7 +64,7 @@ describe AuditLogsController do
     end
     
     it '[13.3] search empty in actioner' do
-      login_as(@root_user)
+      login_as_admin
       visit '/search_audit_logs'
       click_button I18n.t("button.search")
       expect(page.source).to have_selector("tr#audit#{@al1.id}_body")
@@ -87,7 +86,7 @@ describe AuditLogsController do
     end
     
     it '[13.4] search audit log by action', :js => true do
-      login_as(@root_user)
+      login_as_admin
       visit '/search_audit_logs'
       select("Player", :from => "target_name")
       select "All", :from => "action_list"
@@ -98,7 +97,7 @@ describe AuditLogsController do
     end
     
     it '[13.5] search all action' do
-      login_as(@root_user)
+      login_as_admin
       visit '/search_audit_logs'
       select "All", :from => "target_name"
       select "All", :from => "action_list"
@@ -123,7 +122,7 @@ describe AuditLogsController do
     end
     
     it '[13.6] search audit log by target' do
-      login_as(@root_user)
+      login_as_admin
       visit '/search_audit_logs'
       select "Player", :from => "target_name"
       click_button I18n.t("button.search")

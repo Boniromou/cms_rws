@@ -24,8 +24,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def iwms_requester
-    Requester::Standard.new(PROPERTY_ID, 'test_key', IWMS_URL + IWMS_PATH)
+  def wallet_requester
+    Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
   end
   
   protected

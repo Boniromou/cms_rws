@@ -16,7 +16,7 @@ class PlayersController < ApplicationController
       AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.transaction do
           Player.create_by_params(params[:player])
-          iwms_requester.create_player(params[:player][:member_id], 'HKD')
+          wallet_requester.create_player(params[:player][:member_id], 'HKD')
         end
       end
       flash[:success] = {key: "create_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
@@ -37,7 +37,7 @@ class PlayersController < ApplicationController
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
       @currency = Currency.find_by_id(@player.currency_id)
-      @player_balance = iwms_requester.get_player_balance(member_id)
+      @player_balance = wallet_requester.get_player_balance(member_id)
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
@@ -72,7 +72,7 @@ class PlayersController < ApplicationController
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
-      @player_balance = iwms_requester.get_player_balance(member_id)
+      @player_balance = wallet_requester.get_player_balance(member_id)
     rescue Exception => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
@@ -108,7 +108,7 @@ class PlayersController < ApplicationController
       AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.transaction do
           player.lock_account!
-          iwms_requester.lock_player(member_id)
+          wallet_requester.lock_player(member_id)
         end
       end
 
@@ -131,7 +131,7 @@ class PlayersController < ApplicationController
       AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.transaction do
           player.unlock_account!
-          iwms_requester.unlock_player(member_id)
+          wallet_requester.unlock_player(member_id)
         end
       end
 

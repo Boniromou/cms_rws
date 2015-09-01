@@ -11,7 +11,7 @@ class FundInController < FundController
     "deposit"
   end
 
-  def call_iwms(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, user_id)
-    iwms_requester.deposit(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, user_id)
+  def call_wallet(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, user_id)
+    wallet_requester.deposit(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, user_id)
   end
 end

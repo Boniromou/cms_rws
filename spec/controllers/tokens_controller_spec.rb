@@ -33,7 +33,7 @@ describe TokensController do
 
     it '[29.2] Card ID is exist' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
-      get 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
+      post 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'

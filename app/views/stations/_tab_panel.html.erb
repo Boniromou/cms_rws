@@ -1,8 +1,8 @@
 <ul id="myTab1" class="nav nav-tabs bordered">
   <li <%= @status=="active" ? " class=active" : "" %>>
-    <%= link_to t("general.active"), list_stations_path("active"), :remote => true, "data-toggle" => "tab"  %>
+    <%= link_to t("general.active"), list_stations_path("active"), :remote => true  %>
   </li>
   <li <%= @status=="inactive" ? " class=active" : "" %>>
-    <%= link_to t("general.inactive"), list_stations_path("inactive"), :remote => true, "data-toggle" => "tab"  %>
+    <%= link_to t("general.inactive"), list_stations_path("inactive"), :remote => true  %>
   </li>
 </ul>

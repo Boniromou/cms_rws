@@ -112,7 +112,7 @@ describe FundInController do
       
     end
 
-    it '[6.8] Confirm Deposit', :js => true do
+    it '[6.8] Confirm dialog box Deposit', :js => true do
       login_as_admin 
       mock_have_enable_station
       go_to_deposit_page

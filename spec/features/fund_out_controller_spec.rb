@@ -122,7 +122,7 @@ describe FundOutController do
     end
 
 
-    it '[7.9] Confirm Withdraw', :js => true do
+    it '[7.9] Confirm dialog box Withdraw', :js => true do
       login_as_admin 
       mock_have_enable_station 
       go_to_withdraw_page

@@ -57,6 +57,7 @@ class Player < ActiveRecord::Base
         duplicated_filed = ex.record.errors.keys.first.to_s
         raise CreatePlayer::DuplicatedFieldError, duplicated_filed
       end
+      player
     end
 
     def update_by_params(params)

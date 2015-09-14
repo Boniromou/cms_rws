@@ -51,7 +51,5 @@ require 'singleton'
         return response
       end
     end
-
-
-end
+  end
 

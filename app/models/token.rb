@@ -1,20 +1,18 @@
 class Token < ActiveRecord::Base
     validates_uniqueness_of :terminal_id
+    belongs_to :player
 	class << self
 		def validate(login_name, session_token)
       		token = Token.find_by_session_token(session_token)
       		if token
-        		return token if token.login_name == login_name && token.property_id == 20000 && Time.now < token.expired_at
+        		return token if token.player.member_id == login_name && token.property_id == 20000 && Time.now < token.expired_at
       		end
       		{:error_code => 'InvalidSessionToken', :error_msg => 'Session token is invalid'}
     	end
 
-    	def create_or_update(login_name, session_token, property_id, terminal_id)
-    		token = Token.find_by_terminal_id(terminal)
-    		unless token
-    			token = new
-    			token.terminal_id = terminal_id
-    		end
+    	def create(login_name, session_token, property_id, terminal_id)
+    		token = new
+    		token.terminal_id = terminal_id
     		token.login_name = login_name
 		    token.session_token = session_token
 		    token.property_id = property_id
@@ -30,10 +28,6 @@ class Token < ActiveRecord::Base
     end
 
     def discard
-    	self.expired_at = nil
-    	self.login_name = nil
-    	self.property_id = nil
-    	self.session_token = nil
-    	self.save
+    	self.destroy
     end
 end

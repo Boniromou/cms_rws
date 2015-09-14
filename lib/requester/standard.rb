@@ -7,7 +7,7 @@ class Requester::Standard < Requester::Base
   }
   
   API_NAME_MAPPING = {
-    :create_player => 'create_player',
+    :create_internal_player => 'create_internal_player',
     :lock_player => 'lock_player',
     :unlock_player => 'unlock_player',
     :deposit => 'deposit',
@@ -16,8 +16,11 @@ class Requester::Standard < Requester::Base
     :query_wallet_transactions => 'query_wallet_transactions'
   }
 
-  def create_player(login_name, currency)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:create_player)}", :body => {:login_name => login_name, :currency => currency})
+  def create_player(login_name, currency, player_id, player_currency_id)
+    response = remote_rws_call('post', "#{@path}/#{get_api_name(:create_internal_player)}", :body => {:login_name => login_name, 
+                                                                                                      :currency => currency, 
+                                                                                                      :player_id => player_id, 
+                                                                                                      :player_currency_id => player_currency_id})
     parse_create_player_response(response)
   end
 

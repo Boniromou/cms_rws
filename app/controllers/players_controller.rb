@@ -14,10 +14,8 @@ class PlayersController < ApplicationController
     return unless permission_granted? Player.new
     begin
       AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        Player.transaction do
-          Player.create_by_params(params[:player])
-          wallet_requester.create_player(params[:player][:member_id], 'HKD')
-        end
+        player = Player.create_by_params(params[:player])
+        wallet_requester.create_player(params[:player][:member_id], 'HKD', player.id, player.currency_id)
       end
       flash[:success] = {key: "create_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
       redirect_to :action => 'balance', :member_id => params[:player][:member_id]

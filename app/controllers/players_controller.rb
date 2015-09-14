@@ -104,10 +104,7 @@ class PlayersController < ApplicationController
       player = Player.find_by_member_id(member_id)
 
       AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        Player.transaction do
-          player.lock_account!
-          wallet_requester.lock_player(member_id)
-        end
+        player.lock_account!
       end
 
       flash[:success] = { key: "lock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
@@ -127,10 +124,7 @@ class PlayersController < ApplicationController
       player = Player.find_by_member_id(member_id)
 
       AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        Player.transaction do
-          player.unlock_account!
-          wallet_requester.unlock_player(member_id)
-        end
+        player.unlock_account!
       end
 
       flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}

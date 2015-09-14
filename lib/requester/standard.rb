@@ -8,8 +8,6 @@ class Requester::Standard < Requester::Base
   
   API_NAME_MAPPING = {
     :create_internal_player => 'create_internal_player',
-    :lock_player => 'lock_player',
-    :unlock_player => 'unlock_player',
     :deposit => 'deposit',
     :withdraw => 'withdraw',
     :query_player_balance => 'query_player_balance',
@@ -43,16 +41,6 @@ class Requester::Standard < Requester::Base
                                                                                         :shift_id => shift_id, :device_id => station_id,
                                                                                         :issuer_id => name})
     parse_withdraw_response(response)
-  end
-
-  def lock_player(login_name)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:lock_player)}", :body => {:login_name => login_name})
-    parse_lock_player_response(response)
-  end
-
-  def unlock_player(login_name)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:unlock_player)}", :body => {:login_name => login_name})
-    parse_unlock_player_response(response)
   end
 
   protected

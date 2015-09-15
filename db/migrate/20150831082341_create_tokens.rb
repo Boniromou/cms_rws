@@ -5,6 +5,7 @@ class CreateTokens < ActiveRecord::Migration
       t.string :terminal_id
       t.integer :player_id
       t.datetime :expired_at
+      t.integer :property_id
       t.timestamps
     end
   end

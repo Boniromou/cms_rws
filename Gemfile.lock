@@ -3,6 +3,13 @@ PATH
   specs:
     lax-support (0.6.32)
 
+GIT
+  remote: ssh://git/opt/laxino/git_repos/platform/hood/hood_lib.git
+  revision: 8a91534238669c46e6aab8c0dffe5ef01e538bf9
+  branch: integration
+  specs:
+    hood (1.2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -181,6 +188,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   dalli (~> 2.0.3)
   devise (= 3.2.4)
+  hood!
   httparty
   jquery-rails
   lax-support (= 0.6.32)!

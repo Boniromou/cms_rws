@@ -38,7 +38,8 @@
   }
   
   $('button.change_location_status_btn').click(function() {
-    location_id = event.target.id.replace("change_location_status_","");
+    var target = event.target? event.target : event.srcElement;
+    location_id = target.id.replace("change_location_status_","");
     updateChangeStatusForm(location_id);
   });
 </script>

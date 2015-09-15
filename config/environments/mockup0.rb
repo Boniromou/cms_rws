@@ -47,5 +47,5 @@ end
 
 SSO_URL = 'http://mo-mock-sso-vapp01.rnd.laxino.com:80'
 REGISTRATION_PATH = '/register'
-IWMS_URL = 'http://mo-mock-iwms-vapp01.rnd.laxino.com:80'
-IWMS_PATH = '/iwms'
+WALLET_URL = 'http://mo-mock-cwms-vapp01.rnd.laxino.com:80'
+WALLET_PATH = '/cwms'

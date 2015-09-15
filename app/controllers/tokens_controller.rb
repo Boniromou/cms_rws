@@ -13,4 +13,11 @@ class TokensController < ApplicationController
     handle_request(:retrieve_player_info)
   end
 
+  def keep_alive
+    handle_request(:keep_alive)
+  end
+
+  def discard_token
+    handle_request(:discard_token)
+  end
 end

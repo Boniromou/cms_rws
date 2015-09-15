@@ -1,0 +1,39 @@
+default: &default
+  :service_id: 100
+  :service_key: test_key
+
+development:
+  <<: *default
+  :internal_property_id: 1
+
+test:
+  <<: *default
+  :internal_property_id: 3
+
+mockup0:
+  <<: *default
+  :internal_property_id: 4
+
+integration0:
+  <<: *default
+  :internal_property_id: 3
+
+staging0:
+  <<: *default
+  :internal_property_id: 4
+
+sandbox0:
+  <<: *default
+  :internal_property_id: 5
+
+sandbox2:
+  <<: *default
+  :internal_property_id: 5
+
+production0:
+  <<: *default
+  :internal_property_id: 5
+
+smartocean2:
+  <<: *default
+  :internal_property_id: 5

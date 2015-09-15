@@ -78,7 +78,8 @@
   }
   
   $('button.change_station_status_btn').click(function() {
-    station_id = event.target.id.replace("change_station_status_","");
+    var target = event.target? event.target : event.srcElement;
+    station_id = target.id.replace("change_station_status_","");
     updateChangeStatusForm(station_id);
   });
   
@@ -91,12 +92,14 @@
   
   $('button.register_terminal_btn').click(function() {
     terminal_id = getTerminalID();
-    station_id = event.target.id.replace("register_terminal_","");
+    var target = event.target? event.target : event.srcElement;
+    station_id = target.id.replace("register_terminal_","");
     updateTerminalId(station_id,terminal_id);
   });
 
   $('button.unregister_terminal_btn').click(function() {
-    station_id = event.target.id.replace("unregister_terminal_","");
+    var target = event.target? event.target : event.srcElement;
+    station_id = target.id.replace("unregister_terminal_","");
     updateTerminalId(station_id,terminal_id);
   });
 

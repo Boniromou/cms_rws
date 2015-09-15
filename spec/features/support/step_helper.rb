@@ -26,16 +26,9 @@ module StepHelper
   end
 
   def login_as_admin
-    @root_user_name = 'portal.admin'
-    @root_user_password = '123456'
-
-    allow(UserManagement).to receive(:authenticate).and_return({'success' => true, 'system_user' => {'username' => @root_user_name, 'id' => 1}})
-    allow_any_instance_of(ApplicationPolicy).to receive(:is_admin?).and_return(true)
-
-    visit login_path
-    fill_in "user_username", with: @root_user_name
-    fill_in "user_password", with: @root_user_password
-    click_button I18n.t("general.login")
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
+    login_as_not_admin(@root_user)
+    Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true}
   end
 
   def set_permission(user,role,target,permissions)

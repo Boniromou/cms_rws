@@ -46,5 +46,5 @@ end
 
 SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
 REGISTRATION_PATH = '/register'
-IWMS_URL = 'http://mingwong01.rnd.laxino.com:4444'
-IWMS_PATH = '/iwms'
+WALLET_URL = 'http://mingwong01.rnd.laxino.com:5555'
+WALLET_PATH = '/cwms'

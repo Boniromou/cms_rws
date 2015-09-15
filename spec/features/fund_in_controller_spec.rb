@@ -4,7 +4,6 @@ describe FundInController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -18,7 +17,6 @@ describe FundInController do
       mock_cage_info
       mock_close_after_print
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      TransactionType.create!(:name => "Deposit")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
       allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')
@@ -114,7 +112,7 @@ describe FundInController do
       
     end
 
-    it '[6.8] Confirm Deposit', :js => true do
+    it '[6.8] Confirm dialog box Deposit', :js => true do
       login_as_admin 
       mock_have_enable_station
       go_to_deposit_page
@@ -147,7 +145,7 @@ describe FundInController do
       audit_log = AuditLog.last
       audit_log.should_not be_nil
       audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user_name
+      audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "update"
       audit_log.action.should == "deposit"
       audit_log.action_status.should == "success"
@@ -379,8 +377,8 @@ describe FundInController do
       check_balance_page
 
       expect(page.source).to have_selector("#balance_deposit")
-      @station2.terminal_id = nil
-      @station2.save
+      @station5.terminal_id = nil
+      @station5.save
 
       within "div#content" do
         click_link I18n.t("button.deposit")
@@ -403,8 +401,8 @@ describe FundInController do
       check_balance_page
 
       expect(page.source).to have_selector("#balance_withdraw")
-      @station2.terminal_id = nil
-      @station2.save
+      @station5.terminal_id = nil
+      @station5.save
 
       within "div#content" do
         click_link I18n.t("button.withdrawal")

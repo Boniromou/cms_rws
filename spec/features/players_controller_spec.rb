@@ -5,7 +5,6 @@ describe PlayersController do
     include Warden::Test::Helpers
     Warden.test_mode!
     PlayerTransaction.delete_all
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -356,15 +355,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
 
-      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
-      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
-      visit list_stations_path("active")
-      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
-      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
-
-      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
-      @station2.reload
-      expect(@station2.terminal_id).to_not eq nil
+      mock_have_enable_station
 
       visit home_path
       click_link I18n.t("tree_panel.balance")

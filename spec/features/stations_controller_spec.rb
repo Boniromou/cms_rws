@@ -4,7 +4,6 @@ describe StationsController do
 	before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
   end
 
   after(:all) do
@@ -371,7 +370,6 @@ describe StationsController do
       login_as_admin
       visit list_stations_path("active")
       terminal_id = "AAAABBBBCCCCDDDD"
-      set_terminal_id(terminal_id)
       @station1.terminal_id = terminal_id
       @station1.save
 

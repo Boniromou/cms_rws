@@ -1,5 +1,6 @@
 class Player < ActiveRecord::Base
   belongs_to :currency
+  has_many :tokens
   include ActionView::Helpers
   include FundHelper
   attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name
@@ -57,6 +58,7 @@ class Player < ActiveRecord::Base
         duplicated_filed = ex.record.errors.keys.first.to_s
         raise CreatePlayer::DuplicatedFieldError, duplicated_filed
       end
+      player
     end
 
     def update_by_params(params)
@@ -84,6 +86,19 @@ class Player < ActiveRecord::Base
       else
         find_by_card_id(id_number)
       end
+    end
+
+    def retrieve_info(card_id, terminal_id, pin, property_id)
+      player = Player.find_by_card_id(card_id)
+      return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
+      return {:status => 400, :error_code => 'PlayerLocked', :error_msg => 'Player is locked'} if player.account_locked?
+      login_name = player.member_id
+      currency = player.currency.name
+      balance = @wallet_requester.get_player_balance(player.member_id)
+      #TODO gen a real token
+      session_token = 'abm39492i9jd9wjn'
+      # Token.create(login_name, session_token, property_id, terminal_id)
+      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
     end
   end
 

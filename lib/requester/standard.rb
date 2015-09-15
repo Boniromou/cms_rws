@@ -7,17 +7,18 @@ class Requester::Standard < Requester::Base
   }
   
   API_NAME_MAPPING = {
-    :create_player => 'create_player',
-    :lock_player => 'lock_player',
-    :unlock_player => 'unlock_player',
+    :create_internal_player => 'create_internal_player',
     :deposit => 'deposit',
     :withdraw => 'withdraw',
     :query_player_balance => 'query_player_balance',
     :query_wallet_transactions => 'query_wallet_transactions'
   }
 
-  def create_player(login_name, currency)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:create_player)}", :body => {:login_name => login_name, :currency => currency})
+  def create_player(login_name, currency, player_id, player_currency_id)
+    response = remote_rws_call('post', "#{@path}/#{get_api_name(:create_internal_player)}", :body => {:login_name => login_name, 
+                                                                                                      :currency => currency, 
+                                                                                                      :player_id => player_id, 
+                                                                                                      :player_currency_id => player_currency_id})
     parse_create_player_response(response)
   end
 
@@ -40,16 +41,6 @@ class Requester::Standard < Requester::Base
                                                                                         :shift_id => shift_id, :device_id => station_id,
                                                                                         :issuer_id => name})
     parse_withdraw_response(response)
-  end
-
-  def lock_player(login_name)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:lock_player)}", :body => {:login_name => login_name})
-    parse_lock_player_response(response)
-  end
-
-  def unlock_player(login_name)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:unlock_player)}", :body => {:login_name => login_name})
-    parse_unlock_player_response(response)
   end
 
   protected

@@ -40,7 +40,7 @@ class FundController < ApplicationController
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
       Player.transaction do
         @transaction = do_fund_action(@member_id, server_amount)
-        call_wallet(@member_id, amount, make_trans_id(@transaction.id), @transaction.trans_date, current_shift.id, current_station_id, current_user.id)
+        call_wallet(@member_id, amount, make_trans_id(@transaction.id), @transaction.trans_date.localtime, current_shift.id, current_station_id, current_user.id)
       end
     end
   end

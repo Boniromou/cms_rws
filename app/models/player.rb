@@ -1,5 +1,6 @@
 class Player < ActiveRecord::Base
   belongs_to :currency
+  has_many :tokens
   include ActionView::Helpers
   include FundHelper
   attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name
@@ -96,7 +97,7 @@ class Player < ActiveRecord::Base
       balance = @wallet_requester.get_player_balance(player.member_id)
       #TODO gen a real token
       session_token = 'abm39492i9jd9wjn'
-      Token.create_or_update(login_name, session_token, property_id, terminal_id)
+      # Token.create(login_name, session_token, property_id, terminal_id)
       {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
     end
   end

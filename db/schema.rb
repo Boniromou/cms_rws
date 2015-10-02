@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151002040216) do
+ActiveRecord::Schema.define(:version => 20151002045644) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -46,6 +46,12 @@ ActiveRecord::Schema.define(:version => 20151002040216) do
     t.datetime "updated_at", :null => false
     t.string   "status"
     t.datetime "purge_at"
+  end
+
+  create_table "lock_types", :force => true do |t|
+    t.string   "name",       :limit => 45, :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   create_table "player_transactions", :force => true do |t|
@@ -87,6 +93,17 @@ ActiveRecord::Schema.define(:version => 20151002040216) do
   add_index "players", ["currency_id"], :name => "fk_currency_id"
   add_index "players", ["member_id"], :name => "by_member_id", :unique => true
   add_index "players", ["property_id"], :name => "fk_players_property_id"
+
+  create_table "players_lock_types", :force => true do |t|
+    t.integer  "player_id",                  :null => false
+    t.integer  "lock_type_id",               :null => false
+    t.string   "status",       :limit => 45, :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
+
+  add_index "players_lock_types", ["lock_type_id"], :name => "fk_players_lock_types_lock_type_id"
+  add_index "players_lock_types", ["player_id"], :name => "fk_players_lock_types_player_id"
 
   create_table "properties", :force => true do |t|
     t.string   "name",       :limit => 45, :null => false

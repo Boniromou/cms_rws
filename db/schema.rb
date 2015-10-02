@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150814044858) do
+ActiveRecord::Schema.define(:version => 20150831082341) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -120,6 +120,16 @@ ActiveRecord::Schema.define(:version => 20150814044858) do
 
   add_index "stations", ["location_id"], :name => "fk_location_id"
 
+  create_table "tokens", :force => true do |t|
+    t.string   "session_token"
+    t.integer  "player_id"
+    t.datetime "expired_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "tokens", ["player_id"], :name => "fk_tokens_player_id"
+
   create_table "transaction_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -128,10 +138,10 @@ ActiveRecord::Schema.define(:version => 20150814044858) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "employee_id"
+    t.string   "name"
     t.string   "uid"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.datetime "purge_at"
   end
 

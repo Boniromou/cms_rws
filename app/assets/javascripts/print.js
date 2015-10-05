@@ -1,4 +1,4 @@
-function printHtml(html, landscape) {
+function printHtml(html, landscape, title) {
   var printFrame = document.createElement('iframe');
 
   printFrame.name = "printFrame";
@@ -8,7 +8,9 @@ function printHtml(html, landscape) {
 
   var frameDoc = printFrame.contentWindow ? printFrame.contentWindow : printFrame.contentDocument.document ? printFrame.contentDocument.document : printFrame.contentDocument;
   frameDoc.document.open();
-  frameDoc.document.write('<html><head><title>Contents</title>');
+  frameDoc.document.write('<html><head><title>');
+  frameDoc.document.write(title);
+  frameDoc.document.write('</title>');
   if ( typeof landscape !== 'undefined' && landscape )
     frameDoc.document.write('<style>@media print{@page {size: landscape}}</style>'); //only work on Chrome
   frameDoc.document.write('</head><body>');

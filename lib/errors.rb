@@ -21,6 +21,12 @@ module SearchPlayerTransaction
 
   class DateTimeError < SearchPlayerTransactionError
   end
+
+  class NoIdNumberError < SearchPlayerTransactionError
+  end
+
+  class NoResultException < SearchPlayerTransactionError
+  end
 end
 
 module DatetimeParse

@@ -3,7 +3,7 @@
 <% end %>
 
 
-<% if !@player.account_locked? %>
+<% if !@player.cage_locked? %>
   <% lock_or_unlock = 'lock' %>
   <% show_lock_or_unlock_btn = policy(Player.new).lock? %>
 <% else %>

@@ -24,6 +24,10 @@ class Player < ActiveRecord::Base
     return status == STATUS_LOCKED
   end
 
+  def cage_locked?
+    self.lock_types.include?(LOCK_TYPE_CAGE_LOCK)
+  end
+
   def lock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
     PlayersLockType.add_lock_to_player(self.id, lock_type_name)
     update_lock_status

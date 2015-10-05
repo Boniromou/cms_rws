@@ -33,8 +33,6 @@ class Shift < ActiveRecord::Base
       @shift
     end
 
-    SHIFT_NAME = %w(morning swing night)
-
     def current
       shift = Shift.find_by_roll_shift_at(nil)
       raise 'Current shift not found!' unless shift
@@ -42,8 +40,9 @@ class Shift < ActiveRecord::Base
     end
 
     def next_shift_name_by_name( shift_name )
-      raise 'Shift name not found!!' if SHIFT_NAME.index(shift_name).nil?
-      SHIFT_NAME[(SHIFT_NAME.index(shift_name) + 1) % 3]
+      shift_names = PropertiesShiftType.shift_types(PROPERTY_ID)
+      return shift_names[0]if shift_names.index(shift_name).nil?
+      shift_names[(shift_names.index(shift_name) + 1) % shift_names.length] 
     end
   end
 end

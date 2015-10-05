@@ -977,5 +977,14 @@ describe PlayersController do
       expect(audit_log.description).to_not be_nil
     end
 
+    it '[15.6] Show cage lock and Blacklist player status ', js: true do
+      @player.status = "locked"
+      @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'blacklist')
+
+      lock_or_unlock_player_and_check
+    end 
+
   end
 end

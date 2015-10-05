@@ -24,8 +24,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      AuditLog.delete_all
-      Player.delete_all
+      clean_dbs
     end
 
     it '[3.1] Show Create Player Page' do
@@ -287,7 +286,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[4.1] Show search Page' do
@@ -346,7 +345,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[5.1] view player balance enquiry', :js => true do
@@ -523,7 +522,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[12.1] Show search Page' do
@@ -585,7 +584,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[14.1] successfully edit player' do
@@ -914,8 +913,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      AuditLog.delete_all
-      Player.delete_all
+      clean_dbs
     end
 
     it '[15.1] Successfully Lock player', js: true do
@@ -925,6 +923,7 @@ describe PlayersController do
     it '[15.2] Successfully unlock player', js: true do
       @player.status = "locked"
       @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
 
       lock_or_unlock_player_and_check
     end 
@@ -961,6 +960,7 @@ describe PlayersController do
     it '[15.5] audit log for unlock player', js: true do
       @player.status = "locked"
       @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
 
       lock_or_unlock_player_and_check
 

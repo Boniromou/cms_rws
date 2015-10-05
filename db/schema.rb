@@ -103,7 +103,8 @@ ActiveRecord::Schema.define(:version => 20151002094637) do
   end
 
   add_index "players_lock_types", ["lock_type_id"], :name => "fk_players_lock_types_lock_type_id"
-  add_index "players_lock_types", ["player_id"], :name => "fk_players_lock_types_player_id"
+  add_index "players_lock_types", ["player_id", "lock_type_id"], :name => "players_lock_types_player_id_lock_type_id", :unique => true
+  add_index "players_lock_types", ["player_id"], :name => "players_lock_types_player_id"
 
   create_table "properties", :force => true do |t|
     t.string   "name",       :limit => 45, :null => false

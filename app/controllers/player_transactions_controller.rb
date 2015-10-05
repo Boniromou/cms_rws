@@ -16,9 +16,6 @@ class PlayerTransactionsController < ApplicationController
     @start_time = parse_search_time(params[:start_time])
     @end_time = parse_search_time(params[:end_time], true) 
 
-    p  @start_time
-    p @end_time
-
     id_type = params[:id_type]
     id_number = params[:id_number]
 

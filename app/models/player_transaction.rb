@@ -88,10 +88,7 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
-    def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)
-      # raise SearchPlayerTransaction::NoIdNumberError, "no_id_number" if id_number.blank?
-      # raise SearchPlayerTransaction::OverRangeError, "limit_remark" if end_time - start_time > 2592200
-      
+    def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)      
       if id_number.empty?
         player_id = nil
       else
@@ -104,13 +101,11 @@ class PlayerTransaction < ActiveRecord::Base
     end
 
     def search_query_by_transaction(transaction_id)
-      p transaction_id
       by_transaction_id(transaction_id)
     end
 
     def search_query(*args)
       search_type = args[5].to_i
-      p search_type
       if search_type == 0
         id_type = args[0]
         id_number = args[1]
@@ -127,7 +122,6 @@ class PlayerTransaction < ActiveRecord::Base
 
     def search_transactions_group_by_station(start_shift_id, user_id, end_shift_id = nil)
       player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
-      p player_transaction_stations
       result = []
       player_transactions = PlayerTransaction.by_shift_id(start_shift_id)
       player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id) if end_shift_id

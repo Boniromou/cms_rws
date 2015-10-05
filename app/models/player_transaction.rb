@@ -31,8 +31,11 @@ class PlayerTransaction < ActiveRecord::Base
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }
   scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
   scope :by_transaction_id, -> transaction_id { where("id = ?", transaction_id) if transaction_id.present? }
-  scope :by_shift_id, -> shift_id { where( "shift_id = ? ",shift_id) if shift_id.present? }
+  scope :by_shift_id, -> shift_id { where( "shift_id = ? ", shift_id) if shift_id.present? }
   scope :by_station_id, -> station_id { where( "station_id = ?", station_id) if station_id.present? }
+  scope :by_user_id, -> user_id { where( "user_id = ?", user_id) if user_id.present? }
+  scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
+  scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
 
   class << self
   include FundHelper
@@ -85,9 +88,10 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
-    def search_query_by_player(id_type, id_number, start_time, end_time)
-      raise SearchPlayerTransaction::OverRangeError, "limit_remark" if end_time - start_time > 2592200
-      raise SearchPlayerTransaction::DateTimeError, "datetime_error" if end_time < start_time
+    def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)
+      # raise SearchPlayerTransaction::NoIdNumberError, "no_id_number" if id_number.blank?
+      # raise SearchPlayerTransaction::OverRangeError, "limit_remark" if end_time - start_time > 2592200
+      
       if id_number.empty?
         player_id = nil
       else
@@ -96,23 +100,24 @@ class PlayerTransaction < ActiveRecord::Base
         player_id = player.id unless player.nil?
       end
 
-      by_player_id(player_id).since(start_time).until(end_time)
+      by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id)
     end
 
     def search_query_by_transaction(transaction_id)
+      p transaction_id
       by_transaction_id(transaction_id)
     end
 
     def search_query(*args)
       search_type = args[5].to_i
-
+      p search_type
       if search_type == 0
         id_type = args[0]
         id_number = args[1]
-        start_time = args[2]
-        end_time = args[3]
+        start_shift_id = args[2]
+        end_shift_id = args[3]
 
-        search_query_by_player(id_type, id_number, start_time, end_time)
+        search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)
       else
         transaction_id = args[4].to_i
 
@@ -120,13 +125,16 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
-    def search_transactions_group_by_station(shift_id)
+    def search_transactions_group_by_station(start_shift_id, user_id, end_shift_id = nil)
       player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
+      p player_transaction_stations
       result = []
+      player_transactions = PlayerTransaction.by_shift_id(start_shift_id)
+      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id) if end_shift_id
       player_transaction_stations.each do |station|
         station_id = station.station_id
-        player_transactions = by_shift_id(shift_id).by_station_id(station_id).order(:created_at)
-        result << player_transactions if player_transactions.length > 0
+        player_transactions_by_station = player_transactions.by_station_id(station_id).by_user_id(user_id).order(:created_at)
+        result << player_transactions_by_station if player_transactions_by_station.length > 0
       end
       result
     end

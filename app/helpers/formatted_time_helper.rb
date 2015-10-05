@@ -28,4 +28,18 @@ module FormattedTimeHelper
       raise ArgumentError 
     end
   end
+
+  def parse_search_time(date_str, is_end_time=false)
+    begin
+      if is_end_time
+        Time.strptime(date_str, "%Y-%m-%d")
+        return Time.strptime(date_str + " 23:59:59", "%Y-%m-%d %H:%M:%S").utc
+      else
+        Time.strptime(date_str, "%Y-%m-%d").utc
+        # return Time.strptime(date_str, "%Y-%m-%d").utc
+      end
+    rescue ArgumentError
+      raise ArgumentError
+    end
+  end
 end

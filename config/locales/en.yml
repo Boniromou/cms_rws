@@ -180,6 +180,7 @@ en:
     search_field_blank_error: "search field can not be blank"
     no_transaction_found: "No transaction found."
     limit_remark: "The search date range is limited to 30 days."
+    no_id_number: "ID number cannot be blank."
     datetime_error: "The start date must be earlier than the end date"
     datetime_format_not_valid: "Datetime format is not correct!"
   auditlog:

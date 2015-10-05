@@ -34,29 +34,18 @@
             <div class="col-md-7">
               <section class="smart-form">
                 <label class="input">
-                  <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
+                  <%= text_field_tag(:"id_number", @card_id, autofocus: true) %>
                 </label>
               </section>
             </div>
           </div>
 <br/>
           <div class="row">
-            <div class="col-md-6">
-              <section class="smart-form">
-              
-        
-                <label class="label lower"><%= t("transaction_history.start_date") %></label>
-                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
-              </section>
-            </div>
-            
-            <div class="col-md-6">
-              <section class="smart-form">
-           
-                <label class="label lower"><%= t("transaction_history.end_date") %></label>
-                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
-              </section>
-            </div>
+            <div class="col-sm-12">
+            <label><%= t("ac_date.name") %></label></div>
+          </div>
+            <div class="row">
+            <%= render "shared/date_range_picker" %>
           </div>
         </div>
 

@@ -102,8 +102,6 @@ en:
     edit: "Edit"
     lock: "Lock"
     unlock: "Unlock"
-    cage_lock: "Cage Lock"
-    blacklist: "Blacklist"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
@@ -125,6 +123,8 @@ en:
     active: "Active"
     locked: "Locked"
     is_locked: "Player is locked!"
+    cage_lock: "Cage Lock"
+    blacklist: "Blacklist"
   update_player:
     success: "Edit player [%{first_name} %{last_name}] successful"
     duplicate: "Card ID has already existed"

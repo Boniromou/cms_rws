@@ -24,8 +24,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      AuditLog.delete_all
-      Player.delete_all
+      clean_dbs
     end
 
     it '[3.1] Show Create Player Page' do
@@ -287,7 +286,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[4.1] Show search Page' do
@@ -346,7 +345,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[5.1] view player balance enquiry', :js => true do
@@ -523,7 +522,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[12.1] Show search Page' do
@@ -585,7 +584,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      Player.delete_all
+      clean_dbs
     end
 
     it '[14.1] successfully edit player' do
@@ -857,8 +856,8 @@ describe PlayersController do
     end
 
     def check_lock_unlock_components
-      expect(page).to have_selector "div#confirm_#{@lock_or_unlock}_player_dialog"
-      expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to include "none"
+      expect(page).to have_selector "div#pop_up_dialog"
+      expect(find("div#pop_up_dialog")[:style]).to include "none"
     end
 
     def check_lock_unlock_page
@@ -880,7 +879,7 @@ describe PlayersController do
       check_lock_unlock_page
 
       click_button I18n.t("button.#{@lock_or_unlock}")
-      expect(find("div#confirm_#{@lock_or_unlock}_player_dialog")[:style]).to_not include "none"
+      expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
       expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
 
@@ -911,13 +910,10 @@ describe PlayersController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Standard).to receive(:lock_player).and_return('OK')
-      allow_any_instance_of(Requester::Standard).to receive(:unlock_player).and_return('OK')
     end
 
     after(:each) do
-      AuditLog.delete_all
-      Player.delete_all
+      clean_dbs
     end
 
     it '[15.1] Successfully Lock player', js: true do
@@ -927,6 +923,7 @@ describe PlayersController do
     it '[15.2] Successfully unlock player', js: true do
       @player.status = "locked"
       @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
 
       lock_or_unlock_player_and_check
     end 
@@ -963,6 +960,7 @@ describe PlayersController do
     it '[15.5] audit log for unlock player', js: true do
       @player.status = "locked"
       @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
 
       lock_or_unlock_player_and_check
 
@@ -978,6 +976,15 @@ describe PlayersController do
       expect(audit_log.session_id).to_not be_nil
       expect(audit_log.description).to_not be_nil
     end
+
+    it '[15.6] Show cage lock and Blacklist player status ', js: true do
+      @player.status = "locked"
+      @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'blacklist')
+
+      lock_or_unlock_player_and_check
+    end 
 
   end
 end

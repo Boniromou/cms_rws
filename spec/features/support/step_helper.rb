@@ -118,19 +118,24 @@ module StepHelper
     expect(find("input#datetimepicker_end_time").value).to eq Time.now.strftime("%Y-%m-%d 23:59:59")
   end
 
+  def check_player_transaction_page_time_range_picker
+    expect(find("input#start").value).to eq @accounting_date
+    expect(find("input#end").value).to eq @accounting_date
+  end
+
   def check_player_transaction_page
     expect(find("input#card_id")[:checked]).to eq "checked"
-    check_player_transaction_page_time_picker
+    check_player_transaction_page_time_range_picker
   end
 
   def check_player_transaction_page_js
     expect(find("input#card_id")[:checked]).to eq true
-    check_player_transaction_page_time_picker
+    check_player_transaction_page_time_range_picker
   end
 
   def check_search_fm_page
     expect(page.source).to have_selector("input#accounting_date")
-    expect(page.source).to have_selector("select#shift_name")
+    # expect(page.source).to have_selector("select#shift_name")
   end
 
   def check_player_transaction_result_contents(item, player_transaction, reprint_granted)
@@ -147,17 +152,15 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.full_name.upcase
-    expect(item[2].text).to eq player.member_id
-    expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
-    expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[5].text).to eq shift.name
-    expect(item[6].text).to eq station.name
-    expect(item[7].text).to eq user.name
-    expect(item[8].text).to eq player_transaction.status
-    expect(item[9].text).to eq deposit_str
-    expect(item[10].text).to eq withdraw_str
-    within item[11] do
+    expect(item[1].text).to eq player.member_id
+    expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[4].text).to eq station.name
+    expect(item[5].text).to eq user.name
+    expect(item[6].text).to eq player_transaction.status
+    expect(item[7].text).to eq deposit_str
+    expect(item[8].text).to eq withdraw_str
+    within item[9] do
       if reprint_granted
         expect(page.source).to have_selector("input#reprint")
       else
@@ -186,7 +189,7 @@ module StepHelper
       v.each do |t|
         within items[i] do
           expect(items[i][:id]).to eq "transaction_#{t.id}"
-          check_fm_remort_result(all("td"),t)
+          check_fm_report_result(all("td"),t)
         end
         if t.transaction_type_id == 1
           total_deposit += t.amount
@@ -205,7 +208,7 @@ module StepHelper
   end
 
 
-  def check_fm_remort_result(item, player_transaction)
+  def check_fm_report_result(item, player_transaction)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
@@ -219,17 +222,15 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     expect(item[0].text).to eq player_transaction.id.to_s
-    expect(item[1].text).to eq player.full_name.upcase
-    expect(item[2].text).to eq player.member_id
-    expect(item[3].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
-    expect(item[4].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[5].text).to eq shift.name
-    expect(item[6].text).to eq station.name
-    expect(item[7].text).to eq user.name
-    expect(item[8].text).to eq player_transaction.status
-    expect(item[9].text).to eq deposit_str
-    expect(item[10].text).to eq withdraw_str
-    expect(item[11].text).to eq to_display_amount_str(player_transaction.amount)
+    expect(item[1].text).to eq player.member_id
+    expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[4].text).to eq station.name
+    expect(item[5].text).to eq user.name
+    expect(item[6].text).to eq player_transaction.status
+    expect(item[7].text).to eq deposit_str
+    expect(item[8].text).to eq withdraw_str
+    expect(item[9].text).to eq to_display_amount_str(player_transaction.amount)
   end
 
   def check_stations_table_items(station_list,permission_list)

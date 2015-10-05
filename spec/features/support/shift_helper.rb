@@ -13,12 +13,13 @@ module ShiftHelper
 
   def create_shift_data
     @today = Date.today
+    @accounting_date = "2015-04-15"
 
     @shift_type_id = ShiftType.create!(:name => 'morning').id
     ShiftType.create!(:name => 'swing')
     ShiftType.create!(:name => 'night')
 
-    @accounting_date_id = AccountingDate.create!(:accounting_date => @today).id
+    @accounting_date_id = AccountingDate.create!(:accounting_date => @accounting_date).id
 
     Shift.create!(:shift_type_id => @shift_type_id, :accounting_date_id => @accounting_date_id)
 

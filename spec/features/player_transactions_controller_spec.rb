@@ -1,6 +1,8 @@
 require "feature_spec_helper"
+require "rails_helper"
 
 describe PlayersController do
+  include RSpec::Rails::ControllerExampleGroup
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
@@ -36,39 +38,39 @@ describe PlayersController do
       Location.delete_all
     end
 
-    xit '[8.1] successfully generate report. (search by card ID)' do
-      login_as_admin
-      create_player_transaction
-      visit home_path
-      click_link I18n.t("tree_panel.balance")
-      fill_search_info("member_id", @player.member_id)
+    # xit '[8.1] successfully generate report. (search by card ID)' do
+    #   login_as_admin
+    #   create_player_transaction
+    #   visit home_path
+    #   click_link I18n.t("tree_panel.balance")
+    #   fill_search_info("member_id", @player.member_id)
 
-      find("#button_find").click
-      check_balance_page
+    #   find("#button_find").click
+    #   check_balance_page
 
-      within "div#content" do
-        click_link I18n.t("tree_panel.player_transaction")
-      end
+    #   within "div#content" do
+    #     click_link I18n.t("tree_panel.player_transaction")
+    #   end
       
-      check_player_transaction_page
-      expect(find("input#id_number").value).to eq @player.card_id
+    #   check_player_transaction_page
+    #   expect(find("input#id_number").value).to eq @player.card_id
 
-      find("input#search").click
-      check_player_transaction_result_items([@player_transaction1, @player_transaction3])
-    end
+    #   find("input#search").click
+    #   check_player_transaction_result_items([@player_transaction1, @player_transaction3])
+    # end
 
-    it '[8.2] successfully generate report. (search by time)', js: true do
-      login_as_admin
-      create_player_transaction
-      visit search_transactions_path
-      check_player_transaction_page_js
+    # it '[8.2] successfully generate report. (search by time)', js: true do
+    #   login_as_admin
+    #   create_player_transaction
+    #   visit search_transactions_path
+    #   check_player_transaction_page_js
 
-      fill_in "datetimepicker_start_time", :with => (Time.now + 20 * 60)
-      find("input#search").click
-      wait_for_ajax
+    #   fill_in "datetimepicker_start_time", :with => (Time.now + 20 * 60)
+    #   find("input#search").click
+    #   wait_for_ajax
 
-      check_player_transaction_result_items([@player_transaction2, @player_transaction3])
-    end
+    #   check_player_transaction_result_items([@player_transaction2, @player_transaction3])
+    # end
 
     it '[8.3] successfully generate report. (search by transaction ID)', js: true do
       login_as_admin
@@ -81,7 +83,6 @@ describe PlayersController do
 
       find("input#search").click
       wait_for_ajax
-
       check_player_transaction_result_items([@player_transaction3])
     end
 
@@ -89,6 +90,7 @@ describe PlayersController do
       login_as_admin
       visit search_transactions_path
       check_player_transaction_page
+      fill_search_info("member_id", "12345678")
       find("input#search").click
 
       expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
@@ -107,19 +109,12 @@ describe PlayersController do
       check_player_transaction_result_items([@player_transaction2])
     end
 
-    it '[8.6] Transaction history unauthorized' do
+    it '[8.6] Transaction history unauthorized', :js => true do
       @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
-      visit home_path
-      click_link I18n.t("tree_panel.balance")
-      fill_search_info("member_id", @player.member_id)
-      find("#button_find").click
-
-      check_balance_page
-      check_player_info
-      expect(page).to_not have_selector("div a#player_transaction")
+      expect(page).to_not have_selector("li#nav_search_transactions")
     end
     
     it '[8.7] re-print slip', :js => true do
@@ -142,26 +137,25 @@ describe PlayersController do
       create_player_transaction
       visit search_transactions_path
       check_player_transaction_page_js
-
-      fill_in "datetimepicker_start_time", :with => (Time.now + 20 * 60)
+      fill_search_info_js("member_id", @player.member_id)
       find("input#search").click
       wait_for_ajax
 
-      check_player_transaction_result_items([@player_transaction2,@player_transaction3], false)
+      check_player_transaction_result_items([@player_transaction1, @player_transaction3], false)
     end
     
-    it '[8.10] empty search', :js => true do
-      login_as_admin
-      create_player_transaction
-      visit search_transactions_path
-      check_player_transaction_page_js
-      fill_in "datetimepicker_start_time", :with => "abc"
-      find("input#search").click
-      wait_for_ajax
-      check_flash_message I18n.t("report_search.datetime_format_not_valid")
-      expect(page).to_not have_selector("div#wid-id-2")
-      # expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
-    end
+    # it '[8.10] empty search', :js => true do
+    #   login_as_admin
+    #   create_player_transaction
+    #   visit search_transactions_path
+    #   check_player_transaction_page_js
+    #   fill_in "datetimepicker_start_time", :with => "abc"
+    #   find("input#search").click
+    #   wait_for_ajax
+    #   check_flash_message I18n.t("report_search.datetime_format_not_valid")
+    #   expect(page).to_not have_selector("div#wid-id-2")
+    #   # expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
+    # end
 
     it '[8.11] search data out of range', js: true do
       login_as_admin
@@ -169,8 +163,9 @@ describe PlayersController do
       visit search_transactions_path
       check_player_transaction_page_js
 
-      fill_in "datetimepicker_start_time", :with => (Time.now - 2592300)
-      fill_in "datetimepicker_end_time", :with => (Time.now)
+      fill_in "start", :with => (@accounting_date)
+      fill_in "end", :with => ("2015-08-15")
+      fill_search_info_js("member_id", @player2.member_id)
       find("input#search").click
       wait_for_ajax
 
@@ -180,16 +175,28 @@ describe PlayersController do
 
     it '[8.12] search data incorrect time period', js: true do
       login_as_admin
-      create_player_transaction
+      visit home_path
       visit search_transactions_path
+      create_player_transaction
       check_player_transaction_page_js
+      fill_in "start", :with => ("2015-09-01")
+      fill_in "end", :with => ("2015-08-15")
+      find("input#search").click
+      expect(find("input#start").value).to eq "2015-08-15"
+    end
 
-      fill_in "datetimepicker_start_time", :with => (Time.now)
-      fill_in "datetimepicker_end_time", :with => (Time.now - 1000)
+    it '[8.13] show error message when empty card ID/membership ID', js: true do
+      login_as_admin
+      visit home_path
+      visit search_transactions_path
+      create_player_transaction
+      check_player_transaction_page_js
+      fill_in "start", :with => ("2015-09-01")
+      fill_in "end", :with => ("2015-09-30")
       find("input#search").click
       wait_for_ajax
 
-      check_flash_message I18n.t("report_search.datetime_error")
+      check_flash_message I18n.t("report_search.no_id_number")
       expect(page).to_not have_selector("div#wid-id-2")
     end
   end

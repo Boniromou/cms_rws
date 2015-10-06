@@ -110,7 +110,17 @@ module StepHelper
     expect(find("label#player_full_name").text).to eq @player.full_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
     expect(find("label#player_card_id").text).to eq @player.card_id.to_s
-    expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player.status}")
+    if @player.status == 'active'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player.status}")
+    else
+      check_player_lock_types
+    end
+  end
+
+  def check_player_lock_types
+    @player.lock_types.each do |lock_type|
+      expect(find("label#player_#{lock_type}").text).to eq I18n.t("player_status.#{lock_type}")
+    end
   end
 
   def check_player_transaction_page_time_picker

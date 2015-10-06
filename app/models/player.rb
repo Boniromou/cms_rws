@@ -1,6 +1,7 @@
 class Player < ActiveRecord::Base
   belongs_to :currency
   has_many :tokens
+  has_many :players_lock_types
   include ActionView::Helpers
   include FundHelper
   attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id
@@ -8,6 +9,8 @@ class Player < ActiveRecord::Base
 
   STATUS_LOCKED = 'locked'
   STATUS_NORMAL = 'active'
+
+  LOCK_TYPE_CAGE_LOCK = 'cage_lock'
 
   def full_name
     self.first_name + " " + self.last_name
@@ -21,14 +24,36 @@ class Player < ActiveRecord::Base
     return status == STATUS_LOCKED
   end
 
-  def lock_account!
-    self.status = STATUS_LOCKED
-    self.save
+  def cage_locked?
+    self.lock_types.include?(LOCK_TYPE_CAGE_LOCK)
   end
 
-  def unlock_account!
-    self.status = STATUS_NORMAL
-    self.save
+  def lock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
+    PlayersLockType.add_lock_to_player(self.id, lock_type_name)
+    update_lock_status
+  end
+
+  def unlock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
+    PlayersLockType.remove_lock_to_player(self.id, lock_type_name)
+    update_lock_status
+  end
+
+  def update_lock_status
+    if self.status == STATUS_NORMAL && self.lock_types.length > 0
+      self.status = STATUS_LOCKED
+      self.save
+    elsif self.status == STATUS_LOCKED && self.lock_types.length == 0
+      self.status = STATUS_NORMAL
+      self.save
+    end
+  end
+
+  def lock_types
+    result = []
+    self.players_lock_types.each do |players_lock_type|
+      result << players_lock_type.lock_type.name if players_lock_type.status == 'active'
+    end
+    result
   end
 
   class << self

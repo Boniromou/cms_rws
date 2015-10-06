@@ -3,7 +3,7 @@ class CreatePropertiesShiftTypes < ActiveRecord::Migration
     create_table :properties_shift_types do |t|
       t.integer :property_id, :null => false
       t.integer :shift_type_id, :null => false
-      t.integer :order, :null => false
+      t.integer :sequence, :null => false
 
       t.timestamps
     end

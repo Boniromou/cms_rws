@@ -123,6 +123,8 @@ en:
     active: "Active"
     locked: "Locked"
     is_locked: "Player is locked!"
+    cage_lock: "Cage Lock"
+    blacklist: "Blacklist"
   update_player:
     success: "Edit player [%{first_name} %{last_name}] successful"
     duplicate: "Card ID has already existed"

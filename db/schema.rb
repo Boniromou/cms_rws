@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151002094637) do
+ActiveRecord::Schema.define(:version => 20151005084709) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -103,7 +103,8 @@ ActiveRecord::Schema.define(:version => 20151002094637) do
   end
 
   add_index "players_lock_types", ["lock_type_id"], :name => "fk_players_lock_types_lock_type_id"
-  add_index "players_lock_types", ["player_id"], :name => "fk_players_lock_types_player_id"
+  add_index "players_lock_types", ["player_id", "lock_type_id"], :name => "players_lock_types_player_id_lock_type_id", :unique => true
+  add_index "players_lock_types", ["player_id"], :name => "players_lock_types_player_id"
 
   create_table "properties", :force => true do |t|
     t.string   "name",       :limit => 45, :null => false
@@ -115,7 +116,7 @@ ActiveRecord::Schema.define(:version => 20151002094637) do
   create_table "properties_shift_types", :force => true do |t|
     t.integer  "property_id",   :null => false
     t.integer  "shift_type_id", :null => false
-    t.integer  "order",         :null => false
+    t.integer  "sequence",      :null => false
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end

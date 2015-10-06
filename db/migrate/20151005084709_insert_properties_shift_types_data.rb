@@ -5,7 +5,7 @@ class InsertPropertiesShiftTypesData < ActiveRecord::Migration
   end
 
   def down
-    execute "DELETE FROM shift_types WHERE id == 4"
-    execute "DELETE FROM properties_shift_types WHERE id == 1"    
+    execute "DELETE FROM properties_shift_types WHERE id = 1"    
+    execute "DELETE FROM shift_types WHERE id = 4"
   end
 end

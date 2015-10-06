@@ -14,8 +14,8 @@ module ShiftHelper
   end
 
   def create_shift_data
-    @today = Date.today
     @accounting_date = "2015-04-15"
+    @today = Date.parse(@accounting_date)
 
     @moring_shift_type = ShiftType.create!(:name => 'morning')
     @swing_shift_type = ShiftType.create!(:name => 'swing')

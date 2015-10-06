@@ -21,11 +21,7 @@ class ShiftsController < ApplicationController
     @current_accounting_date = @current_shift.accounting_date
 
     @next_shift_name = Shift.next_shift_name_by_name(@current_shift_name)
-    if @current_shift_name == 'night'
-      @next_accounting_date = @current_accounting_date + 1
-    else
-      @next_accounting_date = @current_accounting_date
-    end
+    @next_accounting_date = AccountingDate.next_shift_accounting_date(@current_shift_name, @current_accounting_date)
   end
 
   def create

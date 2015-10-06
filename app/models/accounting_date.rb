@@ -20,6 +20,16 @@ class AccountingDate < ActiveRecord::Base
       end
     end
 
+    def next_shift_accounting_date( shift_name, current_ac_date )
+      shift_names = PropertiesShiftType.shift_types(PROPERTY_ID)
+      last_shift_name = shift_names[-1]
+      if shift_name == last_shift_name
+        return current_ac_date + 1
+      else
+        return current_ac_date
+      end
+    end
+
     def get_id_by_date( date )
       accounting_date = self.find_by_accounting_date(date)
       raise FrontMoneyHelper::NoResultException.new "accounting date not exist" if accounting_date.nil?

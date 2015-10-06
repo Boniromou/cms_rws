@@ -31,11 +31,20 @@ class Player < ActiveRecord::Base
   def lock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
     PlayersLockType.add_lock_to_player(self.id, lock_type_name)
     update_lock_status
+    discard_tokens
   end
 
   def unlock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
     PlayersLockType.remove_lock_to_player(self.id, lock_type_name)
     update_lock_status
+  end
+
+  def discard_tokens
+    if self.tokens != []
+      self.tokens.each do |token| 
+        token.discard
+      end
+    end
   end
 
   def update_lock_status

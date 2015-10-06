@@ -173,6 +173,7 @@ en:
     morning: "Morning"
     swing: "Swing"
     night: "Night"
+    day: "Day"
   fm_activity:
     grand_total: "Grand Total"
     roll_shift_by: "Roll shift by"

@@ -17,7 +17,7 @@ class TokensController < ApplicationController
     handle_request(:keep_alive)
   end
 
-  def discard_token
+  def discard
     handle_request(:discard_token)
   end
 end

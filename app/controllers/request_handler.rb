@@ -20,13 +20,12 @@ require 'singleton'
     end
 
     def process_validate_token_event
-      # response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      # unless response.is_a?(Hash)
-      #   return {}
-      # else 
-      #   return response
-      # end
-      {}
+      response = Token.validate(@inbound[:login_name], @inbound[:session_token])
+      unless response.is_a?(Hash)
+        return {}
+      else 
+        return response
+      end
     end
     
     def process_retrieve_player_info_event

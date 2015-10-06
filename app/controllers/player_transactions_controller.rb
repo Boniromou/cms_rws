@@ -22,30 +22,20 @@ class PlayerTransactionsController < ApplicationController
     selected_tab_index = params[:selected_tab_index]
     transaction_id = params[:transaction_id]
     if selected_tab_index == '0'
-      raise SearchPlayerTransaction::NoIdNumberError, "no_id_number" if id_number.blank?
-      raise SearchPlayerTransaction::DateTimeError, "datetime_error" if @end_time.localtime.to_date.to_time.to_i < @start_time.localtime.to_date.to_time.to_i
-      date_gap = (@end_time.localtime.to_date.to_time.to_i - @start_time.localtime.to_date.to_time.to_i) / 86400
-      raise SearchPlayerTransaction::OverRangeError, "limit_remark" if date_gap > 30
-      start_ac_date = AccountingDate.find_by_accounting_date(@start_time.localtime.to_date.to_s)
-      end_ac_date = AccountingDate.find_by_accounting_date(@end_time.localtime.to_date.to_s)
-      end_ac_date = AccountingDate.order(:created_at).last if end_ac_date.nil? 
-
-      raise SearchPlayerTransaction::NoResultException, "accounting date not found" if start_ac_date.nil? || end_ac_date.nil?
-
-      start_shift = Shift.where(:accounting_date_id => start_ac_date.id).order(:created_at).first
-      end_shift = Shift.where(:accounting_date_id => end_ac_date.id).order(:created_at).last
-      @player_transactions = PlayerTransaction.search_query(id_type, id_number, start_shift.id, end_shift.id, transaction_id, selected_tab_index)
+      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number)
+      
+      @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, transaction_id, selected_tab_index)
     else
       @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, transaction_id, selected_tab_index)
     end
     rescue SearchPlayerTransaction::NoResultException => e
       @player_transactions = []
     rescue SearchPlayerTransaction::NoIdNumberError => e
-      flash[:error] = "report_search." + e.message
+      flash[:error] = "transaction_history." + e.message
     rescue SearchPlayerTransaction::OverRangeError => e
       flash[:error] = "report_search." + e.message
     rescue SearchPlayerTransaction::DateTimeError => e
-      flash[:error] = "report_search." + e.message
+      flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 
       flash[:error] = "report_search.datetime_format_not_valid"
     end

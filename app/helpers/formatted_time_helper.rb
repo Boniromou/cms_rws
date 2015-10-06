@@ -42,4 +42,12 @@ module FormattedTimeHelper
       raise ArgumentError
     end
   end
+
+  def to_number(date_str)
+    date_str.localtime.to_date.to_time.to_i if date_str
+  end
+
+  def to_string(date_str)
+    date_str.localtime.to_date.to_s if date_str
+  end
 end

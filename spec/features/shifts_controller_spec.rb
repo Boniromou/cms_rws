@@ -81,7 +81,6 @@ describe ShiftsController do
     before(:each) do
       clean_dbs
       create_shift_data
-      create_moring_swing_night_shift_sequence
       @shifts = ['morning', 'swing', 'night']
 
       @now = Time.now
@@ -204,7 +203,6 @@ describe ShiftsController do
     before(:each) do
       clean_dbs
       create_shift_data
-      create_moring_swing_night_shift_sequence
       @shifts = ['morning', 'swing', 'night']
 
       allow_any_instance_of(CageInfoHelper).to receive(:polling_interval).and_return(100)

@@ -23,7 +23,7 @@ module ShiftHelper
     @day_shift_type = ShiftType.create!(:name => 'day')
 
     @accounting_date_id = AccountingDate.create!(:accounting_date => @accounting_date).id
-
+    create_moring_swing_night_shift_sequence
 
     # @station_id = Station.create!(:name => 'window#1').id
     # allow_any_instance_of(ApplicationController).to receive(:current_station_id).and_return(@station_id)

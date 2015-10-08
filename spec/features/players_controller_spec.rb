@@ -987,4 +987,76 @@ describe PlayersController do
     end 
 
   end
+
+  describe '[36] Expire token' do
+     before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
+      @token2 = Token.create!(:session_token => '3949245469jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
+    end
+
+     after(:each) do
+      Token.delete_all
+      clean_dbs
+    end
+
+    it '[36.1] Expire token when player is locked from cage', js: true do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      wait_for_ajax
+
+      @player.reload
+
+      if @player.status == 'active'
+        @lock_or_unlock = "lock"
+      else
+        @lock_or_unlock = "unlock"
+      end
+
+      check_profile_page
+      check_player_info
+
+      expect(page).to have_selector "div#pop_up_dialog"
+      expect(find("div#pop_up_dialog")[:style]).to include "none"
+
+      click_button I18n.t("button.#{@lock_or_unlock}")
+      expect(find("div#pop_up_dialog")[:style]).to_not include "none"
+
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
+
+      click_button I18n.t("button.confirm")
+      wait_for_ajax
+
+      @player.reload
+
+      if @player.status == 'active'
+        @lock_or_unlock = "lock"
+      else
+        @lock_or_unlock = "unlock"
+      end
+
+      check_profile_page
+      check_player_info
+
+      expect(page).to have_selector "div#pop_up_dialog"
+      expect(find("div#pop_up_dialog")[:style]).to include "none"
+
+      check_flash_message expected_flash_message
+      token_test1 = Token.find_by_session_token('abm39492i9jd9wjn')
+      token_test2 = Token.find_by_session_token('3949245469jd9wjn')
+      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
+    end
+  end
 end

@@ -3,6 +3,8 @@ require "rails_helper"
 
 describe TokensController do
   def clean_dbs
+    Token.delete_all
+    PlayersLockType.delete_all
     Player.delete_all    
   end
 
@@ -32,16 +34,25 @@ describe TokensController do
       expect(result[:error_code]).to eq 'InvalidCardId'
     end
 
-    it '[29.2] Card ID is exist' do
+    it '[29.2] Card ID is exist and generate token' do
+      mock_token = "afe1f247-5eaa-4c2c-91c7-33a5fb637713"
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
+      allow(SecureRandom).to receive(:uuid).and_return(mock_token)
       post 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
-      #expect(result[:session_token]).to eq 'abc123'
+      expect(result[:session_token]).to eq mock_token
       expect(result[:login_name]).to eq @player.member_id
       expect(result[:currency]).to eq Currency.find(@player.currency_id).name
       expect(result[:balance]).to eq 100.0
+    end
+
+    it '[29.3] Player is locked' do
+      @player.lock_account!
+      get 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'PlayerLocked'
     end
   end
 

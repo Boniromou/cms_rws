@@ -11,12 +11,13 @@ class Token < ActiveRecord::Base
       return {:error_code => 'InvalidSessionToken', :error_msg => 'Session token is invalid.'}, nil
     end
 
-    def create(login_name, session_token)
+   	def generate(player_id)
     	token = new
-    	token.player_id = Player.find_by_member_id(login_name)
-		  token.session_token = session_token
-		  token.expired_at = Time.now.utc + 30 * 60 
+    	token.player_id = player_id
+		  token.session_token = SecureRandom.uuid
+		  token.expired_at = Time.now.utc + 1800
 		  token.save
+      token
     end
 
     def keep_alive(login_name, session_token)

@@ -4,7 +4,6 @@ require 'singleton'
 
     def update(inbound)
       @inbound = inbound
-      @wallet_requester = Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
       begin
         event_name = inbound[:_event_name].to_sym
         @outbound = self.__send__("process_#{event_name}_event") || {}
@@ -29,17 +28,7 @@ require 'singleton'
       card_id = @inbound[:card_id]
       terminal_id = @inbound[:terminal_id]
       pin = @inbound[:pin]
-      property_id = @inbound[:property_id]
-
-      player = Player.find_by_card_id(card_id)
-      return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
-      login_name = player.member_id
-      currency = player.currency.name
-      balance = @wallet_requester.get_player_balance(player.member_id)
-      #TODO gen a real token
-      session_token = 'abm39492i9jd9wjn'
-
-      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
+      PlayerInfo.retrieve_info(card_id, terminal_id, pin)
     end
 
     def process_keep_alive_event

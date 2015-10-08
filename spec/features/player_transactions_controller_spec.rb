@@ -196,7 +196,7 @@ describe PlayersController do
       find("input#search").click
       wait_for_ajax
 
-      check_flash_message I18n.t("report_search.no_id_number")
+      check_flash_message I18n.t("transaction_history.no_id")
       expect(page).to_not have_selector("div#wid-id-2")
     end
   end

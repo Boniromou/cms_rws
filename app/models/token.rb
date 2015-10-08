@@ -36,4 +36,9 @@ class Token < ActiveRecord::Base
       {}
     end
 	end
+
+  def discard
+    self.expired_at = Time.now.utc - 100
+    self.save
+  end
 end

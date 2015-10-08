@@ -31,7 +31,7 @@ module CageInfoHelper
 
   def polling_interval
     #milliseconds
-    6 * 1000 + rand(1..500)
+    60 * 1000 + rand(1..500)
   end
 
   def current_station

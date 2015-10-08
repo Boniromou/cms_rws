@@ -20,14 +20,14 @@ require 'singleton'
 
     def process_validate_token_event
       response, token = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      return response unless token
-      {}
+      return response
     end
     
     def process_retrieve_player_info_event
       card_id = @inbound[:card_id]
       terminal_id = @inbound[:terminal_id]
       pin = @inbound[:pin]
+      property_id = @inbound[:property_id]
       PlayerInfo.retrieve_info(card_id, terminal_id, pin)
     end
 

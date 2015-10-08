@@ -33,8 +33,8 @@ describe AuditLogsController do
     it '[13.1] Search audit log by time' do
       login_as_admin
       visit '/search_audit_logs'
-      fill_in "from", :with => "2014-9-29"
-      fill_in "to", :with => "2014-9-29"
+      fill_in "start", :with => "2014-9-29"
+      fill_in "end", :with => "2014-9-29"
       click_button I18n.t("button.search")
       expect(page.source).to have_selector("tr#audit#{@al1.id}_body")
       expect(page.source).not_to have_selector("tr#audit#{@al2.id}_body")

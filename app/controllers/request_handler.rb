@@ -20,12 +20,9 @@ require 'singleton'
     end
 
     def process_validate_token_event
-      response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      unless response.is_a?(Hash)
-        return {}
-      else 
-        return response
-      end
+      response, token = Token.validate(@inbound[:login_name], @inbound[:session_token])
+      return response unless token
+      {}
     end
     
     def process_retrieve_player_info_event
@@ -46,23 +43,10 @@ require 'singleton'
     end
 
     def process_keep_alive_event
-      response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      unless response.is_a?(Hash)
-        response.keep_alive
-        return {}
-      else
-        return response
-      end
+      Token.keep_alive(@inbound[:login_name], @inbound[:session_token])
     end
 
     def process_discard_token_event
-      response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      unless response.is_a?(Hash)
-        response.discard
-        return {}
-      else
-        return response
-      end
+      Token.discard(@inbound[:login_name], @inbound[:session_token])
     end
   end
-

@@ -72,6 +72,7 @@ CmsRws::Application.routes.draw do
   get 'validate_token' => 'tokens#validate'
   post 'retrieve_player_info' => 'tokens#retrieve_player_info'
   post 'keep_alive' => 'tokens#keep_alive'
+  get 'keep_eternal_alive' => 'tokens#keep_eternal_alive'
   get 'discard_token' => 'tokens#discard'
 
   # The priority is based upon order of creation:

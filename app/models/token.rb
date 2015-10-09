@@ -24,7 +24,9 @@ class Token < ActiveRecord::Base
 
 	class << self
 		def validate(login_name, session_token)
-      token = Token.find_by_session_token(session_token)
+      player = Player.find_by_member_id(login_name)
+      raise Request::InvalidSessionToken.new unless player
+      token = player.tokens.find_by_session_token(session_token)
       raise Request::InvalidSessionToken.new unless token
       raise Request::InvalidSessionToken.new unless token.belong_to?(login_name) && token.alive?
       token

@@ -28,7 +28,7 @@ class Token < ActiveRecord::Base
       raise Request::InvalidSessionToken.new unless player
       token = player.tokens.find_by_session_token(session_token)
       raise Request::InvalidSessionToken.new unless token
-      raise Request::InvalidSessionToken.new unless token.belong_to?(login_name) && token.alive?
+      raise Request::InvalidSessionToken.new unless token.belong_to?(login_name) && token.alive? && !token.player.account_locked?
       token
     end
 

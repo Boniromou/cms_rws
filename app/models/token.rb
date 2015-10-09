@@ -25,8 +25,9 @@ class Token < ActiveRecord::Base
 	class << self
 		def validate(login_name, session_token)
       token = Token.find_by_session_token(session_token)
-      return {:error_code => 'InvalidSessionToken', :error_msg => 'Session token is invalid.'}, nil unless token
-      return {}, token if token.belong_to?(login_name) && token.alive?
+      raise Request::InvalidSessionToken.new unless token
+      raise Request::InvalidSessionToken.new unless token.belong_to?(login_name) && token.alive?
+      token
     end
 
    	def generate(player_id)
@@ -39,17 +40,15 @@ class Token < ActiveRecord::Base
     end
 
     def keep_alive(login_name, session_token)
-      response, token = self.validate(login_name, session_token)
-      return response if response[:error_code] == 'InvalidSessionToken'
+      token = self.validate(login_name, session_token)
       token.keep_alive
-      {}
+      token
     end
 
     def discard(login_name, session_token)
-      response, token = self.validate(login_name, session_token)
-      return response if response[:error_code] == 'InvalidSessionToken'
+      token = self.validate(login_name, session_token)
       token.discard
-      {}
+      token
     end
 	end
 end

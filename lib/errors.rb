@@ -125,3 +125,31 @@ module Remote
   class UnlockPlayerError < RemoteError
   end
 end
+
+module Request
+  class RequestError < CageError
+    def initialize(status_code=500, error_msg=nil, data={})
+      @status_code = status_code
+      @error_msg = error_msg
+      @data = data
+    end
+
+    def error_code
+      self.class.name.split('::').last
+    end
+
+    def to_hash
+      @data = {} unless @data
+      { :status => @status_code ,
+        :error_code => error_code,
+        :error_msg => @error_msg
+        }.merge!(@data)
+    end
+  end
+
+  class InvalidSessionToken < RequestError
+    def initialize(data=nil)
+      super(400,'Session token is invalid.',data)
+    end
+  end
+end

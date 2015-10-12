@@ -42,7 +42,7 @@ class Player < ActiveRecord::Base
   def discard_tokens
     if self.tokens != []
       self.tokens.each do |token| 
-        token.discard
+        token.discard if token.alive?
       end
     end
   end

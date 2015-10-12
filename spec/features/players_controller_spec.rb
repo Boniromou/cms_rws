@@ -1073,7 +1073,7 @@ describe PlayersController do
     end
 
     it '[37.1] Player balance not found', :js => true do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('----')
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('no_balance')
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
@@ -1095,6 +1095,69 @@ describe PlayersController do
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
 
+    end
+  end
+  
+  describe '[38] Retry create player' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[38.1] Retry create player success', :js => true do
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
+      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
+      allow_any_instance_of(Requester::Standard).to receive(:create_player).and_return('OK')
+
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      login_as_admin
+
+      mock_have_enable_station
+
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      check_search_page
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_balance_page(9999)
+
+      expect(page.source).to have_selector("div a#balance_deposit")
+      expect(page.source).to have_selector("div a#balance_withdraw")
+      expect(find("div a#balance_deposit")[:disabled]).to eq nil
+      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
+    end
+
+    it '[38.2] Retry create player  fail', :js => true do
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'})
+
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      login_as_admin
+
+      mock_have_enable_station
+
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      check_search_page
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_balance_page(9999)
+
+      expect(page.source).to have_selector("div a#balance_deposit")
+      expect(page.source).to have_selector("div a#balance_withdraw")
+      expect(find("div a#balance_deposit")[:disabled]).to eq nil
+      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
     end
   end
 end

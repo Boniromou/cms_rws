@@ -23,8 +23,11 @@ class Requester::Standard < Requester::Base
   end
 
   def get_player_balance(login_name)
-    response = remote_rws_call('get', "#{@path}/#{get_api_name(:query_player_balance)}", :query => {:login_name => login_name})
-    parse_get_player_balance_response(response)
+    retry_call(3) do
+      response = remote_rws_call('get', "#{@path}/#{get_api_name(:query_player_balance)}", :query => {:login_name => login_name})
+      create_player_proc = Proc.new {}
+      parse_get_player_balance_response(response, create_player_proc)
+    end
   end
 
   def deposit(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
@@ -44,28 +47,32 @@ class Requester::Standard < Requester::Base
   end
 
   protected
+  def retry_call(retry_times, &block)
+    begin
+      result = block.call
+    rescue Remote::RemoteError => e
+      p e.message
+      p e.backtrace
+      if retry_times > 0
+        result = retry_call(retry_times - 1, &block)
+      else
+        result = RemoteError.msg
+      end
+    end
+    result
+  end
   
   def get_api_name(api_type)
     API_NAME_MAPPING[api_type]
   end
 
-  def parse_get_player_balance_response(result)
+  def parse_get_player_balance_response(result, create_player_proc)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-    begin 
-      if ['OK'].include?(error_code)
-        raise Remote::GetBalanceError, 'balance is nil when OK' if result_hash[:balance].nil?
-        result_hash[:balance].to_f
-      elsif['InvalidLoginName'].include?(error_code)
-        #TODO  create player when invalid login name
-        #create_player(login_name, currency, player_id, player_currency_id)
-        raise Remote::GetBalanceError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
-      else
-        raise Remote::GetBalanceError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
-      end
-    rescue Remote::GetBalanceError => e
-      return 'no_balance'
-    end
+    create_player_proc.call if['InvalidLoginName'].include?(error_code)
+    raise Remote::GetBalanceError, 'no_balance' unless ['OK'].include?(error_code)
+    raise Remote::GetBalanceError, 'no_balance' if result_hash[:balance].nil?
+    return result_hash[:balance].to_f
   end
 
   def parse_create_player_response(result)

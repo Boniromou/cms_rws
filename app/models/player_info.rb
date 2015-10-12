@@ -11,6 +11,7 @@ class PlayerInfo
       return {:status => 400, :error_code => 'InvalidPin', :error_msg => 'Pin is wron with card id'} unless validate_pin(login_name, pin)
       currency = player.currency.name
       balance = @wallet_requester.get_player_balance(player.member_id)
+      return {:status => 500, :error_code => 'RetrieveBalanceFail', :error_msg => 'Retrieve balance from wallet fail'} unless balance.class == Float
       session_token = Token.generate(player.id).session_token
 
       {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}

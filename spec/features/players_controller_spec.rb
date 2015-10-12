@@ -1059,4 +1059,42 @@ describe PlayersController do
       token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
   end
+  
+  describe '[37] Show balance not found' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[37.1] Player balance not found', :js => true do
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('----')
+
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      login_as_admin
+
+      mock_have_enable_station
+
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      check_search_page
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_balance_page_without_balance
+
+      expect(page.source).to have_selector("div a#balance_deposit")
+      expect(page.source).to have_selector("div a#balance_withdraw")
+      expect(find("div a#balance_deposit")[:disabled]).to eq nil
+      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
+
+    end
+  end
 end

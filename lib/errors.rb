@@ -119,11 +119,6 @@ module Remote
   class AmountNotEnough < WithdrawError
   end
 
-  class LockPlayerError < RemoteError
-  end
-
-  class UnlockPlayerError < RemoteError
-  end
 end
 
 module Request

@@ -20,4 +20,8 @@ class TokensController < ApplicationController
   def discard
     handle_request(:discard_token)
   end
+
+  def keep_eternal_alive
+    handle_request(:keep_eternal_alive)
+  end
 end

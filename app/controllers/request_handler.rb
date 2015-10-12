@@ -42,4 +42,19 @@ class RequestHandler
     Token.discard(@inbound[:login_name], @inbound[:session_token])
     {}
   end
+
+  def process_keep_eternal_alive_event
+    property_id = @inbound[:property_id]
+    member_id = @inbound[:login_name]
+    session_token = 'null'
+    player = Player.where(:property_id => property_id, :member_id => member_id).first
+    return {:status => 400, :error_code=>'PlayerNotFound', :error_msg=>'Player is not exist.'} unless player
+    token = Token.where(:player_id => player.id, :session_token => session_token).first
+    token = Token.new unless token
+    token.player_id = player.id
+    token.expired_at = '3012-12-20 00:00:00'
+    token.session_token = 'null'
+    token.save({:validate => false})
+    {}
+  end
 end

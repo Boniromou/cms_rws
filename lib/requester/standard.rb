@@ -52,12 +52,19 @@ class Requester::Standard < Requester::Base
   def parse_get_player_balance_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-
-    if ['OK'].include?(error_code)
-      raise Remote::GetBalanceError, 'balance is nil' if result_hash[:balance].nil?
-      result_hash[:balance].to_f
-    else
-      raise Remote::GetBalanceError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
+    begin 
+      if ['OK'].include?(error_code)
+        raise Remote::GetBalanceError, 'balance is nil when OK' if result_hash[:balance].nil?
+        result_hash[:balance].to_f
+      elsif['InvalidLoginName'].include?(error_code)
+        #TODO  create player when invalid login name
+        #create_player(login_name, currency, player_id, player_currency_id)
+        raise Remote::GetBalanceError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
+      else
+        raise Remote::GetBalanceError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
+      end
+    rescue Remote::GetBalanceError => e
+      return 'no_balance'
     end
   end
 
@@ -93,28 +100,6 @@ class Requester::Standard < Requester::Base
       raise Remote::AmountNotEnough, result_hash[:balance]
     else
       raise Remote::WithdrawError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
-    end
-  end
-
-  def parse_lock_player_response(result)
-    result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-
-    if ['OK', 'AlreadyLocked'].include?(error_code)
-      return 'OK'
-    else
-      raise Remote::LockPlayerError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
-    end
-  end
-
-  def parse_unlock_player_response(result)
-    result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-
-    if ['OK', 'AlreadyUnlocked'].include?(error_code)
-      return 'OK'
-    else
-      raise Remote::UnlockPlayerError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
     end
   end
 end

@@ -73,6 +73,7 @@ en:
     fund_out_amt: "Withdrawal Amount (HKD)"
   balance_enquiry:
     account_balance: "Account Balance (HKD)"
+    no_balance: "-------(missing)"
   button:
     add: "Add"
     cancel: "Cancel"
@@ -123,8 +124,8 @@ en:
     active: "Active"
     locked: "Locked"
     is_locked: "Player is locked!"
-    cage_lock: "Cage Lock"
-    blacklist: "Blacklist"
+    cage_lock: "Cage Lock(missing)"
+    blacklist: "Blacklist(missing)"
   update_player:
     success: "Edit player [%{first_name} %{last_name}] successful"
     duplicate: "Card ID has already existed"

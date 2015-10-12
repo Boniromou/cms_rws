@@ -5,21 +5,26 @@ module StepHelper
     expect(flash_msg.text).to eq(msg)
   end
 
+  def check_location_name(name)
+    location_name = find("div#location_name")
+    expect(location_name.text).to eq (name)
+  end
+
   def login_as_root
     @root_user = User.create!(:uid => 1, :name => 'portal.admin')
     login_as(@root_user)
   end
-=begin
-  def login_as(user)
-    Rails.cache.write user.uid.to_s, {:status => true, :admin => true}
-    result = {'success' => true, 'system_user' => {'id' => user.uid, 'username' => user.name}}
+
+  def login_as_admin_new
+    Rails.cache.write '1', {:status => true, :admin => true}
+    result = {'success' => true, 'system_user' => {'id' => 1, 'username' => 'portal.admin'}}
     UserManagement.stub(:authenticate).and_return(result)
     visit '/login'
-    fill_in "user_username", :with => user.name
-    fill_in "user_password", :with => 'secret'
+    fill_in "user_username", :with => 'portal.admin'
+    fill_in "user_password", :with => 'Cc123456'
     click_button I18n.t("general.login")
   end
-=end
+
   def login_as_not_admin(user)
     login_as user
     Rails.cache.write user.uid.to_s, {:status => true, :admin => false}

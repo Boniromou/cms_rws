@@ -21,7 +21,7 @@ class RequestHandler
   end
 
   def process_validate_token_event
-    Token.validate(@inbound[:login_name], @inbound[:session_token])
+    Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
     {}
   end
   
@@ -30,16 +30,16 @@ class RequestHandler
     terminal_id = @inbound[:terminal_id]
     pin = @inbound[:pin]
     property_id = @inbound[:property_id]
-    PlayerInfo.retrieve_info(card_id, terminal_id, pin)
+    PlayerInfo.retrieve_info(card_id, terminal_id, pin, property_id)
   end
 
   def process_keep_alive_event
-    Token.keep_alive(@inbound[:login_name], @inbound[:session_token])
+    Token.keep_alive(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
     {}
   end
 
   def process_discard_token_event
-    Token.discard(@inbound[:login_name], @inbound[:session_token])
+    Token.discard(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
     {}
   end
 
@@ -56,5 +56,16 @@ class RequestHandler
     token.session_token = 'null'
     token.save({:validate => false})
     {}
+  end
+
+  def process_get_player_currency_event
+    property_id = @inbound[:property_id]
+    login_name = @inbound[:login_name]
+    PlayerInfo.get_currency(login_name, property_id)
+  end
+  #mock
+  def process_validate_terminal_event
+    return {:machine_name => 'abc1234'} if @inbound[:terminal_id] == 'eb693ec8252cd630102fd0d0fb7c3485'
+    {:error_code => 'InvalidTerminalID', :error_msg => 'Validate terminal id failed.'}
   end
 end

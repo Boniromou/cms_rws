@@ -20,7 +20,7 @@ describe TokensController do
   describe '[29] Itegration Service Cage APIs Login' do
     before(:each) do
       clean_dbs
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active", :property_id => 20000)
       bypass_rescue
     end
 
@@ -38,7 +38,7 @@ describe TokensController do
       mock_token = "afe1f247-5eaa-4c2c-91c7-33a5fb637713"
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
       allow(SecureRandom).to receive(:uuid).and_return(mock_token)
-      post 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
+      post 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -50,7 +50,7 @@ describe TokensController do
 
     it '[29.3] Player is locked' do
       @player.lock_account!
-      get 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234"}
+      get 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'PlayerLocked'
     end
@@ -60,7 +60,7 @@ describe TokensController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active", :property_id => 20000)
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
     end
 
@@ -71,14 +71,14 @@ describe TokensController do
     end
 
     it '[30.1] Validation pass' do
-      get 'validate', {:login_name => "123456", :session_token => 'abm39492i9jd9wjn'}
+      get 'validate', {:login_name => "123456", :session_token => 'abm39492i9jd9wjn', :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
     end
 
     it '[30.2] Validation fail with invalid token OK' do
-      get 'validate', {:login_name => "123456", :session_token => 'a456456887676esn'}
+      get 'validate', {:login_name => "123456", :session_token => 'a456456887676esn', :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidSessionToken'
       expect(result[:error_msg]).to eq 'Session token is invalid.'
@@ -89,7 +89,7 @@ describe TokensController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active", :property_id => 20000)
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now.utc + 1800)
     end
 
@@ -100,7 +100,7 @@ describe TokensController do
     end
 
     it '[32.1] Logout success' do
-      get 'discard', {:session_token => 'abm39492i9jd9wjn', :login_name => '123456'}
+      get 'discard', {:session_token => 'abm39492i9jd9wjn', :login_name => '123456', :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -109,7 +109,7 @@ describe TokensController do
     end
 
     it '[32.2] Logout fail' do
-      get 'discard', {:session_token => 'abm394929wjn', :login_name => '123456'}
+      get 'discard', {:session_token => 'abm394929wjn', :login_name => '123456', :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidSessionToken'
       expect(result[:error_msg]).to eq 'Session token is invalid.'
@@ -120,7 +120,7 @@ describe TokensController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active", :property_id => 20000)
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
     end
 
@@ -131,7 +131,7 @@ describe TokensController do
     end
 
     it '[33.1] Keep alive success' do
-      post 'keep_alive', {:session_token => 'abm39492i9jd9wjn', :login_name => '123456'}
+      post 'keep_alive', {:session_token => 'abm39492i9jd9wjn', :login_name => '123456', :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -139,7 +139,7 @@ describe TokensController do
     end
 
     it '[33.2] Keep alive fail with wrong token' do
-      post 'keep_alive', {:session_token => 'abm394jd9wjn', :login_name => '123456'}
+      post 'keep_alive', {:session_token => 'abm394jd9wjn', :login_name => '123456', :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidSessionToken'
       expect(result[:error_msg]).to eq 'Session token is invalid.'
@@ -152,5 +152,26 @@ describe TokensController do
     #   expect(result[:error_code]).to eq 'InvalidSessionToken'
     #   expect(result[:error_msg]).to eq 'Session token is invalid.'
     # end
+  end
+
+  describe '[41] get player Currency API ' do
+    before(:each) do
+      clean_dbs
+      bypass_rescue
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active", :property_id => 20000)
+    end
+
+    after(:each) do
+      Player.delete_all
+      clean_dbs
+    end
+
+    it '[41.1] Return Currency' do
+      get 'get_player_currency', {:login_name => @player.member_id, :property_id => @player.property_id}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      expect(result[:currency]).to eq 'HKD'
+    end
   end
 end

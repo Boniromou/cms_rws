@@ -27,6 +27,10 @@ class ApplicationController < ActionController::Base
   def wallet_requester
     Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
   end
+
+  def terminal_requester
+    Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
+  end
   
   protected
 
@@ -95,5 +99,10 @@ class ApplicationController < ActionController::Base
       format.js { render partial: "shared/error500", formats: [:js], :status => :internal_server_error }
     end
     return
+  end
+
+  def get_location_info
+    return session[:location_info] if session[:location_info]
+    'No location'
   end
 end

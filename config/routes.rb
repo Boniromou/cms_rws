@@ -66,7 +66,7 @@ CmsRws::Application.routes.draw do
   post 'change_station_status' => 'stations#change_status'
   post 'register_terminal' => 'stations#register'
   post 'unregister_terminal' => 'stations#unregister'
-  get 'stations/current/' => 'stations#current'
+  get 'stations/current/:terminal_id' => 'stations#current'
   
 
   get 'validate_token' => 'tokens#validate'

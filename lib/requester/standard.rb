@@ -24,8 +24,8 @@ class Requester::Standard < Requester::Base
     parse_create_player_response(response)
   end
 
-  def get_player_balance(login_name, currency, player_id, player_currency_id)
-    create_player_proc = Proc.new {create_player(login_name, currency, player_id, player_currency_id)}
+  def get_player_balance(login_name, currency = nil, player_id = nil, player_currency_id = nil)
+    create_player_proc = Proc.new {create_player(login_name, currency, player_id, player_currency_id)} unless player_id.nil?
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('get', "#{@path}/#{get_api_name(:query_player_balance)}", :query => {:login_name => login_name})
       parse_get_player_balance_response(response, create_player_proc)
@@ -72,7 +72,7 @@ class Requester::Standard < Requester::Base
   def parse_get_player_balance_response(result, create_player_proc)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-    create_player_proc.call if['InvalidLoginName'].include?(error_code)
+    create_player_proc.call if['InvalidLoginName'].include?(error_code) and !create_player_proc.nil?
     raise Remote::GetBalanceError, "#{error_code}" unless ['OK'].include?(error_code)
     raise Remote::GetBalanceError, 'balance is nil when OK' if result_hash[:balance].nil?
     return result_hash[:balance].to_f

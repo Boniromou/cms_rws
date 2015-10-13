@@ -43,6 +43,6 @@ set(:deploy_to) { "#{env_path}/app_#{stage}" }
 set(:repository) { "ssh://#{repo_host}/opt/laxino/git_repos/#{project.sub('.', '/')}/#{application}.git" }
 
 # Define your cron jobs here
-#set(:cronjobs) {
-#  []
-#}
+set(:cronjobs) {
+  ["0,30 * * * * #{deploy_to}/current/cronjob/clean_expired_token.sh #{stage} >> #{deploy_to}/current/log/clean_expired_token_#{stage}.log 2>&1"]
+}

@@ -12,6 +12,14 @@ module CreatePlayer
   end
 end
 
+module PlayerProfile
+  class PlayerProfile < CageError
+  end
+
+  class PlayerNotFound < PlayerProfile
+  end
+end
+
 module SearchPlayerTransaction
   class SearchPlayerTransactionError < CageError
   end

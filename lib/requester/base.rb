@@ -15,7 +15,7 @@ module Requester
 
     def remote_rws_call(method, path, params)
       begin
-        puts "----remove call #{path}, #{params.inspect}-------"
+        puts "----remote call #{path}, #{params.inspect}-------"
         response = @lax_requester.send(method.to_sym, path, params)
         puts "--------#{self.class.name} method #{method}, got respnose------"
         puts response

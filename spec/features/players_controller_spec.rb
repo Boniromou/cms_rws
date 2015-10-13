@@ -1150,9 +1150,10 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+      wait_for_ajax
+
       check_player_info
-      check_balance_page(9999)
+      check_balance_page_without_balance
 
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")

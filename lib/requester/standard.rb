@@ -11,8 +11,16 @@ class Requester::Standard < Requester::Base
     :deposit => 'deposit',
     :withdraw => 'withdraw',
     :query_player_balance => 'query_player_balance',
-    :query_wallet_transactions => 'query_wallet_transactions'
+    :query_wallet_transactions => 'query_wallet_transactions',
+    :retrieve_location_info => 'retrieve_location_info'
   }
+
+  def retrieve_location_info(terminal_id)
+    # response = remote_rws_call('get', "#{@path}/#{get_api_name(:retrieve_location_info)}", :query => {:terminal_id => terminal_id})
+    # parse_retrieve_location_info_response(response)
+    return nil if terminal_id == 'x'
+    'LOCATION10-STATION10'
+  end
 
   def create_player(login_name, currency, player_id, player_currency_id)
     response = remote_rws_call('post', "#{@path}/#{get_api_name(:create_internal_player)}", :body => {:login_name => login_name, 
@@ -47,6 +55,15 @@ class Requester::Standard < Requester::Base
   
   def get_api_name(api_type)
     API_NAME_MAPPING[api_type]
+  end
+
+  def parse_retrieve_location_info_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+
+    if ['OK'].include?(error_code)
+      return 'OK'
+    end
   end
 
   def parse_get_player_balance_response(result)

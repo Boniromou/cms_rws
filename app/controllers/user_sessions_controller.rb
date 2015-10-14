@@ -1,12 +1,22 @@
 class UserSessionsController < Devise::SessionsController
-  layout "login"  
+  layout "login"
+
+  def get_terminal_id
+    cookies[:terminal_id]
+  end
+
+  def set_location_info
+    session[:location_info] = terminal_requester.retrieve_location_info(get_terminal_id) if get_terminal_id
+  end  
 
   def new
     @login_url = %(#{root_url}login)
+    set_location_info
   end
 
   def create
     super
+    set_location_info
   end
 
   def destroy

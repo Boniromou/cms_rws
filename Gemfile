@@ -52,6 +52,8 @@ gem 'dalli', "~> 2.0.3"
 
 gem 'thin', '1.6.2'
 
+gem 'activerecord-mysql-adapter'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'
 end

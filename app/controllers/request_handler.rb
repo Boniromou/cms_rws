@@ -65,7 +65,7 @@ class RequestHandler
   end
   #mock
   def process_validate_terminal_event
-    return {:machine_name => 'abc1234'} if @inbound[:terminal_id] == 'eb693ec8252cd630102fd0d0fb7c3485'
+    return {:machine_name => 'abc1234'} if @inbound[:terminal_id] != 'acbd123456'
     {:error_code => 'InvalidTerminalID', :error_msg => 'Validate terminal id failed.'}
   end
 end

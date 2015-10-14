@@ -74,6 +74,7 @@ en:
   balance_enquiry:
     account_balance: "Account Balance (HKD)"
     no_balance: "-------(missing)"
+    query_balance_fail: "Query balance fail(missing)"
   button:
     add: "Add"
     cancel: "Cancel"

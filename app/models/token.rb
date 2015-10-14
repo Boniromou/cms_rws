@@ -23,8 +23,8 @@ class Token < ActiveRecord::Base
   end
 
 	class << self
-		def validate(login_name, session_token)
-      player = Player.find_by_member_id(login_name)
+		def validate(login_name, session_token, property_id)
+      player = Player.find_by_member_id_and_property_id(login_name, property_id)
       raise Request::InvalidSessionToken.new unless player
       token = player.tokens.find_by_session_token(session_token)
       raise Request::InvalidSessionToken.new unless token
@@ -41,14 +41,14 @@ class Token < ActiveRecord::Base
       token
     end
 
-    def keep_alive(login_name, session_token)
-      token = self.validate(login_name, session_token)
+    def keep_alive(login_name, session_token, property_id)
+      token = self.validate(login_name, session_token, property_id)
       token.keep_alive
       token
     end
 
-    def discard(login_name, session_token)
-      token = self.validate(login_name, session_token)
+    def discard(login_name, session_token, property_id)
+      token = self.validate(login_name, session_token, property_id)
       token.discard
       token
     end

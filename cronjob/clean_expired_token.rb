@@ -14,6 +14,6 @@ ActiveRecord::Base.establish_connection(:adapter => "mysql",
 
 puts "*************** #{Time.now.utc} ****************"
 puts "Start cleaning expired tokens"
-Tokens::CleanTokenHelper.new.run
+Cronjob::CleanTokenHelper.new.run
 puts "Finish cleaning expired tokens"
 puts "*************** #{Time.now.utc} ****************"

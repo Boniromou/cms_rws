@@ -1,10 +1,10 @@
 class PlayerInfo
   
   class << self
-    def retrieve_info(card_id, terminal_id, pin)
+    def retrieve_info(card_id, terminal_id, pin, property_id)
       @wallet_requester = Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
       return {:status => 400, :error_code => 'InvalidTerminal', :error_msg => 'Terminal is invalid'} unless validate_terminal(terminal_id)
-      player = Player.find_by_card_id(card_id)
+      player = Player.find_by_card_id_and_property_id(card_id, property_id)
       return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
       return {:status => 400, :error_code => 'PlayerLocked', :error_msg => 'Player is locked'} if player.account_locked?
       login_name = player.member_id
@@ -24,6 +24,13 @@ class PlayerInfo
     def validate_pin(login_name, pin)
       #TODO validate pin
       true
+    end
+
+    def get_currency(login_name, property_id)
+      player = Player.find_by_member_id_and_property_id(login_name, property_id)
+      raise Request::InvalidLoginName.new unless player
+      currency = player.currency.name
+      {:currency => currency}
     end
   end
 end

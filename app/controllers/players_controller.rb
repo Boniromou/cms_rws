@@ -36,6 +36,7 @@ class PlayersController < ApplicationController
       @player = Player.find_by_member_id(member_id)
       raise PlayerProfile::PlayerNotFound unless @player
       @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
+      flash[:error] = 'balance_enquiry.query_balance_fail' unless @player_balance.class == Float
     rescue PlayerProfile::PlayerNotFound => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")

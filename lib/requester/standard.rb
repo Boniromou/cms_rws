@@ -23,7 +23,7 @@ class Requester::Standard < Requester::Base
     return nil if terminal_id == 'x'
     'LOCATION10-STATION10'
   end
-  
+
   def create_player(login_name, currency, player_id, player_currency_id)
     retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/#{get_api_name(:create_internal_player)}", :body => {:login_name => login_name, 
@@ -81,7 +81,6 @@ class Requester::Standard < Requester::Base
     API_NAME_MAPPING[api_type]
   end
 
-<<<<<<< HEAD
   def parse_retrieve_location_info_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
@@ -91,10 +90,7 @@ class Requester::Standard < Requester::Base
     end
   end
 
-  def parse_get_player_balance_response(result)
-=======
   def parse_get_player_balance_response(result, create_player_proc)
->>>>>>> d28e1fe9f94c001e434d5b38360f581418eaf1bd
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     if['InvalidLoginName'].include?(error_code) and !create_player_proc.nil?

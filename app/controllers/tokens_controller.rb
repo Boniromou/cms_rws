@@ -1,5 +1,5 @@
 class TokensController < ApplicationController
-  skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id
+  skip_before_filter :check_session_expiration, :authenticate_user!, :pass_terminal_id
   include Hood::RWSHandler
 
   config_handler RequestHandler.instance,false
@@ -23,5 +23,9 @@ class TokensController < ApplicationController
 
   def keep_eternal_alive
     handle_request(:keep_eternal_alive)
+  end
+
+  def get_player_currency
+    handle_request(:get_player_currency)
   end
 end

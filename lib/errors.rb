@@ -149,7 +149,13 @@ module Request
 
   class InvalidSessionToken < RequestError
     def initialize(data=nil)
-      super(400,'Session token is invalid.',data)
+      super(400, 'Session token is invalid.', data)
+    end
+  end
+
+  class InvalidLoginName < RequestError
+    def initialize(data=nil)
+      super(400, 'Login name is invalid.', data)
     end
   end
 end

@@ -37,7 +37,7 @@ describe TerminalsController do
 
     it '[39.2] Validate Terminal ID fail' do
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
-      get 'validate', {:terminal_id => "546454891", :property_id => "20000"}
+      get 'validate', {:terminal_id => "acbd123456", :property_id => "20000"}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidTerminalID'
       expect(result[:error_msg]).to eq 'Validate terminal id failed.'

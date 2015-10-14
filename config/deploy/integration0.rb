@@ -13,6 +13,8 @@ set :repo_host, 'svn.mo.laxino.com'
 #   prd - Production
 role :app, 'mo-int-cms-app01.rnd.laxino.com'
 
+role :cronjob_app, 'mo-int-cms-app01.rnd.laxino.com'
+
 #role :cronjob_app, 'int-cons-vapp03.rnd.laxino.com'
 
 # Define your database servers for integration environment here.

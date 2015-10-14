@@ -34,9 +34,9 @@ class PlayersController < ApplicationController
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
-      @currency = Currency.find_by_id(@player.currency_id)
-      @player_balance = wallet_requester.get_player_balance(member_id)
-    rescue Exception => e
+      raise PlayerProfile::PlayerNotFound unless @player
+      @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
+    rescue PlayerProfile::PlayerNotFound => e
       flash[:alert] = "player not found"
       redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
     end
@@ -67,13 +67,15 @@ class PlayersController < ApplicationController
   end
 
   def profile
+    return unless permission_granted? Player.new
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
-      @player_balance = wallet_requester.get_player_balance(member_id)
-    rescue Exception => e
+      raise PlayerProfile::PlayerNotFound unless @player
+      @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
+    rescue PlayerProfile::PlayerNotFound => e
       flash[:alert] = "player not found"
-      redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
+      redirect_to(players_search_path+"?member_id=#{member_id}&operation=profile")
     end
   end
 
@@ -99,40 +101,28 @@ class PlayersController < ApplicationController
   def lock_account
     return unless permission_granted? Player.new, :lock?
 
-    begin
-      member_id = params[:member_id]
-      player = Player.find_by_member_id(member_id)
+    member_id = params[:member_id]
+    player = Player.find_by_member_id(member_id)
 
-      AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        player.lock_account!
-      end
-
-      flash[:success] = { key: "lock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
-      redirect_to :action => 'profile', :member_id => member_id
-    rescue Exception => e
-      p e.message
-      p e.class
-      raise e
+    AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      player.lock_account!
     end
+
+    flash[:success] = { key: "lock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
+    redirect_to :action => 'profile', :member_id => member_id
   end
 
   def unlock_account
     return unless permission_granted? Player.new, :unlock?
 
-    begin
-      member_id = params[:member_id]
-      player = Player.find_by_member_id(member_id)
+    member_id = params[:member_id]
+    player = Player.find_by_member_id(member_id)
 
-      AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        player.unlock_account!
-      end
-
-      flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
-      redirect_to :action => 'profile', :member_id => member_id
-    rescue Exception => e
-      p e.message
-      p e.class
-      raise e
+    AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      player.unlock_account!
     end
+
+    flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
+    redirect_to :action => 'profile', :member_id => member_id
   end
 end

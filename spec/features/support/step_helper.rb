@@ -99,6 +99,11 @@ module StepHelper
     expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
   end
 
+  def check_balance_page_without_balance
+    check_title("tree_panel.balance")
+    expect(find("label#player_balance").text).to eq  I18n.t("balance_enquiry.no_balance")
+  end
+
   def check_profile_page(balance = 0)
     check_title("tree_panel.profile")
     expect(find("label#player_balance").text).to eq to_display_amount_str(balance)

@@ -12,6 +12,14 @@ module CreatePlayer
   end
 end
 
+module PlayerProfile
+  class PlayerProfile < CageError
+  end
+
+  class PlayerNotFound < PlayerProfile
+  end
+end
+
 module SearchPlayerTransaction
   class SearchPlayerTransactionError < CageError
   end
@@ -119,11 +127,6 @@ module Remote
   class AmountNotEnough < WithdrawError
   end
 
-  class LockPlayerError < RemoteError
-  end
-
-  class UnlockPlayerError < RemoteError
-  end
 end
 
 module Request

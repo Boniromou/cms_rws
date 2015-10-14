@@ -13,3 +13,5 @@ rspec -fh spec/features/user_session_spec.rb -o at/report/user_session_spec.html
 
 
 rspec -fh spec/controllers/tokens_controller_spec.rb -o at/report/tokens_controller_spec.html
+
+rspec -fh spec/cronjob/clean_expired_token_spec.rb -o at/report/clean_expired_token_spec.html

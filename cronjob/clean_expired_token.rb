@@ -5,7 +5,7 @@ require File.expand_path("../lib/clean_token_helper",__FILE__)
 env = $*[0] || "development"
 database = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))
 DB = database[env]
-ActiveRecord::Base.establish_connection(:adapter => "mysql",
+ActiveRecord::Base.establish_connection(:adapter => "mysql2",
                                         :host => DB['host'],
                                         :username => DB['username'],
                                         :password => DB['password'],

@@ -6,7 +6,7 @@ describe Token do
     Player.delete_all
   end
 
-  describe 'Roll' do
+  describe '[40] Regular delete expired token' do
     before(:each) do
       clean_dbs
       @player1 = Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => 123456, :currency_id => 1, :status => "active")
@@ -17,7 +17,7 @@ describe Token do
       @token4 = Token.generate(@player2.id)
     end
 
-    it 'clean token' do
+    it '[40.1] delete expired token' do
       @token1.expired_at = Time.now - 100
       @token1.save!
       @token3.expired_at = Time.now - 100

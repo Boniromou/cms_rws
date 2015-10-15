@@ -21,10 +21,6 @@ class TokensController < ApplicationController
     handle_request(:discard_token)
   end
 
-  def keep_eternal_alive
-    handle_request(:keep_eternal_alive)
-  end
-
   def get_player_currency
     handle_request(:get_player_currency)
   end

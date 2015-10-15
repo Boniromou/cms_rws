@@ -72,7 +72,7 @@ CmsRws::Application.routes.draw do
   get 'validate_token' => 'tokens#validate'
   post 'retrieve_player_info' => 'tokens#retrieve_player_info'
   post 'keep_alive' => 'tokens#keep_alive'
-  get 'keep_eternal_alive' => 'tokens#keep_eternal_alive'
+  get 'keep_eternal_alive' => 'eternal_tokens#keep_eternal_alive'
   get 'discard_token' => 'tokens#discard'
   get 'get_player_currency' => 'tokens#get_player_currency'
 

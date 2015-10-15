@@ -52,7 +52,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
       transaction[:status] = "completed"
-      transaction[:transaction_type_id] = TransactionType.find_by_name("Deposit").id;
+      transaction[:transaction_type_id] = TransactionType.find_by_name("deposit").id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction.save
@@ -70,7 +70,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
       transaction[:status] = "completed"
-      transaction[:transaction_type_id] = TransactionType.find_by_name("Withdrawal").id;
+      transaction[:transaction_type_id] = TransactionType.find_by_name("withdraw").id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction.save

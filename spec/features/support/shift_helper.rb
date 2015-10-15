@@ -9,6 +9,7 @@ module ShiftHelper
     Station.delete_all
     AuditLog.delete_all
     PlayersLockType.delete_all
+    Token.delete_all
     Player.delete_all
     Location.delete_all
   end

@@ -5,7 +5,7 @@ class AuditLog < ActiveRecord::Base
                  :player => { :all => "general.all",
                               :create => "player.create",
                               :deposit => "player.deposit",
-                              :withdrawal => "player.withdrawal",
+                              :withdraw => "player.withdrawal",
                               :edit => "player.edit",
                               :lock => "player.lock",
                               :unlock => "player.unlock"},
@@ -26,7 +26,7 @@ class AuditLog < ActiveRecord::Base
   }
 
   ACTION_TYPE_LIST = { 
-    :player => {:create => "create", :deposit => "update", :withdrawal => "update", :edit => "update", :lock => "update", :unlock => "update"},
+    :player => {:create => "create", :deposit => "update", :withdraw => "update", :edit => "update", :lock => "update", :unlock => "update"},
     :location => {:add => "create", :disable => "update", :enable => "update"},
     :station => {:create => "create", :disable => "update", :enable => "update", :register => "update", :unregister => "update"},
     :player_transaction => {:print => "read"},

@@ -62,7 +62,7 @@ describe FundOutController do
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
-      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdrawal")
+      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
 
     it '[7.5] Invalid Withdraw (invalid balance)', :js => true do
@@ -78,7 +78,7 @@ describe FundOutController do
       check_title("tree_panel.fund_out")
       expect(find("label#player_full_name").text).to eq @player.full_name.upcase
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      check_flash_message I18n.t("invalid_amt.no_enough_to_withdrawal", { balance: to_display_amount_str(@player_balance)})
+      check_flash_message I18n.t("invalid_amt.no_enough_to_withdraw", { balance: to_display_amount_str(@player_balance)})
     end
 
     it '[7.6] cancel Withdraw', :js => true do
@@ -156,7 +156,7 @@ describe FundOutController do
       audit_log.audit_target.should == "player"
       audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "update"
-      audit_log.action.should == "withdrawal"
+      audit_log.action.should == "withdraw"
       audit_log.action_status.should == "success"
       audit_log.action_error.should be_nil
       audit_log.ip.should_not be_nil
@@ -331,7 +331,7 @@ describe FundOutController do
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_fund").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
-      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdrawal")
+      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
   end
 end

@@ -36,7 +36,7 @@
                   <td><%= t.user.name %></td>
                   <td><%= t.status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <td><%= t.withdrawal_amt_str %></td>
+                  <td><%= t.withdraw_amt_str %></td>
                   <td>
                     <% if policy(PlayerTransaction.instance).reprint? %>
                       <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>

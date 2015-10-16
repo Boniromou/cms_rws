@@ -17,7 +17,7 @@ class PlayerTransaction < ActiveRecord::Base
     result
   end
 
-  def withdrawal_amt_str
+  def withdraw_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == WITHDRAW
     result

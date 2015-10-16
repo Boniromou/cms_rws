@@ -8,23 +8,23 @@ class PlayerTransaction < ActiveRecord::Base
   include FundHelper
   include ActionView::Helpers
 
-  DEPOSIT = 1
-  WITHDRAWAL = 2
+  DEPOSIT = 'deposit'
+  WITHDRAW = 'withdraw'
 
   TRANSACTION_TYPE_STR = {
-    DEPOSIT: "Deposit",
-    WITHDRAWAL: "Withdrawal"
+    1 => "Deposit",
+    2 => "Withdrawal"
   }
 
   def deposit_amt_str
     result = ""
-    result = to_display_amount_str(amount) if transaction_type_id == DEPOSIT
+    result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT
     result
   end
 
   def withdrawal_amt_str
     result = ""
-    result = to_display_amount_str(amount) if transaction_type_id == WITHDRAWAL
+    result = to_display_amount_str(amount) if self.transaction_type.name == WITHDRAW
     result
   end
 
@@ -57,7 +57,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
       transaction[:status] = "completed"
-      transaction[:transaction_type_id] = TransactionType.find_by_name("deposit").id;
+      transaction[:transaction_type_id] = TransactionType.find_by_name(DEPOSIT).id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction.save
@@ -75,7 +75,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
       transaction[:status] = "completed"
-      transaction[:transaction_type_id] = TransactionType.find_by_name("withdraw").id;
+      transaction[:transaction_type_id] = TransactionType.find_by_name(WITHDRAW).id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction.save

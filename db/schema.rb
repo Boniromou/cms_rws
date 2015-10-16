@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151015094845) do
+ActiveRecord::Schema.define(:version => 20151016101527) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.datetime "purge_at"
   end
 
   create_table "locations", :force => true do |t|
@@ -52,6 +53,7 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
     t.string   "name",       :limit => 45, :null => false
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.datetime "purge_at"
   end
 
   create_table "player_transactions", :force => true do |t|
@@ -68,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
     t.datetime "trans_date"
     t.datetime "purge_at"
     t.integer  "property_id",                      :default => 20000, :null => false
+    t.integer  "slip_number"
   end
 
   add_index "player_transactions", ["player_id"], :name => "fk_player_id"
@@ -100,17 +103,18 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
     t.string   "status",       :limit => 45, :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.datetime "purge_at"
   end
 
   add_index "players_lock_types", ["lock_type_id"], :name => "fk_players_lock_types_lock_type_id"
   add_index "players_lock_types", ["player_id", "lock_type_id"], :name => "players_lock_types_player_id_lock_type_id", :unique => true
-  add_index "players_lock_types", ["player_id"], :name => "players_lock_types_player_id"
 
   create_table "properties", :force => true do |t|
     t.string   "name",       :limit => 45, :null => false
     t.string   "secret_key", :limit => 45, :null => false
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.datetime "purge_at"
   end
 
   create_table "properties_shift_types", :force => true do |t|
@@ -119,6 +123,7 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
     t.integer  "sequence",      :null => false
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.datetime "purge_at"
   end
 
   add_index "properties_shift_types", ["property_id"], :name => "fk_properties_shift_types_property_id"
@@ -150,6 +155,13 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
   add_index "shifts", ["roll_shift_on_station_id"], :name => "fk_station_id"
   add_index "shifts", ["shift_type_id"], :name => "fk_shift_type_id"
 
+  create_table "slip_types", :force => true do |t|
+    t.string   "name",       :null => false
+    t.datetime "purge_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "stations", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",  :null => false
@@ -172,12 +184,36 @@ ActiveRecord::Schema.define(:version => 20151015094845) do
 
   add_index "tokens", ["player_id"], :name => "fk_tokens_player_id"
 
+  create_table "transaction_slips", :force => true do |t|
+    t.integer  "property_id",  :null => false
+    t.integer  "slip_type_id", :null => false
+    t.integer  "next_number",  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "transaction_slips", ["property_id", "slip_type_id"], :name => "index_transaction_slips_on_property_id_and_slip_type_id", :unique => true
+  add_index "transaction_slips", ["slip_type_id"], :name => "fk_transaction_slips_slip_type_id"
+
   create_table "transaction_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "purge_at"
   end
+
+  create_table "transaction_types_slip_types", :force => true do |t|
+    t.integer  "property_id",         :null => false
+    t.integer  "transaction_type_id", :null => false
+    t.integer  "slip_type_id",        :null => false
+    t.datetime "purge_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "transaction_types_slip_types", ["property_id", "transaction_type_id"], :name => "index_trans_types_slip_types_on_property_id_and_trans_type_id", :unique => true
+  add_index "transaction_types_slip_types", ["slip_type_id"], :name => "fk_transaction_types_slip_types_slip_type_id"
+  add_index "transaction_types_slip_types", ["transaction_type_id"], :name => "fk_transaction_types_slip_types_transaction_type_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

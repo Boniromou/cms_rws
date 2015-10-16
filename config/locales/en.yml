@@ -144,7 +144,7 @@ en:
     next_ac_date: "Next Account Date"
   invalid_amt:
     deposit: "invalid deposit amount"
-    withdrawal: "invalid withdrawal amount"
+    withdraw: "invalid withdrawal amount"
     fund_in: "invalid deposit amount"
     fund_out: "invalid withdrawal amount"
     no_enough_to_withdrawal: "the account balance is not enough to withdrawal. Current balance: %{balance}"

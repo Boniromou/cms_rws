@@ -26,20 +26,17 @@
             <tbody>
               <% @player_transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
-                  <% shift = t.shift %>
-                  <% player = t.player %>
-                  <% user = t.user %>
                   <td><%= t.id %></td>
-                  <!-- <td><%= player.first_name.upcase %> <%= player.last_name.upcase %></td> -->
-                  <td><%= player.member_id %></td>
-                  <td><%= shift.accounting_date%></td>
+                  <!-- <td><%= t.player.first_name.upcase %> <%= t.player.last_name.upcase %></td> -->
+                  <td><%= t.player.member_id %></td>
+                  <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
-                  <!-- <td><%= shift.name %></td> -->
+                  <!-- <td><%= t.shift.name %></td> -->
                   <td><%= Station.get_name_by_id(t.station_id) %></td>
-                  <td><%= user.name %></td>
+                  <td><%= t.user.name %></td>
                   <td><%= t.status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <td><%= t.withdrawal_amt_str %></td>
+                  <td><%= t.withdraw_amt_str %></td>
                   <td>
                     <% if policy(PlayerTransaction.instance).reprint? %>
                       <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>

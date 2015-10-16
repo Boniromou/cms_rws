@@ -31,20 +31,17 @@
                 player_transactions.each do |t| 
             %>
                 <tr id="transaction_<%= t.id %>">
-                  <% shift = Shift.find(t.shift_id) %>
-                  <% player = Player.find_by_id(t.player_id) %>
-                  <% user = User.find_by_id(t.user_id) %>
                   <td><%= t.id %></td>
-                  <!-- <td><%= player.full_name.upcase %></td> -->
-                  <td><%= player.member_id %></td>
-                  <td><%= shift.accounting_date%></td>
+                  <!-- <td><%= t.player.full_name.upcase %></td> -->
+                  <td><%= t.player.member_id %></td>
+                  <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
-                  <!-- <td><%= shift.name %></td> -->
+                  <!-- <td><%= t.shift.name %></td> -->
                   <td><%= Station.get_name_by_id(t.station_id) %></td>
-                  <td><%= user.name %></td>
+                  <td><%= t.user.name %></td>
                   <td><%= t.status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <td><%= t.withdrawal_amt_str %></td>
+                  <td><%= t.withdraw_amt_str %></td>
                   <td><%= to_display_amount_str(t.amount) %></td>
                 </tr>
                 <% 

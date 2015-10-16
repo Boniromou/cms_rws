@@ -11,26 +11,17 @@ class PlayerTransaction < ActiveRecord::Base
   DEPOSIT = 'deposit'
   WITHDRAW = 'withdraw'
 
-  TRANSACTION_TYPE_STR = {
-    1 => "Deposit",
-    2 => "Withdrawal"
-  }
-
   def deposit_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT
     result
   end
 
-  def withdrawal_amt_str
+  def withdraw_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == WITHDRAW
     result
   end
-
-  def action_type_str
-    TRANSACTION_TYPE_STR[transaction_type_id]
-  end    
 
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }

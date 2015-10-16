@@ -60,7 +60,7 @@ class PlayerTransactionsController < ApplicationController
     transaction_id = params[:transaction_id]
     @transaction = PlayerTransaction.find(transaction_id)
     @player = Player.find(@transaction.player_id)
-    @operation =  @transaction.action_type_str
+    @operation =  @transaction.transaction_type.name
   end
   
   def get_start_time(time_str)

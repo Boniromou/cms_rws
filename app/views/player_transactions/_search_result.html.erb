@@ -26,9 +26,9 @@
             <tbody>
               <% @player_transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
-                  <% shift = Shift.find_by_id(t.shift_id) %>
-                  <% player = Player.find_by_id(t.player_id) %>
-                  <% user = User.find_by_id(t.user_id) %>
+                  <% shift = t.shift %>
+                  <% player = t.player %>
+                  <% user = t.user %>
                   <td><%= t.id %></td>
                   <!-- <td><%= player.first_name.upcase %> <%= player.last_name.upcase %></td> -->
                   <td><%= player.member_id %></td>

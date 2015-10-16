@@ -1,5 +1,10 @@
 class PlayerTransaction < ActiveRecord::Base
   attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :created_at
+  belongs_to :player
+  belongs_to :shift
+  belongs_to :user
+  belongs_to :transaction_type
+
   include FundHelper
   include ActionView::Helpers
 

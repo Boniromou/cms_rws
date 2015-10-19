@@ -20,8 +20,8 @@ describe FundController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0)
-      allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('disconnect')
-      allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('disconnect')
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
+      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_raise(Exception.new)
     end
     
     after(:each) do

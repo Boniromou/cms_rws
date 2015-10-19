@@ -1,6 +1,7 @@
 #!/bin/sh
 rspec -cfd spec/features/audit_logs_controller_spec.rb 
 rspec -cfd spec/features/front_money_controller_spec.rb
+rspec -cfd spec/features/fund_controller_spec.rb
 rspec -cfd spec/features/fund_in_controller_spec.rb 
 rspec -cfd spec/features/fund_out_controller_spec.rb
 rspec -cfd spec/features/locations_controller_spec.rb

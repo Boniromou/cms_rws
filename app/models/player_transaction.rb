@@ -23,6 +23,16 @@ class PlayerTransaction < ActiveRecord::Base
     result
   end
 
+  def completed!
+    self.status = 'completed'
+    self.save!
+  end
+
+  def rejected!
+    self.status = 'rejected'
+    self.save!
+  end
+
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }
   scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
@@ -47,7 +57,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:amount] = amount
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
-      transaction[:status] = "completed"
+      transaction[:status] = "pending"
       transaction[:transaction_type_id] = TransactionType.find_by_name(DEPOSIT).id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
@@ -65,7 +75,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:amount] = amount
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
-      transaction[:status] = "completed"
+      transaction[:status] = "pending"
       transaction[:transaction_type_id] = TransactionType.find_by_name(WITHDRAW).id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now

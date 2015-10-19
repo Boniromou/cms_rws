@@ -14,6 +14,7 @@ class FundOutController < FundController
   end
 
   def handle_balance_not_enough(e)
+    @transaction.rejected!
     handle_fund_error({ key: "invalid_amt.no_enough_to_withdraw", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
   end
 

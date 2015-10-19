@@ -127,6 +127,7 @@ en:
     is_locked: "Player is locked!"
     cage_lock: "Cage Lock(missing)"
     blacklist: "Blacklist(missing)"
+    pending: "Pending(missing)"
   update_player:
     success: "Edit player [%{first_name} %{last_name}] successful"
     duplicate: "Card ID has already existed"
@@ -151,7 +152,7 @@ en:
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
-    contact_service: "”Please contact customer service”flash message."
+    contact_service: "Please contact customer service(missing)"
   transaction_history:
     start_date: "Start Date"
     end_date: "End Date"

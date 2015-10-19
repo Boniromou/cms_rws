@@ -19,7 +19,7 @@ describe FundController do
       mock_have_enable_station
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0,'no_balance')
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0)
       allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('disconnect')
       allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('disconnect')
     end
@@ -37,6 +37,8 @@ describe FundController do
     it '[48.1] Pending Deposit Transaction', :js => true do
       login_as_admin
       go_to_deposit_page
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_call_original
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog div button#confirm").click
@@ -46,7 +48,9 @@ describe FundController do
       expect(player_transaction.status).to eq 'pending'
       check_balance_page_without_balance
       check_player_lock_types
+      @player.reload
       expect(@player.lock_types.include?('pending')).to eq true
+      expect(@player.status).to eq 'locked'
       check_flash_message I18n.t('flash_message.contact_service')
       expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
@@ -93,19 +97,22 @@ describe FundController do
     it '[48.5] Pending Withdraw Transaction', :js => true do
       login_as_admin
       go_to_withdraw_page
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_call_original
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 
       player_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      expect(player_transaction.status).to eq 'rejected'
+      expect(player_transaction.status).to eq 'pending'
       check_balance_page_without_balance
       check_player_lock_types
-      expect(@player.lock_types.include?('pending')).to eq false
-      expect(@player.status).to eq 'active'
-      expect(find("div a#balance_deposit")[:disabled]).to_not eq 'disabled'
-      expect(find("div a#balance_withdraw")[:disabled]).to_not eq 'disabled'
+      @player.reload
+      expect(@player.lock_types.include?('pending')).to eq true
+      expect(@player.status).to eq 'locked'
+      expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
+      expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
     end
   end
 end

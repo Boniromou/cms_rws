@@ -308,6 +308,14 @@ module StepHelper
     expect(@station5.terminal_id).to_not eq nil
   end
 
+  def go_to_balance_enquiry_page
+    visit home_path
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+    check_balance_page
+  end
+
   def go_to_deposit_page
     visit home_path
     click_link I18n.t("tree_panel.balance")

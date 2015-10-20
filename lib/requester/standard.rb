@@ -45,27 +45,34 @@ class Requester::Standard < Requester::Base
   end
 
   def deposit(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:deposit)}", :body => {:login_name => login_name, :amt => amount,
-                                                                                       :ref_trans_id => ref_trans_id, :trans_date => trans_date,
-                                                                                       :shift_id => shift_id, :device_id => station_id,
-                                                                                       :issuer_id => name})
-    parse_deposit_response(response)
+    retry_call(RETRY_TIMES) do
+      response = remote_rws_call('post', "#{@path}/#{get_api_name(:deposit)}", :body => {:login_name => login_name, :amt => amount,
+                                                                                         :ref_trans_id => ref_trans_id, :trans_date => trans_date,
+                                                                                         :shift_id => shift_id, :device_id => station_id,
+                                                                                         :issuer_id => name})
+      parse_deposit_response(response)
+    end
   end
 
   def withdraw(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
-    response = remote_rws_call('post', "#{@path}/#{get_api_name(:withdraw)}", :body => {:login_name => login_name, :amt => amount,
-                                                                                        :ref_trans_id => ref_trans_id, :trans_date => trans_date,
-                                                                                        :shift_id => shift_id, :device_id => station_id,
-                                                                                        :issuer_id => name})
-    parse_withdraw_response(response)
+    retry_call(RETRY_TIMES) do
+      response = remote_rws_call('post', "#{@path}/#{get_api_name(:withdraw)}", :body => {:login_name => login_name, :amt => amount,
+                                                                                          :ref_trans_id => ref_trans_id, :trans_date => trans_date,
+                                                                                          :shift_id => shift_id, :device_id => station_id,
+                                                                                          :issuer_id => name})
+      parse_withdraw_response(response)
+    end
   end
 
   protected
   def retry_call(retry_times, &block)
     begin
+      puts "***************retry_times: #{RETRY_TIMES - retry_times}***************"
       return block.call
-    rescue Remote::RemoteError => e
+    rescue Remote::ReturnError => e
       return e.message
+    rescue Remote::RaiseError => e
+      raise e
     rescue Exception => e
       #p e.message
       #p e.backtrace
@@ -95,7 +102,7 @@ class Requester::Standard < Requester::Base
     error_code = result_hash[:error_code].to_s
     if['InvalidLoginName'].include?(error_code) and !create_player_proc.nil?
       create_player_proc.call
-      raise Exception, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
+      raise Remote::RetryError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}"
     end
     raise Remote::GetBalanceError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}" unless ['OK'].include?(error_code)
     raise Remote::GetBalanceError, 'balance is nil when OK' if result_hash[:balance].nil?

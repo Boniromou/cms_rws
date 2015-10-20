@@ -12,6 +12,17 @@ module CreatePlayer
   end
 end
 
+module FundInOut
+  class FundError < CageError
+  end
+
+  class AmountInvalidError < FundError
+  end
+
+  class CallWalletFail < FundError
+  end
+end
+
 module PlayerProfile
   class PlayerProfile < CageError
   end
@@ -106,22 +117,31 @@ module Remote
   class RemoteError < CageError
   end
 
-  class WalletError < RemoteError
+  class RetryError < RemoteError
+  end
+
+  class ReturnError < RemoteError
+  end
+
+  class RaiseError < RemoteError
+  end
+
+  class WalletError < ReturnError
   end
 
   class GetBalanceError < WalletError
   end
 
-  class UnexpectedResponseFormat < RemoteError
+  class UnexpectedResponseFormat < RetryError
   end
 
-  class CreatePlayerError < RemoteError
+  class CreatePlayerError < ReturnError
   end
 
-  class DepositError < RemoteError
+  class DepositError < RaiseError
   end
 
-  class WithdrawError < RemoteError
+  class WithdrawError < RaiseError
   end
 
   class AmountNotEnough < WithdrawError

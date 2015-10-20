@@ -1,6 +1,7 @@
 #!/bin/sh
 rspec -fh spec/features/audit_logs_controller_spec.rb -o at/report/audit_logs_controller_spec.html
 rspec -fh spec/features/front_money_controller_spec.rb -o at/report/front_money_controller_spec.html
+rspec -fh spec/features/fund_controller_spec.rb -o at/report/fund_controller_spec.html
 rspec -fh spec/features/fund_in_controller_spec.rb -o at/report/fund_in_controller_spec.html
 rspec -fh spec/features/fund_out_controller_spec.rb -o at/report/fund_out_controller_spec.html
 rspec -fh spec/features/locations_controller_spec.rb -o at/report/locations_controller_spec.html

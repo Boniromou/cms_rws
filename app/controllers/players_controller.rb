@@ -109,6 +109,7 @@ class PlayersController < ApplicationController
       player.lock_account!
     end
 
+    ChangeHistory.create(current_user, player, 'lock')
     flash[:success] = { key: "lock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
     redirect_to :action => 'profile', :member_id => member_id
   end
@@ -123,6 +124,7 @@ class PlayersController < ApplicationController
       player.unlock_account!
     end
 
+    ChangeHistory.create(current_user, player, 'unlock')
     flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
     redirect_to :action => 'profile', :member_id => member_id
   end

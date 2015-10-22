@@ -1,0 +1,15 @@
+          <%= form_tag(search_change_histories_path, :remote => true, :id => "search_form") do %>
+            <fieldset>
+              <div class="row">
+                <%= render "shared/date_picker" %>
+              </div>
+                
+              
+            <div class="form-actions">
+              <div class="row">
+                <div class="col-md-12">
+                  <%= submit_tag t("button.search"),:id => "search", :class => "btn btn-primary", :remote => true  %>
+                </div>
+              </div>
+            </div>
+          <% end %>

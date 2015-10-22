@@ -158,6 +158,11 @@ module StepHelper
     # expect(page.source).to have_selector("select#shift_name")
   end
 
+  def check_search_ch_page
+    expect(page.source).to have_selector("input#accounting_date")
+    # expect(page.source).to have_selector("select#shift_name")
+  end
+
   def check_player_transaction_result_contents(item, player_transaction, reprint_granted)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
@@ -227,6 +232,24 @@ module StepHelper
     end
   end
 
+  def check_ch_report_result_items(history_hash)
+    items = all("table#datatable_col_reorder tr")
+    i = 1
+    history_hash.each do |t|
+      within items[i] do
+        expect(items[i][:id]).to eq "history_#{t.id}"
+        check_ch_report_result(all("td"),t)
+      end
+      i += 1
+    end
+  end
+
+  def check_ch_report_result(item, change_history)
+    expect(item[0].text).to eq change_history.action_by
+    expect(item[1].text).to eq change_history.action_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[2].text).to eq change_history.action
+    expect(item[3].text).to eq @player.member_id.to_s + ' (Player ID: ' + @player.id.to_s + ')'
+  end
 
   def check_fm_report_result(item, player_transaction)
     player = Player.find(player_transaction.player_id)
@@ -337,6 +360,61 @@ module StepHelper
     within "div#content" do
         click_link I18n.t("button.withdrawal")
     end
+  end
+
+  def lock_or_unlock_player_and_check
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      search_player_profile
+      toggle_player_lock_status_and_check
+  end
+
+  def search_player_profile
+      fill_search_info_js("card_id", @player.card_id)
+      find("#button_find").click
+      wait_for_ajax
+  end
+
+  def toggle_player_lock_status_and_check
+      check_lock_unlock_page
+
+      click_button I18n.t("button.#{@lock_or_unlock}")
+      expect(find("div#pop_up_dialog")[:style]).to_not include "none"
+
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
+
+      click_button I18n.t("button.confirm")
+      wait_for_ajax
+
+      check_lock_unlock_page
+      check_flash_message expected_flash_message
+  end
+
+  def check_lock_unlock_page
+      @player.reload
+      update_lock_or_unlock
+
+      check_profile_page
+      check_player_info
+      check_lock_unlock_components
+  end
+
+  def update_lock_or_unlock
+      if @player.status == 'active'
+        @lock_or_unlock = "lock"
+      else
+        @lock_or_unlock = "unlock"
+      end
+  end
+
+  def check_lock_unlock_components
+      expect(page).to have_selector "div#pop_up_dialog"
+      expect(find("div#pop_up_dialog")[:style]).to include "none"
   end
 end
 RSpec.configure do |config|

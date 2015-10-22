@@ -23,7 +23,6 @@ class ChangeHistoriesController < ApplicationController
     # raise FrontMoneyHelper::NoResultException.new "shift not found" if start_shift.nil? || end_shift.nil?
 
     @change_histories = ChangeHistory.by_property_id(current_user.property_id).since(start_time).until(end_time)
-    p @change_histories
     rescue FrontMoneyHelper::NoResultException => e
       @change_histories = []
     end

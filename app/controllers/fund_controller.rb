@@ -2,6 +2,7 @@ class FundController < ApplicationController
   include FundHelper
 
   layout 'cage'
+  rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
 
@@ -65,6 +66,11 @@ class FundController < ApplicationController
     flash[:alert] = msg
     flash[:fade_in] = false
     redirect_to :action => 'new', member_id: @member_id
+  end
+
+  def handle_balance_not_enough(e)
+    @transaction.rejected!
+    handle_fund_error({ key: "invalid_amt.no_enough_to_withdraw", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
   end
 
   protected

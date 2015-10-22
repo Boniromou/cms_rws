@@ -237,6 +237,7 @@ en:
     disable_station: "Confirm to disable station %{name}?"
     enable_location: "Confirm to enable location %{name}?"
     disable_location: "Confirm to disable location %{name}?"
+    void_transaction: "Confirm to void transaction %{id}(missing)"
   terminal_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"
@@ -247,3 +248,5 @@ en:
     terminal_already_reg: "This machine has been registered on station %{station_name}. (each machine can only register 1 station)"
     unregister_success: "Remove terminal from station %{station_name} successful"
     unregister_fail: "There is no registered terminal on this station, please refresh your page."
+  void_transaction:
+    success: "Void Success(missing)"

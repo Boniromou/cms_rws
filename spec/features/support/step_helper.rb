@@ -158,7 +158,7 @@ module StepHelper
     # expect(page.source).to have_selector("select#shift_name")
   end
 
-  def check_player_transaction_result_contents(item, player_transaction, reprint_granted)
+  def check_player_transaction_result_contents(item, player_transaction, reprint_granted, void_granted, reprint_void_granted)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
@@ -171,6 +171,11 @@ module StepHelper
       deposit_str = ""
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
+    if player_transaction.void_transaction
+      void_slip_id_str = player_transaction.void_transaction.id
+    else
+      void_slip_id_str = ""
+    end
     expect(item[0].text).to eq player_transaction.id.to_s
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
@@ -180,22 +185,31 @@ module StepHelper
     expect(item[6].text).to eq player_transaction.status
     expect(item[7].text).to eq deposit_str
     expect(item[8].text).to eq withdraw_str
+    expect(item[8].text).to eq void_slip_id_str
     within item[9] do
-      if reprint_granted
-        expect(page.source).to have_selector("input#reprint")
-      else
-        expect(page.source).to_not have_selector("input#reprint")
+      if player_transaction.status == completed
+        if reprint_granted
+          expect(page.source).to have_selector("input#reprint")
+        else
+          expect(page.source).to_not have_selector("input#reprint")
+        end
+        if !player_transaction.voided?
+          expect(page.source).to have_selector("button#void_transaction_#{player_transaction.id}") if void_granted
+        else
+          expect(page.source).to_not have_selector("button#void_transaction_#{player_transaction.id}")
+          expect(page.source).to have_selector("button#reprint_void_transaction_#{player_transaction.id}") if reprint_void_granted
+        end
       end
     end
   end
 
-  def check_player_transaction_result_items(transaction_list, reprint_granted = true)
+  def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
-        check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted)
+        check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted, void_granted, reprint_void_granted)
       end
     end
   end

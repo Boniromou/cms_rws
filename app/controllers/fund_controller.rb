@@ -70,7 +70,7 @@ class FundController < ApplicationController
   protected
 
   def do_fund_action(member_id, amount)
-    PlayerTransaction.send "save_#{operation_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_station_id
+    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_station_id
   end
 
   def handle_wallet_result(transaction, result)

@@ -119,6 +119,20 @@
           </ul>
         </li>
       <% end %>
+      <% if policy(AuditLog.instance).search? %>
+        <li>
+          <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.change_log")%></span></a>
+          <ul style="display:block;">
+            <% if policy(AuditLog.instance).search? %>
+              <li id="nav_audit_log">
+                <%= link_to search_change_histories_path, :title => t("tree_panel.change_history"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.change_history") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
     </ul>
   </nav>
   <span class="minifyme" data-action="minifyMenu" id="miniMenu">

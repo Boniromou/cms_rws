@@ -78,6 +78,9 @@ CmsRws::Application.routes.draw do
 
   get 'validate_terminal' => 'terminals#validate'
 
+  get 'search_change_histories' => 'change_histories#search'
+  post 'search_change_histories' => 'change_histories#do_search'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

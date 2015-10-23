@@ -94,6 +94,7 @@ en:
     disable: "Disable"
     register: "Register"
     unregister: "Unregister"
+    void: "Void(missing)"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -149,6 +150,7 @@ en:
     fund_in: "invalid deposit amount"
     fund_out: "invalid withdrawal amount"
     no_enough_to_withdraw: "the account balance is not enough to withdrawal. Current balance: %{balance}"
+    no_enough_to_void_deposit: "the account balance is not enough to void deposit. Current balance: %{balance}(missing)"
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."

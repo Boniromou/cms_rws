@@ -22,4 +22,16 @@ class PlayerTransactionPolicy < ApplicationPolicy
   def print_report?
     is_admin? || has_permission?('player_transaction', 'print_report')
   end
+
+  def void?
+    is_admin? || has_permission?('player_transaction', 'void')
+  end
+
+  def void_deposit?
+    void?
+  end
+
+  def void_withdraw?
+    void?
+  end
 end

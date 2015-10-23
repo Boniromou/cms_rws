@@ -21,6 +21,9 @@ module FundInOut
 
   class CallWalletFail < FundError
   end
+
+  class VoidTransactionNotExist < FundError
+  end
 end
 
 module PlayerProfile

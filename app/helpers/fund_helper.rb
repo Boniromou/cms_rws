@@ -7,6 +7,10 @@ module FundHelper
     (amount.to_f.round(2) * 100).to_i
   end
 
+  def cents_to_dollar(cent_amount)
+    (cent_amount.to_f/100.0).to_f
+  end
+
   def validate_balance_enough( amount , balance)
     raise  BalanceNotEnough.new "Input amount not valid" unless balance >= amount
   end

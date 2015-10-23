@@ -38,6 +38,10 @@ class FundController < ApplicationController
     end
 
     amount = params[:player_transaction][:amount]
+    process_transaction(amount)
+  end
+
+  def process_transaction(amount)
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
       @transaction = do_fund_action(@member_id, server_amount)

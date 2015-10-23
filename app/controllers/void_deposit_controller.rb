@@ -1,4 +1,4 @@
-class VoidDepositController < FundController
+class VoidDepositController < VoidController
   def operation_sym
     :void_deposit?
   end

@@ -209,7 +209,7 @@ describe FundController do
       allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_raise(Exception.new)
       login_as_admin
       create_player_transaction
-      @player_transaction1.trans_type_id = 2
+      @player_transaction1.transaction_type_id = 2
       visit search_transactions_path 
       check_player_transaction_page_js
 
@@ -276,6 +276,6 @@ describe FundController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1],false,false,false)
     end
-
+  end
 
 end

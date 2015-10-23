@@ -187,7 +187,7 @@ module StepHelper
     expect(item[8].text).to eq withdraw_str
     expect(item[8].text).to eq void_slip_id_str
     within item[9] do
-      if player_transaction.status == completed
+      if player_transaction.status == 'completed'
         if reprint_granted
           expect(page.source).to have_selector("input#reprint")
         else

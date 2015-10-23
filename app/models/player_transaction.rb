@@ -13,6 +13,8 @@ class PlayerTransaction < ActiveRecord::Base
   VOID_DEPOSIT = 'void_deposit'
   VOID_WITHDRAW = 'void_withdraw'
 
+  TRANSACTION_TYPE_ID_LIST = {:deposit => 1, :withdraw => 2, :void_deposit => 3, :void_withdraw => 4}
+
   def deposit_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT
@@ -63,6 +65,7 @@ class PlayerTransaction < ActiveRecord::Base
   scope :by_shift_id, -> shift_id { where( "shift_id = ? ", shift_id) if shift_id.present? }
   scope :by_station_id, -> station_id { where( "station_id = ?", station_id) if station_id.present? }
   scope :by_user_id, -> user_id { where( "user_id = ?", user_id) if user_id.present? }
+  scope :by_transaction_type_id, -> trans_types { where(:transaction_type_id => trans_types) if trans_types.present?}
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
   scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
 
@@ -118,6 +121,10 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
+    def only_deposit_withdraw
+      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit],TRANSACTION_TYPE_ID_LIST[:withdraw]])
+    end
+
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)      
       if id_number.empty?
         player_id = nil
@@ -127,11 +134,11 @@ class PlayerTransaction < ActiveRecord::Base
         player_id = player.id unless player.nil?
       end
 
-      by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id)
+      by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
     end
 
     def search_query_by_transaction(transaction_id)
-      by_transaction_id(transaction_id)
+      by_transaction_id(transaction_id).only_deposit_withdraw
     end
 
     def search_query(*args)
@@ -153,8 +160,8 @@ class PlayerTransaction < ActiveRecord::Base
     def search_transactions_group_by_station(start_shift_id, user_id, end_shift_id = nil)
       player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
       result = []
-      player_transactions = PlayerTransaction.by_shift_id(start_shift_id)
-      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id) if end_shift_id
+      player_transactions = PlayerTransaction.by_shift_id(start_shift_id).only_deposit_withdraw
+      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw if end_shift_id
       player_transaction_stations.each do |station|
         station_id = station.station_id
         player_transactions_by_station = player_transactions.by_station_id(station_id).by_user_id(user_id).order(:created_at)

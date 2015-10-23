@@ -21,6 +21,7 @@
               <th><%= t("transaction_history.status")%></th>
               <th><%= t("transaction_history.deposit")%></th>
               <th><%= t("transaction_history.withdrawal")%></th>
+              <th><%= t("transaction_history.void_slip")%></th>
               <th><%= t("transaction_history.action")%></th>
             </thead>
             <tbody>
@@ -37,6 +38,7 @@
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
                   <td><%= t.withdraw_amt_str %></td>
+                  <td><%= t.void_transaction.id if t.voided? %></td>
                   <td>
                     <% if policy(:player_transaction).void? && t.status == 'completed'%>
                       <% if t.can_void? %>

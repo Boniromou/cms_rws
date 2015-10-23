@@ -171,6 +171,7 @@ en:
     status: "Status"
     deposit: "Deposit"
     withdrawal: "Withdrawal"
+    void_slip: "Void Slip ID(missing)"
     balance: "Balance"
     action: "Action"
     print: "Print"

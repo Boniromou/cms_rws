@@ -1,4 +1,6 @@
   $('#pop_up_dialog #cancel').click(function() {
+    $('#pop_up_dialog #confirm').unbind("click");
+    $('#pop_up_content').html('');
     $('#pop_up_dialog').removeClass("fadeIn");
     $('#pop_up_dialog').addClass("fadeOut");
     setTimeout(function(){
@@ -18,6 +20,7 @@
       $(form_id).submit();
       return false;
     });
+
 
   }
 

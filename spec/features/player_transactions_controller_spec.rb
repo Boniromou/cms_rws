@@ -125,7 +125,7 @@ describe PlayersController do
       fill_search_info_js("member_id", @player2.member_id)
       find("input#search").click
       
-      find("div input#reprint").click
+      find("div a#reprint").click
       wait_for_ajax
       expect(page.source).to have_selector("iframe")
     end
@@ -141,7 +141,7 @@ describe PlayersController do
       find("input#search").click
       wait_for_ajax
 
-      check_player_transaction_result_items([@player_transaction1, @player_transaction3], false)
+      check_player_transaction_result_items([@player_transaction1, @player_transaction3], false,false,false)
     end
     
     # it '[8.10] empty search', :js => true do

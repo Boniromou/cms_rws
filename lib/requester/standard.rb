@@ -10,6 +10,8 @@ class Requester::Standard < Requester::Base
     :create_internal_player => 'create_internal_player',
     :deposit => 'deposit',
     :withdraw => 'withdraw',
+    :void_deposit => 'void_deposit',
+    :void_withdraw => 'void_withdraw',
     :query_player_balance => 'query_player_balance',
     :query_wallet_transactions => 'query_wallet_transactions',
     :retrieve_location_info => 'retrieve_location_info'
@@ -61,6 +63,26 @@ class Requester::Standard < Requester::Base
                                                                                           :shift_id => shift_id, :device_id => station_id,
                                                                                           :issuer_id => name})
       parse_withdraw_response(response)
+    end
+  end
+
+  def void_deposit(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
+    retry_call(RETRY_TIMES) do
+      response = remote_rws_call('post', "#{@path}/#{get_api_name(:void_deposit)}", :body => {:login_name => login_name, :amt => amount,
+                                                                                         :ref_trans_id => ref_trans_id, :trans_date => trans_date,
+                                                                                         :shift_id => shift_id, :device_id => station_id,
+                                                                                         :issuer_id => name})
+      parse_void_deposit_response(response)
+    end
+  end
+
+  def void_withdraw(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
+    retry_call(RETRY_TIMES) do
+      response = remote_rws_call('post', "#{@path}/#{get_api_name(:void_withdraw)}", :body => {:login_name => login_name, :amt => amount,
+                                                                                          :ref_trans_id => ref_trans_id, :trans_date => trans_date,
+                                                                                          :shift_id => shift_id, :device_id => station_id,
+                                                                                          :issuer_id => name})
+      parse_void_withdraw_response(response)
     end
   end
 
@@ -119,7 +141,8 @@ class Requester::Standard < Requester::Base
   def parse_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-    raise Remote::DepositError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}" unless ['OK'].include?(error_code)
+    message = result_hash[:message].to_s
+    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
 
@@ -127,7 +150,22 @@ class Requester::Standard < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
-    raise Remote::WithdrawError, "error_code #{error_code}: #{ERROR_CODE_MAPPING[error_code]}" unless ['OK'].include?(error_code)
+    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
+    return 'OK'
+  end
+
+  def parse_void_deposit_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
+    return 'OK'
+  end
+
+  def parse_void_withdraw_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+    raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
+    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
 end

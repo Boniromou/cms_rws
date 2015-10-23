@@ -24,6 +24,9 @@ module FundInOut
 
   class VoidTransactionNotExist < FundError
   end
+
+  class AlreadyVoided <FundError
+  end
 end
 
 module PlayerProfile

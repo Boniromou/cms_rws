@@ -17,7 +17,21 @@ class VoidController < FundController
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, current_shift.id, current_station_id, current_user.id)
       handle_wallet_result(@transaction, result)
     end
+
+    flash[:success] = "void_transaction.success"
+    @print_void_slip = true
+    @operation =  @transaction.transaction_type.name
     
+    respond_to do |format|
+      format.js { render partial: "player_transactions/refresh_result", formats: [:js] }
+    end
+  end
+  
+  def handle_call_wallet_fail(e)
+    @player.lock_account!('pending')
+    flash[:alert] = 'flash_message.contact_service'
+    flash[:fade_in] = false
+    @print_void_slip = false
     respond_to do |format|
       format.js { render partial: "player_transactions/refresh_result", formats: [:js] }
     end

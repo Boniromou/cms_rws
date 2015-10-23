@@ -38,8 +38,14 @@
                   <td><%= t.deposit_amt_str %></td>
                   <td><%= t.withdraw_amt_str %></td>
                   <td>
-                    <% if policy(PlayerTransaction.instance).reprint? %>
-                      <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
+                    <% if policy(:player_transaction).void? && t.status == 'completed'%>
+                      <% trans_type = t.transaction_type.name %>
+                      <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
+                        <p><%= t("confirm_box.void_transaction", {:id => t.id}) %></p>
+                      <% end %>
+                    <% end %>
+                    <% if policy(:player_transaction).reprint? %>
+                      <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
                     <% end %>
                   </td>
                 </tr>
@@ -47,7 +53,7 @@
             </tbody>
           </table>
         </div>
-        <% if policy(PlayerTransaction.instance).print_report? %>
+        <% if policy(:player_transaction).print_report? %>
           <div>
             <button id="print_player_transaction" class="btn btn-primary pull-right"><%= t("button.print") %></button>
           </div>
@@ -60,6 +66,13 @@
     </div>
   </div>
 </div>
+<% end %>
+<%= render partial: "shared/pop_up_panel" %>
+<%= form_tag(void_deposit_path, :remote => true, :id => "void_deposit", :style => 'display: none;') do |f|%>
+  <%= hidden_field_tag :transaction_id, 0 %>
+<% end %>
+<%= form_tag(void_withdraw_path, :remote => true, :id => "void_withdraw", :style => 'display: none;') do |f|%>
+  <%= hidden_field_tag :transaction_id, 0 %>
 <% end %>
 
 
@@ -86,6 +99,18 @@
 
       return false;
     });
+  });
+  
+  $('button.void_deposit_btn').click(function() {
+    var target = event.target? event.target : event.srcElement;
+    transaction_id = target.id.replace("void_deposit_","");
+    $('form#void_deposit input#transaction_id').val(transaction_id);
+  });
+  
+  $('button.void_withdraw_btn').click(function() {
+    var target = event.target? event.target : event.srcElement;
+    transaction_id = target.id.replace("void_withdraw_","");
+    $('form#void_withdraw input#transaction_id').val(transaction_id);
   });
 </script>
 

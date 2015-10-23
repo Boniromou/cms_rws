@@ -35,7 +35,17 @@ class PlayerTransaction < ActiveRecord::Base
     self.save!
   end
 
+  def display_status
+    return 'voided' if self.void_transaction && self.void_transaction.status == 'completed'
+    return 'voiding' if self.void_transaction && self.void_transaction.status == 'pending'
+    self.status
+  end
+
   def voided?
+    display_status == 'voided'
+  end
+
+  def can_void?
     !void_transaction.nil?
   end
 
@@ -43,7 +53,7 @@ class PlayerTransaction < ActiveRecord::Base
     void_trans_type_name = "void_" + self.transaction_type.name
     void_trans_type = TransactionType.find_by_name(void_trans_type_name)
     trans_type_id = void_trans_type.id if void_trans_type
-    PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => 'completed').first
+    PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed', 'pending']).first
   end
 
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }

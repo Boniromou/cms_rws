@@ -34,14 +34,17 @@
                   <!-- <td><%= t.shift.name %></td> -->
                   <td><%= Station.get_name_by_id(t.station_id) %></td>
                   <td><%= t.user.name %></td>
-                  <td><%= t.status %></td>
+                  <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
                   <td><%= t.withdraw_amt_str %></td>
                   <td>
                     <% if policy(:player_transaction).void? && t.status == 'completed'%>
-                      <% trans_type = t.transaction_type.name %>
-                      <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
-                        <p><%= t("confirm_box.void_transaction", {:id => t.id}) %></p>
+                      <% if t.can_void? %>
+                      <% else %>
+                        <% trans_type = t.transaction_type.name %>
+                        <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
+                          <p><%= t("confirm_box.void_transaction", {:id => t.id}) %></p>
+                        <% end %>
                       <% end %>
                     <% end %>
                     <% if policy(:player_transaction).reprint? %>

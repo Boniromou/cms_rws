@@ -48,7 +48,7 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def can_void?
-    !void_transaction.nil?
+    void_transaction.nil?
   end
 
   def void_transaction

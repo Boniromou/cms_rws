@@ -185,8 +185,8 @@ module StepHelper
     expect(item[6].text).to eq player_transaction.status
     expect(item[7].text).to eq deposit_str
     expect(item[8].text).to eq withdraw_str
-    expect(item[8].text).to eq void_slip_id_str
-    within item[9] do
+    expect(item[9].text).to eq void_slip_id_str
+    within item[10] do
       if player_transaction.status == 'completed'
         trans_type = player_transaction.transaction_type.name
         if reprint_granted

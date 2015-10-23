@@ -125,7 +125,6 @@ describe FundController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')
     end
     
     after(:each) do
@@ -153,6 +152,7 @@ describe FundController do
     end
     
     it '[47.2] Void success', :js => true do
+      allow_any_instance_of(Requester::Standard).to receive(:void_deposit).and_return('OK')
       login_as_admin
       create_player_transaction
       visit search_transactions_path 
@@ -166,12 +166,12 @@ describe FundController do
       check_player_transaction_result_items([@player_transaction1])
       
       content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
-      click_pop_up_confirm("void_transaction_" + @player_transaction1.id.to_s, content_list)
+      click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
 
       check_flash_message I18n.t("void_transaction.success")
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
-      void_transaction = PlayerTransaction.where(:player_id => @player.id, :trans_type_id => 3)
+      void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
       expect(void_transaction.status).to eq 'completed'
       expect(page.source).to have_selector("iframe")
     end
@@ -192,12 +192,13 @@ describe FundController do
       check_player_transaction_result_items([@player_transaction1])
       
       content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
-      click_pop_up_confirm("void_transaction_" + @player_transaction1.id.to_s, content_list)
+      click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
       
       check_flash_message I18n.t("flash_message.contact_service")
+      wait_for_ajax
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
-      void_transaction = PlayerTransaction.where(:player_id => @player.id, :trans_type_id => 3).first
+      void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
       expect(void_transaction.status).to eq 'pending'
       @player.reload
       expect(@player.lock_types.include?('pending')).to eq true
@@ -210,6 +211,7 @@ describe FundController do
       login_as_admin
       create_player_transaction
       @player_transaction1.transaction_type_id = 2
+      @player_transaction1.save
       visit search_transactions_path 
       check_player_transaction_page_js
 
@@ -221,12 +223,12 @@ describe FundController do
       check_player_transaction_result_items([@player_transaction1])
       
       content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
-      click_pop_up_confirm("void_transaction_" + @player_transaction1.id.to_s, content_list)
+      click_pop_up_confirm("void_withdraw_" + @player_transaction1.id.to_s, content_list)
       
       check_flash_message I18n.t("flash_message.contact_service")
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
-      void_transaction = PlayerTransaction.where(:player_id => @player.id, :trans_type_id => 4).first
+      void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 4).first
       expect(void_transaction.status).to eq 'pending'
       @player.reload
       expect(@player.lock_types.include?('pending')).to eq true
@@ -249,12 +251,12 @@ describe FundController do
       check_player_transaction_result_items([@player_transaction1])
       
       content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
-      click_pop_up_confirm("void_transaction_" + @player_transaction1.id.to_s, content_list)
+      click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
       
       check_flash_message I18n.t("invalid_amt.no_enough_to_void_deposit")
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
-      void_transaction = PlayerTransaction.where(:player_id => @player.id, :trans_type_id => 3).first
+      void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
       expect(void_transaction.status).to eq 'rejected'
       @player.reload
       expect(@player.lock_types.include?('pending')).to eq false

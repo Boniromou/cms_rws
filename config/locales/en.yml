@@ -95,6 +95,7 @@ en:
     register: "Register"
     unregister: "Unregister"
     void: "Void(missing)"
+    print_void: "Print Void(missing)"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"

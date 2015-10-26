@@ -9,6 +9,7 @@ class CreateConfigurations < ActiveRecord::Migration
       t.timestamps
     end
     execute "ALTER TABLE configurations ADD CONSTRAINT fk_configurations_property_id FOREIGN KEY (property_id) REFERENCES properties(id);"
+    add_index :configurations, [:property_id, :key], :unique => true
   end
 
   def down

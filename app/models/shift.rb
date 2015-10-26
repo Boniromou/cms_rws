@@ -27,6 +27,24 @@ class Shift < ActiveRecord::Base
     end
   end
 
+  def roll_by_system
+    raise 'rolled_error' if self.roll_shift_at != nil
+
+    self.roll_shift_on_station_id = 1
+    self.roll_shift_by_user_id = 1
+    self.roll_shift_at = Time.now.utc
+
+    new_shift = Shift.new
+    new_shift_name = self.class.next_shift_name_by_name(name)
+    new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
+    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name)
+
+    Shift.transaction do
+      self.save
+      new_shift.save
+    end
+  end
+
   class << self
     def instance
       @shift = Shift.new unless @shift

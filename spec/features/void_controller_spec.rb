@@ -33,6 +33,7 @@ describe VoidController do
     end
 
     it '[47.1] Display void button', :js => true do
+      create_past_shift
       login_as_admin
       @location6 = Location.create!(:name => "LOCATION6", :status => "active")
       @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)

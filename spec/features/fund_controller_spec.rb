@@ -31,7 +31,7 @@ describe FundController do
     def create_player_transaction
       @location6 = Location.create!(:name => "LOCATION6", :status => "active")
       @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "peinding", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
     end
 
     it '[48.1] Pending Deposit Transaction', :js => true do

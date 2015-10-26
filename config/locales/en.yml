@@ -96,6 +96,8 @@ en:
     disable: "Disable"
     register: "Register"
     unregister: "Unregister"
+    void: "Void(missing)"
+    print_void: "Print Void(missing)"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -151,6 +153,7 @@ en:
     fund_in: "invalid deposit amount"
     fund_out: "invalid withdrawal amount"
     no_enough_to_withdraw: "the account balance is not enough to withdrawal. Current balance: %{balance}"
+    no_enough_to_void_deposit: "the account balance is not enough to void deposit. Current balance: %{balance}(missing)"
   flash_message:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
@@ -170,6 +173,7 @@ en:
     status: "Status"
     deposit: "Deposit"
     withdrawal: "Withdrawal"
+    void_slip: "Void Slip ID(missing)"
     balance: "Balance"
     action: "Action"
     print: "Print"
@@ -239,6 +243,7 @@ en:
     disable_station: "Confirm to disable station %{name}?"
     enable_location: "Confirm to enable location %{name}?"
     disable_location: "Confirm to disable location %{name}?"
+    void_transaction: "Confirm to void transaction %{id}(missing)"
   terminal_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"
@@ -254,3 +259,5 @@ en:
     action: "Action"
     action_at: "Action at"
     user_name: "User name"
+  void_transaction:
+    success: "Void Success(missing)"

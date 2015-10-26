@@ -19,7 +19,6 @@ class VoidController < FundController
     end
 
     flash[:success] = "void_transaction.success"
-    @print_void_slip = true
     @operation =  @transaction.transaction_type.name
     
     respond_to do |format|
@@ -29,9 +28,17 @@ class VoidController < FundController
   
   def handle_call_wallet_fail(e)
     @player.lock_account!('pending')
-    flash[:alert] = 'flash_message.contact_service'
+    handle_fund_error('flash_message.contact_service')
+  end
+
+  def handle_balance_not_enough(e)
+    @transaction.rejected!
+    handle_fund_error({ key: "invalid_amt.no_enough_to_void_deposit", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
+  end
+  
+  def handle_fund_error(msg)
+    flash[:alert] = msg
     flash[:fade_in] = false
-    @print_void_slip = false
     respond_to do |format|
       format.js { render partial: "player_transactions/refresh_result", formats: [:js] }
     end

@@ -1,5 +1,5 @@
 $('input#search').click();
-if(<%=@print_void_slip%>){
+if(<%=@transaction.status == 'completed'%>){
 var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
 
 printHtml(html);

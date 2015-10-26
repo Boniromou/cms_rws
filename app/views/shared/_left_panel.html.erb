@@ -21,18 +21,18 @@
           <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
       </li> 
-      <% if policy(Player.instance).create? || policy(Player.instance).profile?%>
+      <% if policy(:Player).create? || policy(:Player).profile?%>
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
           <ul style="display:block;"> 
-            <% if policy(Player.instance).create? %>
+            <% if policy(:Player).create? %>
               <li id="nav_create_player">
                 <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.create_player")%></span>
                 <% end %>
               </li>
             <% end %>
-            <% if policy(Player.instance).profile? %>
+            <% if policy(:Player).profile? %>
               <li id="nav_player_profile">
                 <%= link_to players_search_path + "?operation=profile", :title => t("tree_panel.profile") , :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.profile")%></span>
@@ -42,18 +42,18 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(Player.instance).balance? || policy(PlayerTransaction.instance).search? %>
+      <% if policy(:Player).balance? || policy(:PlayerTransaction).search? %>
         <li>
           <a href="#" class="unlink"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
           <ul style="display:block;">
-            <% if policy(Player.instance).balance? %>
+            <% if policy(:Player).balance? %>
               <li id="nav_balance_enquiry">
                 <%= link_to players_search_path + "?operation=balance", :title => t("tree_panel.balance"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
                 <% end %>
               </li>
             <% end %>
-            <% if policy(PlayerTransaction.instance).search? %>
+            <% if policy(:PlayerTransaction).search? %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
@@ -63,18 +63,18 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(Shift.instance).roll? || policy(Shift.instance).search_fm? %>
+      <% if policy(:Shift).roll? || policy(:Shift).search_fm? %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>
           <ul style="display:block;">
-            <% if policy(Shift.instance).roll? %>
+            <% if policy(:Shift).roll? %>
               <li id="nav_roll_shift">
                 <%= link_to shifts_path, :title => t("tree_panel.roll_shift"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.roll_shift") %></span>
                 <% end %>
               </li>
             <% end %>
-            <% if policy(Shift.instance).search_fm? %>
+            <% if policy(:Shift).search_fm? %>
               <li id="nav_front_money">
                 <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.front_money") %></span>
@@ -84,11 +84,11 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(AuditLog.instance).search? %>
+      <% if policy(:AuditLog).search? %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
           <ul style="display:block;">
-            <% if policy(AuditLog.instance).search? %>
+            <% if policy(:AuditLog).search? %>
               <li id="nav_audit_log">
                 <%= link_to search_audit_logs_path, :title => t("tree_panel.audit_log"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.audit_log") %></span>
@@ -98,18 +98,18 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(Location.instance).list? || policy(Station.instance).list? %> 
+      <% if policy(:Location).list? || policy(:Station).list? %> 
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-map-marker"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
           <ul style="display:block;">
-            <% if policy(Location.instance).list? %>
+            <% if policy(:Location).list? %>
               <li id="nav_location">
                 <%= link_to list_locations_path("active"), :title => t("tree_panel.location"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.location") %></span>
                 <% end %>
               </li>
             <% end %>
-            <% if policy(Station.instance).list? %>
+            <% if policy(:Station).list? %>
               <li id="nav_stations">
                 <%= link_to list_stations_path("active"), :title => t("tree_panel.station"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.station") %></span>
@@ -119,11 +119,11 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(AuditLog.instance).search? %>
+      <% if policy(:AuditLog).search? %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.change_log")%></span></a>
           <ul style="display:block;">
-            <% if policy(AuditLog.instance).search? %>
+            <% if policy(:AuditLog).search? %>
               <li id="nav_audit_log">
                 <%= link_to search_change_histories_path, :title => t("tree_panel.change_history"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.change_history") %></span>

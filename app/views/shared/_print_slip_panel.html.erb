@@ -1,5 +1,5 @@
 <br/>
-<% if policy(PlayerTransaction.instance).print? %>
+<% if policy(:PlayerTransaction).print? %>
   <button id="print_slip" class="btn btn-primary">Print</button>
 <% end %>
 <%= link_to balance_path + "?member_id=#{@player.member_id}" , :title => t("button.close"), :remote => true, :id => "close_link", :class => "btn btn-primary" do %>

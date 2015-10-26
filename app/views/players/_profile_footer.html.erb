@@ -1,14 +1,9 @@
-<% if policy(Player.new).edit? %>
-  <%= link_to t("button.edit"), edit_path + "?member_id=#{@player.member_id}" , :title => t("button.edit"), :remote => true, :id => "edit_player", :class => "btn btn-primary" %>
-<% end %>
-
-
 <% if !@player.cage_locked? %>
   <% lock_or_unlock = 'lock' %>
-  <% show_lock_or_unlock_btn = policy(Player.new).lock? %>
+  <% show_lock_or_unlock_btn = policy(:Player).lock? %>
 <% else %>
   <% lock_or_unlock = 'unlock' %>
-  <% show_lock_or_unlock_btn = policy(Player.new).unlock? %>
+  <% show_lock_or_unlock_btn = policy(:Player).unlock? %>
 <% end %>
 
 <% if show_lock_or_unlock_btn %>

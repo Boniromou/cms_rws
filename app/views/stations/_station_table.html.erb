@@ -22,12 +22,12 @@
                   <td><%= format_time(station.updated_at) %></td>
                   <td>
                   <div>
-                    <% if policy(Station.instance).change_status? %>
+                    <% if policy(:Station).change_status? %>
                       <% pop_up_btn :id => "change_station_status_" + station.id.to_s, :str => t("button." + action_str), :form_id => "change_station_status", :style => "change_station_status_btn" do %>
                         <p><%= t("confirm_box." + action_str + "_station", {:name => location.name + "-" + station.name}) %></p>
                       <% end %>
                     <% end %>
-                    <% if policy(Station.instance).register? %>
+                    <% if policy(:Station).register? %>
                       <% if station.terminal_id.nil? %>
                         <% pop_up_btn :id => "register_terminal_" + station.id.to_s, :str => t("button.register"), :form_id => "register_terminal", :style => "register_terminal_btn" do %>
                           <div style="height: 60%; vertical-align: middle; padding: 30px;" align="center">

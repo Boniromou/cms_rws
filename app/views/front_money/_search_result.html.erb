@@ -82,7 +82,7 @@
             </tr>
           </table>
         </div>
-        <% if policy(Shift.instance).print_fm? %>
+        <% if policy(:Shift).print_fm? %>
           <div>
             <button id="print_fm" class="btn btn-primary pull-right"><%= t("button.print") %></button>
           </div>

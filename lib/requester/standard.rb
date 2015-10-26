@@ -157,6 +157,7 @@ class Requester::Standard < Requester::Base
   def parse_void_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
+    raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
@@ -164,7 +165,6 @@ class Requester::Standard < Requester::Base
   def parse_void_withdraw_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-    raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end

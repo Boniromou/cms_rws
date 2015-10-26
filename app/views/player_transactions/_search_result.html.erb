@@ -47,7 +47,7 @@
                           <p><%= t("confirm_box.void_transaction", {:id => t.id}) %></p>
                         <% end %>
                       <% else %>
-                        <% if t.voided? %>
+                        <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
                           <%= link_to t("button.print_void"), reprint_path + "?transaction_id=#{t.void_transaction.id}", :id => "reprint_void", :class => "btn btn-primary", :method => "get", :remote => true %>
                         <% end %>
                       <% end %>

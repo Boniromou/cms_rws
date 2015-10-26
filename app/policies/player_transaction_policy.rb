@@ -34,4 +34,12 @@ class PlayerTransactionPolicy < ApplicationPolicy
   def void_withdraw?
     void?
   end
+
+  def print_void?
+    is_admin? || has_permission?('player_transaction', 'print_void')
+  end
+
+  def reprint_void?
+    is_admin? || has_permission?('player_transaction', 'reprint_void')
+  end
 end

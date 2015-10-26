@@ -35,6 +35,7 @@ module ShiftHelper
     PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
     PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
     Shift.delete_all
+    create_past_shift
     Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id)
   end
   
@@ -42,6 +43,11 @@ module ShiftHelper
     PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @day_shift_type.id, :sequence => 1)
     Shift.delete_all
     Shift.create!(:shift_type_id => @day_shift_type.id, :accounting_date_id => @accounting_date_id)
+  end
+
+  def create_past_shift
+    @past_accounting_date_id = AccountingDate.create!(:accounting_date => "2015-04-10").id
+    @past_shift = Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @past_accounting_date_id)
   end
 
 end

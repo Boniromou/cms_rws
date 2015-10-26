@@ -194,11 +194,11 @@ module StepHelper
         else
           expect(page.source).to_not have_selector("a#reprint")
         end
-        if !player_transaction.voided?
+        if player_transaction.can_void?
           expect(page.source).to have_selector("button#void_#{trans_type}_#{player_transaction.id}") if void_granted
         else
           expect(page.source).to_not have_selector("button#void_#{trans_type}_#{player_transaction.id}")
-          expect(page.source).to have_selector("a#reprint_void") if reprint_void_granted
+          expect(page.source).to have_selector("a#reprint_void") if reprint_void_granted && player_transaction.voided?
         end
       end
     end

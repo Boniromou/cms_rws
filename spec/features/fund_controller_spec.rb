@@ -139,16 +139,21 @@ describe FundController do
 
     it '[47.1] Display void button', :js => true do
       login_as_admin
-      create_player_transaction
+      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
+      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
       visit search_transactions_path 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
-      find("input#selected_tab_index").set "1"
+      fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
+      fill_in "end", :with => @player_transaction1.shift.accounting_date.to_s
+      fill_in "id_number", :with => @player_transaction1.player.card_id
+      find("input#selected_tab_index").set "0"
 
       find("input#search").click
       wait_for_ajax
-      check_player_transaction_result_items([@player_transaction1])
+      check_player_transaction_result_items([@player_transaction2,@player_transaction1])
     end
     
     it '[47.2] Void success', :js => true do

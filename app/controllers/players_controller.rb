@@ -80,11 +80,6 @@ class PlayersController < ApplicationController
     end
   end
 
-  def edit
-    member_id = params[:member_id]
-    @player = Player.find_by_member_id(member_id)
-  end
-
   def update
     return unless permission_granted? Player.new
     begin

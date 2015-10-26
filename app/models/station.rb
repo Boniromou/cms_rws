@@ -38,11 +38,6 @@ class Station < ActiveRecord::Base
   end
 
   class << self
-    def instance
-      @station = Station.new unless @station
-      @station
-    end
-
     def get_name_by_id(id)
       if Station.find_by_id(id)
         Station.find_by_id(id).name

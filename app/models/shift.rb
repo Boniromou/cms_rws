@@ -32,12 +32,15 @@ class Shift < ActiveRecord::Base
 
     self.roll_shift_on_station_id = 1
     self.roll_shift_by_user_id = 1
-    self.roll_shift_at = Time.now.utc
+    self.roll_shift_at = Time.now.utc.to_formatted_s(:db)
+    self.updated_at = Time.now.utc.to_formatted_s(:db)
 
     new_shift = Shift.new
     new_shift_name = self.class.next_shift_name_by_name(name)
     new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
     new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name)
+    new_shift.created_at = Time.now.utc.to_formatted_s(:db)
+    new_shift.updated_at = Time.now.utc.to_formatted_s(:db)
 
     Shift.transaction do
       self.save
@@ -46,13 +49,8 @@ class Shift < ActiveRecord::Base
   end
 
   class << self
-    def instance
-      @shift = Shift.new unless @shift
-      @shift
-    end
-
     def current
-      shift = Shift.find_by_roll_shift_at(nil)
+      shift = Shift.find_by_roll_shift_at_and_property_id(nil, PROPERTY_ID)
       raise 'Current shift not found!' unless shift
       shift
     end

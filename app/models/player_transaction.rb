@@ -45,11 +45,6 @@ class PlayerTransaction < ActiveRecord::Base
 
   class << self
   include FundHelper
-    def instance
-      @player_transaction = PlayerTransaction.new unless @player_transaction
-      @player_transaction
-    end
-
     def save_fund_in_transaction(member_id, amount, shift_id, user_id, station_id)
       player_id = Player.find_by_member_id(member_id)[:id]
       transaction = new

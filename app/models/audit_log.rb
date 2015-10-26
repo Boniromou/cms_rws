@@ -75,13 +75,6 @@ class AuditLog < ActiveRecord::Base
     compose_log(action, action_by, "shift", ip, session_id, options, &block)
   end
 
-  class << self
-    def instance
-      @audit_log = AuditLog.new unless @audit_log
-      @audit_log
-    end
-  end
-
   private
   def self.compose_log(action, action_by, audit_target, ip, session_id, options={}, &block)
     content = options.merge({:action => action, :action_by => action_by, :audit_target => audit_target, :ip => ip, :session_id => session_id})

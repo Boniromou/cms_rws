@@ -48,7 +48,9 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def can_void?
-    void_transaction.nil?
+    #TODO set by configuration, how many days can void
+    can_void_date = AccountingDate.current.accounting_date - 0.day
+    void_transaction.nil? && self.shift.accounting_date >= can_void_date
   end
 
   def void_transaction

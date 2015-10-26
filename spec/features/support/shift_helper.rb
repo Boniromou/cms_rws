@@ -44,6 +44,13 @@ module ShiftHelper
     Shift.create!(:shift_type_id => @day_shift_type.id, :accounting_date_id => @accounting_date_id)
   end
 
+  def create_past_shift
+    Shift.delete_all
+    @past_accounting_date_id = AccountingDate.create!(:accounting_date => "2015-04-10").id
+    @past_shift = Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @past_accounting_date_id)
+    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id)
+  end
+
 end
 
 RSpec.configure do |config|

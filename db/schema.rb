@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151016101527) do
+ActiveRecord::Schema.define(:version => 20151026090209) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -33,6 +33,30 @@ ActiveRecord::Schema.define(:version => 20151016101527) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
+
+  create_table "change_histories", :force => true do |t|
+    t.string   "action_by",     :limit => 45, :null => false
+    t.string   "object",        :limit => 45, :null => false
+    t.string   "action",        :limit => 45, :null => false
+    t.string   "change_detail",               :null => false
+    t.integer  "property_id",                 :null => false
+    t.datetime "action_at",                   :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  add_index "change_histories", ["property_id"], :name => "fk_change_histories_property_id"
+
+  create_table "configurations", :force => true do |t|
+    t.integer  "property_id",               :null => false
+    t.string   "key",         :limit => 45, :null => false
+    t.string   "value",       :limit => 45, :null => false
+    t.string   "description", :limit => 45
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "configurations", ["property_id", "key"], :name => "index_configurations_on_property_id_and_key", :unique => true
 
   create_table "currencies", :force => true do |t|
     t.string   "name"

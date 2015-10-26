@@ -29,6 +29,9 @@ CmsRws::Application.routes.draw do
   get 'fund_out' => 'fund_out#new'
   post 'fund_out' => 'fund_out#create'
   
+  post 'void_deposit' => 'void_deposit#create'
+  post 'void_withdraw' => 'void_withdraw#create'
+
   get 'print'=> 'player_transactions#print'
   get 'reprint'=> 'player_transactions#reprint'
   get 'transactions' => 'player_transactions#index'

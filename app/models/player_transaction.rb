@@ -10,6 +10,10 @@ class PlayerTransaction < ActiveRecord::Base
 
   DEPOSIT = 'deposit'
   WITHDRAW = 'withdraw'
+  VOID_DEPOSIT = 'void_deposit'
+  VOID_WITHDRAW = 'void_withdraw'
+
+  TRANSACTION_TYPE_ID_LIST = {:deposit => 1, :withdraw => 2, :void_deposit => 3, :void_withdraw => 4}
 
   def deposit_amt_str
     result = ""
@@ -33,6 +37,29 @@ class PlayerTransaction < ActiveRecord::Base
     self.save!
   end
 
+  def display_status
+    return 'voided' if self.void_transaction && self.void_transaction.status == 'completed'
+    return 'voiding' if self.void_transaction && self.void_transaction.status == 'pending'
+    self.status
+  end
+
+  def voided?
+    display_status == 'voided'
+  end
+
+  def can_void?
+    #TODO set by configuration, how many days can void
+    can_void_date = AccountingDate.current.accounting_date - 0.day
+    void_transaction.nil? && self.shift.accounting_date >= can_void_date
+  end
+
+  def void_transaction
+    void_trans_type_name = "void_" + self.transaction_type.name
+    void_trans_type = TransactionType.find_by_name(void_trans_type_name)
+    trans_type_id = void_trans_type.id if void_trans_type
+    PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed', 'pending']).first
+  end
+
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }
   scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
@@ -40,45 +67,47 @@ class PlayerTransaction < ActiveRecord::Base
   scope :by_shift_id, -> shift_id { where( "shift_id = ? ", shift_id) if shift_id.present? }
   scope :by_station_id, -> station_id { where( "station_id = ?", station_id) if station_id.present? }
   scope :by_user_id, -> user_id { where( "user_id = ?", user_id) if user_id.present? }
+  scope :by_transaction_type_id, -> trans_types { where(:transaction_type_id => trans_types) if trans_types.present?}
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
   scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
 
   class << self
   include FundHelper
-    def save_fund_in_transaction(member_id, amount, shift_id, user_id, station_id)
+    def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, station_id, ref_trans_id = nil)
       player_id = Player.find_by_member_id(member_id)[:id]
       transaction = new
       transaction[:player_id] = player_id
       transaction[:amount] = amount
+      transaction[:transaction_type_id] = TransactionType.find_by_name(trans_type).id;
       transaction[:shift_id] = shift_id
       transaction[:station_id] = station_id
       transaction[:status] = "pending"
-      transaction[:transaction_type_id] = TransactionType.find_by_name(DEPOSIT).id;
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction.save
-      transaction.reload
-      transaction[:ref_trans_id] = make_trans_id(transaction.id)
-      transaction.save
+      if ref_trans_id.nil?
+        transaction[:ref_trans_id] = make_trans_id(transaction.id)
+      else
+        transaction[:ref_trans_id] = ref_trans_id
+      end
+        transaction.save
       transaction
     end
 
-    def save_fund_out_transaction(member_id, amount, shift_id, user_id, station_id)
-      player_id = Player.find_by_member_id(member_id)[:id]
-      transaction = new
-      transaction[:player_id] = player_id
-      transaction[:amount] = amount
-      transaction[:shift_id] = shift_id
-      transaction[:station_id] = station_id
-      transaction[:status] = "pending"
-      transaction[:transaction_type_id] = TransactionType.find_by_name(WITHDRAW).id;
-      transaction[:user_id] = user_id
-      transaction[:trans_date] = Time.now
-      transaction.save
-      transaction.reload
-      transaction[:ref_trans_id] = make_trans_id(transaction.id)
-      transaction.save
-      transaction
+    def save_deposit_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, station_id, ref_trans_id)
+    end
+
+    def save_withdraw_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, station_id, ref_trans_id)
+    end
+
+    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, station_id, ref_trans_id)
+    end
+
+    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, station_id, ref_trans_id)
     end
 
     def get_player_by_card_member_id(type, id)
@@ -87,6 +116,10 @@ class PlayerTransaction < ActiveRecord::Base
       else
         Player.find_by_card_id(id)
       end
+    end
+
+    def only_deposit_withdraw
+      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit],TRANSACTION_TYPE_ID_LIST[:withdraw]])
     end
 
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)      
@@ -98,11 +131,11 @@ class PlayerTransaction < ActiveRecord::Base
         player_id = player.id unless player.nil?
       end
 
-      by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id)
+      by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
     end
 
     def search_query_by_transaction(transaction_id)
-      by_transaction_id(transaction_id)
+      by_transaction_id(transaction_id).only_deposit_withdraw
     end
 
     def search_query(*args)
@@ -124,8 +157,8 @@ class PlayerTransaction < ActiveRecord::Base
     def search_transactions_group_by_station(start_shift_id, user_id, end_shift_id = nil)
       player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
       result = []
-      player_transactions = PlayerTransaction.by_shift_id(start_shift_id)
-      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id) if end_shift_id
+      player_transactions = PlayerTransaction.by_shift_id(start_shift_id).only_deposit_withdraw
+      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw if end_shift_id
       player_transaction_stations.each do |station|
         station_id = station.station_id
         player_transactions_by_station = player_transactions.by_station_id(station_id).by_user_id(user_id).order(:created_at)

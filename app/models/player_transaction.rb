@@ -1,5 +1,5 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :created_at
+  attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :slip_number, :created_at
   belongs_to :player
   belongs_to :shift
   belongs_to :user
@@ -30,6 +30,7 @@ class PlayerTransaction < ActiveRecord::Base
   def completed!
     self.status = 'completed'
     self.save!
+    self.update_slip_number!
   end
 
   def rejected!
@@ -60,6 +61,18 @@ class PlayerTransaction < ActiveRecord::Base
     PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed', 'pending']).first
   end
 
+  def slip_type
+    self.transaction_type.transaction_types_slip_types.find_by_property_id(self.property_id).slip_type
+  end
+
+  def update_slip_number!
+    PlayerTransaction.transaction do
+      transaction_slip = self.slip_type.transaction_slips.lock.find_by_property_id(self.property_id)
+      self.slip_number = transaction_slip.provide_next_number!
+      self.save!
+    end
+  end
+
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }
   scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
@@ -74,7 +87,8 @@ class PlayerTransaction < ActiveRecord::Base
   class << self
   include FundHelper
     def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, station_id, ref_trans_id = nil)
-      player_id = Player.find_by_member_id(member_id)[:id]
+      player = Player.find_by_member_id(member_id)
+      player_id = player[:id]
       transaction = new
       transaction[:player_id] = player_id
       transaction[:amount] = amount
@@ -84,6 +98,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
+      transaction[:property_id] = player[:property_id]
       transaction.save
       if ref_trans_id.nil?
         transaction[:ref_trans_id] = make_trans_id(transaction.id)

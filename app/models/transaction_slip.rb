@@ -3,4 +3,11 @@ class TransactionSlip < ActiveRecord::Base
   belongs_to :property
   belongs_to :slip_type
 
+  def provide_next_number!
+    next_number = self.next_number
+    self.next_number = self.next_number + 1
+    self.save!
+    next_number
+  end
+
 end

@@ -44,7 +44,7 @@ set :user, "laxino"
 set :group, "laxino_rnd"
 
 # Define who should recieve alerts from Monit
-set :alert_recipients, ['ming.wong@laxino.com, marcus.ao@laxino.com']
+set :alert_recipients, ['ming.wong@laxino.com']
 
 # Before you can execute sudo comands on the app server,
 # please comment out the following line in the /etc/sudoers

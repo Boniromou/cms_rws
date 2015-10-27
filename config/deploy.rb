@@ -3,6 +3,7 @@ set :default_stage, 'integration0'
 require 'capistrano/ext/multistage'
 require 'lax-capistrano-recipes/rws'
 require 'bundler/capistrano'
+require 'active_record'
 require File.expand_path("../../app/models/configuration", __FILE__)
 require File.expand_path("../../config/initializers/application", __FILE__)
 

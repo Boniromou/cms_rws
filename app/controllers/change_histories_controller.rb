@@ -20,7 +20,6 @@ class ChangeHistoriesController < ApplicationController
     end_time = Shift.where(:accounting_date_id => accounting_date_id).order(:created_at).last.roll_shift_at
     start_time = Time.now.utc unless start_time
     end_time = Time.now.utc unless end_time
-    # raise FrontMoneyHelper::NoResultException.new "shift not found" if start_shift.nil? || end_shift.nil?
 
     @change_histories = ChangeHistory.by_property_id(current_user.property_id).since(start_time).until(end_time)
     rescue FrontMoneyHelper::NoResultException => e

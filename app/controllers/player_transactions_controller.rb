@@ -23,7 +23,6 @@ class PlayerTransactionsController < ApplicationController
     transaction_id = params[:transaction_id]
     if selected_tab_index == '0'
       shifts = get_start_and_end_shifts(@start_time, @end_time, id_number)
-      
       @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, transaction_id, selected_tab_index)
     else
       @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, transaction_id, selected_tab_index)
@@ -37,7 +36,7 @@ class PlayerTransactionsController < ApplicationController
     rescue SearchPlayerTransaction::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 
-      flash[:error] = "report_search.datetime_format_not_valid"
+      flash[:error] = "transaction_history.datetime_format_not_valid"
     end
 
     respond_to do |format|

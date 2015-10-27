@@ -44,7 +44,7 @@
                       <% if t.can_void? %>
                         <% trans_type = t.transaction_type.name %>
                         <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
-                          <p><%= t("confirm_box.void_transaction", {:id => t.id}) %></p>
+                          <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
                         <% end %>
                       <% else %>
                         <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>

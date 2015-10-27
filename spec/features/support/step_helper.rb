@@ -177,11 +177,11 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     if player_transaction.void_transaction
-      void_slip_id_str = player_transaction.void_transaction.id.to_s
+      void_slip_number_str = player_transaction.void_transaction.slip_number.to_s
     else
-      void_slip_id_str = ""
+      void_slip_number_str = ""
     end
-    expect(item[0].text).to eq player_transaction.id.to_s
+    expect(item[0].text).to eq player_transaction.slip_number.to_s
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
@@ -190,7 +190,7 @@ module StepHelper
     expect(item[6].text).to eq player_transaction.display_status
     expect(item[7].text).to eq deposit_str
     expect(item[8].text).to eq withdraw_str
-    expect(item[9].text).to eq void_slip_id_str
+    expect(item[9].text).to eq void_slip_number_str
     within item[10] do
       if player_transaction.status == 'completed'
         trans_type = player_transaction.transaction_type.name

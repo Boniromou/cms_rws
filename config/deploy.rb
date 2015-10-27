@@ -3,6 +3,8 @@ set :default_stage, 'integration0'
 require 'capistrano/ext/multistage'
 require 'lax-capistrano-recipes/rws'
 require 'bundler/capistrano'
+require File.expand_path("../../app/models/configuration", __FILE__)
+require File.expand_path("../../config/initializers/application", __FILE__)
 
 set :app_server, "thin"
 set :application, "cms_rws"
@@ -30,7 +32,7 @@ set :user, "laxino"
 set :group, "laxino_rnd"
 
 # Define who should recieve alerts from Monit
-set :alert_recipients, ['ming.wong@laxino.com']
+set :alert_recipients, ['ming.wong@laxino.com, marcus.ao@laxino.com']
 
 # Before you can execute sudo comands on the app server,
 # please comment out the following line in the /etc/sudoers
@@ -44,8 +46,6 @@ set(:repository) { "ssh://#{repo_host}/opt/laxino/git_repos/#{project.sub('.', '
 
 # Define your cron jobs here
 set(:cronjobs) {
-  ["0,30 * * * * #{deploy_to}/current/cronjob/clean_expired_token.sh #{stage} >> #{deploy_to}/current/log/clean_expired_token_#{stage}.log 2>&1"]
-  ["0 6 * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift#{stage}.log 2>&1"]
-  ["0 14 * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift#{stage}.log 2>&1"]
-  ["0 22 * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift#{stage}.log 2>&1"]
+  ["0,30 * * * * #{deploy_to}/current/cronjob/clean_expired_token.sh #{stage} >> #{deploy_to}/current/log/clean_expired_token_#{stage}.log 2>&1"],
+  ["0 #{ROLL_SHIFT_TIME} * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift#{stage}.log 2>&1"]
 }

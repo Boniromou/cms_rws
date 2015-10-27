@@ -7,3 +7,4 @@ AUDIT_LOG_SEARCH_RANGE = Configuration.retrieve_config('audit_log_search_range')
 CHANGE_LOG_SEARCH_RANGE = Configuration.retrieve_config('change_log_search_range')
 TOKEN_LIFE_TIME = Configuration.retrieve_config('token_life_time') * 60
 SESSION_EXPIRATION_TIME = Configuration.retrieve_config('session_life_time') * 60
+ROLL_SHIFT_TIME = Configuration.retrieve_config('roll_shift_time')

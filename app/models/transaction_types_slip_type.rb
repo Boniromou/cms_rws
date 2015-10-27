@@ -3,5 +3,4 @@ class TransactionTypesSlipType < ActiveRecord::Base
   belongs_to :property
   belongs_to :transaction_type
   belongs_to :slip_type
-
 end

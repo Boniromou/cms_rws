@@ -18,7 +18,7 @@ class VoidController < FundController
       handle_wallet_result(@transaction, result)
     end
 
-    flash[:success] = {key: "void_transaction_success", replace: {:slip_number => @transaction.slip_number}}
+    flash[:success] = {key: "void_transaction.success", replace: {:slip_number => @transaction.slip_number}}
     @operation =  @transaction.transaction_type.name
     
     respond_to do |format|

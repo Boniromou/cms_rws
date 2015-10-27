@@ -210,6 +210,8 @@ module StepHelper
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
+    ths = all("tr th")
+    ths[3].click
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
@@ -420,7 +422,7 @@ module StepHelper
     wait_for_ajax
     check_player_transaction_result_items([player_transaction])
     
-    content_list = [I18n.t("confirm_box.void_transaction", id: player_transaction.id.to_s)]
+    content_list = [I18n.t("confirm_box.void_transaction", slip_number: player_transaction.slip_number.to_s)]
     click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)
     wait_for_ajax
 

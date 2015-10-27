@@ -66,10 +66,10 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
       
-      content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
+      content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
 
-      check_flash_message I18n.t("void_transaction.success")
+      check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
@@ -92,7 +92,7 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
       
-      content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
+      content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
       
       check_flash_message I18n.t("flash_message.contact_service")
@@ -123,7 +123,7 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
       
-      content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
+      content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_withdraw_" + @player_transaction1.id.to_s, content_list)
       
       check_flash_message I18n.t("flash_message.contact_service")
@@ -151,7 +151,7 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
       
-      content_list = [I18n.t("confirm_box.void_transaction", id: @player_transaction1.id.to_s)]
+      content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
       
       check_flash_message I18n.t("invalid_amt.no_enough_to_void_deposit", { balance: to_display_amount_str(@player_balance)})

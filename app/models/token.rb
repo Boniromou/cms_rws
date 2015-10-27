@@ -2,7 +2,7 @@ class Token < ActiveRecord::Base
     validates_uniqueness_of :session_token
     attr_accessible :session_token, :player_id, :expired_at
     belongs_to :player
-    EXPIRE_TIME = 30 * 60
+    EXPIRE_TIME = TOKEN_LIFE_TIME
   
   def alive?
     self.expired_at > Time.now

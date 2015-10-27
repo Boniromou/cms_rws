@@ -17,8 +17,8 @@ module PlayerTransactionsHelper
     raise SearchPlayerTransaction::DateTimeError, "range_error" if to_number(@end_time) < to_number(@start_time)
 
     date_gap = (to_number(@end_time) - to_number(@start_time)) / 86400
-    raise SearchPlayerTransaction::OverRangeError, "limit_remark" if date_gap > 30
-
+    
+    raise SearchPlayerTransaction::OverRangeError, "limit_remark" if date_gap > TRANS_HISTORY_SEARCH_RANGE
     start_ac_date = AccountingDate.find_by_accounting_date(to_string(@start_time))
     end_ac_date = AccountingDate.find_by_accounting_date(to_string(@end_time))
     end_ac_date = AccountingDate.order(:created_at).last if end_ac_date.nil?

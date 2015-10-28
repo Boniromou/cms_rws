@@ -20,7 +20,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     def create_player_transaction
@@ -209,7 +209,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     def create_player_transaction
@@ -253,11 +253,11 @@ describe PlayersController do
       reset_slip_number
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')
-      allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('OK')
-      allow_any_instance_of(Requester::Standard).to receive(:void_deposit).and_return('OK')
-      allow_any_instance_of(Requester::Standard).to receive(:void_withdraw).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:void_withdraw).and_return('OK')
     end
     
     after(:each) do

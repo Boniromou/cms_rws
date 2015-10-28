@@ -19,9 +19,9 @@ describe FundController do
       mock_have_enable_station
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
-      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_raise(Exception.new)
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
     end
     
     after(:each) do
@@ -37,8 +37,8 @@ describe FundController do
     it '[48.1] Pending Deposit Transaction', :js => true do
       login_as_admin
       go_to_deposit_page
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_call_original
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('no_balance')
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog div button#confirm").click
@@ -78,7 +78,7 @@ describe FundController do
     end
 
     it '[48.4] invalid Withdraw (invalid balance)', :js => true do
-      allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "0.0")
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "0.0")
       login_as_admin 
       mock_have_enable_station 
       go_to_withdraw_page
@@ -97,8 +97,8 @@ describe FundController do
     it '[48.5] Pending Withdraw Transaction', :js => true do
       login_as_admin
       go_to_withdraw_page
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_call_original
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('no_balance')
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund").click
       find("div#pop_up_dialog div button#confirm").click

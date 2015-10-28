@@ -19,8 +19,8 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Standard).to receive(:create_player).and_return('OK')
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:create_player).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -282,7 +282,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -341,7 +341,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -349,7 +349,7 @@ describe PlayersController do
     end
 
     it '[5.1] view player balance enquiry', :js => true do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
@@ -412,7 +412,7 @@ describe PlayersController do
     it '[5.5] Return to Cage home', :js => true do
       Station.delete_all
       Location.delete_all
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
@@ -447,7 +447,7 @@ describe PlayersController do
     end
 
     it '[5.6] unauthorized to all actions' do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       @test_user = User.create!(:uid => 2, :name => 'test.user')
@@ -478,7 +478,7 @@ describe PlayersController do
     it '[5.8] balance enquiry with locked player', :js => true do
       Station.delete_all
       Location.delete_all
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "locked")
       login_as_admin
@@ -518,7 +518,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -636,7 +636,7 @@ describe PlayersController do
 
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
     after(:each) do
@@ -720,7 +720,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
       @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       @token2 = Token.create!(:session_token => '3949245469jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
@@ -800,7 +800,7 @@ describe PlayersController do
     end
 
     it '[37.1] Player balance not found', :js => true do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return('no_balance')
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin
@@ -839,8 +839,8 @@ describe PlayersController do
 
     it '[38.1] Retry create player success', :js => true do
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
-      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
-      allow_any_instance_of(Requester::Standard).to receive(:create_player).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
+      allow_any_instance_of(Requester::Wallet).to receive(:create_player).and_return('OK')
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
       login_as_admin

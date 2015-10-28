@@ -19,7 +19,7 @@ describe VoidController do
       mock_close_after_print
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
     
     after(:each) do
@@ -53,7 +53,7 @@ describe VoidController do
     end
     
     it '[47.2] Void success', :js => true do
-      allow_any_instance_of(Requester::Standard).to receive(:void_deposit).and_return('OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
       login_as_admin
       create_player_transaction
       visit search_transactions_path 
@@ -79,7 +79,7 @@ describe VoidController do
 
     it '[47.3] disconnection Void depopsit fail', :js => true do
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
-      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_raise(Exception.new)
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
       login_as_admin
       create_player_transaction
       visit search_transactions_path 
@@ -108,7 +108,7 @@ describe VoidController do
 
     it '[47.4] disconnection Void withdraw fail', :js => true do
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
-      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_raise(Exception.new)
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
       login_as_admin
       create_player_transaction
       @player_transaction1.transaction_type_id = 2
@@ -138,7 +138,7 @@ describe VoidController do
 
     it '[47.5] balance not enough to void deposit', :js => true do
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => "AmountNotEnough"})
-      allow_any_instance_of(Requester::Standard).to receive(:remote_response_checking).and_return({:error_code => "AmountNotEnough"})
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => "AmountNotEnough"})
       login_as_admin
       create_player_transaction
       visit search_transactions_path 

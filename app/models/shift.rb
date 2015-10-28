@@ -30,8 +30,6 @@ class Shift < ActiveRecord::Base
   def roll_by_system
     raise 'rolled_error' if self.roll_shift_at != nil
 
-    self.roll_shift_on_station_id = 1
-    self.roll_shift_by_user_id = 1
     self.roll_shift_at = Time.now.utc.to_formatted_s(:db)
     self.updated_at = Time.now.utc.to_formatted_s(:db)
 

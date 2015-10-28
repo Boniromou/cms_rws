@@ -244,7 +244,7 @@ en:
     disable_station: "Confirm to disable station %{name}?"
     enable_location: "Confirm to enable location %{name}?"
     disable_location: "Confirm to disable location %{name}?"
-    void_transaction: "Confirm to void transaction %{slip_id}"
+    void_transaction: "Confirm to void transaction %{slip_number}"
   terminal_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"
@@ -261,4 +261,4 @@ en:
     action_at: "Action at"
     user_name: "User name"
   void_transaction:
-    success: "Void transaction {%slip_id} successful"
+    success: "Void transaction {%slip_number} successful"

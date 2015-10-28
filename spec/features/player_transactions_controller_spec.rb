@@ -2,7 +2,6 @@ require "feature_spec_helper"
 require "rails_helper"
 
 describe PlayersController do
-  include RSpec::Rails::ControllerExampleGroup
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
@@ -241,6 +240,77 @@ describe PlayersController do
       wait_for_ajax
 
       expect(page.source).to_not have_selector("button#print_player_transaction")
+    end
+  end
+  
+  describe '[49] Slip ID' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_close_after_print
+      mock_have_enable_station
+      reset_slip_number
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+
+      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Standard).to receive(:deposit).and_return('OK')
+      allow_any_instance_of(Requester::Standard).to receive(:withdraw).and_return('OK')
+      allow_any_instance_of(Requester::Standard).to receive(:void_deposit).and_return('OK')
+      allow_any_instance_of(Requester::Standard).to receive(:void_withdraw).and_return('OK')
+    end
+    
+    after(:each) do
+    end
+
+    def create_player_transaction
+      @location = Location.create!(:name => "LOCATION", :status => "active")
+      @station = Station.create!(:name => "STATION", :status => "active", :location_id => @location.id)
+      allow(Station).to receive(:find_by_terminal_id).and_return(@station)
+      @player_transaction1 = do_deposit(1000)
+      @player_transaction2 = do_deposit(1000)
+      @void_transaction1 = do_void(@player_transaction1.id)
+      @void_transaction2 = do_void(@player_transaction2.id)
+      @player_transaction3 = do_deposit(5000)
+      @void_transaction3 = do_void(@player_transaction3.id)
+      @player_transaction4 = do_deposit(5000)
+      @player_transaction5 = do_withdraw(5000)
+      @void_transaction4 = do_void(@player_transaction5.id)
+      @player_transaction6 = do_withdraw(5000)
+    end
+    
+    it '[49.1] Show correct slip ID', :js => true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path 
+      check_player_transaction_page_js
+
+      fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
+      fill_in "end", :with => @player_transaction1.shift.accounting_date.to_s
+      fill_in "id_number", :with => @player_transaction1.player.card_id
+      find("input#selected_tab_index").set "0"
+
+      find("input#search").click
+      wait_for_ajax
+      @player_transaction1.reload
+      @player_transaction2.reload
+      @player_transaction3.reload
+      @player_transaction4.reload
+      @player_transaction5.reload
+      @player_transaction6.reload
+
+      check_player_transaction_result_items([@player_transaction1,@player_transaction2,@player_transaction3,@player_transaction4,@player_transaction5,@player_transaction6])
+
+      expect(@player_transaction1.slip_number).to eq 1
+      expect(@player_transaction2.slip_number).to eq 2
+      expect(@void_transaction1.slip_number).to eq 3
+      expect(@void_transaction2.slip_number).to eq 4
+      expect(@player_transaction3.slip_number).to eq 5
+      expect(@void_transaction3.slip_number).to eq 6
+      expect(@player_transaction4.slip_number).to eq 7
+      expect(@player_transaction5.slip_number).to eq 1
+      expect(@void_transaction4.slip_number).to eq 2
+      expect(@player_transaction6.slip_number).to eq 3
     end
   end
 end

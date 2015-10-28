@@ -177,20 +177,20 @@ module StepHelper
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
     if player_transaction.void_transaction
-      void_slip_id_str = player_transaction.void_transaction.id
+      void_slip_number_str = player_transaction.void_transaction.slip_number.to_s
     else
-      void_slip_id_str = ""
+      void_slip_number_str = ""
     end
-    expect(item[0].text).to eq player_transaction.id.to_s
+    expect(item[0].text).to eq player_transaction.slip_number.to_s
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[4].text).to eq station.name
     expect(item[5].text).to eq user.name
-    expect(item[6].text).to eq player_transaction.status
+    expect(item[6].text).to eq player_transaction.display_status
     expect(item[7].text).to eq deposit_str
     expect(item[8].text).to eq withdraw_str
-    expect(item[9].text).to eq void_slip_id_str
+    expect(item[9].text).to eq void_slip_number_str
     within item[10] do
       if player_transaction.status == 'completed'
         trans_type = player_transaction.transaction_type.name
@@ -210,6 +210,8 @@ module StepHelper
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
+    ths = all("tr th")
+    ths[3].click
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
@@ -374,6 +376,64 @@ module StepHelper
 
     within "div#content" do
         click_link I18n.t("button.withdrawal")
+    end
+  end
+
+  def do_deposit(amount)
+    go_to_deposit_page
+    wait_for_ajax
+    fill_in "player_transaction_amount", :with => amount
+    find("button#confirm_fund").click
+    expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+    
+    expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
+    expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+    expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+    find("div#pop_up_dialog div button#confirm").click
+    wait_for_ajax
+    PlayerTransaction.last
+  end
+
+  def do_withdraw(amount)
+    go_to_withdraw_page
+    wait_for_ajax
+    fill_in "player_transaction_amount", :with => amount
+    find("button#confirm_fund").click
+    expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+
+    find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+    expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
+    expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+    expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+    find("div#pop_up_dialog div button#confirm").click
+    wait_for_ajax
+    PlayerTransaction.last
+  end
+
+  def do_void(transaction_id)
+    player_transaction = PlayerTransaction.find(transaction_id)
+    visit search_transactions_path 
+    check_player_transaction_page_js
+
+    fill_in "transaction_id", :with => transaction_id
+    find("input#selected_tab_index").set "1"
+
+    find("input#search").click
+    wait_for_ajax
+    check_player_transaction_result_items([player_transaction])
+    
+    content_list = [I18n.t("confirm_box.void_transaction", slip_number: player_transaction.slip_number.to_s)]
+    click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)
+    wait_for_ajax
+
+    check_flash_message I18n.t("void_transaction.success")
+    PlayerTransaction.last
+  end
+
+  def reset_slip_number
+    TransactionSlip.all.each do |s|
+      s.next_number = 1
+      s.save
     end
   end
 

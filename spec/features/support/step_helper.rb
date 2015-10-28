@@ -265,7 +265,7 @@ module StepHelper
     expect(item[0].text).to eq change_history.action_by
     expect(item[1].text).to eq change_history.action_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[2].text).to eq change_history.action
-    expect(item[3].text).to eq @player.member_id.to_s + ' (Player ID: ' + @player.id.to_s + ')'
+    expect(item[3].text).to eq 'Member ID: ' + @player.member_id.to_s
   end
 
   def check_fm_report_result(item, player_transaction)

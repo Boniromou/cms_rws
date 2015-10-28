@@ -19,6 +19,44 @@ Dir[Rails.root.join("lib/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("cronjob/lib/*.rb")].each {|f| require f}
 
 Capybara.ignore_hidden_elements = false
+
+  def create_shift_data
+    @accounting_date = "2015-04-15"
+    @today = Date.parse(@accounting_date)
+
+    @moring_shift_type = ShiftType.create!(:name => 'morning')
+    @swing_shift_type = ShiftType.create!(:name => 'swing')
+    @night_shift_type = ShiftType.create!(:name => 'night')
+    @day_shift_type = ShiftType.create!(:name => 'day')
+
+    @accounting_date_id = AccountingDate.create!(:accounting_date => @accounting_date).id
+    create_moring_swing_night_shift_sequence
+
+    # @station_id = Station.create!(:name => 'window#1').id
+    # allow_any_instance_of(ApplicationController).to receive(:current_station_id).and_return(@station_id)
+  end
+
+  def create_moring_swing_night_shift_sequence
+    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @moring_shift_type.id, :sequence => 1)
+    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
+    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
+    Shift.delete_all
+    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id)
+  end
+  
+  def create_day_sequence
+    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @day_shift_type.id, :sequence => 1)
+    Shift.delete_all
+    Shift.create!(:shift_type_id => @day_shift_type.id, :accounting_date_id => @accounting_date_id)
+  end
+
+  def create_past_shift
+    Shift.delete_all
+    @past_accounting_date_id = AccountingDate.create!(:accounting_date => "2015-04-10").id
+    @past_shift = Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @past_accounting_date_id)
+    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id)
+  end
+
 RSpec.configure do |config|
   config.include FundHelper, type: :feature
   config.include Devise::TestHelpers, :type => :controller

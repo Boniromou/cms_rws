@@ -261,4 +261,4 @@ en:
     action_at: "Action at"
     user_name: "User name"
   void_transaction:
-    success: "Void transaction {%slip_number} successful"
+    success: "Void transaction %{slip_number} successful"

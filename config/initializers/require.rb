@@ -1,2 +1,2 @@
 require 'errors'
-require 'requester/standard'
+Dir[Rails.root.join 'lib/requester/*.rb'].each {|file| require file }

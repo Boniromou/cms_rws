@@ -25,11 +25,11 @@ class ApplicationController < ActionController::Base
   end
 
   def wallet_requester
-    Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
+    Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
   end
 
   def terminal_requester
-    Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
+    Requester::Terminal.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
   end
   
   protected

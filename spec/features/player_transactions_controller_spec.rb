@@ -313,4 +313,51 @@ describe PlayersController do
       expect(@player_transaction6.slip_number).to eq 3
     end
   end
+  describe '[58] Update player info when search in transaction history' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[58.1] Search transaction history with card change', :js => true do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => true })
+      create_past_shift
+      login_as_admin
+      visit search_transactions_path 
+      check_player_transaction_page_js
+
+      fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
+      fill_in "end", :with => @player_transaction1.shift.accounting_date.to_s
+      fill_in "id_number", :with => @player_transaction1.player.card_id
+      find("input#selected_tab_index").set "0"
+
+      find("input#search").click
+      wait_for_ajax
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq 1234567893
+      expect(p.status).to eq @player.status
+    end
+
+    it '[58.2] Search transaction history with player not exist in cage' do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'PlayerNotFound'})
+      login_as_admin
+      visit search_transactions_path
+      check_player_transaction_page
+      fill_search_info("member_id", "12345678")
+      find("input#search").click
+
+      expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
+    end
+  end
 end

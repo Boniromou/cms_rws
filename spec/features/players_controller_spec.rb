@@ -888,4 +888,117 @@ describe PlayersController do
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
     end
   end
+  
+  describe '[53] Update player info when search in Balance Enquiry/Player Profile' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[53.1] Show PIS player info when search  Player Profile without change' do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => true })
+      login_as_admin
+      visit players_search_path + "?operation=profile"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq @player.card_id
+      expect(p.status).to eq @player.status
+    end
+
+    it '[53.2] Show PIS player info when search  Player Profile with Card ID changed' do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567891, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => true })
+      login_as_admin
+      visit players_search_path + "?operation=profile"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq 1234567891
+      expect(p.status).to eq @player.status
+    end
+
+    it '[53.3] Show PIS player info when search  Player Profile with blacklist changed' do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => true, :activated => true })
+      login_as_admin
+      visit players_search_path + "?operation=profile"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq 1234567891
+      expect(p.status).to eq 'locked'
+      expect(p.has_locked?('blacklist')).to eq true
+    end
+
+    xit '[53.4] Show PIS player info when search  Player Profile PIN changed' do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567891, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => true })
+      login_as_admin
+      visit players_search_path + "?operation=profile"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page
+      check_player_info
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq 1234567891
+      expect(p.status).to eq @player.status
+    end
+
+    it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do
+      @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => false })
+      login_as_admin
+      visit players_search_path + "?operation=profile"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_profile_page('----')
+      check_player_info
+      expect(page.source).to have_selector("button#create_pin")
+    end
+    
+    it '[53.6] Card ID not found in PIS' do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'PlayerNotFound'})
+      login_as_admin
+      visit players_search_path + "?operation=profile"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_not_found
+      click_link I18n.t("button.create")
+    end
+
+    it '[53.7] Show PIS player info when search balance enquiry with Card ID changed' do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567891, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => true })
+      login_as_admin
+      visit players_search_path + "?operation=balance"
+      fill_search_info("card_id", @player.card_id)
+      find("#button_find").click
+      check_balance_page
+      check_player_info
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq 1234567891
+      expect(p.status).to eq @player.status
+    end
+  end
 end

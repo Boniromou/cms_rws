@@ -30,16 +30,25 @@ class PlayersController < ApplicationController
   end
 
   def balance
+    @operation = :balance
+    player_info
+  end
+
+  def profile
+    @operation = :profile
+    player_info
+  end
+
+  def player_info
     return unless permission_granted? Player.new
     begin
       member_id = params[:member_id]
       @player = Player.find_by_member_id(member_id)
       raise PlayerProfile::PlayerNotFound unless @player
       @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
-      flash[:error] = 'balance_enquiry.query_balance_fail' unless @player_balance.class == Float || !flash[:alert].nil?
     rescue PlayerProfile::PlayerNotFound => e
       flash[:alert] = "player not found"
-      redirect_to(players_search_path+"?member_id=#{member_id}&operation=balance")
+      redirect_to(players_search_path+"?member_id=#{member_id}&operation=#{@operation}")
     end
   end
 
@@ -64,19 +73,6 @@ class PlayersController < ApplicationController
       redirect_to :action => 'search', :found => false, :id_number => id_number, :id_type => id_type, :operation => @operation
     else
       redirect_to eval( @operation + "_path" )  + "?member_id=" + member_id
-    end
-  end
-
-  def profile
-    return unless permission_granted? Player.new
-    begin
-      member_id = params[:member_id]
-      @player = Player.find_by_member_id(member_id)
-      raise PlayerProfile::PlayerNotFound unless @player
-      @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
-    rescue PlayerProfile::PlayerNotFound => e
-      flash[:alert] = "player not found"
-      redirect_to(players_search_path+"?member_id=#{member_id}&operation=profile")
     end
   end
 

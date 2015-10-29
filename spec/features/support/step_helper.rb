@@ -430,6 +430,11 @@ module StepHelper
     PlayerTransaction.last
   end
 
+  def create_void_transaction(transaction_id)
+    target_transaction = PlayerTransaction.find(transaction_id)
+    transaction = PlayerTransaction.create!(:shift_id => target_transaction.shift_id, :player_id => target_transaction.player_id, :user_id => target_transaction.user_id, :transaction_type_id => target_transaction.transaction_type_id + 2, :status => "completed", :amount => target_transaction.amount, :station_id => target_transaction.station_id , :created_at => Time.now, :slip_number => target_transaction.slip_number + 1)
+  end
+
   def reset_slip_number
     TransactionSlip.all.each do |s|
       s.next_number = 1

@@ -179,6 +179,28 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1],false,false,false)
     end
-  end
+    
+    it '[47.7] Void deposit fail when the transaction had been voided', :js => true do
+      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path 
+      check_player_transaction_page_js
 
+      fill_in "transaction_id", :with => @player_transaction1.id
+      find("input#selected_tab_index").set "1"
+
+      find("input#search").click
+      wait_for_ajax
+      check_player_transaction_result_items([@player_transaction1])
+      
+      content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
+      create_void_transaction(@player_transaction1.id)
+      click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
+
+      check_flash_message I18n.t("void_transaction.already_void", slip_number: @player_transaction1.slip_number.to_s)
+      @player_transaction1.reload
+      check_player_transaction_result_items([@player_transaction1])
+    end
+  end
 end

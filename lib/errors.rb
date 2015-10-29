@@ -153,6 +153,9 @@ module Remote
   class AmountNotEnough < WithdrawError
   end
 
+  class PlayerNotFound < RaiseError
+  end
+
 end
 
 module Request

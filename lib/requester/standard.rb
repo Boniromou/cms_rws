@@ -13,8 +13,8 @@ class Requester::Standard < Requester::Base
     rescue Remote::RaiseError => e
       raise e
     rescue Exception => e
-      p e.message
-      p e.backtrace
+      Rails.logger.error "#{e.message}"
+      Rails.logger.error "#{e.backtrace.inspect}"
       if retry_times > 0
         return retry_call(retry_times - 1, &block)
       else

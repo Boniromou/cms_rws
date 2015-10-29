@@ -1,4 +1,6 @@
 class VoidController < FundController
+  rescue_from FundInOut::AlreadyVoided, :with => :handle_already_voided
+
   def create
     return unless permission_granted? PlayerTransaction.new, operation_sym
 
@@ -34,6 +36,10 @@ class VoidController < FundController
   def handle_balance_not_enough(e)
     @transaction.rejected!
     handle_fund_error({ key: "invalid_amt.no_enough_to_void_deposit", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
+  end
+
+  def handle_already_voided(e)
+    handle_fund_error({ key: "void_transaction.already_void", replace: { slip_number: @target_transaction.slip_number} })
   end
   
   def handle_fund_error(msg)

@@ -1,7 +1,5 @@
 $('input#search').click();
-var can_print_void_slip = <%=policy(:PlayerTransaction).print_void? %>;
-if(<%=@transaction.status == 'completed'%> && can_print_void_slip){
-var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
-
-printHtml(html);
-}
+<% if @transaction && @transaction.status == 'completed' && policy(:PlayerTransaction).print_void? %>
+  var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
+  printHtml(html);
+<% end %>

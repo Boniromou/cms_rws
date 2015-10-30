@@ -1,0 +1,5 @@
+<% if policy(:Player).create_pin? %>
+  <%#TODO set create_pin_path%>
+  <%= link_to t("button.create_pin"), "#" , :title => t("button.create_pin"), :remote => true, :id => "create_pin", :class => "btn btn-primary" %>
+<% end %>
+

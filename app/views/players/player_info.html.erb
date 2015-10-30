@@ -3,8 +3,11 @@
 <% else %>
   <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.profile")) %>
 <% end %>
-
-<% footer = render "players/#{@operation}_footer" %>
+<% if @inactivate %>
+  <% footer = render "players/inactivate_footer" %>
+<% else %>
+  <% footer = render "players/#{@operation}_footer" %>
+<% end %>
 <% content = render "players/balance_amt" %>
 <%= render partial:"shared/player_info" , :locals => {:show_balance => true, :content => content, :footer => footer} %>
 </div>

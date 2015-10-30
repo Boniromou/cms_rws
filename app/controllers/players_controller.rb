@@ -44,10 +44,11 @@ class PlayersController < ApplicationController
 
   def player_not_activated
     @player_balance = 'no_balance'
+    @inactivate = true
 
     respond_to do |format|
-      format.html { render "players/#{@operation}", formats: [:html] }
-      format.js { render"players/#{@operation}", formats: [:js] }
+      format.html { render "players/player_info", formats: [:html] }
+      format.js { render"players/player_info", formats: [:js] }
     end
   end
 
@@ -84,12 +85,12 @@ class PlayersController < ApplicationController
     @id_type = params[:id_type]
     @operation = params[:operation] if params[:operation]
 
-#    player_info = patron_requester.get_player_info(@id_type,@id_number)
-#    unless player_info[:activated]
-#      @player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activated')
-#      raise PlayerProfile::PlayerNotActivated
-#    end
-#    Player.update_info(player_info)
+    player_info = patron_requester.get_player_info(@id_type,@id_number)
+    unless player_info[:activated]
+      @player = Player.create_inactivate(player_info)
+      raise PlayerProfile::PlayerNotActivated
+    end
+    Player.update_info(player_info)
 
     @player = Player.find_by_type_id(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player

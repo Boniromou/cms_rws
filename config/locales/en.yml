@@ -98,6 +98,8 @@ en:
     unregister: "Unregister"
     void: "Void(missing)"
     print_void: "Print Void(missing)"
+    create_pin: "Create Pin(missing)"
+    reset_pin: "Reset Pin(missing)"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -132,6 +134,7 @@ en:
     cage_lock: "Cage Lock(missing)"
     blacklist: "Blacklist(missing)"
     pending: "Pending(missing)"
+    not_activate: "Not Activate(missing)"
   update_player:
     success: "Edit player [%{first_name} %{last_name}] successful"
     duplicate: "Card ID has already existed"

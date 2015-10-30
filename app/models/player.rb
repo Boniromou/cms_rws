@@ -122,6 +122,10 @@ class Player < ActiveRecord::Base
         find_by_card_id(id_number)
       end
     end
+
+    def create_inactivate(player_info)
+      player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activate')
+    end
   end
 
   protected

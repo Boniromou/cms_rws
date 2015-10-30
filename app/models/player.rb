@@ -27,7 +27,11 @@ class Player < ActiveRecord::Base
   end
 
   def cage_locked?
-    self.lock_types.include?(LOCK_TYPE_CAGE_LOCK)
+    has_lock_type?(LOCK_TYPE_CAGE_LOCK)
+  end
+
+  def has_lock_type?(lock_type)
+    self.lock_types.include?(lock_type)
   end
 
   def lock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
@@ -132,6 +136,7 @@ class Player < ActiveRecord::Base
       return unless player
       if player_info[:card_id] != player.card_id
         player.card_id = player_info[:card_id]
+        player.save
         player.discard_tokens
       end
       player.lock_account!('blacklist') if player_info[:blacklist]

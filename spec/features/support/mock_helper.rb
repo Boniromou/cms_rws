@@ -36,6 +36,10 @@ module MockHelper
   def mock_not_have_terminal_id
     allow_any_instance_of(UserSessionsController).to receive(:get_terminal_id).and_return(nil)
   end
+
+  def mock_patron_not_change
+    allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+  end
 end
 
 RSpec.configure do |config|

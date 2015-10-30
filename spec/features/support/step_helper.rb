@@ -466,7 +466,7 @@ module StepHelper
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.full_name.upcase)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax

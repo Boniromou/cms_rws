@@ -33,12 +33,12 @@ class PlayersController < ApplicationController
   end
 
   def balance
-    @operation = :balance
+    @operation = 'balance'
     player_info
   end
 
   def profile
-    @operation = :profile
+    @operation = 'profile'
     player_info
   end
 
@@ -86,7 +86,7 @@ class PlayersController < ApplicationController
     @operation = params[:operation] if params[:operation]
 
     player_info = patron_requester.get_player_info(@id_type,@id_number)
-    unless player_info[:activated]
+    if player_info[:activated] == false
       @player = Player.create_inactivate(player_info)
       raise PlayerProfile::PlayerNotActivated
     end

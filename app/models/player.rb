@@ -126,6 +126,16 @@ class Player < ActiveRecord::Base
     def create_inactivate(player_info)
       player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activate')
     end
+
+    def update_info(player_info)
+      player = Player.find_by_member_id(player_info[:member_id])
+      return unless player
+      if player_info[:card_id] != player.card_id
+        player.card_id = player_info[:card_id]
+        player.discard_tokens
+      end
+      player.lock_account!('blacklist') if player_info[:blacklist]
+    end
   end
 
   protected

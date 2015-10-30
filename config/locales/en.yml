@@ -120,11 +120,11 @@ en:
     member_id_only_number_allowed_error: "Membership ID can only input number"
     unknown_error: "Unknown error"
   lock_player:
-    success: "Lock player [%{first_name} %{last_name}] successful"
-    confirm_msg: "Are you sure to Lock player: %{first_name} %{last_name}?"
+    success: "Lock player [%{name}] successful"
+    confirm_msg: "Are you sure to Lock player: %{name}?"
   unlock_player:
-    success: "Unlock player [%{first_name} %{last_name}] successful"
-    confirm_msg: "Are you sure to UnLock player: %{first_name} %{last_name}?"
+    success: "Unlock player [%{name}] successful"
+    confirm_msg: "Are you sure to UnLock player: %{name}?"
   player_status:
     active: "Active"
     locked: "Locked"

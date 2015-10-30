@@ -1,0 +1,10 @@
+<% if @operation == 'balance' %>
+  <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.balance")) %>
+<% else %>
+  <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.profile")) %>
+<% end %>
+
+<% footer = render "players/#{@operation}_footer" %>
+<% content = render "players/balance_amt" %>
+<%= render partial:"shared/player_info" , :locals => {:show_balance => true, :content => content, :footer => footer} %>
+</div>

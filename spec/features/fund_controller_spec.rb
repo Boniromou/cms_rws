@@ -17,6 +17,7 @@ describe FundController do
       mock_cage_info
       mock_close_after_print
       mock_have_enable_station
+      mock_patron_not_change
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0)

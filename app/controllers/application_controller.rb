@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
   def terminal_requester
     Requester::Terminal.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
   end
+
+  def patron_requester
+    Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
+  end
   
   protected
 

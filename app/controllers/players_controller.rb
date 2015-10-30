@@ -1,5 +1,7 @@
 class PlayersController < ApplicationController
   layout 'cage'
+  rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
+  rescue_from Remote::PlayerNotFound, :with => :handle_player_not_found
 
   def new
     return unless permission_granted? Player.new
@@ -41,15 +43,12 @@ class PlayersController < ApplicationController
 
   def player_info
     return unless permission_granted? Player.new
-    begin
-      member_id = params[:member_id]
-      @player = Player.find_by_member_id(member_id)
-      raise PlayerProfile::PlayerNotFound unless @player
-      @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
-    rescue PlayerProfile::PlayerNotFound => e
-      flash[:alert] = "player not found"
-      redirect_to(players_search_path+"?member_id=#{member_id}&operation=#{@operation}")
-    end
+    member_id = params[:member_id]
+    @id_number = member_id
+    @id_type = :member_id
+    @player = Player.find_by_member_id(member_id)
+    raise PlayerProfile::PlayerNotFound unless @player
+    @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
   end
 
   def search
@@ -64,16 +63,26 @@ class PlayersController < ApplicationController
   end
 
   def do_search
-    id_number = params[:id_number]
-    id_type = params[:id_type]
+    @id_number = params[:id_number]
+    @id_type = params[:id_type]
+
+    player_info = patron_request.get_player_info(id_type,@id_number)
+    raise PlayerNotActivated unless player_info[:activated]
+    Player.update_info(player_info)
+
     @operation = params[:operation] if params[:operation]
-    @player = Player.find_by_type_id(id_type, id_number)
+    @player = Player.find_by_type_id(@id_type, @id_number)
+    raise PlayerProfile::PlayerNotFound unless @player
     member_id = @player.member_id if @player
-    if @player.nil?
-      redirect_to :action => 'search', :found => false, :id_number => id_number, :id_type => id_type, :operation => @operation
-    else
-      redirect_to eval( @operation + "_path" )  + "?member_id=" + member_id
-    end
+    redirect_to eval( @operation + "_path" )  + "?member_id=" + member_id
+  end
+
+  def handle_player_not_found(e)
+    redirect_to :action => 'search', :found => false, :id_number => @id_number, :id_type => @id_type, :operation => @operation
+  end
+
+  def handle_player_not_activated(e)
+    redirect_to eval( @operation + "_path" )
   end
 
   def update

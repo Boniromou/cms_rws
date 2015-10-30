@@ -35,6 +35,9 @@ module PlayerProfile
 
   class PlayerNotFound < PlayerProfile
   end
+
+  class PlayerNotActivated < PlayerProfile
+  end
 end
 
 module SearchPlayerTransaction

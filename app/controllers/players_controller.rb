@@ -2,6 +2,7 @@ class PlayersController < ApplicationController
   layout 'cage'
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
   rescue_from Remote::PlayerNotFound, :with => :handle_player_not_found
+  rescue_from PlayerProfile::PlayerNotActivated, :with => :player_not_activated
 
   def new
     return unless permission_granted? Player.new
@@ -41,13 +42,24 @@ class PlayersController < ApplicationController
     player_info
   end
 
+  def player_not_activated
+    @player_balance = 'no_balance'
+
+    respond_to do |format|
+      format.html { render "players/#{@operation}", formats: [:html] }
+      format.js { render"players/#{@operation}", formats: [:js] }
+    end
+  end
+
   def player_info
     return unless permission_granted? Player.new
     member_id = params[:member_id]
-    @id_number = member_id
-    @id_type = :member_id
     @player = Player.find_by_member_id(member_id)
-    raise PlayerProfile::PlayerNotFound unless @player
+    unless @player
+      raise PlayerProfile::PlayerNotFound
+      @id_number = member_id
+      @id_type = :member_id
+    end
     @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
   end
 
@@ -65,12 +77,15 @@ class PlayersController < ApplicationController
   def do_search
     @id_number = params[:id_number]
     @id_type = params[:id_type]
+    @operation = params[:operation] if params[:operation]
 
-    player_info = patron_request.get_player_info(id_type,@id_number)
-    raise PlayerNotActivated unless player_info[:activated]
+    player_info = patron_requester.get_player_info(@id_type,@id_number)
+    unless player_info[:activated]
+      @player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activated')
+      raise PlayerProfile::PlayerNotActivated
+    end
     Player.update_info(player_info)
 
-    @operation = params[:operation] if params[:operation]
     @player = Player.find_by_type_id(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player
     member_id = @player.member_id if @player
@@ -110,7 +125,7 @@ class PlayersController < ApplicationController
     end
 
     ChangeHistory.create(current_user, player, 'lock')
-    flash[:success] = { key: "lock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
+    flash[:success] = { key: "lock_player.success", replace: {name: player.full_name.upcase}}
     redirect_to :action => 'profile', :member_id => member_id
   end
 
@@ -125,7 +140,7 @@ class PlayersController < ApplicationController
     end
 
     ChangeHistory.create(current_user, player, 'unlock')
-    flash[:success] = { key: "unlock_player.success", replace: {first_name: player.first_name.upcase, last_name: player.last_name.upcase}}
+    flash[:success] = { key: "unlock_player.success", replace: {name: player.full_name.upcase}}
     redirect_to :action => 'profile', :member_id => member_id
   end
 end

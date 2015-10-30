@@ -13,7 +13,9 @@ class Player < ActiveRecord::Base
   LOCK_TYPE_CAGE_LOCK = 'cage_lock'
 
   def full_name
-    self.first_name + " " + self.last_name
+    first_name = self.first_name || ""
+    last_name = self.last_name || ""
+    first_name + " " + last_name
   end
 
   def balance_str

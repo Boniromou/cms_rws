@@ -11,7 +11,8 @@ class Requester::Patron < Requester::Standard
 
   protected
 
-  def parse_create_player_response(result)
+  def parse_get_player_info_response(result)
+    return {:member_id => 123, :card_id => 102130320923, :blacklist => true, :activated => false}
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)

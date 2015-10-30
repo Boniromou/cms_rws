@@ -283,6 +283,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
     end
 
     after(:each) do
@@ -342,6 +343,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
     end
 
     after(:each) do
@@ -519,6 +521,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
     end
 
     after(:each) do
@@ -608,7 +611,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.full_name.upcase)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
@@ -637,6 +640,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
     end
 
     after(:each) do
@@ -721,6 +725,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
       @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       @token2 = Token.create!(:session_token => '3949245469jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
@@ -760,7 +765,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", first_name: @player.first_name.upcase, last_name: @player.last_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.full_name.upcase)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
@@ -792,6 +797,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
 
     end
 
@@ -830,6 +836,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
       
     end
 

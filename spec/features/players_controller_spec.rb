@@ -911,7 +911,7 @@ describe PlayersController do
 
     it '[53.1] Show PIS player info when search  Player Profile without change' do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :activated => true })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -926,7 +926,7 @@ describe PlayersController do
 
     it '[53.2] Show PIS player info when search  Player Profile with Card ID changed' do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :activated => true })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("member_id", @player.member_id)
@@ -940,7 +940,7 @@ describe PlayersController do
 
     it '[53.3] Show PIS player info when search  Player Profile with blacklist changed' do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => true, :activated => true })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => true, :pin_status => 'created' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -953,9 +953,9 @@ describe PlayersController do
       expect(p.has_lock_type?('blacklist')).to eq true
     end
 
-    xit '[53.4] Show PIS player info when search  Player Profile PIN changed' do
+    it '[53.4] Show PIS player info when search  Player Profile PIN changed' do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :activated => true })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -970,7 +970,7 @@ describe PlayersController do
 
     it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do
       @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :activated => false })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'null' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -995,7 +995,7 @@ describe PlayersController do
 
     it '[53.7] Show PIS player info when search balance enquiry with Card ID changed' do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :activated => true })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created' })
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)

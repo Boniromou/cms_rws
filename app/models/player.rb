@@ -49,10 +49,14 @@ class Player < ActiveRecord::Base
     end
   end
 
+  def valid_tokens
+    self.tokens.where("expired_at > ?", Time.now)
+  end
+
   def discard_tokens
-    if self.tokens != []
-      self.tokens.each do |token| 
-        token.discard if token.alive?
+    if self.valid_tokens != []
+      self.valid_tokens.each do |token| 
+        token.discard
       end
     end
   end
@@ -133,12 +137,14 @@ class Player < ActiveRecord::Base
 
     def update_info(player_info)
       player = Player.find_by_member_id(player_info[:member_id])
+      is_discard_tokens = player_info[:pin_status] == 'reset'
       return unless player
       if player_info[:card_id] != player.card_id
         player.card_id = player_info[:card_id]
         player.save
-        player.discard_tokens
+        is_discard_tokens = true
       end
+      player.discard_tokens if is_discard_tokens
       player.lock_account!('blacklist') if player_info[:blacklist]
     end
   end

@@ -16,6 +16,7 @@ module FundHelper
   end
 
   def to_display_amount_str( amount )
+    return I18n.t("balance_enquiry.#{amount}") if amount.class == String
     number_to_currency(amount.to_f / 100).sub("$","")
   end
 

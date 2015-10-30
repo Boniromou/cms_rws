@@ -86,7 +86,7 @@ class PlayersController < ApplicationController
     @operation = params[:operation] if params[:operation]
 
     player_info = patron_requester.get_player_info(@id_type,@id_number)
-    if player_info[:activated] == false
+    if player_info[:pin_status] == 'null'
       @player = Player.create_inactivate(player_info)
       raise PlayerProfile::PlayerNotActivated
     end

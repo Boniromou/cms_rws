@@ -955,7 +955,8 @@ describe PlayersController do
 
     it '[53.4] Show PIS player info when search  Player Profile PIN changed' do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset' })
+      Token.generate(@player.id)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -964,8 +965,9 @@ describe PlayersController do
       check_player_info
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
-      expect(p.card_id).to eq 1234567891
+      expect(p.card_id).to eq @player.card_id
       expect(p.status).to eq @player.status
+      expect(@player.valid_tokens).to eq []
     end
 
     it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do

@@ -426,7 +426,7 @@ module StepHelper
     click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)
     wait_for_ajax
 
-    check_flash_message I18n.t("void_transaction.success")
+    check_flash_message I18n.t("void_transaction.success", slip_number: player_transaction.slip_number.to_s)
     PlayerTransaction.last
   end
 

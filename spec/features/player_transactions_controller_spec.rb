@@ -16,6 +16,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      mock_patron_not_change
       
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
@@ -205,6 +206,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      mock_patron_not_change
       
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
@@ -314,6 +316,7 @@ describe PlayersController do
       expect(@player_transaction6.slip_number).to eq 3
     end
   end
+
   describe '[58] Update player info when search in transaction history' do
     before(:each) do
       clean_dbs
@@ -329,11 +332,19 @@ describe PlayersController do
     after(:each) do
       clean_dbs
     end
+    
+    def create_player_transaction
+      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
+      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @location6.id, :created_at => Time.now)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @location6.id, :created_at => Time.now + 30 * 60)
+      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :station_id => @location6.id, :created_at => Time.now + 60 * 60)
+    end
 
     it '[58.1] Search transaction history with card change', :js => true do
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_locked?('blacklist'), :activated => true })
-      create_past_shift
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created'})
       login_as_admin
+      create_player_transaction
       visit search_transactions_path 
       check_player_transaction_page_js
 
@@ -346,12 +357,13 @@ describe PlayersController do
       wait_for_ajax
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
-      expect(p.card_id).to eq 1234567893
+      expect(p.card_id).to eq '1234567893'
       expect(p.status).to eq @player.status
     end
 
     it '[58.2] Search transaction history with player not exist in cage' do
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'PlayerNotFound'})
+      @player.delete
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'null'})
       login_as_admin
       visit search_transactions_path
       check_player_transaction_page

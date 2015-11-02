@@ -51,5 +51,11 @@ class Token < ActiveRecord::Base
       token.discard
       token
     end
+    
+    def clean_expired_tokens
+      tokens = Token.where('expired_at < ?', Time.now)
+      puts "#{tokens.length} tokens expired"
+      tokens.delete_all        
+    end
 	end
 end

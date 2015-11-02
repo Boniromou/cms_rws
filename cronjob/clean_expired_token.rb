@@ -1,5 +1,5 @@
 require 'active_record'
-require File.expand_path("../lib/token",__FILE__)
+require File.expand_path("../../app/models/token",__FILE__)
 require File.expand_path("../lib/clean_token_helper",__FILE__)
 
 env = $*[0] || "development"

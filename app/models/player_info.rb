@@ -38,13 +38,21 @@ class PlayerInfo
       {:currency => currency}
     end
     
-    def update(id_type, id_value)
+    def update!(id_type, id_value)
       player_info = patron_requester.get_player_info(id_type, id_value)
       if player_info[:pin_status] == 'null'
         player = Player.create_inactivate(player_info)
         raise PlayerProfile::PlayerNotActivated.new(player)
       end
       Player.update_info(player_info)
+    end
+
+    def update(id_type, id_value)
+      begin
+        update!(id_type, id_value)
+      rescue PlayerProfile::PlayerNotActivated => e
+        return 'PlayerNotActivated'
+      end
     end
   end
 end

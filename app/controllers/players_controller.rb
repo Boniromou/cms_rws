@@ -86,7 +86,7 @@ class PlayersController < ApplicationController
     @id_type = params[:id_type]
     @operation = params[:operation] if params[:operation]
     
-    PlayerInfo.update(@id_type,@id_number)
+    PlayerInfo.update!(@id_type,@id_number)
 
     @player = Player.find_by_type_id(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player

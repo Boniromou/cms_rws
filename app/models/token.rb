@@ -2,7 +2,6 @@ class Token < ActiveRecord::Base
     validates_uniqueness_of :session_token
     attr_accessible :session_token, :player_id, :expired_at
     belongs_to :player
-    EXPIRE_TIME = TOKEN_LIFE_TIME
   
   def alive?
     self.expired_at > Time.now
@@ -18,7 +17,7 @@ class Token < ActiveRecord::Base
   end
 
   def keep_alive
-    self.expired_at = Time.now.utc + EXPIRE_TIME
+    self.expired_at = Time.now.utc + TOKEN_LIFE_TIME
     self.save
   end
 
@@ -36,7 +35,7 @@ class Token < ActiveRecord::Base
     	token = new
     	token.player_id = player_id
 		  token.session_token = SecureRandom.uuid
-		  token.expired_at = Time.now.utc + EXPIRE_TIME
+		  token.expired_at = Time.now.utc + TOKEN_LIFE_TIME
 		  token.save
       token
     end

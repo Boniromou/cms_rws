@@ -412,7 +412,7 @@ module StepHelper
 
   def do_void(transaction_id)
     player_transaction = PlayerTransaction.find(transaction_id)
-    visit search_transactions_path 
+    click_link I18n.t("tree_panel.player_transaction")
     check_player_transaction_page_js
 
     fill_in "transaction_id", :with => transaction_id

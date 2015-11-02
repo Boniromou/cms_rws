@@ -40,6 +40,10 @@ class PlayerInfo
     
     def update!(id_type, id_value)
       player_info = patron_requester.get_player_info(id_type, id_value)
+      if player_info.class != Hash
+        Rails.logger.error "update player info fail"
+        return
+      end
       if player_info[:pin_status] == 'null'
         player = Player.create_inactivate(player_info)
         raise PlayerProfile::PlayerNotActivated.new(player)

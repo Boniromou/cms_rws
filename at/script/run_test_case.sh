@@ -18,3 +18,4 @@ rspec -cfd spec/features/terminals_controller_spec.rb
 rspec -cfd spec/controllers/tokens_controller_spec.rb
 
 rspec -cfd spec/cronjob/clean_expired_token_spec.rb
+rspec -cfd spec/cronjob/update_player_spec.rb

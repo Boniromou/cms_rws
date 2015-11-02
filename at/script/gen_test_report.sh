@@ -18,3 +18,4 @@ rspec -fh spec/features/terminals_controller_spec.rb -o at/report/terminals_cont
 rspec -fh spec/controllers/tokens_controller_spec.rb -o at/report/tokens_controller_spec.html
 
 rspec -fh spec/cronjob/clean_expired_token_spec.rb -o at/report/clean_expired_token_spec.html
+rspec -fh spec/cronjob/update_player_spec.rb -o at/report/update_player_spec.html

@@ -17,6 +17,7 @@ describe VoidController do
       create_shift_data
       mock_cage_info
       mock_close_after_print
+      mock_patron_not_change
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
@@ -39,7 +40,8 @@ describe VoidController do
       @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
       @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
       @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
@@ -56,7 +58,8 @@ describe VoidController do
       allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
       login_as_admin
       create_player_transaction
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "transaction_id", :with => @player_transaction1.id
@@ -82,7 +85,8 @@ describe VoidController do
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
       login_as_admin
       create_player_transaction
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "transaction_id", :with => @player_transaction1.id
@@ -113,7 +117,8 @@ describe VoidController do
       create_player_transaction
       @player_transaction1.transaction_type_id = 2
       @player_transaction1.save
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "transaction_id", :with => @player_transaction1.id
@@ -141,7 +146,8 @@ describe VoidController do
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => "AmountNotEnough"})
       login_as_admin
       create_player_transaction
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "transaction_id", :with => @player_transaction1.id
@@ -169,7 +175,8 @@ describe VoidController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,['search'])
       create_player_transaction
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "transaction_id", :with => @player_transaction1.id
@@ -184,7 +191,8 @@ describe VoidController do
       allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
       login_as_admin
       create_player_transaction
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
       fill_in "transaction_id", :with => @player_transaction1.id

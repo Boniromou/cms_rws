@@ -1,6 +1,10 @@
 class PlayerInfo
   
   class << self
+    def patron_requester
+      Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
+    end
+
     def retrieve_info(card_id, terminal_id, pin, property_id)
       @wallet_requester = Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
       return {:status => 400, :error_code => 'InvalidTerminal', :error_msg => 'Terminal is invalid'} unless validate_terminal(terminal_id)
@@ -32,6 +36,15 @@ class PlayerInfo
       raise Request::InvalidLoginName.new unless player
       currency = player.currency.name
       {:currency => currency}
+    end
+    
+    def update(id_type, id_value)
+      player_info = patron_requester.get_player_info(id_type, id_value)
+      if player_info[:pin_status] == 'null'
+        player = Player.create_inactivate(player_info)
+        raise PlayerProfile::PlayerNotActivated.new(player)
+      end
+      Player.update_info(player_info)
     end
   end
 end

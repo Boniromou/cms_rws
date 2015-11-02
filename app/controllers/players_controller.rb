@@ -42,9 +42,10 @@ class PlayersController < ApplicationController
     player_info
   end
 
-  def player_not_activated
+  def player_not_activated(e)
     @player_balance = 'no_balance'
     @inactivate = true
+    @player = e.player
 
     respond_to do |format|
       format.html { render "players/player_info", formats: [:html] }
@@ -53,7 +54,7 @@ class PlayersController < ApplicationController
   end
 
   def player_info
-    return unless permission_granted? Player.new
+    return unless permission_granted? :Player
     member_id = params[:member_id]
     @player = Player.find_by_member_id(member_id)
     unless @player
@@ -84,13 +85,8 @@ class PlayersController < ApplicationController
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @operation = params[:operation] if params[:operation]
-
-    player_info = patron_requester.get_player_info(@id_type,@id_number)
-    if player_info[:pin_status] == 'null'
-      @player = Player.create_inactivate(player_info)
-      raise PlayerProfile::PlayerNotActivated
-    end
-    Player.update_info(player_info)
+    
+    PlayerInfo.update(@id_type,@id_number)
 
     @player = Player.find_by_type_id(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player
@@ -100,10 +96,6 @@ class PlayersController < ApplicationController
 
   def handle_player_not_found(e)
     redirect_to :action => 'search', :found => false, :id_number => @id_number, :id_type => @id_type, :operation => @operation
-  end
-
-  def handle_player_not_activated(e)
-    redirect_to eval( @operation + "_path" )
   end
 
   def update

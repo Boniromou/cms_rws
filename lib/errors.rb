@@ -37,6 +37,10 @@ module PlayerProfile
   end
 
   class PlayerNotActivated < PlayerProfile
+    attr_reader :player
+    def initialize(player)
+      @player = player
+    end
   end
 end
 

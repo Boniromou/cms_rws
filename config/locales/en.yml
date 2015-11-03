@@ -35,6 +35,7 @@ en:
     station: "Stations"
     change_log: "Change Log"
     change_history: "Change History"
+    reset_pin: "Reset PIN"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -268,3 +269,8 @@ en:
   void_transaction:
     success: "Void transaction %{slip_number} successful"
     already_void: "Transaction %{slip_number} has been void(missing)"
+  reset_pin:
+    new_pin: "New PIN"
+    confirm_pin: "Confirm PIN"
+    pin_not_match: "These PINs don't match"
+    confirm_set_pin: "Confirm to set pin for player %{member_id}?"

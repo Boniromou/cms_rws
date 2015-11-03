@@ -141,4 +141,13 @@ class PlayersController < ApplicationController
     flash[:success] = { key: "unlock_player.success", replace: {name: player.full_name.upcase}}
     redirect_to :action => 'profile', :member_id => member_id
   end
+
+  def reset_pin
+    member_id = params[:member_id]
+    @player = Player.find_by_member_id(member_id)
+  end
+
+  def do_reset_pin
+    return unless permission_granted? Player.new, :unlock?
+  end
 end

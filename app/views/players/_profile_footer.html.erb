@@ -1,3 +1,7 @@
+<% if policy(:Player).edit? %>
+  <%= link_to t("button.reset_pin"), reset_pin_path + "?member_id=#{@player.member_id}" , :title => t("button.reset_pin"), :remote => true, :id => "reset_pin", :class => "btn btn-primary" %>
+<% end %>
+
 <% if !@player.cage_locked? %>
   <% lock_or_unlock = 'lock' %>
   <% show_lock_or_unlock_btn = policy(:Player).lock? %>

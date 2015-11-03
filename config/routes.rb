@@ -18,6 +18,8 @@ CmsRws::Application.routes.draw do
   get "search" => 'players#search' ,:as => :players_search
   post "search" => "players#do_search"
   get "profile" => "players#profile"
+  get "reset_pin" => "players#reset_pin"
+  post "reset_pin" => "players#do_reset_pin"
   post "lock_account" => "players#lock_account"
   post "unlock_account" => "players#unlock_account"
   post "update" => "players#update"

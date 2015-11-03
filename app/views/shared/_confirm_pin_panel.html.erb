@@ -1,0 +1,35 @@
+<div id="button_set">
+  <%= close_to_profile %>
+  <% pop_up_btn :id => "abc", :str => t("button.confirm"), :form_id => "pin_request", :style => "confirm_pin_btn", :form_valid_function => "formValid()" do %>
+  <p><%= t("reset_pin.confirm_set_pin", {:member_id => @player.member_id}) %></p>
+    <p style="font-size: 18px;" id="fund_amt"></p>
+  <% end %>
+</div>
+
+<%= javascript_include_tag "format.number.js" %>
+<script type='text/javascript'>
+  function formValid(){
+    new_pin = $('#new_pin').val();
+    confirm_pin = $('#confirm_pin').val();
+    return new_pin == confirm_pin && new_pin != ""
+  }
+
+  function showError(){
+     $("label.invisible_error").css('visibility', 'visible');
+  }
+
+  function hideError(){
+    $("label.invisible_error").css('visibility', 'hidden');
+  }
+
+  $('#abc').click(function() {
+    if( formValid()){
+      hideError();
+            
+    } else {
+      showError();
+    }
+
+    return false;
+  });
+</script>

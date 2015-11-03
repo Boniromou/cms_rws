@@ -1,0 +1,27 @@
+<%=form_tag(pin_request_path, :remote => true, :id => "pin_request", :autocomplete => "off") do %>
+  <div>
+    <%= hidden_field(:player, :member_id) %>
+  </div>
+
+  
+    <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("reset_pin.new_pin")%> :</strong></label></td>
+    <%= text_field_tag :pin, nil, required: true, autofocus: true, pattern: '^\d+$', :id => "new_pin", :oninput => "validateNumberOnlyAndMaxLength($(this), value, 4)", :class => "col-xs-3 box", :type => "password" %>
+  </div>
+  <div class="row" style="margin-top:10px;">
+    <label class="col-xs-4 box"><strong><%= t("reset_pin.confirm_pin")%> :</strong></label></td>
+    <%= text_field_tag :pin, nil, required: true, autofocus: false, pattern: '^\d+$', :id => "confirm_pin", :oninput => "validateNumberOnlyAndMaxLength($(this), value, 4)", :class => "col-xs-3 box", :type => "password" %>
+        <div class='col-xs-5 box'>
+          <label class='invisible_error'>
+            <%= t("reset_pin.pin_not_match") %>
+          </label>
+        </div>
+      </div>
+
+<% end %>
+
+<script>
+  $(document).ready(function() {
+    $('input[autofocus="autofocus"]').focus();
+  });
+</script>

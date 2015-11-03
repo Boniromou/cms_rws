@@ -13,6 +13,11 @@ module ViewsHelper
     content_tag(:a, "Cancel", :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
   end
 
+  def close_to_profile
+    icon = create_icon("fa fa-times")
+    content_tag(:a, "Cancel", :href =>  profile_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
+  end
+
   def create_icon(style)
     content_tag(:i,"", :class => style)
   end

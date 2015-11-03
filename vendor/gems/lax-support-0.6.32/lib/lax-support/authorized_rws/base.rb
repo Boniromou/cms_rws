@@ -17,9 +17,9 @@ module LaxSupport
       # Make defult_options as a class instance varaible
       # This is to override the module inheritable attribute
       # default_options from HTTParty
-      def self.inherited(subclass)
-        subclass.instance_variable_set("@default_options", {})
-      end
+      # def self.inherited(subclass)
+      #   subclass.instance_variable_set("@default_options", {})
+      # end
 
       # The ID for a given property (mandatory)
       attr_accessor :property_id

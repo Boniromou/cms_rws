@@ -186,6 +186,8 @@ en:
     no_id: "Member ID or Card ID can not be blank"
     range_error: "The start date must be earlier than the end date"
     datetime_format_not_valid: "Datetime format is not correct!"
+    by_slip_number: "by Slip Number(missing)"
+    slip_number: "Slip Number(missing"
   shift_name:
     morning: "Morning"
     swing: "Swing"

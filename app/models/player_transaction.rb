@@ -83,6 +83,7 @@ class PlayerTransaction < ActiveRecord::Base
   scope :by_transaction_type_id, -> trans_types { where(:transaction_type_id => trans_types) if trans_types.present?}
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
   scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
+  scope :by_slip_number, -> slip_number { where("slip_number = ?", slip_number) if slip_number.present? }
 
   class << self
   include FundHelper
@@ -149,8 +150,8 @@ class PlayerTransaction < ActiveRecord::Base
       by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
     end
 
-    def search_query_by_transaction(transaction_id)
-      by_transaction_id(transaction_id).only_deposit_withdraw
+    def search_query_by_slip_number(slip_number)
+      by_slip_number(slip_number).only_deposit_withdraw
     end
 
     def search_query(*args)
@@ -163,9 +164,9 @@ class PlayerTransaction < ActiveRecord::Base
 
         search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)
       else
-        transaction_id = args[4].to_i
+        slip_number = args[4].to_i
 
-        search_query_by_transaction(transaction_id)
+        search_query_by_slip_number(slip_number)
       end
     end
 

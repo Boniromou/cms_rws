@@ -35,6 +35,7 @@ en:
     station: "Stations"
     change_log: "Change Log"
     change_history: "Change History"
+    reset_pin: "Reset PIN"
   general:
     login: "Log In"
     logout: "Log Out"
@@ -98,6 +99,7 @@ en:
     unregister: "Unregister"
     void: "Void(missing)"
     print_void: "Print Void(missing)"
+    reset_pin: "Reset PIN"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -262,3 +264,8 @@ en:
     user_name: "User name"
   void_transaction:
     success: "Void transaction %{slip_number} successful"
+  reset_pin:
+    new_pin: "New PIN"
+    confirm_pin: "Confirm PIN"
+    pin_not_match: "These PINs don't match"
+    confirm_set_pin: "Confirm to set pin for player %{member_id}?"

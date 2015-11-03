@@ -153,6 +153,9 @@ module Remote
   class AmountNotEnough < WithdrawError
   end
 
+  class PinError < RemoteError
+  end
+
 end
 
 module Request

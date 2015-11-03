@@ -68,4 +68,24 @@ class RequestHandler
     return {:machine_name => 'abc1234'} if @inbound[:terminal_id] != 'acbd123456'
     {:error_code => 'InvalidTerminalID', :error_msg => 'Validate terminal id failed.'}
   end
+
+  def process_validate_machine_token_event
+    property_id = @inbound[:property_id]
+    machine_token = @inbound[:machine_token]
+    # @station_requester = Requester::Station.new(PROPERTY_ID, 'test_key', STATION_URL)
+    @station_requester = Requester::Station.new(STATION_URL)
+    response = @station_requester.validate_machine_token(machine_token, property_id)  
+    # return {:property_id => 20000,
+    #         :zone_id => 1,
+    #         :zone_name => '01',
+    #         :location_id => 4,
+    #         :location_name => '0102',
+    #         :machine_id => 2,
+    #         :machine_name => 'abc1234',
+    #         :uuid => '6e80a295eeff4554bf025098cca6eb37'} if @inbound[:terminal_id] != 'acbd123456'
+    
+
+    
+    # {:error_code => 'InvalidMachineToken', :error_msg => 'Validate terminal id failed.'}
+  end
 end

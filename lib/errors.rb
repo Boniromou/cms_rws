@@ -163,9 +163,11 @@ module Remote
   class PlayerNotFound < RaiseError
   end
 
-  class PinError < RemoteError
+  class PinError < ReturnError
   end
 
+  class MachineTokenError < ReturnError
+  end
 end
 
 module Request

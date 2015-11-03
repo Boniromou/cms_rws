@@ -80,7 +80,7 @@ CmsRws::Application.routes.draw do
   get 'discard_token' => 'tokens#discard'
   get 'get_player_currency' => 'tokens#get_player_currency'
 
-  get 'validate_terminal' => 'terminals#validate'
+  get 'validate_machine_token' => 'tokens#validate_machine'
 
   get 'search_change_histories' => 'change_histories#search'
   post 'search_change_histories' => 'change_histories#do_search'

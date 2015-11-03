@@ -28,14 +28,14 @@ class ApplicationController < ActionController::Base
     Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
   end
 
-  def terminal_requester
-    Requester::Terminal.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
-  end
-
   def patron_requester
     Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
   end
   
+  def station_requester
+    Requester::Station.new(STATION_URL)
+  end
+
   protected
 
   def check_session_expiration

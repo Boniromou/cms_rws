@@ -1,0 +1,13 @@
+<% if @operation == 'create_pin' %>
+  <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.create_pin")) %>
+<% else %>
+  <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.reset_pin")) %>
+<% end %>
+
+<% content = render partial: "players/pin_request_form" , :locals => {:pin_request_path => reset_pin_path }%>
+<% footer = render "players/confirm_pin_panel" %>
+<%= render partial:"shared/player_info" , :locals => {:show_info => false, :show_balance => true, :content => content, :footer => footer} %>
+<%= render partial: "shared/pop_up_panel" %>
+
+<%= javascript_include_tag "validate.input.js" %>
+<%= javascript_include_tag "block.enter.js" %>

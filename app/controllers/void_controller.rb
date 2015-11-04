@@ -2,7 +2,7 @@ class VoidController < FundController
   rescue_from FundInOut::AlreadyVoided, :with => :handle_already_voided
 
   def create
-    return unless permission_granted? PlayerTransaction.new, operation_sym
+    return unless permission_granted? :PlayerTransaction, operation_sym
 
     player_transaction_id = params[:transaction_id]
     raise FundInOut::VoidTransactionNotExist unless player_transaction_id

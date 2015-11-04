@@ -13,7 +13,7 @@ class ShiftsController < ApplicationController
   end
 
   def new
-    return unless permission_granted? Shift.new, :roll?
+    return unless permission_granted? :Shift, :roll?
 
     @current_shift = current_shift
 
@@ -25,7 +25,7 @@ class ShiftsController < ApplicationController
   end
 
   def create
-    return unless permission_granted? Shift.new, :roll?
+    return unless permission_granted? :Shift, :roll?
 
     begin
       current_shift_id = params[:shift][:current_shift_id].to_i

@@ -4,13 +4,13 @@ class PlayerTransactionsController < ApplicationController
   include PlayerTransactionsHelper
 
   def search
-    return unless permission_granted? PlayerTransaction.new
+    return unless permission_granted? :PlayerTransaction
     @card_id = params[:card_id]
     @default_date = params[:accounting_date] || current_accounting_date.accounting_date
   end
 
   def do_search
-    return unless permission_granted? PlayerTransaction.new, :search?
+    return unless permission_granted? :PlayerTransaction, :search?
         
     begin
     @start_time = parse_search_time(params[:start_time])
@@ -48,7 +48,7 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def print
-    return unless permission_granted? PlayerTransaction.new
+    return unless permission_granted? :PlayerTransaction
     AuditLog.print_log("print", current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
     end
     member_id = params[:member_id]
@@ -56,7 +56,7 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def reprint
-    return unless permission_granted? PlayerTransaction.new
+    return unless permission_granted? :PlayerTransaction
     transaction_id = params[:transaction_id]
     @transaction = PlayerTransaction.find(transaction_id)
     @player = Player.find(@transaction.player_id)

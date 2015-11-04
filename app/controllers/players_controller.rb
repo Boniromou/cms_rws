@@ -5,7 +5,7 @@ class PlayersController < ApplicationController
   rescue_from PlayerProfile::PlayerNotActivated, :with => :player_not_activated
 
   def new
-    return unless permission_granted? Player.new
+    return unless permission_granted? :Player
     @player = Player.new
     @player.card_id = params[:card_id]
     @player.member_id = params[:member_id]
@@ -14,7 +14,7 @@ class PlayersController < ApplicationController
   end
 
   def create
-    return unless permission_granted? Player.new
+    return unless permission_granted? :Player
     begin
       AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         player = Player.create_by_params(params[:player])
@@ -73,7 +73,7 @@ class PlayersController < ApplicationController
   def search
     @operation = params[:operation] if params[:operation]
     action = (@operation+ "?").to_sym unless @operation.nil?
-    return unless permission_granted? Player.new, action
+    return unless permission_granted? :Player, action
     @id_number = params[:id_number] if params[:id_number]
     @id_type = params[:id_type] if params[:id_type]
     @player = Player.new
@@ -99,7 +99,7 @@ class PlayersController < ApplicationController
   end
 
   def update
-    return unless permission_granted? Player.new
+    return unless permission_granted? :Player
     begin
       AuditLog.player_log("edit", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
         Player.update_by_params(params[:player])
@@ -113,7 +113,7 @@ class PlayersController < ApplicationController
   end
 
   def lock_account
-    return unless permission_granted? Player.new, :lock?
+    return unless permission_granted? :Player, :lock?
 
     member_id = params[:member_id]
     player = Player.find_by_member_id(member_id)
@@ -128,7 +128,7 @@ class PlayersController < ApplicationController
   end
 
   def unlock_account
-    return unless permission_granted? Player.new, :unlock?
+    return unless permission_granted? :Player, :unlock?
 
     member_id = params[:member_id]
     player = Player.find_by_member_id(member_id)
@@ -142,12 +142,28 @@ class PlayersController < ApplicationController
     redirect_to :action => 'profile', :member_id => member_id
   end
 
+  def create_pin
+    @operation = 'create_pin'
+    set_pin
+  end
+
   def reset_pin
+    @operation = 'reset_pin'
+    set_pin
+  end
+
+  def set_pin
     member_id = params[:member_id]
     @player = Player.find_by_member_id(member_id)
+    respond_to do |format|
+      format.html { render "players/set_pin", formats: [:html] }
+      format.js { render"players/set_pin", formats: [:js] }
+    end
   end
 
   def do_reset_pin
-    return unless permission_granted? Player.new, :unlock?
+    return unless permission_granted? :Player, :unlock?
+    flash[:success] = { key: "reset_pin.set_pin_success", replace: {name: params[:player][:member_id]}}
+    redirect_to :action => 'profile', :member_id => params[:player][:member_id]
   end
 end

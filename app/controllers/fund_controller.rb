@@ -19,7 +19,7 @@ class FundController < ApplicationController
   end
 
   def new
-    return unless permission_granted? PlayerTransaction.new, operation_sym
+    return unless permission_granted? :PlayerTransaction, operation_sym
 
     member_id = params[:member_id]
     @operation = operation_str
@@ -27,7 +27,7 @@ class FundController < ApplicationController
   end
 
   def create
-    return unless permission_granted? PlayerTransaction.new, operation_sym
+    return unless permission_granted? :PlayerTransaction, operation_sym
 
     @member_id = params[:player][:member_id]
     @player = Player.find_by_member_id(@member_id)

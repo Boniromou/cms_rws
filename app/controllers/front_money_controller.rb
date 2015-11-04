@@ -4,14 +4,14 @@ class FrontMoneyController < ApplicationController
   include FrontMoneyHelper
 
   def search
-    return unless permission_granted? Shift.new, :search_fm?
+    return unless permission_granted? :Shift, :search_fm?
     @shift_name_list = ["morning","swing","night"]
     @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
     @shift_name = params[:shift_name] || "morning"
   end
 
   def do_search
-    return unless permission_granted? Shift.new, :search_fm?
+    return unless permission_granted? :Shift, :search_fm?
     begin
     accounting_date = params[:accounting_date]
     @accounting_date = parse_date(accounting_date, current_accounting_date.accounting_date)

@@ -70,7 +70,7 @@ CmsRws::Application.routes.draw do
   post 'change_station_status' => 'stations#change_status'
   post 'register_terminal' => 'stations#register'
   post 'unregister_terminal' => 'stations#unregister'
-  get 'stations/current/:terminal_id' => 'stations#current'
+  get 'stations/current' => 'stations#current'
   
 
   get 'validate_token' => 'tokens#validate'
@@ -80,7 +80,7 @@ CmsRws::Application.routes.draw do
   get 'discard_token' => 'tokens#discard'
   get 'get_player_currency' => 'tokens#get_player_currency'
 
-  get 'validate_machine_token' => 'tokens#validate_machine'
+  get 'validate_machine_token' => 'machines#validate'
 
   get 'search_change_histories' => 'change_histories#search'
   post 'search_change_histories' => 'change_histories#do_search'

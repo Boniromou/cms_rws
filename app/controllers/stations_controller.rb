@@ -90,8 +90,9 @@ class StationsController < ApplicationController
   end
   
   def current
-    terminal_id = params[:terminal_id]
-    @current_station = Station.get_full_name_by_terminal_id(terminal_id)
+    # terminal_id = params[:terminal_id]
+    # @current_station = Station.get_full_name_by_terminal_id(terminal_id)
+    @current_station = get_location_info
     respond_to do |format|
       format.html { render "stations/current", :layout => false }
     end

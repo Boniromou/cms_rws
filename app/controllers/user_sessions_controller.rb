@@ -1,12 +1,16 @@
 class UserSessionsController < Devise::SessionsController
   layout "login"
 
-  def get_terminal_id
-    cookies[:terminal_id]
+  def get_machine_token
+    cookies[:machine_token]
   end
 
   def set_location_info
-    session[:location_info] = terminal_requester.retrieve_location_info(get_terminal_id) if get_terminal_id
+    if get_machine_token
+      session[:location_info] = station_requester.validate_machine_token(get_machine_token, PROPERTY_ID)[:location_name]
+    else
+      session[:location_info] = nil
+    end
   end  
 
   def new

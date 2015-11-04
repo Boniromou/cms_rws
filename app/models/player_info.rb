@@ -6,7 +6,7 @@ class PlayerInfo
     end
 
     def retrieve_info(card_id, terminal_id, pin, property_id)
-      @wallet_requester = Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
+      @wallet_requester = Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
       return {:status => 400, :error_code => 'InvalidTerminal', :error_msg => 'Terminal is invalid'} unless validate_terminal(terminal_id)
       player = Player.find_by_card_id_and_property_id(card_id, property_id)
       return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player

@@ -21,14 +21,15 @@ class Requester::Patron < Requester::Standard
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    return result_hash
+    player_info = result_hash[:player]
+    return player_info
   end
 
   def parse_get_player_infos_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    player_info_array = result_hash[:player_infos]
+    player_info_array = result_hash[:players]
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info_array.nil?
     return player_info_array
   end

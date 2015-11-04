@@ -27,10 +27,10 @@ class RequestHandler
   
   def process_retrieve_player_info_event
     card_id = @inbound[:card_id]
-    terminal_id = @inbound[:terminal_id]
+    machine_token = @inbound[:machine_token]
     pin = @inbound[:pin]
     property_id = @inbound[:property_id]
-    PlayerInfo.retrieve_info(card_id, terminal_id, pin, property_id)
+    PlayerInfo.retrieve_info(card_id, machine_token, pin, property_id)
   end
 
   def process_keep_alive_event
@@ -63,29 +63,10 @@ class RequestHandler
     login_name = @inbound[:login_name]
     PlayerInfo.get_currency(login_name, property_id)
   end
-  #mock
-  def process_validate_terminal_event
-    return {:machine_name => 'abc1234'} if @inbound[:terminal_id] != 'acbd123456'
-    {:error_code => 'InvalidTerminalID', :error_msg => 'Validate terminal id failed.'}
-  end
 
   def process_validate_machine_token_event
     property_id = @inbound[:property_id]
     machine_token = @inbound[:machine_token]
-    # @station_requester = Requester::Station.new(PROPERTY_ID, 'test_key', STATION_URL)
-    @station_requester = Requester::Station.new(STATION_URL)
-    response = @station_requester.validate_machine_token(machine_token, property_id)  
-    # return {:property_id => 20000,
-    #         :zone_id => 1,
-    #         :zone_name => '01',
-    #         :location_id => 4,
-    #         :location_name => '0102',
-    #         :machine_id => 2,
-    #         :machine_name => 'abc1234',
-    #         :uuid => '6e80a295eeff4554bf025098cca6eb37'} if @inbound[:terminal_id] != 'acbd123456'
-    
-
-    
-    # {:error_code => 'InvalidMachineToken', :error_msg => 'Validate terminal id failed.'}
+    Machine.validate(machine_token, property_id)
   end
 end

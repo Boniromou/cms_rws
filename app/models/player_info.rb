@@ -5,9 +5,9 @@ class PlayerInfo
       Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
     end
 
-    def retrieve_info(card_id, terminal_id, pin, property_id)
+    def retrieve_info(card_id, machine_token, pin, property_id)
       @wallet_requester = Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
-      return {:status => 400, :error_code => 'InvalidTerminal', :error_msg => 'Terminal is invalid'} unless validate_terminal(terminal_id)
+      return {:status => 400, :error_code => 'InvalidMachineToken', :error_msg => 'Machine token is invalid'} unless validate_machine_token(machine_token, property_id)
       player = Player.find_by_card_id_and_property_id(card_id, property_id)
       return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
       return {:status => 400, :error_code => 'PlayerLocked', :error_msg => 'Player is locked'} if player.account_locked?
@@ -21,8 +21,9 @@ class PlayerInfo
       {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
     end
 
-    def validate_terminal(terminal_id)
-      #TODO validate terminal
+    def validate_machine_token(machine_token, property_id)
+      # response = Machine.validate(machine_token, property_id)
+      # return false if response[:error_code] != 'OK' 
       true
     end
 

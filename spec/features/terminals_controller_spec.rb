@@ -13,8 +13,8 @@ describe TerminalsController do
 	      clean_dbs
 	    end
 
-	    it '[43.1] Launch Cage Terminal ID not exist OK', :js => true do
-	      mock_not_have_terminal_id
+	    it '[43.1] Launch Cage Terminal ID not exist', :js => true do
+	      mock_not_have_machine_token
 	      visit root_path
 	      within '#cage_info' do
 	        expect(page).to have_content @location
@@ -24,18 +24,20 @@ describe TerminalsController do
       	  end
 	    end
 
-	    it '[43.2] Launch Cage Get station info success OK', :js => true do
-	      mock_have_valid_terminal_id
+	    it '[43.2] Launch Cage Get station info success', :js => true do
+	      mock_have_machine_token
+	      mock_receive_location_name
 	      visit root_path
 	      within '#cage_info' do
-	        check_location_name 'LOCATION10-STATION10'
+	        check_location_name '0102'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
 	    end
 
-	    it '[43.3] Launch Cage Get station info fail OK', :js => true do
-	      mock_have_invalid_terminal_id
+	    it '[43.3] Launch Cage Get station info fail', :js => true do
+	      mock_have_machine_token
+	      mock_not_receive_location_name
 	      visit root_path
 	      within '#cage_info' do
 	        check_location_name 'No location'
@@ -44,8 +46,8 @@ describe TerminalsController do
       	  end
 	    end
 
-	    it '[43.4] Login Cage Terminal ID not exist OK', :js => true do
-	      mock_not_have_terminal_id
+	    it '[43.4] Login Cage Terminal ID not exist', :js => true do
+	      mock_not_have_machine_token
 	      login_as_admin
 	      visit home_path
 	       within 'header#header' do
@@ -57,10 +59,11 @@ describe TerminalsController do
 	    end
 
 	    it '[43.5] Login Cage Get station info success', :js => true do
-	      mock_have_valid_terminal_id
+	      mock_have_machine_token
+	      mock_receive_location_name
 	      login_as_admin_new
 	       within 'header#header' do
-	        check_location_name 'LOCATION10-STATION10'
+	        check_location_name '0102'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content @shift.capitalize
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}/
@@ -68,7 +71,8 @@ describe TerminalsController do
 	    end
 
 	    it '[43.6] Login Cage Get station info fail', :js => true do
-	      mock_have_invalid_terminal_id
+	      mock_have_machine_token
+	      mock_not_receive_location_name
 	      login_as_admin_new
 	       within 'header#header' do
 	        check_location_name 'No location'

@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   def patron_requester
-    Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
+    Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
   end
   
   def station_requester

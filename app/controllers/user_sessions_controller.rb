@@ -5,22 +5,21 @@ class UserSessionsController < Devise::SessionsController
     cookies[:machine_token]
   end
 
-  def set_location_info
+  def set_location_name
     if get_machine_token
-      session[:location_info] = station_requester.validate_machine_token(get_machine_token, PROPERTY_ID)[:location_name]
-    else
-      session[:location_info] = nil
+      session[:location_name] = station_requester.validate_machine_token(get_machine_token, PROPERTY_ID)[:location_name]
+      session[:machine_token] = get_machine_token if session[:machine_token]
     end
   end  
 
   def new
     @login_url = %(#{root_url}login)
-    set_location_info
+    set_location_name
   end
 
   def create
     super
-    set_location_info
+    set_location_name
   end
 
   def destroy

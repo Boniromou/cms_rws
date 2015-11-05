@@ -51,11 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_have_enable_station
-    # @station = Station.find_by_terminal_id(request.headers['TerminalID'])
-    # if @station
-    #   return current_user && @station.status == 'active' && request.headers['TerminalID'] != nil
-    # end
-    session[:location_info] != nil
+    session[:machine_token] == cookies[:machine_token] && cookies[:machine_token] != nil
   end
 
   def sid
@@ -106,8 +102,8 @@ class ApplicationController < ActionController::Base
     return
   end
 
-  def get_location_info
-    return session[:location_info] if session[:location_info]
+  def get_location_name
+    return session[:location_name] if session[:location_name]
     'No location'
   end
 end

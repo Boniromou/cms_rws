@@ -45,7 +45,7 @@ class PlayerInfo
         Rails.logger.error "update player info fail"
         return
       end
-      if player_info[:pin_status] == 'null'
+      if player_info[:pin_status] == 'blank'
         player = Player.create_inactivate(player_info)
         raise PlayerProfile::PlayerNotActivated.new(player)
       end

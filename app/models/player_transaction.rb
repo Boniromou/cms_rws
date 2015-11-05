@@ -84,6 +84,7 @@ class PlayerTransaction < ActiveRecord::Base
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
   scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
   scope :by_slip_number, -> slip_number { where("slip_number = ?", slip_number) if slip_number.present? }
+  scope :by_status, -> status { where( :status => status) if status.present? }
 
   class << self
   include FundHelper
@@ -135,7 +136,7 @@ class PlayerTransaction < ActiveRecord::Base
     end
 
     def only_deposit_withdraw
-      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit],TRANSACTION_TYPE_ID_LIST[:withdraw]])
+      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit],TRANSACTION_TYPE_ID_LIST[:withdraw]]).by_status(['completed','pending'])
     end
 
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)      

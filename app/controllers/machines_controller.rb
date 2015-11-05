@@ -1,4 +1,4 @@
-class TerminalsController < ApplicationController
+class MachinesController < ApplicationController
   skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id
   include Hood::RWSHandler
 

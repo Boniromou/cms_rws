@@ -3,7 +3,8 @@
     <header role="heading">
       <span class="widget-icon"> <i class="glyphicon glyphicon-user"></i> </span>
       <h2>
-        <strong><%= t("general.member_id")%>: <%= label_tag :player_member_id, @player.member_id , :id => "player_member_id" %></strong>
+        <!-- <strong><%= t("general.member_id")%>: <%= label_tag :player_member_id, @player.member_id , :id => "player_member_id" %></strong> -->
+        <strong><%= label_tag :player_full_name, @player.full_name.upcase , :id => "player_full_name" %></strong>
       </h2>       
       <!-- <div class="widget-toolbar" role="menu">
         
@@ -18,10 +19,10 @@
           <div><label class="col-xs-4 box"><strong><%= t("general.card_id")%> :</strong></label></div>
           <div><label class="col-xs-3 box"><%= label_tag :player_card_id, @player.card_id, :id => "player_card_id" %></label></div>
         </div>
-        <!-- <div class="row">
-          <div><label class="col-xs-3 box"><strong><%= t("general.member_id")%> :</strong></label></div>
+        <div class="row">
+          <div><label class="col-xs-4 box"><strong><%= t("general.member_id")%> :</strong></label></div>
           <div><label class="col-xs-3 box"><%= label_tag :player_member_id, @player.member_id, :id => "player_member_id" %></label></div>
-        </div> -->
+        </div>
         <div class="row">
           <div><label class="col-xs-4 box"><strong><%= t("general.status")%> :</strong></label></div>
           <% if !@player.account_locked? %>

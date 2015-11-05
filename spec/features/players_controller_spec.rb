@@ -412,22 +412,11 @@ describe PlayersController do
     end     
     
     it '[5.5] Return to Cage home', :js => true do
-      Station.delete_all
-      Location.delete_all
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+      mock_have_enable_station
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
-
-      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
-      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
-      visit list_stations_path("active")
-      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
-      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
-
-      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
-      @station2.reload
-      expect(@station2.terminal_id).to_not eq nil
 
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -444,8 +433,6 @@ describe PlayersController do
 
       click_link I18n.t("tree_panel.home")
       check_home_page
-      Station.delete_all
-      Location.delete_all
     end
 
     it '[5.6] unauthorized to all actions' do
@@ -478,22 +465,11 @@ describe PlayersController do
     end     
 
     it '[5.8] balance enquiry with locked player', :js => true do
-      Station.delete_all
-      Location.delete_all
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
-
+      mock_have_enable_station
+      
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "locked")
       login_as_admin
-
-      @location2 = Location.create!(:name => "LOCATION2", :status => "active")
-      @station2 = Station.create!(:name => "STATION2", :status => "active", :location_id => @location2.id)
-      visit list_stations_path("active")
-      content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station2.full_name)]
-      click_pop_up_confirm("register_terminal_" + @station2.id.to_s, content_list)
-
-      check_flash_message I18n.t("terminal_id.register_success", station_name: @station2.full_name)
-      @station2.reload
-      expect(@station2.terminal_id).to_not eq nil
 
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -509,8 +485,6 @@ describe PlayersController do
       expect(page).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
-      Station.delete_all
-      Location.delete_all
     end
   end
   

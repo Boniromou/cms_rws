@@ -44,11 +44,13 @@
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= to_display_amount_str(t.amount) %></td>
                 </tr>
-                <% 
-                  if t.transaction_type_id ==1
-                    total_deposit += t.amount
-                  else
-                    total_withdraw += t.amount
+                <%
+                  if t.status == 'completed'
+                    if t.transaction_type_id ==1
+                      total_deposit += t.amount
+                    else
+                      total_withdraw += t.amount
+                    end
                   end
                 %>
               <% end %>

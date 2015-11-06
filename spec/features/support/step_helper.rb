@@ -210,8 +210,6 @@ module StepHelper
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
-    ths = all("tr th")
-    ths[3].click
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
@@ -281,7 +279,7 @@ module StepHelper
       deposit_str = ""
       withdraw_str = to_display_amount_str(player_transaction.amount)
     end
-    expect(item[0].text).to eq player_transaction.id.to_s
+    expect(item[0].text).to eq player_transaction.slip_number.to_s
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")

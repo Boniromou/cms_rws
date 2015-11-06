@@ -84,6 +84,7 @@ class PlayerTransaction < ActiveRecord::Base
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
   scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
   scope :by_slip_number, -> slip_number { where("slip_number = ?", slip_number) if slip_number.present? }
+  scope :by_status, -> status { where( :status => status) if status.present? }
 
   class << self
   include FundHelper
@@ -135,7 +136,7 @@ class PlayerTransaction < ActiveRecord::Base
     end
 
     def only_deposit_withdraw
-      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit],TRANSACTION_TYPE_ID_LIST[:withdraw]])
+      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit],TRANSACTION_TYPE_ID_LIST[:withdraw]]).by_status(['completed','pending'])
     end
 
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)      
@@ -170,17 +171,8 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
-    def search_transactions_group_by_station(start_shift_id, user_id, end_shift_id = nil)
-      player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
-      result = []
-      player_transactions = PlayerTransaction.by_shift_id(start_shift_id).only_deposit_withdraw
-      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw if end_shift_id
-      player_transaction_stations.each do |station|
-        station_id = station.station_id
-        player_transactions_by_station = player_transactions.by_station_id(station_id).by_user_id(user_id).order(:created_at)
-        result << player_transactions_by_station if player_transactions_by_station.length > 0
-      end
-      result
+    def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
+      by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
     end
   end
 end

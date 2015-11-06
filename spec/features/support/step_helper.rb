@@ -210,8 +210,6 @@ module StepHelper
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
-    ths = all("tr th")
-    ths[3].click
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|

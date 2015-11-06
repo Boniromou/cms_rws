@@ -171,17 +171,8 @@ class PlayerTransaction < ActiveRecord::Base
       end
     end
 
-    def search_transactions_group_by_station(start_shift_id, user_id, end_shift_id = nil)
-      player_transaction_stations = PlayerTransaction.select(:station_id).group(:station_id)
-      result = []
-      player_transactions = PlayerTransaction.by_shift_id(start_shift_id).only_deposit_withdraw
-      player_transactions = PlayerTransaction.from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw if end_shift_id
-      player_transaction_stations.each do |station|
-        station_id = station.station_id
-        player_transactions_by_station = player_transactions.by_station_id(station_id).by_user_id(user_id).order(:created_at)
-        result << player_transactions_by_station if player_transactions_by_station.length > 0
-      end
-      result
+    def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
+      by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
     end
   end
 end

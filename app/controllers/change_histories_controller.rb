@@ -15,7 +15,7 @@ class ChangeHistoriesController < ApplicationController
     begin
     accounting_date = params[:accounting_date]
     @accounting_date = parse_date(accounting_date, current_accounting_date.accounting_date)
-    accounting_date_id = AccountingDate.get_id_by_date(@accounting_date)
+    accounting_date_id = AccountingDate.get_by_date(@accounting_date).id
     start_time = Shift.where(:accounting_date_id => accounting_date_id).order(:created_at).first.created_at
     end_time = Shift.where(:accounting_date_id => accounting_date_id).order(:created_at).last.roll_shift_at
     start_time = Time.now.utc unless start_time

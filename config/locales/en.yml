@@ -57,6 +57,7 @@ en:
     inactive: "Inactive"
     location: "Location"
     station: "Station"
+    zone_and_location: "Zone/Location"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -274,3 +275,5 @@ en:
     confirm_pin: "Confirm PIN"
     pin_not_match: "These PINs don't match"
     confirm_set_pin: "Confirm to set pin for player %{member_id}?"
+    set_pin_success: "Set PIN for player [%{name}] successful"
+    length_error: "PIN must be 4 number"

@@ -5,21 +5,26 @@ class UserSessionsController < Devise::SessionsController
     cookies[:machine_token]
   end
 
-  def set_location_name
+  def set_location_info
     if get_machine_token
-      session[:location_name] = station_requester.validate_machine_token(get_machine_token, PROPERTY_ID)[:location_name]
-      session[:machine_token] = get_machine_token if session[:machine_token]
+      response = station_requester.validate_machine_token(get_machine_token, PROPERTY_ID)
+      if response.class != Hash
+        Rails.logger.error "retrieve location name fail"
+      return
+      end
+      session[:location_info] = response[:zone_name] + response[:location_name] if response[:error_code] == 'OK'
+      session[:machine_token] = get_machine_token if session[:location_info]
     end
   end  
 
   def new
     @login_url = %(#{root_url}login)
-    set_location_name
+    set_location_info
   end
 
   def create
     super
-    set_location_name
+    set_location_info
   end
 
   def destroy

@@ -5,8 +5,8 @@
   </header>
   <div>
     <div class="widget-body no-padding">
-      <% if @change_histories.length > 0 %>
-        <div id="change_history_result">
+      <% if @lock_histories.length > 0 %>
+        <div id="lock_history_result">
           <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
                 <th><%= t("change_history.user_name")%></th>
@@ -15,19 +15,19 @@
                 <th><%= t("change_history.player")%></th>
 
             </thead>
-            <% @change_histories.each do |ch| %>
-                <tr id="history_<%= ch.id %>">
-                  <td><%= ch.action_by %></td>
-                  <td><%= format_time(ch.action_at) %></td>
-                  <td><%= ch.action %></td>
-                  <td><%= ch.change_detail %></td>
+            <% @lock_histories.each do |lh| %>
+                <tr id="history_<%= lh.id %>">
+                  <td><%= lh.action_by %></td>
+                  <td><%= format_time(lh.action_at) %></td>
+                  <td><%= lh.action %></td>
+                  <td><%= lh.change_detail %></td>
                 </tr>
             <% end %>
           </table>
         </div>
         <% if policy(:Shift).print_fm? %>
           <div>
-            <button id="print_ch" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+            <button id="print_lh" class="btn btn-primary pull-right"><%= t("button.print") %></button>
           </div>
         <% end %>
       <% else %>
@@ -48,13 +48,13 @@
     $('thead th', raw).css("border","1px double");
     $('table', raw).attr('height', 10);
   }
-  var raw_result = $('div#change_history_result').clone();
+  var raw_result = $('div#lock_history_result').clone();
   trimToPrintContent(raw_result);
   var content = raw_result.html();
   $(document).ready(function() {
     $('button#print_ch').click(function() {
 
-      printHtml(content, false, 'Change History Report');
+      printHtml(content, false, 'Lock History Report');
 
       return false;
     });

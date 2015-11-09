@@ -2,7 +2,7 @@ class PlayerInfo
   
   class << self
     def patron_requester
-      Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
+      Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
     end
 
     def retrieve_info(card_id, machine_token, pin, property_id)

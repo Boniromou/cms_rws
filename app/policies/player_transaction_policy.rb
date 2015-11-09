@@ -8,19 +8,19 @@ class PlayerTransactionPolicy < ApplicationPolicy
   end
 
   def print?
-    is_admin? || has_permission?('player_transaction', 'print')
+    is_admin? || has_permission?('player_transaction', 'print_slip')
   end
 
   def search?
-    is_admin? || has_permission?('player_transaction', 'search')
+    is_admin? || has_permission?('player_transaction', 'transaction_history')
   end
   
   def reprint?
-    is_admin? || has_permission?('player_transaction', 'reprint')
+    is_admin? || has_permission?('player_transaction', 'reprint_slip')
   end
 
   def print_report?
-    is_admin? || has_permission?('player_transaction', 'print_report')
+    is_admin? || has_permission?('player_transaction', 'print_transaction_report')
   end
 
   def void?
@@ -36,10 +36,10 @@ class PlayerTransactionPolicy < ApplicationPolicy
   end
 
   def print_void?
-    is_admin? || has_permission?('player_transaction', 'print_void')
+    is_admin? || has_permission?('player_transaction', 'print_void_slip')
   end
 
   def reprint_void?
-    is_admin? || has_permission?('player_transaction', 'reprint_void')
+    is_admin? || has_permission?('player_transaction', 'reprint_void_slip')
   end
 end

@@ -37,7 +37,24 @@ module StepHelper
   end
 
   def set_permission(user,role,target,permissions)
+    permission_mapping = {#player
+                          :balance => 'balance_enquiry',
+                          :profile => 'player_profile',
+                          #player_transaction
+                          :search => 'transacction_history', 
+                          :reprint => 'reprint_slip', 
+                          :print => 'print_slip',
+                          :print_void => 'print_void_slip',
+                          :reprint_void => 'reprint_void_slip',
+                          :print_report => 'print_transaction_report',
+                          #shift
+                          :search_fm => 'fm_activity_report',
+                          :print_fm => 'print_fm_activity_report'
+                          }
     cache_key = "#{APP_NAME}:permissions:#{user.uid}"
+    permissions.each_index do |i|
+      permissions[i] = permission_mapping[permissions[i].to_sym] || permissions[i]
+    end
     origin_permissions = Rails.cache.fetch cache_key
     if origin_permissions.nil?
       origin_perm_hash = {}

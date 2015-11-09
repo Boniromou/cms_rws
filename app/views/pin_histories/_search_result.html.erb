@@ -1,0 +1,63 @@
+<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
+  <header>
+    <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+      <h2>Search Result </h2>
+  </header>
+  <div>
+    <div class="widget-body no-padding">
+      <% if @pin_histories.length > 0 %>
+        <div id="change_history_result">
+          <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+            <thead>
+                <th><%= t("change_history.user_name")%></th>
+                <th><%= t("change_history.action_at")%></th>
+                <th><%= t("change_history.action")%></th>
+                <th><%= t("change_history.player")%></th>
+
+            </thead>
+            <% @pin_histories.each do |ph| %>
+                <tr id="history_<%= ch.id %>">
+                  <td><%= ph.action_by %></td>
+                  <td><%= format_time(ph.action_at) %></td>
+                  <td><%= ph.action %></td>
+                  <td><%= ph.change_detail %></td>
+                </tr>
+            <% end %>
+          </table>
+        </div>
+        <% if policy(:Shift).print_fm? %>
+          <div>
+            <button id="print_ph" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+          </div>
+        <% end %>
+      <% else %>
+        <br/>
+        <br/>
+        <label style="margin-left: 10px"> <%= t("report_search.no_history_found")%> </label>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag "print.js" %>
+
+<script>
+  function trimToPrintContent(raw) {
+    $('table', raw).css("border","1px double");
+    $('tbody tr td', raw).css("border","1px double");
+    $('thead th', raw).css("border","1px double");
+    $('table', raw).attr('height', 10);
+  }
+  var raw_result = $('div#pin_history_result').clone();
+  trimToPrintContent(raw_result);
+  var content = raw_result.html();
+  $(document).ready(function() {
+    $('button#print_ph').click(function() {
+
+      printHtml(content, false, 'PIN History Report');
+
+      return false;
+    });
+  });
+</script>
+<%= javascript_include_tag "pagination.js" %>

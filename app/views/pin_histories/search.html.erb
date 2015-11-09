@@ -1,0 +1,11 @@
+<%= bread_crumb("glyphicon glyphicon-retweet",t("tree_panel.change_log"),t("tree_panel.pin_history")) %>
+
+<%= javascript_include_tag "print.js" %>
+
+<div id="myTabContent1" class="tab-content">
+	<div class="tab-pane fade in active" id="pin_history_content">
+    	<%= render "pin_histories/search_form" %>
+    	<div id="pin_history_result">
+    </div>
+  </div>
+</div>

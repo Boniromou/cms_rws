@@ -95,38 +95,19 @@
                 <% end %>
               </li>
             <% end %>
-          </ul>
-        </li>
-      <% end %>
-      <% if policy(:Location).list? || policy(:Station).list? %> 
-        <li>
-          <a href="#" class="unlink"><i class="glyphicon glyphicon-map-marker"></i> <span class="menu-item-parent"><%= t("tree_panel.station_management")%></span></a>
-          <ul style="display:block;">
-            <% if policy(:Location).list? %>
-              <li id="nav_location">
-                <%= link_to list_locations_path("active"), :title => t("tree_panel.location"), :remote => true do %>
-                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.location") %></span>
-                <% end %>
-              </li>
-            <% end %>
-            <% if policy(:Station).list? %>
-              <li id="nav_stations">
-                <%= link_to list_stations_path("active"), :title => t("tree_panel.station"), :remote => true do %>
-                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.station") %></span>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-        </li>
-      <% end %>
-      <% if policy(:AuditLog).search? %>
-        <li>
-          <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.change_log")%></span></a>
-          <ul style="display:block;">
+            <!-- TODO permission -->
             <% if policy(:AuditLog).search? %>
               <li id="nav_audit_log">
-                <%= link_to search_change_histories_path, :title => t("tree_panel.change_history"), :remote => true do %>
-                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.change_history") %></span>
+                <%= link_to search_lock_histories_path, :title => t("tree_panel.lock_history"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.lock_history") %></span>
+                <% end %>
+              </li>
+            <% end %>
+            <!-- TODO permission -->
+            <% if policy(:AuditLog).search? %>
+              <li id="nav_audit_log">
+                <%= link_to search_pin_histories_path, :title => t("tree_panel.pin_history"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.pin_history") %></span>
                 <% end %>
               </li>
             <% end %>

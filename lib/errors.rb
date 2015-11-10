@@ -48,16 +48,7 @@ module SearchPlayerTransaction
   class SearchPlayerTransactionError < CageError
   end
 
-  class OverRangeError < SearchPlayerTransactionError
-  end
-
-  class DateTimeError < SearchPlayerTransactionError
-  end
-
   class NoIdNumberError < SearchPlayerTransactionError
-  end
-
-  class NoResultException < SearchPlayerTransactionError
   end
 end
 
@@ -163,10 +154,27 @@ module Remote
   class PlayerNotFound < RaiseError
   end
 
-  class PinError < ReturnError
+  class PinError < RaiseError
   end
 
-  class MachineTokenError < ReturnError
+  class InvalidTimeRange < RaiseError
+  end
+
+  class NoPinAuditLog < RaiseError
+  end
+end
+
+module Search
+  class SearchError < CageError
+  end
+
+  class OverRangeError < SearchError
+  end
+
+  class DateTimeError < SearchError
+  end
+
+  class NoResultException < SearchError
   end
 end
 
@@ -200,6 +208,36 @@ module Request
   class InvalidLoginName < RequestError
     def initialize(data=nil)
       super(400, 'Login name is invalid.', data)
+    end
+  end
+
+  class InvalidPin < RequestError
+    def initialize(data=nil)
+      super(400, 'Pin is wrong with card id', data)
+    end
+  end
+
+  class InvalidMachineToken < RequestError
+    def initialize(data=nil)
+      super(400, 'Machine token is invalid', data)
+    end
+  end
+
+  class InvalidCardId < RequestError
+    def initialize(data=nil)
+      super(400, 'Card id is not exist', data)
+    end
+  end
+
+  class PlayerLocked < RequestError
+    def initialize(data=nil)
+      super(400, 'Player is locked', data)
+    end
+  end
+
+  class RetrieveBalanceFail < RequestError
+    def initialize(data=nil)
+      super(500, 'Retrieve balance from wallet fail', data)
     end
   end
 end

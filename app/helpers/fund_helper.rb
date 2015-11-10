@@ -22,7 +22,7 @@ module FundHelper
 
   def to_formatted_display_amount_str( amount )
     return I18n.t("balance_enquiry.#{amount}") if amount.class == String
-    "%0.2f" % amount
+    number_to_currency(amount).sub("$","")
   end
 
   def make_trans_id(id)

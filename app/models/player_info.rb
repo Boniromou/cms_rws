@@ -2,7 +2,7 @@ class PlayerInfo
   
   class << self
     def patron_requester
-      Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL + PATRON_PATH)
+      Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
     end
 
     def retrieve_info(card_id, machine_token, pin, property_id)
@@ -18,7 +18,6 @@ class PlayerInfo
         balance = @wallet_requester.get_player_balance(player.member_id)
         raise Request::RetrieveBalanceFail.new unless balance.class == Float
         session_token = Token.generate(player.id).session_token
-
         {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
       rescue Remote::PinError
         raise Request::InvalidPin.new

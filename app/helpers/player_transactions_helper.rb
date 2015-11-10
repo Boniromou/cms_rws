@@ -14,16 +14,16 @@ module PlayerTransactionsHelper
 
   def get_start_and_end_shifts(start_time, end_time, id_number)
   	raise SearchPlayerTransaction::NoIdNumberError, "no_id" if id_number.blank?
-    raise SearchPlayerTransaction::DateTimeError, "range_error" if to_number(@end_time) < to_number(@start_time)
+    raise Search::DateTimeError, "range_error" if to_number(@end_time) < to_number(@start_time)
 
     date_gap = (to_number(@end_time) - to_number(@start_time)) / 86400
     
-    raise SearchPlayerTransaction::OverRangeError, "limit_remark" if date_gap > TRANS_HISTORY_SEARCH_RANGE
+    raise Search::OverRangeError, "limit_remark" if date_gap > TRANS_HISTORY_SEARCH_RANGE
     start_ac_date = AccountingDate.find_by_accounting_date(to_string(@start_time))
     end_ac_date = AccountingDate.find_by_accounting_date(to_string(@end_time))
     end_ac_date = AccountingDate.order(:created_at).last if end_ac_date.nil?
 
-    raise SearchPlayerTransaction::NoResultException, "accounting date not found" if start_ac_date.nil? || end_ac_date.nil? 
+    raise Search::NoResultException, "accounting date not found" if start_ac_date.nil? || end_ac_date.nil? 
   
     start_shift = Shift.where(:accounting_date_id => start_ac_date.id).order(:created_at).first
     end_shift = Shift.where(:accounting_date_id => end_ac_date.id).order(:created_at).last

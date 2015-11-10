@@ -25,7 +25,10 @@ module FundInOut
   class VoidTransactionNotExist < FundError
   end
 
-  class AlreadyVoided <FundError
+  class AlreadyVoided < FundError
+  end
+
+  class CallPatronFail < FundError
   end
 end
 

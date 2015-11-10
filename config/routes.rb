@@ -82,8 +82,11 @@ CmsRws::Application.routes.draw do
 
   get 'validate_machine_token' => 'machines#validate'
 
-  get 'search_change_histories' => 'change_histories#search'
-  post 'search_change_histories' => 'change_histories#do_search'
+  get 'search_lock_histories' => 'lock_histories#search'
+  post 'search_lock_histories' => 'lock_histories#do_search'
+
+  get 'search_pin_histories' => 'pin_histories#search'
+  post 'search_pin_histories' => 'pin_histories#do_search'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

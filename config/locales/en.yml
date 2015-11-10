@@ -34,8 +34,9 @@ en:
     location: "Locations"
     station: "Stations"
     change_log: "Change Log"
-    change_history: "Change History"
+    lock_history: "Lock History"
     reset_pin: "Reset PIN"
+    pin_history: "PIN History"
   general:
     login: "Log In"
     logout: "Log Out"

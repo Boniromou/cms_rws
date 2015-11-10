@@ -30,16 +30,18 @@ describe TokensController do
     end
 
     it '[29.1] Card ID is not exist' do
-      post 'retrieve_player_info', {:card_id => "1234567891", :terminal_id => "1234567891", :pin => "1234"}
+      allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'OK'})
+      post 'retrieve_player_info', {:card_id => "1234567891", :machine_token => "1234567891", :pin => "1234"}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidCardId'
     end
 
     it '[29.2] Card ID is exist and generate token' do
       mock_token = "afe1f247-5eaa-4c2c-91c7-33a5fb637713"
+      allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'OK'})
       allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(100.00)
       allow(SecureRandom).to receive(:uuid).and_return(mock_token)
-      post 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234", :property_id => 20000}
+      post 'retrieve_player_info', {:card_id => "1234567890", :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -51,7 +53,8 @@ describe TokensController do
 
     it '[29.3] Player is locked' do
       @player.lock_account!
-      get 'retrieve_player_info', {:card_id => "1234567890", :terminal_id => "1234567891", :pin => "1234", :property_id => 20000}
+      allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'OK'})
+      get 'retrieve_player_info', {:card_id => "1234567890", :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'PlayerLocked'
     end

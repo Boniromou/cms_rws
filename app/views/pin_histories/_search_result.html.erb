@@ -17,7 +17,7 @@
 
             </thead>
             <% @pin_histories.each do |ph| %>
-                <tr id="history_<%= ch.id %>">
+                <tr id="history_<%= ph.id %>">
                   <td><%= ph.action_by %></td>
                   <td><%= format_time(ph.action_at) %></td>
                   <td><%= ph.action %></td>

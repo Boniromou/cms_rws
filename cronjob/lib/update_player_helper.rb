@@ -1,9 +1,15 @@
 module Cronjob
   class UpdatePlayerHelper
-    PATRON_URL = 'aaa'
-    PATRON_PATH = 'bbb'
-    def patron_requester(property_id, secret_key)
-      Requester::Patron.new(property_id, secret_key, PATRON_URL + PATRON_PATH)
+    PATH = {:integration0 => 'http://mo-int-pis-vapp01.rnd.laxino.com:80',
+            :staging0 => 'http://mo-stg-pis-vapp01.rnd.laxino.com:80',
+            :mockup0 => 'http://mo-mock-pis-vapp01.rnd.laxino.com:80'
+            }
+    def initialize(env)
+      @env = end
+    end
+    def patron_requester(property_id, secret_key, env)
+      patron_url = PATH[@env.to_sym]
+      Requester::Patron.new(property_id, secret_key, patron_url)
     end
 
     def run

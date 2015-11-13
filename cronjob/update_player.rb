@@ -19,6 +19,6 @@ ActiveRecord::Base.establish_connection(:adapter => "mysql2",
 
 puts "*************** #{Time.now.utc} ****************"
 puts "Start update players"
-Cronjob::UpdatePlayerHelper.new.run
+Cronjob::UpdatePlayerHelper.new(env).run
 puts "Finish update plsyers"
 puts "*************** #{Time.now.utc} ****************"

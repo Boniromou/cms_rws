@@ -30,7 +30,7 @@ class Requester::Patron < Requester::Standard
 
   def get_pin_audit_logs(start_time, end_time)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/#{__callee__}", :body => {:start_time => start_time, :end_time => end_time})
+      response = remote_rws_call('get', "#{@path}/#{__callee__}", :body => {:start_time => start_time, :end_time => end_time})
       self.send "parse_#{__callee__}_response", response
     end
   end

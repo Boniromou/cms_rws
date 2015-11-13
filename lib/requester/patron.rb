@@ -58,10 +58,11 @@ class Requester::Patron < Requester::Standard
   def parse_validate_pin_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-    raise Remote::PinError, "error_code #{error_code}: #{message}" if ['InvalidPin'].include?(error_code)
+    error_msg = result_hash[:error_msg].to_s
+    raise Remote::PinError, "error_code #{error_code}: #{error_msg}" if ['InvalidPin'].include?(error_code)
     player_info = result_hash[:player]
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
-    raise Remote::PinError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
+    raise Remote::PlayerNotFound, "error_code #{error_code}: #{error_msg}" if player_info.nil?
+    raise Remote::PinError, "error_code #{error_code}: #{error_msg}" unless ['OK'].include?(error_code)
     return player_info
   end
 

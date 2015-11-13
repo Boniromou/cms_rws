@@ -1,7 +1,6 @@
 class PlayersController < ApplicationController
   layout 'cage'
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
-  rescue_from Remote::PlayerNotFound, :with => :handle_player_not_found
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
 
   def new
@@ -87,7 +86,11 @@ class PlayersController < ApplicationController
     @id_type = params[:id_type]
     @operation = params[:operation] if params[:operation]
     
-    PlayerInfo.update!(@id_type,@id_number)
+    begin
+      PlayerInfo.update!(@id_type,@id_number)
+    rescue Remote::PlayerNotFound => e
+      Rails.logger.error 'PlayerNotFound in PIS'
+    end
 
     @player = Player.find_by_type_id(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player

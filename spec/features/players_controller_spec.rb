@@ -970,8 +970,11 @@ describe PlayersController do
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      expect(page.source).to have_content(I18n.t("search_error.not_found"))
-      click_link I18n.t("button.create")
+      check_profile_page
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq @player.card_id
+      expect(p.status).to eq @player.status
     end
 
     it '[53.7] Show PIS player info when search balance enquiry with Card ID changed' do

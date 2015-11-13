@@ -59,8 +59,8 @@ class Requester::Patron < Requester::Standard
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     raise Remote::PinError, "error_code #{error_code}: #{message}" if ['InvalidPin'].include?(error_code)
-    player_info = result_hash[:players]
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info_array.nil?
+    player_info = result_hash[:player]
+    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
     raise Remote::PinError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
     return player_info
   end
@@ -69,8 +69,8 @@ class Requester::Patron < Requester::Standard
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    player_info = result_hash[:players]
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info_array.nil?
+    player_info = result_hash[:player]
+    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
     return player_info
   end
 

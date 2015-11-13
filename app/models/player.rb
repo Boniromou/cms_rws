@@ -160,8 +160,8 @@ class Player < ActiveRecord::Base
     def update_info(player_info)
       return false if player_info.nil? || player_info[:member_id].nil? || player_info[:card_id].nil? || player_info[:pin_status].nil?
       player = Player.find_by_member_id(player_info[:member_id])
-      is_discard_tokens = player_info[:pin_status] == 'reset'
       player = Player.create_by_pis(player_info) if player == nil && player_info[:pin_status] != 'blank'
+      is_discard_tokens = player_info[:pin_status] == 'reset'
       if player_info[:card_id] != player.card_id
         player.card_id = player_info[:card_id]
         player.save

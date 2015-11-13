@@ -59,18 +59,20 @@ describe PlayersController do
     #   check_player_transaction_result_items([@player_transaction1, @player_transaction3])
     # end
 
-    # it '[8.2] successfully generate report. (search by time)', js: true do
-    #   login_as_admin
-    #   create_player_transaction
-    #   visit search_transactions_path
-    #   check_player_transaction_page_js
+    it '[8.2] successfully generate report. (search by accounting date)', js: true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
 
-    #   fill_in "datetimepicker_start_time", :with => (Time.now + 20 * 60)
-    #   find("input#search").click
-    #   wait_for_ajax
+      fill_search_info_js("member_id", @player2.member_id)
+      fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
+      fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
+      find("input#search").click
+      wait_for_ajax
 
-    #   check_player_transaction_result_items([@player_transaction2, @player_transaction3])
-    # end
+      check_player_transaction_result_items([@player_transaction2])
+    end
 
     it '[8.3] successfully generate report. (search by slip ID)', js: true do
       login_as_admin
@@ -137,6 +139,7 @@ describe PlayersController do
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
       visit search_transactions_path
+      save_and_open_page
       check_player_transaction_page_js
       fill_search_info_js("member_id", @player.member_id)
       find("input#search").click
@@ -145,18 +148,15 @@ describe PlayersController do
       check_player_transaction_result_items([@player_transaction1, @player_transaction3], false,false,false)
     end
     
-    # it '[8.10] empty search', :js => true do
-    #   login_as_admin
-    #   create_player_transaction
-    #   visit search_transactions_path
-    #   check_player_transaction_page_js
-    #   fill_in "datetimepicker_start_time", :with => "abc"
-    #   find("input#search").click
-    #   wait_for_ajax
-    #   check_flash_message I18n.t("report_search.datetime_format_not_valid")
-    #   expect(page).to_not have_selector("div#wid-id-2")
-    #   # expect(find("input#datetimepicker_start_time").value).to eq Time.parse(Time.now.strftime("%d")).getlocal.strftime("%Y-%m-%d %H:%M:%S")
-    # end
+    it '[8.10] empty search', :js => true do
+      login_as_admin
+      create_player_transaction
+      visit search_transactions_path
+      check_player_transaction_page_js
+      find("input#search").click
+      wait_for_ajax
+      check_flash_message I18n.t("transaction_history.no_id")
+    end
 
     it '[8.11] search data out of range', js: true do
       login_as_admin
@@ -262,6 +262,7 @@ describe PlayersController do
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
       allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
       allow_any_instance_of(Requester::Wallet).to receive(:void_withdraw).and_return('OK')
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
     end
     
     after(:each) do
@@ -273,13 +274,13 @@ describe PlayersController do
       allow(Station).to receive(:find_by_terminal_id).and_return(@station)
       @player_transaction1 = do_deposit(1000)
       @player_transaction2 = do_deposit(1000)
-      @void_transaction1 = do_void(@player_transaction1.id)
-      @void_transaction2 = do_void(@player_transaction2.id)
+      @void_transaction1 = do_void(@player_transaction1.slip_number)
+      @void_transaction2 = do_void(@player_transaction2.slip_number)
       @player_transaction3 = do_deposit(5000)
-      @void_transaction3 = do_void(@player_transaction3.id)
+      @void_transaction3 = do_void(@player_transaction3.slip_number)
       @player_transaction4 = do_deposit(5000)
       @player_transaction5 = do_withdraw(5000)
-      @void_transaction4 = do_void(@player_transaction5.id)
+      @void_transaction4 = do_void(@player_transaction5.slip_number)
       @player_transaction6 = do_withdraw(5000)
     end
     
@@ -358,7 +359,7 @@ describe PlayersController do
       wait_for_ajax
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
-      expect(p.card_id).to eq '1234567893'
+      expect(p.card_id).to eq '1234567890'
       expect(p.status).to eq @player.status
     end
 

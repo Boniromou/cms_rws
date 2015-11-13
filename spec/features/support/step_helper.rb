@@ -41,7 +41,7 @@ module StepHelper
                           :balance => 'balance_enquiry',
                           :profile => 'player_profile',
                           #player_transaction
-                          :search => 'transacction_history', 
+                          :search => 'transaction_history', 
                           :reprint => 'reprint_slip', 
                           :print => 'print_slip',
                           :print_void => 'print_void_slip',
@@ -398,7 +398,7 @@ module StepHelper
     go_to_deposit_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
-    find("button#confirm_fund").click
+    find("button#confirm_fund_in").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
     
     expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
@@ -413,7 +413,7 @@ module StepHelper
     go_to_withdraw_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
-    find("button#confirm_fund").click
+    find("button#confirm_fund_out").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
 
     find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
@@ -425,17 +425,16 @@ module StepHelper
     PlayerTransaction.last
   end
 
-  def do_void(transaction_id)
-    player_transaction = PlayerTransaction.find(transaction_id)
+  def do_void(slip_number)
+    player_transaction = PlayerTransaction.find_by_slip_number(slip_number)
     click_link I18n.t("tree_panel.player_transaction")
     check_player_transaction_page_js
 
-    fill_in "transaction_id", :with => transaction_id
+    fill_in "slip_number", :with => slip_number
     find("input#selected_tab_index").set "1"
 
     find("input#search").click
     wait_for_ajax
-    check_player_transaction_result_items([player_transaction])
     
     content_list = [I18n.t("confirm_box.void_transaction", slip_number: player_transaction.slip_number.to_s)]
     click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)

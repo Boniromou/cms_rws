@@ -23,6 +23,7 @@ describe FundController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used' })
     end
     
     after(:each) do
@@ -32,7 +33,7 @@ describe FundController do
     def create_player_transaction
       @location6 = Location.create!(:name => "LOCATION6", :status => "active")
       @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :station_id => @station6.id, :created_at => Time.now, :slip_number => 1)
     end
 
     it '[48.1] Pending Deposit Transaction', :js => true do
@@ -41,7 +42,8 @@ describe FundController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
+      save_and_open_page
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 
@@ -70,7 +72,7 @@ describe FundController do
       visit search_transactions_path 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
@@ -84,7 +86,7 @@ describe FundController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
@@ -101,7 +103,7 @@ describe FundController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 

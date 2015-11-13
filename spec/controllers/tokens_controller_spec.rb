@@ -5,6 +5,7 @@ describe TokensController do
   def clean_dbs
     Token.delete_all
     PlayersLockType.delete_all
+    PlayerTransaction.delete_all
     Player.delete_all    
   end
 

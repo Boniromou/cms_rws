@@ -1,7 +1,7 @@
 require "feature_spec_helper"
 require "rails_helper"
 
-describe TerminalsController do
+describe MachinesController do
 	describe '[43] Call Get Station Info API' do
 	    before(:each) do
 	      clean_dbs
@@ -13,12 +13,12 @@ describe TerminalsController do
 	      clean_dbs
 	    end
 
-	    it '[43.1] Launch Cage Terminal ID not exist', :js => true do
+	    it '[43.1] Launch Cage machine token not exist', :js => true do
 	      mock_not_have_machine_token
 	      visit root_path
 	      within '#cage_info' do
 	        expect(page).to have_content @location
-	        @location.should == 'No location'
+	        @location.should == 'N/A'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
@@ -29,7 +29,7 @@ describe TerminalsController do
 	      mock_receive_location_name
 	      visit root_path
 	      within '#cage_info' do
-	        check_location_name '0102'
+	        check_location_name 'Zone/Location: 01/0102'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
@@ -40,7 +40,7 @@ describe TerminalsController do
 	      mock_not_receive_location_name
 	      visit root_path
 	      within '#cage_info' do
-	        check_location_name 'No location'
+	        check_location_name 'Zone/Location: N/A'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
@@ -51,7 +51,7 @@ describe TerminalsController do
 	      login_as_admin
 	      visit home_path
 	       within 'header#header' do
-	        check_location_name 'No location'
+	        check_location_name 'Zone/Location: N/A'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content @shift.capitalize
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}/
@@ -63,7 +63,7 @@ describe TerminalsController do
 	      mock_receive_location_name
 	      login_as_admin_new
 	       within 'header#header' do
-	        check_location_name '0102'
+	        check_location_name 'Zone/Location: 01/0102'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content @shift.capitalize
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}/
@@ -75,7 +75,7 @@ describe TerminalsController do
 	      mock_not_receive_location_name
 	      login_as_admin_new
 	       within 'header#header' do
-	        check_location_name 'No location'
+	        check_location_name 'Zone/Location: N/A'
 	        expect(page).to have_content @accounting_date
 	        expect(page).to have_content @shift.capitalize
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}/

@@ -36,7 +36,7 @@ describe FundInController do
       wait_for_ajax
       check_title("tree_panel.fund_in")
       check_player_info
-      expect(page.source).to have_selector("button#confirm")
+      expect(page.source).to have_selector("button#confirm_fund_in")
       expect(page.source).to have_selector("button#cancel")
     end
     
@@ -61,7 +61,7 @@ describe FundInController do
       mock_have_enable_station 
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 0
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
 
       find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
@@ -82,7 +82,7 @@ describe FundInController do
       mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
 
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
@@ -97,7 +97,7 @@ describe FundInController do
       mock_have_enable_station 
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
 
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
@@ -118,7 +118,7 @@ describe FundInController do
       mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -137,7 +137,7 @@ describe FundInController do
       mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
       expect(page).to have_selector("button#print_slip")
@@ -198,7 +198,7 @@ describe FundInController do
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       set_permission(@test_user,"cashier",:player_transaction,[])
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
@@ -214,7 +214,7 @@ describe FundInController do
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -233,7 +233,7 @@ describe FundInController do
       mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
 
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
@@ -260,7 +260,7 @@ describe FundInController do
       mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -285,7 +285,7 @@ describe FundInController do
       mock_have_enable_station
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -324,7 +324,7 @@ describe FundInController do
       mock_have_enable_station 
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => ""
-      find("button#confirm_fund").click
+      find("button#confirm_fund_in").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
@@ -365,52 +365,53 @@ describe FundInController do
       expect(page.source).to_not have_selector("#balance_withdraw")
     end
 
-    it '[28.2] Deposit with removed station', :js => true do
-      login_as_admin
+    # it '[28.2] Deposit with removed station', :js => true do
+    #   login_as_admin
       
-      register_terminal
+    #   register_terminal
       
-      click_link I18n.t("tree_panel.balance")
-      wait_for_ajax
-      fill_search_info_js("member_id", @player.member_id)
+    #   click_link I18n.t("tree_panel.balance")
+    #   wait_for_ajax
+    #   fill_search_info_js("member_id", @player.member_id)
       
-      find("#button_find").click
-      check_balance_page
+    #   find("#button_find").click
+    #   check_balance_page
 
-      expect(page.source).to have_selector("#balance_deposit")
-      @station5.terminal_id = nil
-      @station5.save
+    #   expect(page.source).to have_selector("#balance_deposit")
+    #   @station5.terminal_id = nil
+    #   @station5.save
 
-      within "div#content" do
-        click_link I18n.t("button.deposit")
-      end
+    #   within "div#content" do
+    #     click_link I18n.t("button.deposit")
+    #   end
 
-      check_home_page
-      check_flash_message I18n.t("flash_message.not_authorize")
-    end
+    #   check_home_page
+    #   check_flash_message I18n.t("flash_message.not_authorize")
+    # end
 
-    it '[28.3] Withdraw with removed station', :js => true do
-      login_as_admin
+    # it '[28.3] Withdraw with removed station', :js => true do
+    #   mock_not_have_enable_station
+    #   login_as_admin
       
-      register_terminal
+    #   register_terminal
 
-      click_link I18n.t("tree_panel.balance")
-      wait_for_ajax
-      fill_search_info_js("member_id", @player.member_id)
+    #   click_link I18n.t("tree_panel.balance")
+    #   wait_for_ajax
+    #   fill_search_info_js("member_id", @player.member_id)
       
-      find("#button_find").click
-      check_balance_page
+    #   find("#button_find").click
+    #   check_balance_page
 
-      expect(page.source).to have_selector("#balance_withdraw")
-      @station5.terminal_id = nil
-      @station5.save
+    #   expect(page.source).to have_selector("#balance_withdraw")
+    #   @station5.terminal_id = nil
+    #   @station5.save
 
-      within "div#content" do
-        click_link I18n.t("button.withdrawal")
-      end
+    #   within "div#content" do
+    #     click_link I18n.t("button.withdrawal")
+    #   end
 
-      check_home_page
-      check_flash_message I18n.t("flash_message.not_authorize")
-    end
+    #   check_home_page
+    #   check_flash_message I18n.t("flash_message.not_authorize")
+    # end
   end
 end

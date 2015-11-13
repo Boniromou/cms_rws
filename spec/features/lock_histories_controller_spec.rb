@@ -1,6 +1,6 @@
 require "feature_spec_helper"
 
-describe ChangeHistoriesController do
+describe LockHistoriesController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
@@ -29,7 +29,7 @@ describe ChangeHistoriesController do
 
     it '[46.1] Display lock player change log', :js => true do
       lock_or_unlock_player_and_check
-      visit search_change_histories_path
+      visit search_lock_histories_path
       check_search_ch_page
       find("input#search").click
       wait_for_ajax
@@ -40,7 +40,7 @@ describe ChangeHistoriesController do
     it '[46.2] Display unlock player change log', :js => true do
       lock_or_unlock_player_and_check
       lock_or_unlock_player_and_check
-      visit search_change_histories_path
+      visit search_lock_histories_path
       check_search_ch_page
       find("input#search").click
       wait_for_ajax

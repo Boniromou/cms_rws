@@ -62,7 +62,7 @@ describe VoidController do
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
@@ -89,7 +89,7 @@ describe VoidController do
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
@@ -121,7 +121,7 @@ describe VoidController do
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
@@ -150,7 +150,7 @@ describe VoidController do
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
@@ -179,7 +179,7 @@ describe VoidController do
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
@@ -195,7 +195,7 @@ describe VoidController do
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
 
-      fill_in "transaction_id", :with => @player_transaction1.id
+      fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click

@@ -6,7 +6,7 @@
   <div>
     <div class="widget-body no-padding">
       <% if @lock_histories.length > 0 %>
-        <div id="lock_history_result">
+        <div id="history_result">
           <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
                 <th><%= t("change_history.user_name")%></th>
@@ -48,11 +48,11 @@
     $('thead th', raw).css("border","1px double");
     $('table', raw).attr('height', 10);
   }
-  var raw_result = $('div#lock_history_result').clone();
+  var raw_result = $('div#history_result').clone();
   trimToPrintContent(raw_result);
   var content = raw_result.html();
   $(document).ready(function() {
-    $('button#print_ch').click(function() {
+    $('button#print_lh').click(function() {
 
       printHtml(content, false, 'Lock History Report');
 

@@ -43,7 +43,6 @@ describe FundController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund_in").click
-      save_and_open_page
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 

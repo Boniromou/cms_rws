@@ -139,7 +139,6 @@ describe PlayersController do
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
       visit search_transactions_path
-      save_and_open_page
       check_player_transaction_page_js
       fill_search_info_js("member_id", @player.member_id)
       find("input#search").click

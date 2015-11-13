@@ -1,5 +1,5 @@
 class Shift < ActiveRecord::Base
-  attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_station_id, :accounting_date_id, :roll_shift_at
+  attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_machine_token, :accounting_date_id, :roll_shift_at
   
   def name
     ShiftType.get_name_by_id(shift_type_id)
@@ -9,10 +9,10 @@ class Shift < ActiveRecord::Base
     AccountingDate.find_by_id(accounting_date_id).accounting_date
   end
 
-  def roll!(station_id, user_id)
+  def roll!(machine_token, user_id)
     raise 'rolled_error' if self.roll_shift_at != nil
 
-    self.roll_shift_on_station_id = station_id
+    self.roll_shift_on_machine_token = machine_token
     self.roll_shift_by_user_id = user_id
     self.roll_shift_at = Time.now.utc
 

@@ -7,7 +7,7 @@ module Cronjob
     def initialize(env)
       @env = env
     end
-    def patron_requester(property_id, secret_key, env)
+    def patron_requester(property_id, secret_key)
       patron_url = PATH[@env.to_sym]
       Requester::Patron.new(property_id, secret_key, patron_url)
     end

@@ -1004,7 +1004,7 @@ describe PlayersController do
 
     it '[54.1] Create PIN success in player profile', js: true do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
-      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:player =>{:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'}})
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -1037,7 +1037,7 @@ describe PlayersController do
 
     it '[54.2] Create PIN fail with PIN is too short in player profile', js: true do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
-      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:player =>{:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'}})
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -1069,7 +1069,7 @@ describe PlayersController do
 
     it '[54.3] Create PIN fail with 2 different PIN in player profile', js: true do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
-      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:player =>{:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'}})
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -1101,7 +1101,7 @@ describe PlayersController do
     it '[54.4] Reset PIN success in player profile', js: true do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created' })
-      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:player =>{:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset'}})
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset'})
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
       login_as_admin
       visit home_path
@@ -1135,7 +1135,7 @@ describe PlayersController do
 
     it '[54.5] Create PIN success in balance enquiry', js: true do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
-      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:player =>{:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'}})
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")

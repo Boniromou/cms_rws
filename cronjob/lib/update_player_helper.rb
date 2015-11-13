@@ -5,9 +5,9 @@ module Cronjob
             :mockup0 => 'http://mo-mock-pis-vapp01.rnd.laxino.com:80'
             }
     def initialize(env)
-      @env = end
+      @env = env
     end
-    def patron_requester(property_id, secret_key, env)
+    def patron_requester(property_id, secret_key)
       patron_url = PATH[@env.to_sym]
       Requester::Patron.new(property_id, secret_key, patron_url)
     end

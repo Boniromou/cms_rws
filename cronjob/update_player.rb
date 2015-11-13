@@ -1,4 +1,5 @@
 require 'active_record'
+require 'action_view'
 require File.expand_path("../../app/helpers/fund_helper", __FILE__)
 require File.expand_path("../../app/models/player", __FILE__)
 require File.expand_path("../../app/models/token", __FILE__)

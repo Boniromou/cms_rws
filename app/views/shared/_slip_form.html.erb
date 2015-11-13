@@ -1,50 +1,131 @@
+<html id="slip">
+<style>
+.floating-index {
+    float: left;
+    width: 20%;
+    height: 30px;
+    margin: 10px;
+    text-align:right;
+}
 
-<div id="slip">
-  <div class="row">
-    <div class="col-sm-2">Member ID:</div>
-    <div class="col-sm-2"><%= @player.member_id %></div>
-    <div class="col-sm-2">Transaction ID:</div>
-    <div class="col-sm-2"><%= @transaction.id %></div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Player Name:</div>
-    <div class="col-sm-2"><%=@player.first_name  %></div>
-    <div class="col-sm-2"><%=@player.last_name  %></div>
-    <div class="col-sm-2">Date/Time:</div>
-    <div class="col-sm-2"><%= format_time(@transaction.created_at) %></div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-2"></div>
-    <div class="col-sm-2">Employee ID:</div>
-    <div class="col-sm-2"><%= current_user.name %></div>
-  </div>
+.floating-content {
+    float: left;
+    width: 20%;
+    height: 30px;
+    margin: 10px;
+    text-align: left;
+}
+
+.floating-index2 {
+    float: left;
+    width: 20%;
+    height: 15px;
+    margin: 0px 10px 0px 10px;
+    text-align:right;
+}
+
+.floating-content2 {
+    float: left;
+    width: 20%;
+    height: 15px;
+    margin: 0px 10px 0px 10px;
+    text-align: left;
+}
+.table-index {
+    float: left;
+    width: 16%;
+    height: 30px;
+    margin: 30px 10px 10px 10px;
+    text-align: center;
+}
+
+.table-content {
+    float: left;
+    width: 16%;
+    height: 30px;
+    margin: 0px 10px 10px 10px;
+    text-align: center;
+}
+
+.after-box {
+    border: 3px solid red; 
+}
+</style>
+<div id="a" style="margin: 120px 0px 0px 0px; width: 210mm; height: 297mm;" >
+    <h1 class="table-content" style="width: 100%; margin: 0px 10px 0px 10px;">Front Money <%= operation.titleize %></h1>
+    <h1 class="table-content" style="width: 100%; margin: 10px 10px 0px 10px;">提款單</h1>
+    <div class="floating-index">Member ID:<br/>會員號碼:</div>
+    <div class="floating-content"><%= @player.member_id %></div>
+    <div class="floating-index">Deposit #:<br/>存款單編號:</div>
+    <div class="floating-content"><%= @transaction.slip_number %></div>
+
+    <div class="floating-index"></div>
+    <div class="floating-content"></div>
+    <div class="floating-index">Date/Time:<br/>日期/時間:</div>
+    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+
+    <div class="floating-index"></div>
+    <div class="floating-content"></div>
+    <div class="floating-index">Employee ID:<br/>員工號碼:</div>
+    <div class="floating-content"><%= current_user.name %></div>
+
   <br/>
-  <div class="row">
-    <div class="col-sm-1"></div>
-    <h2 class="col-sm-3">Total <%= operation %>:</h2>
-    <h2 class="col-sm-3">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
-  </div>
-  <div class="row">
-    <div class="col-sm-1"></div>
-    <h4 class="col-sm-3">Patron Signature</h4>
-    <h4 class="col-sm-3">__________________</h4>
-  </div>
-  <br/>
-  <div class="row">
-    <div class="col-sm-2">________________________________________</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Cage Cashier</div>
-    <div class="col-sm-2">ID</div>
-  </div>
-  <br/>
-  <div class="row">
-    <div class="col-sm-2">________________________________________</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-2">Cage Cashier</div>
-    <div class="col-sm-2">ID</div>
-  </div>
+
+    <h2 class="floating-index" style="width: 30%;">Total <%= operation.titleize %>:</h2>
+    <h2 class="floating-content" style="width: 60%; text-align: left;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
+
+    <div class="floating-index">Patron Signature<br/>顧客簽名</div>
+    <div class="floating-content" style="width: 70%;"><br/>_____________________________________________</div>
+    <div class="floating-index"></div>
+    <div class="floating-content" style="width: 70%;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述存款之款項</div>
+
+    <div class="table-index">Qty<br/>數量</div>
+    <div class="table-index">Description<br/>項目</div>
+    <div class="table-index">Foreign Amt<br/>外幣面額</div>
+    <div class="table-index">For Ex. Rate<br/>兌換率</div>
+    <div class="table-index">Amount<br/>面額</div>
+
+    <div class="table-content"><%= to_display_amount_str(@transaction[:amount])%></div>
+    <div class="table-content">HKD 1 Cash</div>
+    <div class="table-content">HK$ <%= to_display_amount_str(@transaction[:amount]) %></div>
+    <div class="table-content">1.00</div>
+    <div class="table-content">HK$<%= to_display_amount_str(@transaction[:amount]) %></div>
+
+    <div class="table-content"></div>
+    <div class="table-content"></div>
+    <div class="table-content" style="margin: 0px 10px 0px 10px;">------END------</div>
+
+    <div class="table-content" style="width: 100%; margin: 0px 10px 0px 10px;">___________________________________________________________________</div>
+    <h3 class="floating-index" style="width: 40%; margin: 0px 10px 0px 10px;">Total <%= operation.titleize  %></h3>
+    <h3 class="floating-index" style="width: 40%; margin: 0px 10px 0px 10px;">HK $<%= to_display_amount_str(@transaction[:amount]) %></h3>
+    <h3 class="floating-index" style="width: 40%; margin: 0px 10px 0px 10px;">總數</h3>
+    <h3 class="floating-index" style="width: 40%; margin: 0px 10px 0px 10px;"></h3>
+
+    <div class="floating-index2" style="width: 40%; margin: 30px 10px 10px 10px;">______________________________________</div>
+    <div class="floating-index2" style="width: 40%; margin: 30px 10px 10px 10px;"></div>
+    <div class="floating-content2">Cage Cashier</div>
+    <div class="floating-index2">ID#</div>
+    <div class="floating-content2"></div>
+    <div class="floating-index2"></div>
+    <div class="floating-content2">賬房出納員</div>
+    <div class="floating-index2">員工編號</div>
+
+    <div class="floating-content2"></div>
+    <div class="floating-index2"></div>
+
+    <div class="floating-index2" style="width: 40%; margin: 40px 10px 10px 10px;">______________________________________</div>
+    <div class="floating-index2" style="width: 40%; margin: 40px 10px 10px 10px;"></div>
+    <div class="floating-content2">Cage Supervisor</div>
+    <div class="floating-index2" >ID#</div>
+    <div class="floating-content2"></div>
+    <div class="floating-index2"></div>
+    <div class="floating-content2">賬房主任</div>
+    <div class="floating-index2">員工編號</div>
+
+    <div class="floating-content2"></div>
+    <div class="floating-index2"></div>
+
+    <h2 class="floating-content2" style="margin: 40px 10px 0px 10px;">Patron Copy</h2>
+
 </div>
-
+</html>

@@ -1,18 +1,27 @@
 <%=form_tag(pin_request_path, :remote => true, :id => "pin_request", :autocomplete => "off") do %>
   <div>
     <%= hidden_field(:player, :member_id) %>
+    <%= hidden_field(:player, :card_id) %>
+    <%= hidden_field_tag :status, @player.status %>
+    <%= hidden_field_tag :inactivate, @inactivate %>
+    <%= hidden_field_tag :operation, @operation %>
   </div>
 
   
     <div class="row">
     <label class="col-xs-4 box"><strong><%= t("reset_pin.new_pin")%> :</strong></label></td>
     <%= text_field_tag :pin, nil, required: true, autofocus: true, pattern: '^\d+$', :id => "new_pin", :oninput => "validateNumberOnlyAndMaxLength($(this), value, 4)", :class => "col-xs-3 box", :type => "password" %>
+    <div class='col-xs-5 box'>
+          <label class='invisible_error' id="length_error">
+            <%= t("reset_pin.length_error") %>
+          </label>
+        </div>
   </div>
   <div class="row" style="margin-top:10px;">
     <label class="col-xs-4 box"><strong><%= t("reset_pin.confirm_pin")%> :</strong></label></td>
     <%= text_field_tag :pin, nil, required: true, autofocus: false, pattern: '^\d+$', :id => "confirm_pin", :oninput => "validateNumberOnlyAndMaxLength($(this), value, 4)", :class => "col-xs-3 box", :type => "password" %>
         <div class='col-xs-5 box'>
-          <label class='invisible_error'>
+          <label class='invisible_error' id="not_match_error">
             <%= t("reset_pin.pin_not_match") %>
           </label>
         </div>

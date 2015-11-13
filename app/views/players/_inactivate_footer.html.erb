@@ -1,4 +1,4 @@
 <% if policy(:Player).reset_pin? %>
-  <%= link_to t("button.create_pin"), reset_pin_path + "?member_id=#{@player.member_id}" , :title => t("button.create_pin"), :remote => true, :id => "create_pin", :class => "btn btn-primary" %>
+  <%= link_to t("button.create_pin"), create_pin_path + "?member_id=#{@player.member_id}&card_id=#{@player.card_id}&operation=#{@operation}" , :title => t("button.create_pin"), :remote => true, :id => "create_pin", :class => "btn btn-primary" %>
 <% end %>
 

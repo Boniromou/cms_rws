@@ -6,7 +6,7 @@
     <% if @operation == 'fund_out' %>
     <form class="form-horizontal">
       <div class="form-group">
-          <label for="inputPIN" class="col-sm-5 control-label"><strong>PIN:</strong></label>
+          <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
           <div class="col-sm-3">
             <%= text_field_tag 'player_transaction[pin]', nil, :form => "fund_request", :type => "password" %>
           </div>

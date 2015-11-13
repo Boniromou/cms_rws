@@ -1,4 +1,4 @@
-<% if policy(:Player).edit? %>
+<% if policy(:Player).reset_pin? %>
   <%= link_to t("button.reset_pin"), reset_pin_path + "?member_id=#{@player.member_id}" , :title => t("button.reset_pin"), :remote => true, :id => "reset_pin", :class => "btn btn-primary" %>
 <% end %>
 

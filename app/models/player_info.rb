@@ -13,16 +13,12 @@ class PlayerInfo
         raise Request::InvalidCardId.new unless player
         raise Request::PlayerLocked.new if player.account_locked?
         login_name = player.member_id
-        validate_pin(login_name, pin)
+        raise Request::InvalidPin.new unless validate_pin(login_name, pin)
         currency = player.currency.name
         balance = @wallet_requester.get_player_balance(player.member_id)
         raise Request::RetrieveBalanceFail.new unless balance.class == Float
         session_token = Token.generate(player.id).session_token
         {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
-      rescue Remote::PinError
-        raise Request::InvalidPin.new
-      rescue Remote::PlayerNotFound
-        raise Request::InvalidPin.new
       end
     end
 
@@ -33,7 +29,18 @@ class PlayerInfo
     end
 
     def validate_pin(login_name, pin)
-      patron_requester.validate_pin(login_name, pin)
+      begin
+      # patron_requester.validate_pin(login_name, pin)
+        response = patron_requester.validate_pin(login_name, pin)
+        if response.class != Hash
+          Rails.logger.error "validate pin fail"
+          return true
+        end
+        return true if response.class == Hash
+      rescue Remote::PinError
+      rescue Remote::PlayerNotFound
+        return false
+      end
     end
 
     def get_currency(login_name, property_id)
@@ -45,6 +52,7 @@ class PlayerInfo
     
     def update!(id_type, id_value)
       player_info = patron_requester.get_player_info(id_type, id_value)
+      # player_info = {:card_id => '02338431000000041732', :member_id => '8888', :blacklist => false, :pin_status => 'blank'}
       if player_info.class != Hash
         Rails.logger.error "update player info fail"
         return

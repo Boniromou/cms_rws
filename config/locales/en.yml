@@ -36,6 +36,7 @@ en:
     change_log: "Change Log"
     lock_history: "Lock History"
     reset_pin: "Reset PIN"
+    create_pin: "Create PIN"
     pin_history: "PIN History"
   general:
     login: "Log In"
@@ -254,6 +255,7 @@ en:
     enable_location: "Confirm to enable location %{name}?"
     disable_location: "Confirm to disable location %{name}?"
     void_transaction: "Confirm to void transaction %{slip_number}"
+    set_pin: "Confirm to set pin for player %{member_id}"
   terminal_id:
     confirm_reg1: "Confirm to register "
     confirm_reg2: " to station %{name}?"
@@ -276,6 +278,7 @@ en:
     new_pin: "New PIN"
     confirm_pin: "Confirm PIN"
     pin_not_match: "These PINs don't match"
-    confirm_set_pin: "Confirm to set pin for player %{member_id}?"
     set_pin_success: "Set PIN for player [%{name}] successful"
     length_error: "PIN must be 4 number"
+    set_pin_fail: "Set PIN fail"
+    call_patron_fail: "Set PIN fail, please contact customer service for more details."

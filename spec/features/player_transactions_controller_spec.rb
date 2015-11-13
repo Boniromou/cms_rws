@@ -359,13 +359,13 @@ describe PlayersController do
       wait_for_ajax
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
-      expect(p.card_id).to eq '1234567890'
+      expect(p.card_id).to eq '1234567893'
       expect(p.status).to eq @player.status
     end
 
     it '[58.2] Search transaction history with player not exist in cage' do
       @player.delete
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'null'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank'})
       login_as_admin
       visit search_transactions_path
       check_player_transaction_page

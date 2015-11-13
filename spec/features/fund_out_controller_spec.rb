@@ -357,6 +357,7 @@ describe FundOutController do
     end
 
     it '[52.1] Enter PIN withdraw success', :js => true do
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
       login_as_admin 
       mock_have_enable_station 
       go_to_withdraw_page

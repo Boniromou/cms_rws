@@ -1168,7 +1168,7 @@ describe PlayersController do
 
     it '[54.6] Create PIN fail in balance enquiry', js: true do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
-      # allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:player =>{:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'}})
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return('connection fail')
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")

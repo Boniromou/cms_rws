@@ -14,7 +14,6 @@ class PinHistoriesController < ApplicationController
     begin
 
     start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time])
-
     @pin_histories = patron_requester.get_pin_audit_logs(start_time, end_time)
 
     if @pin_histories.class != Array

@@ -1,3 +1,6 @@
-var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
-
+<% if @operation == 'void_deposit' || @operation == 'void_withdraw' %>
+	var html = "<%= escape_javascript(render :partial => "shared/void_slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
+<% else %>
+	var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
+<% end %>
 printHtml(html, true);

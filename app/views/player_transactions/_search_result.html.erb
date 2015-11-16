@@ -28,7 +28,7 @@
               <% @player_transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
                   <td><%= t.slip_number %></td>
-                  <!-- <td><%= t.player.first_name.upcase %> <%= t.player.last_name.upcase %></td> -->
+                  <!-- <td><%= t.player.full_name.upcase %></td> -->
                   <td><%= t.player.member_id %></td>
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>

@@ -13,7 +13,7 @@ rspec -cfd spec/features/stations_controller_spec.rb
 rspec -cfd spec/features/user_session_spec.rb
 rspec -cfd spec/features/terminals_controller_spec.rb
 rspec -cfd spec/features/pin_histories_controller_spec.rb
-
+rspec -cfd spec/features/lock_histories_controller_spec.rb
 
 rspec -cfd spec/controllers/tokens_controller_spec.rb
 rspec -cfd spec/controllers/machines_controller_spec.rb

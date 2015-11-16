@@ -283,6 +283,24 @@ module StepHelper
     expect(item[3].text).to eq 'Member ID: ' + @player.member_id.to_s
   end
 
+  def check_ph_report_result_items(history_hash)
+    items = all("table#datatable_col_reorder tr")
+    i = 1
+    history_hash.each do |t|
+      within items[i] do
+        check_ph_report_result(all("td"),t)
+      end
+      i += 1
+    end
+  end
+
+  def check_ph_report_result(item, change_history)
+    expect(item[0].text).to eq change_history[:user]
+    expect(item[1].text).to eq change_history[:action_at]
+    expect(item[2].text).to eq change_history[:action]
+    expect(item[3].text).to eq change_history[:member_id]
+  end
+
   def check_fm_report_result(item, player_transaction)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)

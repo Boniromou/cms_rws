@@ -8,4 +8,10 @@ class MachinesController < ApplicationController
   def validate
   	handle_request(:validate_machine_token)
   end
+
+  def current_location
+    respond_to do |format|
+      format.html { render :text => get_location_info , :layout => false }
+    end
+  end
 end

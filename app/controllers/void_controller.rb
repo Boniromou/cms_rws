@@ -14,7 +14,7 @@ class VoidController < FundController
 
     server_amount = @target_transaction.amount
     amount = cents_to_dollar(server_amount)
-    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
+    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = do_fund_action(@member_id, server_amount, @target_transaction.ref_trans_id)
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, current_shift.id, current_machine_token, current_user.id)
       handle_wallet_result(@transaction, result)

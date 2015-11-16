@@ -46,7 +46,7 @@ class FundController < ApplicationController
       # Rails.logger.error "validate pin fail" if response.class != Hash
     end
     server_amount = get_server_amount(amount)
-    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
+    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = do_fund_action(@member_id, server_amount)
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, current_shift.id, current_machine_token, current_user.id)
       handle_wallet_result(@transaction, result)

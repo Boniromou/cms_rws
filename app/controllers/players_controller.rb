@@ -15,7 +15,7 @@ class PlayersController < ApplicationController
   def create
     return unless permission_granted? :Player
     begin
-      AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
         player = Player.create_by_params(params[:player])
         wallet_requester.create_player(params[:player][:member_id], 'HKD', player.id, player.currency_id)
       end
@@ -105,7 +105,7 @@ class PlayersController < ApplicationController
   def update
     return unless permission_granted? :Player
     begin
-      AuditLog.player_log("edit", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+      AuditLog.player_log("edit", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
         Player.update_by_params(params[:player])
       end
       flash[:success] = {key: "update_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
@@ -122,7 +122,7 @@ class PlayersController < ApplicationController
     member_id = params[:member_id]
     player = Player.find_by_member_id(member_id)
 
-    AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+    AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       player.lock_account!
     end
 
@@ -137,7 +137,7 @@ class PlayersController < ApplicationController
     member_id = params[:member_id]
     player = Player.find_by_member_id(member_id)
 
-    AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
+    AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       player.unlock_account!
     end
 

@@ -347,8 +347,6 @@ describe FundInController do
       AuditLog.delete_all
       PlayerTransaction.delete_all
       Player.delete_all
-      Station.delete_all
-      Location.delete_all
     end
 
     it '[28.1] Disappear deposit, withdraw button', :js => true do

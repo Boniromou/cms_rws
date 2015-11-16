@@ -31,8 +31,6 @@ describe FrontMoneyController do
 
     after(:each) do
       PlayerTransaction.delete_all
-      Station.delete_all
-      Location.delete_all
     end
 
     it '[11.1] Successfully generate FM Actiivty Report', :js => true do
@@ -102,8 +100,6 @@ describe FrontMoneyController do
 
     after(:each) do
       PlayerTransaction.delete_all
-      Station.delete_all
-      Location.delete_all
     end
 
     it '[17.2] unauthorized print FM Activity report', :js => true do

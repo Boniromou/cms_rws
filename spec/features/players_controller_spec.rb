@@ -472,6 +472,7 @@ describe PlayersController do
       mock_have_enable_station
       
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "locked")
+      @player.lock_account!
       login_as_admin
 
       visit home_path

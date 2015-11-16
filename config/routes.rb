@@ -19,7 +19,9 @@ CmsRws::Application.routes.draw do
   post "search" => "players#do_search"
   get "profile" => "players#profile"
   get "reset_pin" => "players#reset_pin"
+  get "create_pin" => "players#create_pin"
   post "reset_pin" => "players#do_reset_pin"
+  get "inactivated" => "players#player_not_activated"
   post "lock_account" => "players#lock_account"
   post "unlock_account" => "players#unlock_account"
   post "update" => "players#update"
@@ -82,8 +84,11 @@ CmsRws::Application.routes.draw do
 
   get 'validate_machine_token' => 'machines#validate'
 
-  get 'search_change_histories' => 'change_histories#search'
-  post 'search_change_histories' => 'change_histories#do_search'
+  get 'search_lock_histories' => 'lock_histories#search'
+  post 'search_lock_histories' => 'lock_histories#do_search'
+
+  get 'search_pin_histories' => 'pin_histories#search'
+  post 'search_pin_histories' => 'pin_histories#do_search'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

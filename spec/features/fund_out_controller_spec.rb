@@ -21,6 +21,7 @@ describe FundOutController do
       @player_balance = 20000
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(200.0)
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
     end
     
     after(:each) do
@@ -61,7 +62,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
@@ -73,7 +74,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
@@ -97,7 +98,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -110,7 +111,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -128,7 +129,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -146,7 +147,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
       expect(page).to have_selector("button#print_slip")
@@ -206,7 +207,7 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       set_permission(@test_user,"cashier",:player_transaction,[])
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
@@ -222,7 +223,7 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -241,7 +242,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -267,7 +268,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -292,7 +293,7 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -330,9 +331,76 @@ describe FundOutController do
       mock_have_enable_station 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
-      find("button#confirm_fund").click
+      find("button#confirm_fund_out").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
+    end
+  end
+
+  describe '[52] Enter PIN withdraw success ' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_close_after_print
+      mock_patron_not_change
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player_balance = 20000
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(200.0)
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
+    end
+
+    after(:each) do
+      AuditLog.delete_all
+      PlayerTransaction.delete_all
+      Player.delete_all
+    end
+
+    it '[52.1] Enter PIN withdraw success', :js => true do
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
+      login_as_admin 
+      mock_have_enable_station 
+      go_to_withdraw_page
+      fill_in "player_transaction_amount", :with => 100
+      find("button#confirm_fund_out").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
+      expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
+      expect(page).to have_selector("div#pop_up_dialog div input#player_transaction_pin")
+      fill_in "player_transaction_pin", :with => 1111
+      find("div#pop_up_dialog div button#confirm").click
+      check_title("tree_panel.fund_out")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+    end
+
+    it '[52.2] Enter PIN withdraw fail with wrong PIN', :js => true do
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_raise(Remote::PinError)
+      login_as_admin 
+      mock_have_enable_station 
+      go_to_withdraw_page
+      fill_in "player_transaction_amount", :with => 100
+      find("button#confirm_fund_out").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
+      expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
+      expect(page).to have_selector("div#pop_up_dialog div input#player_transaction_pin")
+      fill_in "player_transaction_pin", :with => 1111
+      find("div#pop_up_dialog div button#confirm").click
+      check_flash_message I18n.t("invalid_pin.invalid_pin")
+      check_title("tree_panel.balance")
+      # expect(page).to have_selector("table")
+      # expect(page).to have_selector("button#print_slip")
+      # expect(page).to have_selector("a#close_link")
     end
   end
 end

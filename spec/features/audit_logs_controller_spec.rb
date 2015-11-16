@@ -19,6 +19,7 @@ describe AuditLogsController do
   
   describe '[13] Search audit log' do
     before(:each) do
+      create_shift_data
       AuditLog.delete_all
       @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => "2014-09-29 12:00:00", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al1.save(:validate => false)

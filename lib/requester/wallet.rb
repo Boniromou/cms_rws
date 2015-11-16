@@ -67,6 +67,7 @@ class Requester::Wallet < Requester::Standard
   def parse_get_player_balance_response(result, create_player_proc)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
     if['InvalidLoginName'].include?(error_code) and !create_player_proc.nil?
       create_player_proc.call
       raise Remote::RetryError, "error_code #{error_code}: #{message}"
@@ -79,6 +80,7 @@ class Requester::Wallet < Requester::Standard
   def parse_create_player_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
     raise Remote::CreatePlayerError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
     return 'OK'
   end
@@ -86,7 +88,7 @@ class Requester::Wallet < Requester::Standard
   def parse_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
-    message = result_hash[:message].to_s
+    message = result_hash[:error_msg].to_s || "no message"
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
@@ -94,6 +96,7 @@ class Requester::Wallet < Requester::Standard
   def parse_withdraw_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
     raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
@@ -102,6 +105,7 @@ class Requester::Wallet < Requester::Standard
   def parse_void_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
     raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
@@ -110,6 +114,7 @@ class Requester::Wallet < Requester::Standard
   def parse_void_withdraw_response(result)
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end

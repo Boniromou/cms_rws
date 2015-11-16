@@ -22,7 +22,7 @@ describe Player do
       @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'created' }
       @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'created' }
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return([@player_info1,@player_info2])
-      Cronjob::UpdatePlayerHelper.new.run
+      Cronjob::UpdatePlayerHelper.new('test').run
       
       p = Player.find(@player1.id)
       expect(p.member_id).to eq @player1.member_id
@@ -39,7 +39,7 @@ describe Player do
       @player_info1 = {:card_id => '123456', :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'created' }
       @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'created' }
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return([@player_info1,@player_info2])
-      Cronjob::UpdatePlayerHelper.new.run
+      Cronjob::UpdatePlayerHelper.new('test').run
       
       p = Player.find(@player1.id)
       expect(p.member_id).to eq @player1.member_id
@@ -56,7 +56,7 @@ describe Player do
       @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => !@player1.has_lock_type?('blacklist'), :pin_status => 'created' }
       @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => !@player2.has_lock_type?('blacklist'), :pin_status => 'created' }
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return([@player_info1,@player_info2])
-      Cronjob::UpdatePlayerHelper.new.run
+      Cronjob::UpdatePlayerHelper.new('test').run
       
       p = Player.find(@player1.id)
       expect(p.member_id).to eq @player1.member_id
@@ -75,7 +75,7 @@ describe Player do
       @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'reset' }
       @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'reset' }
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return([@player_info1,@player_info2])
-      Cronjob::UpdatePlayerHelper.new.run
+      Cronjob::UpdatePlayerHelper.new('test').run
       
       p = Player.find(@player1.id)
       expect(p.member_id).to eq @player1.member_id

@@ -10,7 +10,7 @@
         <div id="player_trnasaction_result">
           <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
-              <th><%= t("transaction_history.slip_number")%></th>
+              <th><%= t("transaction_history.slip_no")%></th>
               <!-- <th><%= t("transaction_history.member_name")%></th> -->
               <th><%= t("transaction_history.member_id")%></th>
               <th><%= t("transaction_history.accounting_date")%></th>
@@ -21,14 +21,14 @@
               <th><%= t("transaction_history.status")%></th>
               <th><%= t("transaction_history.deposit")%></th>
               <th><%= t("transaction_history.withdrawal")%></th>
-              <th><%= t("transaction_history.void_slip_number")%></th>
+              <th><%= t("transaction_history.void_slip_no")%></th>
               <th><%= t("transaction_history.action")%></th>
             </thead>
             <tbody>
               <% @player_transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
                   <td><%= t.slip_number %></td>
-                  <!-- <td><%= t.player.first_name.upcase %> <%= t.player.last_name.upcase %></td> -->
+                  <!-- <td><%= t.player.full_name.upcase %></td> -->
                   <td><%= t.player.member_id %></td>
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>

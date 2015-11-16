@@ -28,13 +28,15 @@ class PlayerTransactionsController < ApplicationController
     else
       @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, slip_number, selected_tab_index)
     end
-    rescue SearchPlayerTransaction::NoResultException => e
+    rescue Remote::PlayerNotFound => e
+      @player_transactions = []
+    rescue Search::NoResultException => e
       @player_transactions = []
     rescue SearchPlayerTransaction::NoIdNumberError => e
       flash[:error] = "transaction_history." + e.message
-    rescue SearchPlayerTransaction::OverRangeError => e
+    rescue Search::OverRangeError => e
       flash[:error] = "report_search." + e.message
-    rescue SearchPlayerTransaction::DateTimeError => e
+    rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 
       flash[:error] = "transaction_history.datetime_format_not_valid"

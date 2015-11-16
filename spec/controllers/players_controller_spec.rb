@@ -28,7 +28,7 @@ describe PlayersController do
     end
 
     it 'should be able to query balance' do
-      allow_any_instance_of(Requester::Standard).to receive(:get_player_balance).and_return(99.99)
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
 
       expect{ get 'balance', {member_id: 123456} }.to_not raise_error
     end

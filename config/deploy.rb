@@ -59,5 +59,6 @@ set(:repository) { "ssh://#{repo_host}/opt/laxino/git_repos/#{project.sub('.', '
 # Define your cron jobs here
 set(:cronjobs) {
   ["0,30 * * * * #{deploy_to}/current/cronjob/clean_expired_token.sh #{stage} >> #{deploy_to}/current/log/clean_expired_token_#{stage}.log 2>&1", 
-   "0 #{ROLL_SHIFT_TIME} * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift_#{stage}.log 2>&1"]
+   "0 #{ROLL_SHIFT_TIME} * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift_#{stage}.log 2>&1",
+   "*/5 * * * * #{deploy_to}/current/cronjob/update_player.sh #{stage} >> #{deploy_to}/current/log/update_player_#{stage}.log 2>&1"]
 }

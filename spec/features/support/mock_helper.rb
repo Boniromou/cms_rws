@@ -5,7 +5,7 @@ module MockHelper
   end
 
   def mock_cage_info
-    @location = "No location"
+    @location = "N/A"
     @accounting_date = "2015-04-15"
     @shift = "morning"
 
@@ -25,6 +25,10 @@ module MockHelper
     allow_any_instance_of(ApplicationController).to receive(:is_have_enable_station).and_return(true)
   end
 
+  def mock_not_have_enable_station
+    allow_any_instance_of(ApplicationController).to receive(:is_have_enable_station).and_return(false)
+  end
+
   def mock_have_machine_token
     allow_any_instance_of(UserSessionsController).to receive(:get_machine_token).and_return('20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
   end
@@ -38,7 +42,7 @@ module MockHelper
   end
 
   def mock_receive_location_name
-    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:location_name => '0102'})
+    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'OK', :error_msg => 'Request is carried out successfully.', :location_name => '0102', :zone_name => '01'})
   end
 
   def mock_not_receive_location_name

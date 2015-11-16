@@ -1,4 +1,5 @@
 module FundHelper
+  include ActionView::Helpers::NumberHelper
   def validate_amount_str( amount )
     raise FundInOut::AmountInvalidError.new "Input amount not valid" unless amount.is_a?(String) && amount =~ /^\d{1,7}(\.\d{1,2})?$/ && to_server_amount( amount ) > 0
   end

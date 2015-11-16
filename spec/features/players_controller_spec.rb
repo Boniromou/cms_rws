@@ -283,7 +283,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
     after(:each) do
@@ -298,7 +298,7 @@ describe PlayersController do
     end
 
     it '[4.2] successfully search player' do
-      @player = Player.create!(:first_name => "exist", :last_name => "player",:member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -308,8 +308,9 @@ describe PlayersController do
     end
     
     it '[4.3] fail to search player' do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @player = Player.new
-      @player.member_id = 123456
+      @player.member_id = 12345
       @player.first_name = "test"
       @player.last_name = "player"
       login_as_admin
@@ -321,8 +322,9 @@ describe PlayersController do
     end
     
     it '[4.4] direct to create player' do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @player = Player.new
-      @player.member_id = 123456
+      @player.member_id = 12345
       @player.first_name = "test"
       @player.last_name = "player"
       login_as_admin
@@ -343,7 +345,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
     after(:each) do
@@ -400,6 +402,7 @@ describe PlayersController do
     end     
     
     it '[5.4] authorized to search and unauthorized to create' do 
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -412,13 +415,13 @@ describe PlayersController do
     end     
     
     it '[5.5] Return to Cage home', :js => true do
+      login_as_admin
+
+      visit home_path
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
       mock_have_enable_station
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      login_as_admin
-
-      visit home_path
       click_link I18n.t("tree_panel.balance")
       wait_for_ajax
       check_search_page
@@ -469,6 +472,7 @@ describe PlayersController do
       mock_have_enable_station
       
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "locked")
+      @player.lock_account!
       login_as_admin
 
       visit home_path
@@ -495,7 +499,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
     after(:each) do
@@ -520,6 +524,7 @@ describe PlayersController do
     end
     
     it '[12.3] fail to search player' do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @player = Player.new
       @player.member_id = 123456
       @player.card_id = 1234567890
@@ -534,6 +539,7 @@ describe PlayersController do
     end
     
     it '[12.4] direct to create player' do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @player = Player.new
       @player.member_id = 123456
       @player.card_id = 1234567890
@@ -614,7 +620,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
 
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
     after(:each) do
@@ -699,7 +705,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
       @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       @token2 = Token.create!(:session_token => '3949245469jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
@@ -761,8 +767,10 @@ describe PlayersController do
       check_flash_message expected_flash_message
       token_test1 = Token.find_by_session_token('abm39492i9jd9wjn')
       token_test2 = Token.find_by_session_token('3949245469jd9wjn')
-      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
-      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
   end
   
@@ -771,7 +779,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
 
     end
 
@@ -810,7 +818,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
       
     end
 
@@ -946,7 +954,7 @@ describe PlayersController do
 
     it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do
       @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'null' })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank' })
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -965,8 +973,11 @@ describe PlayersController do
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      expect(page.source).to have_content(I18n.t("search_error.not_found"))
-      click_link I18n.t("button.create")
+      check_profile_page
+      p = Player.find(@player.id)
+      expect(p.member_id).to eq @player.member_id
+      expect(p.card_id).to eq @player.card_id
+      expect(p.status).to eq @player.status
     end
 
     it '[53.7] Show PIS player info when search balance enquiry with Card ID changed' do
@@ -981,7 +992,217 @@ describe PlayersController do
       expect(p.member_id).to eq @player.member_id
       expect(p.card_id).to eq '1234567891'
       expect(p.status).to eq @player.status
+    end
+  end
 
+  describe '[54] Reset/Create PIN (PIS)' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[54.1] Create PIN success in player profile', js: true do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      fill_search_info_js("card_id", "1234567890")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.profile")
+      expect(find("label#player_balance").text).to eq '--'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
+
+      find("#create_pin").click
+      
+      wait_for_ajax
+      check_title("tree_panel.create_pin")
+      fill_in "new_pin", :with => '1111'
+      fill_in "confirm_pin", :with => '1111'
+      content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
+      click_pop_up_confirm("confirm_set_pin", content_list)
+      
+      wait_for_ajax
+      check_flash_message I18n.t("reset_pin.set_pin_success", name: "123456")
+    end
+
+    it '[54.2] Create PIN fail with PIN is too short in player profile', js: true do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      fill_search_info_js("card_id", "1234567890")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.profile")
+      expect(find("label#player_balance").text).to eq '--'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
+
+      find("#create_pin").click
+      
+      wait_for_ajax
+      check_title("tree_panel.create_pin")
+      fill_in "new_pin", :with => '11'
+      fill_in "confirm_pin", :with => '11'
+      find("#confirm_set_pin").click
+      expect(page).to have_selector('#length_error', visible: true)
+      expect(page).to have_selector('#not_match_error', visible: false)
+      # expect(find("#length_error").style('')).to eq I18n.t("reset_pin.length_error")
+    end
+
+    it '[54.3] Create PIN fail with 2 different PIN in player profile', js: true do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      fill_search_info_js("card_id", "1234567890")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.profile")
+      expect(find("label#player_balance").text).to eq '--'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
+
+      find("#create_pin").click
+      
+      wait_for_ajax
+      check_title("tree_panel.create_pin")
+      fill_in "new_pin", :with => '1111'
+      fill_in "confirm_pin", :with => '2222'
+      find("#confirm_set_pin").click
+      expect(page).to have_selector('#length_error', visible: false)
+      expect(page).to have_selector('#not_match_error', visible: true)
+    end
+
+    it '[54.4] Reset PIN success in player profile', js: true do
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created' })
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset'})
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      fill_search_info_js("member_id", "123456")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.profile")
+      expect(find("label#player_balance").text).to eq '0.00'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.active")
+
+      find("#reset_pin").click
+      
+      wait_for_ajax
+      check_title("tree_panel.reset_pin")
+      fill_in "new_pin", :with => '1111'
+      fill_in "confirm_pin", :with => '1111'
+      content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
+      click_pop_up_confirm("confirm_set_pin", content_list)
+      
+      wait_for_ajax
+      check_flash_message I18n.t("reset_pin.set_pin_success", name: "123456")
+    end
+
+    it '[54.5] Create PIN success in balance enquiry', js: true do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created'})
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+
+      check_search_page
+
+      fill_search_info_js("member_id", "123456")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.balance")
+      expect(find("label#player_balance").text).to eq '--'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
+
+      find("#create_pin").click
+
+      wait_for_ajax
+      check_title("tree_panel.create_pin")
+      fill_in "new_pin", :with => '1111'
+      fill_in "confirm_pin", :with => '1111'
+      content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
+      click_pop_up_confirm("confirm_set_pin", content_list)
+      
+      wait_for_ajax
+      check_flash_message I18n.t("reset_pin.set_pin_success", name: "123456")
+    end
+
+    it '[54.6] Create PIN fail in balance enquiry', js: true do
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank' })
+      allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return('connection fail')
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+
+      check_search_page
+
+      fill_search_info_js("member_id", "123456")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.balance")
+      expect(find("label#player_balance").text).to eq '--'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
+
+      find("#create_pin").click
+
+      wait_for_ajax
+      check_title("tree_panel.create_pin")
+      fill_in "new_pin", :with => '1111'
+      fill_in "confirm_pin", :with => '1111'
+      content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
+      click_pop_up_confirm("confirm_set_pin", content_list)
+      
+      wait_for_ajax
+      check_flash_message I18n.t("reset_pin.call_patron_fail")
     end
   end
 end

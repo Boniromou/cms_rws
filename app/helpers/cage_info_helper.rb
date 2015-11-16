@@ -24,7 +24,7 @@ module CageInfoHelper
   end
 
   def default_station_widget_message
-    "No location"
+    "N/A"
   end
 
   protected
@@ -38,6 +38,6 @@ module CageInfoHelper
   def current_station
     @station = Station.find(current_station_id) if current_station_id
     return @station.full_name if @station
-    'No station'
+    'N/A'
   end
 end

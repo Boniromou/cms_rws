@@ -12,3 +12,7 @@
     <%= link_to t("button.withdrawal"), fund_out_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw", :class => "btn btn-primary" %>
   <% end %>
 <% end %>
+
+<% if @inactivate && policy(:Player).reset_pin? %>
+  <%= link_to t("button.create_pin"), reset_pin_path + "?member_id=#{@player.member_id}" , :title => t("button.create_pin"), :remote => true, :id => "create_pin", :class => "btn btn-primary" %>
+<% end %> 

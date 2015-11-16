@@ -9,6 +9,16 @@ module FormattedTimeHelper
     end
   end
 
+  def format_time_slip(time)
+    begin
+      unless time.blank?
+        time.getlocal.strftime("%d-%b-%Y %I:%M:%S %p")
+      end
+    rescue Exception
+      Time.parse(time).getlocal.strftime("%d-%b-%Y %I:%M:%S %p")
+    end
+  end
+
   def format_date(date)
     date.strftime("%Y-%m-%d")
   end

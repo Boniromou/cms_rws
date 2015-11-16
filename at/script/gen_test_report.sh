@@ -12,10 +12,12 @@ rspec -fh spec/features/shifts_controller_spec.rb -o at/report/shifts_controller
 rspec -fh spec/features/stations_controller_spec.rb -o at/report/stations_controller_spec.html
 rspec -fh spec/features/user_session_spec.rb -o at/report/user_session_spec.html
 rspec -fh spec/features/terminals_controller_spec.rb -o at/report/terminals_controller_spec.html
-
-
+rspec -fh spec/features/lock_histories_controller_spec.rb -o at/report/lock_histories_controller_spec.html
+rspec -fh spec/features/pin_histories_controller_spec.rb -o at/report/pin_histories_controller_spec.html
 
 rspec -fh spec/controllers/tokens_controller_spec.rb -o at/report/tokens_controller_spec.html
+rspec -fh spec/controllers/machines_controller_spec.rb -o at/report/machines_controller_spec.html
 
 rspec -fh spec/cronjob/clean_expired_token_spec.rb -o at/report/clean_expired_token_spec.html
 rspec -fh spec/cronjob/update_player_spec.rb -o at/report/update_player_spec.html
+rspec -fh spec/cronjob/roll_shift_spec.rb -o at/report/roll_shift_spec.html

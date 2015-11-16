@@ -1,22 +1,15 @@
 class PlayerPolicy < ApplicationPolicy
   def create?
+    #TODO delete create permission
     is_admin? || has_permission?('player', 'create')
   end
 
   def balance?
-    is_admin? || has_permission?('player', 'balance')
+    is_admin? || has_permission?('player', 'balance_enquiry')
   end
 
   def profile?
-    is_admin? || has_permission?('player', 'profile')
-  end
-
-  def edit?
-    is_admin? || has_permission?('player', 'edit')
-  end
-
-  def update?
-    edit?
+    is_admin? || has_permission?('player', 'player_profile')
   end
 
   def lock?
@@ -27,7 +20,7 @@ class PlayerPolicy < ApplicationPolicy
     lock?
   end
 
-  def create_pin?
-    is_admin? || has_permission?('player', 'create_pin')
+  def reset_pin?
+    is_admin? || has_permission?('player', 'reset_pin')
   end
 end

@@ -37,7 +37,24 @@ module StepHelper
   end
 
   def set_permission(user,role,target,permissions)
+    permission_mapping = {#player
+                          :balance => 'balance_enquiry',
+                          :profile => 'player_profile',
+                          #player_transaction
+                          :search => 'transaction_history', 
+                          :reprint => 'reprint_slip', 
+                          :print => 'print_slip',
+                          :print_void => 'print_void_slip',
+                          :reprint_void => 'reprint_void_slip',
+                          :print_report => 'print_transaction_report',
+                          #shift
+                          :search_fm => 'fm_activity_report',
+                          :print_fm => 'print_fm_activity_report'
+                          }
     cache_key = "#{APP_NAME}:permissions:#{user.uid}"
+    permissions.each_index do |i|
+      permissions[i] = permission_mapping[permissions[i].to_sym] || permissions[i]
+    end
     origin_permissions = Rails.cache.fetch cache_key
     if origin_permissions.nil?
       origin_perm_hash = {}
@@ -266,6 +283,24 @@ module StepHelper
     expect(item[3].text).to eq 'Member ID: ' + @player.member_id.to_s
   end
 
+  def check_ph_report_result_items(history_hash)
+    items = all("table#datatable_col_reorder tr")
+    i = 1
+    history_hash.each do |t|
+      within items[i] do
+        check_ph_report_result(all("td"),t)
+      end
+      i += 1
+    end
+  end
+
+  def check_ph_report_result(item, change_history)
+    expect(item[0].text).to eq change_history[:user]
+    expect(item[1].text).to eq change_history[:action_at]
+    expect(item[2].text).to eq change_history[:action]
+    expect(item[3].text).to eq change_history[:member_id]
+  end
+
   def check_fm_report_result(item, player_transaction)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
@@ -347,18 +382,28 @@ module StepHelper
   end
 
   def go_to_balance_enquiry_page
-    visit home_path
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
     click_link I18n.t("tree_panel.balance")
     fill_search_info_js("member_id", @player.member_id)
     find("#button_find").click
+    wait_for_ajax
     check_balance_page
   end
 
   def go_to_deposit_page
-    visit home_path
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
     click_link I18n.t("tree_panel.balance")
     fill_search_info_js("member_id", @player.member_id)
     find("#button_find").click
+    wait_for_ajax
     check_balance_page
 
     within "div#content" do
@@ -367,10 +412,15 @@ module StepHelper
   end
 
   def go_to_withdraw_page
-    visit home_path
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
     click_link I18n.t("tree_panel.balance")
     fill_search_info_js("member_id", @player.member_id)
     find("#button_find").click
+    wait_for_ajax
 
     within "div#content" do
         click_link I18n.t("button.withdrawal")
@@ -381,7 +431,7 @@ module StepHelper
     go_to_deposit_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
-    find("button#confirm_fund").click
+    find("button#confirm_fund_in").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
     
     expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
@@ -396,7 +446,7 @@ module StepHelper
     go_to_withdraw_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
-    find("button#confirm_fund").click
+    find("button#confirm_fund_out").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
 
     find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
@@ -413,13 +463,11 @@ module StepHelper
     click_link I18n.t("tree_panel.player_transaction")
     check_player_transaction_page_js
 
-    fill_in "transaction_id", :with => transaction_id
+    fill_in "slip_number", :with => player_transaction.slip_number
     find("input#selected_tab_index").set "1"
 
     find("input#search").click
     wait_for_ajax
-    check_player_transaction_result_items([player_transaction])
-    
     content_list = [I18n.t("confirm_box.void_transaction", slip_number: player_transaction.slip_number.to_s)]
     click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)
     wait_for_ajax

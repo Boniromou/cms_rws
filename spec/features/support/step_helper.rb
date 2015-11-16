@@ -364,18 +364,28 @@ module StepHelper
   end
 
   def go_to_balance_enquiry_page
-    visit home_path
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
     click_link I18n.t("tree_panel.balance")
     fill_search_info_js("member_id", @player.member_id)
     find("#button_find").click
+    wait_for_ajax
     check_balance_page
   end
 
   def go_to_deposit_page
-    visit home_path
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
     click_link I18n.t("tree_panel.balance")
     fill_search_info_js("member_id", @player.member_id)
     find("#button_find").click
+    wait_for_ajax
     check_balance_page
 
     within "div#content" do
@@ -384,10 +394,15 @@ module StepHelper
   end
 
   def go_to_withdraw_page
-    visit home_path
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
     click_link I18n.t("tree_panel.balance")
     fill_search_info_js("member_id", @player.member_id)
     find("#button_find").click
+    wait_for_ajax
 
     within "div#content" do
         click_link I18n.t("button.withdrawal")
@@ -425,17 +440,16 @@ module StepHelper
     PlayerTransaction.last
   end
 
-  def do_void(slip_number)
-    player_transaction = PlayerTransaction.find_by_slip_number(slip_number)
+  def do_void(transaction_id)
+    player_transaction = PlayerTransaction.find(transaction_id)
     click_link I18n.t("tree_panel.player_transaction")
     check_player_transaction_page_js
 
-    fill_in "slip_number", :with => slip_number
+    fill_in "slip_number", :with => player_transaction.slip_number
     find("input#selected_tab_index").set "1"
 
     find("input#search").click
     wait_for_ajax
-    
     content_list = [I18n.t("confirm_box.void_transaction", slip_number: player_transaction.slip_number.to_s)]
     click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)
     wait_for_ajax

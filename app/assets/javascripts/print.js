@@ -12,7 +12,7 @@ function printHtml(html, landscape, title) {
   frameDoc.document.write(title);
   frameDoc.document.write('</title>');
   if ( typeof landscape !== 'undefined' && landscape )
-    frameDoc.document.write('<style>@media print{@page {size: landscape}}</style>'); //only work on Chrome
+    frameDoc.document.write('<style>@media print{@page {size: landscape; margin: 0;}}</style>'); //only work on Chrome
   frameDoc.document.write('</head><body>');
   frameDoc.document.write(html);
   frameDoc.document.write('</body></html>');

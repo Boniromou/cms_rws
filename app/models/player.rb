@@ -168,7 +168,11 @@ class Player < ActiveRecord::Base
         is_discard_tokens = true
       end
       player.discard_tokens if is_discard_tokens
-      player.lock_account!('blacklist') if player_info[:blacklist]
+      if player_info[:blacklist]
+        player.lock_account!('blacklist')
+      else
+        player.unlock_account!('blacklist')
+      end
     end
   end
 

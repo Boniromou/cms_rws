@@ -28,6 +28,8 @@ class PlayerTransactionsController < ApplicationController
     else
       @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, slip_number, selected_tab_index)
     end
+    rescue Remote::PlayerNotFound => e
+      @player_transactions = []
     rescue Search::NoResultException => e
       @player_transactions = []
     rescue SearchPlayerTransaction::NoIdNumberError => e

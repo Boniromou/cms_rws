@@ -51,8 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_have_enable_station
-    #session[:machine_token] == cookies[:machine_token] && cookies[:machine_token] != nil
-    true
+    session[:machine_token] == cookies[:machine_token] && cookies[:machine_token] != nil
   end
 
   def sid

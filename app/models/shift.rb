@@ -1,6 +1,7 @@
 class Shift < ActiveRecord::Base
   attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_station_id, :accounting_date_id, :roll_shift_at
-  
+  belongs_to :shift_type
+
   def name
     ShiftType.get_name_by_id(shift_type_id)
   end

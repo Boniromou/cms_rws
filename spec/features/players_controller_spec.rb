@@ -415,13 +415,13 @@ describe PlayersController do
     end     
     
     it '[5.5] Return to Cage home', :js => true do
+      login_as_admin
+
+      visit home_path
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
       mock_have_enable_station
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
-      login_as_admin
-
-      visit home_path
       click_link I18n.t("tree_panel.balance")
       wait_for_ajax
       check_search_page
@@ -767,8 +767,10 @@ describe PlayersController do
       check_flash_message expected_flash_message
       token_test1 = Token.find_by_session_token('abm39492i9jd9wjn')
       token_test2 = Token.find_by_session_token('3949245469jd9wjn')
-      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
-      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
   end
   

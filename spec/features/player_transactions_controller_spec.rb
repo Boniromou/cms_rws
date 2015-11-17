@@ -62,7 +62,8 @@ describe PlayersController do
     it '[8.2] successfully generate report. (search by accounting date)', js: true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_search_info_js("member_id", @player2.member_id)
@@ -78,7 +79,8 @@ describe PlayersController do
       login_as_admin
       create_player_transaction
       @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now, :slip_number => 1)
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -91,7 +93,8 @@ describe PlayersController do
 
     it '[8.4] Transaction not found' do
       login_as_admin
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page
       fill_search_info("member_id", "12345678")
       find("input#search").click
@@ -102,7 +105,8 @@ describe PlayersController do
     it '[8.5] successfully generate report. (search by member ID)', js: true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_search_info_js("member_id", @player2.member_id)
@@ -123,7 +127,8 @@ describe PlayersController do
     it '[8.7] re-print slip', :js => true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
       fill_search_info_js("member_id", @player2.member_id)
       find("input#search").click
@@ -138,7 +143,8 @@ describe PlayersController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
       fill_search_info_js("member_id", @player.member_id)
       find("input#search").click
@@ -150,7 +156,8 @@ describe PlayersController do
     it '[8.10] empty search', :js => true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
       find("input#search").click
       wait_for_ajax
@@ -160,7 +167,8 @@ describe PlayersController do
     it '[8.11] search data out of range', js: true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "start", :with => (@accounting_date)
@@ -176,7 +184,7 @@ describe PlayersController do
     it '[8.12] search data incorrect time period', js: true do
       login_as_admin
       visit home_path
-      visit search_transactions_path
+      click_link I18n.t("tree_panel.player_transaction")
       create_player_transaction
       check_player_transaction_page_js
       fill_in "start", :with => ("2015-09-01")
@@ -188,7 +196,7 @@ describe PlayersController do
     it '[8.13] show error message when empty card ID/membership ID', js: true do
       login_as_admin
       visit home_path
-      visit search_transactions_path
+      click_link I18n.t("tree_panel.player_transaction")
       create_player_transaction
       check_player_transaction_page_js
       fill_in "start", :with => ("2015-09-01")
@@ -231,10 +239,11 @@ describe PlayersController do
     it '[16.2] unauthorized print transaction report', js: true do
       @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
+      visit home_path
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
-      visit search_transactions_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_search_info_js("member_id", @player2.member_id)
@@ -273,20 +282,22 @@ describe PlayersController do
       allow(Station).to receive(:find_by_terminal_id).and_return(@station)
       @player_transaction1 = do_deposit(1000)
       @player_transaction2 = do_deposit(1000)
-      @void_transaction1 = do_void(@player_transaction1.slip_number)
-      @void_transaction2 = do_void(@player_transaction2.slip_number)
+      @void_transaction1 = do_void(@player_transaction1.id)
+      @void_transaction2 = do_void(@player_transaction2.id)
       @player_transaction3 = do_deposit(5000)
-      @void_transaction3 = do_void(@player_transaction3.slip_number)
+      @void_transaction3 = do_void(@player_transaction3.id)
       @player_transaction4 = do_deposit(5000)
+      sleep(1)
       @player_transaction5 = do_withdraw(5000)
-      @void_transaction4 = do_void(@player_transaction5.slip_number)
+      @void_transaction4 = do_void(@player_transaction5.id)
       @player_transaction6 = do_withdraw(5000)
     end
     
     it '[49.1] Show correct slip ID', :js => true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path 
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
@@ -302,7 +313,6 @@ describe PlayersController do
       @player_transaction4.reload
       @player_transaction5.reload
       @player_transaction6.reload
-
       check_player_transaction_result_items([@player_transaction1,@player_transaction2,@player_transaction3,@player_transaction4,@player_transaction5,@player_transaction6])
 
       expect(@player_transaction1.slip_number).to eq 1
@@ -345,8 +355,9 @@ describe PlayersController do
     it '[58.1] Search transaction history with card change', :js => true do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created'})
       login_as_admin
+      visit home_path
       create_player_transaction
-      visit search_transactions_path 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
@@ -366,7 +377,8 @@ describe PlayersController do
       @player.delete
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank'})
       login_as_admin
-      visit search_transactions_path
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page
       fill_search_info("member_id", "12345678")
       find("input#search").click

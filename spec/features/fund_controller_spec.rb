@@ -81,7 +81,7 @@ describe FundController do
     it '[48.4] invalid Withdraw (invalid balance)', :js => true do
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "0.0")
       login_as_admin 
-      mock_have_active_station 
+      mock_have_active_location
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
       find("button#confirm_fund_out").click

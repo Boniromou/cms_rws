@@ -219,7 +219,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       mock_close_after_print
-      mock_have_enable_station
+      mock_have_active_location
       mock_patron_not_change
       reset_slip_number
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
@@ -255,6 +255,7 @@ describe PlayersController do
       create_player_transaction
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
+      wait_for_ajax
       check_player_transaction_page_js
 
       fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s

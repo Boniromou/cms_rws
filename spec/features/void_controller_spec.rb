@@ -28,18 +28,16 @@ describe VoidController do
     end
     
     def create_player_transaction
-      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
-      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now, :slip_number => 1)
+      @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1)
     end
 
     it '[47.1] Display void button', :js => true do
       create_past_shift
       login_as_admin
-      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
-      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now)
+      @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js

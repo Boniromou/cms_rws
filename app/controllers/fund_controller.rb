@@ -51,7 +51,7 @@ class FundController < ApplicationController
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, current_shift.id, current_machine_token, current_user.id)
       handle_wallet_result(@transaction, result)
     end
-    flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: @transaction.amount}}
+    flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
   end
 
   def get_server_amount(amount)

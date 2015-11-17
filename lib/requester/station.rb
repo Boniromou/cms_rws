@@ -8,9 +8,10 @@ class Requester::Station < Requester::Standard
       @path = base_path
   end
 
-  def validate_machine_token(machine_token, property_id)
+  def validate_machine_token(machine_type, machine_token, property_id)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('get', "#{@path}/validate_machine_token", :query => {:machine_token => machine_token,
+      response = remote_rws_call('get', "#{@path}/validate_machine_token", :query => {:machine_type => machine_type,
+                                                                                      :machine_token => machine_token,
                                                                                       :property_id => property_id})
       parse_validate_machine_token_response(response)
     end

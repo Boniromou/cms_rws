@@ -5,10 +5,10 @@ class PlayerInfo
       Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
     end
 
-    def retrieve_info(card_id, machine_token, pin, property_id)
+    def retrieve_info(card_id, machine_type, machine_token, pin, property_id)
       begin
         @wallet_requester = Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
-        raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_token, property_id)
+        raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id)
         player = Player.find_by_card_id_and_property_id(card_id, property_id)
         raise Request::InvalidCardId.new unless player
         raise Request::PlayerLocked.new if player.account_locked?
@@ -22,8 +22,8 @@ class PlayerInfo
       end
     end
 
-    def validate_machine_token(machine_token, property_id)
-      response = Machine.validate(machine_token, property_id)
+    def validate_machine_token(machine_type, machine_token, property_id)
+      response = Machine.validate(machine_type, machine_token, property_id)
       return true if response[:error_code] == 'OK'
       false
     end

@@ -26,11 +26,12 @@ class RequestHandler
   end
   
   def process_retrieve_player_info_event
+    machine_type = @inbound[:machine_type]
     card_id = @inbound[:card_id]
     machine_token = @inbound[:machine_token]
     pin = @inbound[:pin]
     property_id = @inbound[:property_id]
-    PlayerInfo.retrieve_info(card_id, machine_token, pin, property_id)
+    PlayerInfo.retrieve_info(card_id, machine_type, machine_token, pin, property_id)
   end
 
   def process_keep_alive_event
@@ -65,8 +66,9 @@ class RequestHandler
   end
 
   def process_validate_machine_token_event
+    machine_type = @inbound[:machine_type]
     property_id = @inbound[:property_id]
     machine_token = @inbound[:machine_token]
-    Machine.validate(machine_token, property_id)
+    Machine.validate(machine_type, machine_token, property_id)
   end
 end

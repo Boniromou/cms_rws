@@ -1,5 +1,6 @@
 APP_NAME = 'cage'
 PROPERTY_ID = 20000
+MACHINE_TYPE = 'cage'
 
 TRANS_HISTORY_SEARCH_RANGE = Configuration.retrieve_config('trans_history_search_range')
 POLLING_TIME = Configuration.retrieve_config('polling_time') * 60000

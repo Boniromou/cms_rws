@@ -38,6 +38,7 @@ describe MachinesController do
     end
 
     it '[39.2] Validate Terminal ID fail' do
+      allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'InvalidMachineToken', :error_msg => 'Validate terminal id failed.'})
       get 'validate', {:machine_token => "20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37", :property_id => "20000"}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidMachineToken'

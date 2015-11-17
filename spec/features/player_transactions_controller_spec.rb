@@ -24,38 +24,9 @@ describe PlayersController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
-    def create_player_transaction
-      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
-      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now, :slip_number => 1)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @station6.id, :created_at => Time.now + 30 * 60, :slip_number => 2)
-      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :station_id => @station6.id, :created_at => Time.now + 60 * 60, :slip_number => 3)
-    end
-
     after(:each) do
       PlayerTransaction.delete_all
     end
-
-    # xit '[8.1] successfully generate report. (search by card ID)' do
-    #   login_as_admin
-    #   create_player_transaction
-    #   visit home_path
-    #   click_link I18n.t("tree_panel.balance")
-    #   fill_search_info("member_id", @player.member_id)
-
-    #   find("#button_find").click
-    #   check_balance_page
-
-    #   within "div#content" do
-    #     click_link I18n.t("tree_panel.player_transaction")
-    #   end
-      
-    #   check_player_transaction_page
-    #   expect(find("input#id_number").value).to eq @player.card_id
-
-    #   find("input#search").click
-    #   check_player_transaction_result_items([@player_transaction1, @player_transaction3])
-    # end
 
     it '[8.2] successfully generate report. (search by accounting date)', js: true do
       login_as_admin
@@ -76,7 +47,7 @@ describe PlayersController do
     it '[8.3] successfully generate report. (search by slip ID)', js: true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :station_id => @station6.id, :created_at => Time.now, :slip_number => 1)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -220,14 +191,6 @@ describe PlayersController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
     end
 
-    def create_player_transaction
-      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
-      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @location6.id, :created_at => Time.now)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @location6.id, :created_at => Time.now + 30 * 60)
-      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :station_id => @location6.id, :created_at => Time.now + 60 * 60)
-    end
-
     after(:each) do
       PlayerTransaction.delete_all
     end
@@ -273,9 +236,7 @@ describe PlayersController do
     end
 
     def create_player_transaction
-      @location = Location.create!(:name => "LOCATION", :status => "active")
-      @station = Station.create!(:name => "STATION", :status => "active", :location_id => @location.id)
-      allow(Station).to receive(:find_by_terminal_id).and_return(@station)
+      mock_current_machine_token
       @player_transaction1 = do_deposit(1000)
       @player_transaction2 = do_deposit(1000)
       @void_transaction1 = do_void(@player_transaction1.id)
@@ -338,14 +299,6 @@ describe PlayersController do
 
     after(:each) do
       clean_dbs
-    end
-    
-    def create_player_transaction
-      @location6 = Location.create!(:name => "LOCATION6", :status => "active")
-      @station6 = Station.create!(:name => "STATION6", :status => "active", :location_id => @location6.id)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :station_id => @location6.id, :created_at => Time.now)
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :station_id => @location6.id, :created_at => Time.now + 30 * 60)
-      @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :station_id => @location6.id, :created_at => Time.now + 60 * 60)
     end
 
     it '[58.1] Search transaction history with card change', :js => true do

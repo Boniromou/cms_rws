@@ -72,6 +72,12 @@ class PlayerTransaction < ActiveRecord::Base
     self.transaction_type.transaction_types_slip_types.find_by_property_id(self.property_id).slip_type
   end
 
+  def location
+    machine_token_array = self.machine_token.split('|') if self.machine_token
+    return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
+    'N/A'
+  end
+
   def update_slip_number!
     PlayerTransaction.transaction do
       transaction_slip = self.slip_type.transaction_slips.lock.find_by_property_id(self.property_id)

@@ -358,7 +358,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
 
-      mock_have_enable_station
+      mock_have_active_location
 
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -417,7 +417,7 @@ describe PlayersController do
 
       visit home_path
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
-      mock_have_enable_station
+      mock_have_active_location
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       click_link I18n.t("tree_panel.balance")
@@ -467,7 +467,7 @@ describe PlayersController do
 
     it '[5.8] balance enquiry with locked player', :js => true do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
-      mock_have_enable_station
+      mock_have_active_location
       
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "locked")
       @player.lock_account!
@@ -791,7 +791,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
 
-      mock_have_enable_station
+      mock_have_active_location
 
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -816,6 +816,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      mock_have_active_location
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
       
     end
@@ -831,8 +832,6 @@ describe PlayersController do
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
-
-      mock_have_enable_station
 
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -855,9 +854,7 @@ describe PlayersController do
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
-
-      mock_have_enable_station
-
+      
       visit home_path
       click_link I18n.t("tree_panel.balance")
       wait_for_ajax

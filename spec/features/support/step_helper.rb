@@ -184,7 +184,6 @@ module StepHelper
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
-    station = Station.find(player_transaction.station_id)
     user = User.find(player_transaction.user_id)
     if player_transaction.transaction_type_id == 1
       deposit_str = to_display_amount_str(player_transaction.amount)
@@ -202,7 +201,7 @@ module StepHelper
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[4].text).to eq station.name
+    expect(item[4].text).to eq player_transaction.location
     expect(item[5].text).to eq user.name
     expect(item[6].text).to eq player_transaction.display_status
     expect(item[7].text).to eq deposit_str
@@ -462,7 +461,7 @@ module StepHelper
 
   def create_void_transaction(transaction_id)
     target_transaction = PlayerTransaction.find(transaction_id)
-    transaction = PlayerTransaction.create!(:shift_id => target_transaction.shift_id, :player_id => target_transaction.player_id, :user_id => target_transaction.user_id, :transaction_type_id => target_transaction.transaction_type_id + 2, :status => "completed", :amount => target_transaction.amount, :station_id => target_transaction.station_id , :created_at => Time.now, :slip_number => target_transaction.slip_number + 1)
+    transaction = PlayerTransaction.create!(:shift_id => target_transaction.shift_id, :player_id => target_transaction.player_id, :user_id => target_transaction.user_id, :transaction_type_id => target_transaction.transaction_type_id + 2, :status => "completed", :amount => target_transaction.amount, :machine_token => target_transaction.machine_token , :created_at => Time.now, :slip_number => target_transaction.slip_number + 1)
   end
 
   def reset_slip_number

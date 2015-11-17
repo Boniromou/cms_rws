@@ -21,12 +21,8 @@ module MockHelper
     allow_any_instance_of(PlayerTransactionsHelper).to receive(:is_close_after_print).and_return(false)
   end
 
-  def mock_have_enable_station
-    allow_any_instance_of(ApplicationController).to receive(:is_have_enable_station).and_return(true)
-  end
-
-  def mock_not_have_enable_station
-    allow_any_instance_of(ApplicationController).to receive(:is_have_enable_station).and_return(false)
+  def mock_have_active_location
+    allow_any_instance_of(ApplicationController).to receive(:have_active_location?).and_return(true)
   end
 
   def mock_have_machine_token

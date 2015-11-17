@@ -21,6 +21,7 @@ describe MachinesController do
     before(:each) do
       clean_dbs
       bypass_rescue
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
 
     after(:each) do

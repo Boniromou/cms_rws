@@ -1,5 +1,5 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :station_id, :status, :transaction_type_id, :user_id, :slip_number, :created_at
+  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at
   belongs_to :player
   belongs_to :shift
   belongs_to :user
@@ -50,7 +50,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   def can_void?
     #TODO set by configuration, how many days can void
-    can_void_date = AccountingDate.current.accounting_date - 0.day
+    can_void_date = AccountingDate.current.accounting_date - 1.day
     void_transaction.nil? && self.shift.accounting_date >= can_void_date
   end
 
@@ -85,7 +85,6 @@ class PlayerTransaction < ActiveRecord::Base
   scope :by_player_id, -> player_id { where("player_id = ?", player_id) if player_id.present? }
   scope :by_transaction_id, -> transaction_id { where("id = ?", transaction_id) if transaction_id.present? }
   scope :by_shift_id, -> shift_id { where( "shift_id = ? ", shift_id) if shift_id.present? }
-  scope :by_station_id, -> station_id { where( "station_id = ?", station_id) if station_id.present? }
   scope :by_user_id, -> user_id { where( "user_id = ?", user_id) if user_id.present? }
   scope :by_transaction_type_id, -> trans_types { where(:transaction_type_id => trans_types) if trans_types.present?}
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
@@ -95,7 +94,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   class << self
   include FundHelper
-    def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, station_id, ref_trans_id = nil)
+    def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil)
       player = Player.find_by_member_id(member_id)
       player_id = player[:id]
       transaction = new
@@ -103,7 +102,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:amount] = amount
       transaction[:transaction_type_id] = TransactionType.find_by_name(trans_type).id;
       transaction[:shift_id] = shift_id
-      transaction[:station_id] = station_id
+      transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
@@ -118,20 +117,20 @@ class PlayerTransaction < ActiveRecord::Base
       transaction
     end
 
-    def save_deposit_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
-      init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, station_id, ref_trans_id)
+    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_withdraw_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
-      init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, station_id, ref_trans_id)
+    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
-      init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, station_id, ref_trans_id)
+    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, station_id, ref_trans_id = nil)
-      init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, station_id, ref_trans_id)
+    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
     end
 
     def get_player_by_card_member_id(type, id)

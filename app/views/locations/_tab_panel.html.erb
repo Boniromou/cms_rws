@@ -1,8 +1,0 @@
-<ul id="myTab1" class="nav nav-tabs bordered">
-  <li <%= @status=="active" ? " class=active" : "" %>>
-    <%= link_to t("general.active"), list_locations_path("active"), :remote => true %>
-  </li>
-  <li <%= @status=="inactive" ? " class=active" : "" %>>
-    <%= link_to t("general.inactive"), list_locations_path("inactive"), :remote => true  %>
-  </li>
-</ul>

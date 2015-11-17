@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151026090209) do
+ActiveRecord::Schema.define(:version => 20151111025226) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -89,12 +89,12 @@ ActiveRecord::Schema.define(:version => 20151026090209) do
     t.integer  "amount",              :limit => 8
     t.datetime "created_at",                                          :null => false
     t.datetime "updated_at",                                          :null => false
-    t.integer  "station_id"
     t.string   "ref_trans_id"
     t.datetime "trans_date"
     t.datetime "purge_at"
     t.integer  "property_id",                      :default => 20000, :null => false
     t.integer  "slip_number"
+    t.string   "machine_token"
   end
 
   add_index "player_transactions", ["player_id"], :name => "fk_player_id"
@@ -164,19 +164,18 @@ ActiveRecord::Schema.define(:version => 20151026090209) do
     t.integer  "shift_type_id"
     t.integer  "roll_shift_by_user_id"
     t.datetime "roll_shift_at"
-    t.integer  "roll_shift_on_station_id"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.integer  "accounting_date_id"
     t.integer  "lock_version"
     t.datetime "purge_at"
-    t.integer  "property_id",              :default => 20000, :null => false
+    t.integer  "property_id",           :default => 20000, :null => false
+    t.string   "machine_token"
   end
 
   add_index "shifts", ["accounting_date_id"], :name => "fk_accounting_date_id"
   add_index "shifts", ["property_id"], :name => "fk_shifts_property_id"
   add_index "shifts", ["roll_shift_by_user_id"], :name => "fk_user_id"
-  add_index "shifts", ["roll_shift_on_station_id"], :name => "fk_station_id"
   add_index "shifts", ["shift_type_id"], :name => "fk_shift_type_id"
 
   create_table "slip_types", :force => true do |t|

@@ -34,8 +34,6 @@ describe PlayersController do
 
     after(:each) do
       PlayerTransaction.delete_all
-      Station.delete_all
-      Location.delete_all
     end
 
     # xit '[8.1] successfully generate report. (search by card ID)' do
@@ -232,8 +230,6 @@ describe PlayersController do
 
     after(:each) do
       PlayerTransaction.delete_all
-      Station.delete_all
-      Location.delete_all
     end
     
     it '[16.2] unauthorized print transaction report', js: true do

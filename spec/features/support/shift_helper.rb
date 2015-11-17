@@ -6,12 +6,10 @@ module ShiftHelper
     PropertiesShiftType.delete_all
     ShiftType.delete_all
     User.delete_all
-    Station.delete_all
     AuditLog.delete_all
     PlayersLockType.delete_all
     Token.delete_all
     Player.delete_all
-    Location.delete_all
   end
 
   def create_shift_data

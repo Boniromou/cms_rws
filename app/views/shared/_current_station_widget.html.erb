@@ -4,12 +4,8 @@
 
 <script>
   function updateStation() {
-    // terminal_id = getTerminalID();
-    // if( terminal_id == "")
-    //   return false 
     $.ajax({
-      // url: '/stations/current/' + terminal_id,
-      url: '/stations/current/',
+      url: '/machines/current_location/',
       type: 'get',
       success: function(data) {
         $('.station_widget').each(function(index, element) {
@@ -25,11 +21,4 @@
   };
   
     updateStation();
-
-  // if ( !$.station_widget_loaded ) {
-  //   var updateStationInterval = <%= update_station_interval %>;
-  //   setInterval(updateStation, updateStationInterval);
-
-  //   $.station_widget_loaded = true;
-  // }
 </script>

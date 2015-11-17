@@ -375,8 +375,6 @@ describe PlayersController do
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
 
-      Station.delete_all
-      Location.delete_all        
     end
 
     it '[5.2] click unauthorized action', :js => true do 

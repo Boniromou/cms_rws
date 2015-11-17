@@ -61,19 +61,8 @@ CmsRws::Application.routes.draw do
   
   get 'search_audit_logs' => 'audit_logs#search'
   post 'search_audit_logs' => 'audit_logs#do_search'
-
-  get 'list_locations' => 'locations#list'
-  post 'change_location_status' => 'locations#change_status'
-  get 'list_locations/:status' => 'locations#list', :as => :list_locations
-  post 'add_location' => 'locations#add'
   
-  get 'list_stations/:status' => 'stations#list', :as => :list_stations
-  post 'create_station' => 'stations#create'
-  post 'change_station_status' => 'stations#change_status'
-  post 'register_terminal' => 'stations#register'
-  post 'unregister_terminal' => 'stations#unregister'
-  get 'stations/current' => 'stations#current'
-  
+  get 'machines/current_location' => 'machines#current_location'
 
   get 'validate_token' => 'tokens#validate'
   post 'retrieve_player_info' => 'tokens#retrieve_player_info'

@@ -66,9 +66,8 @@ class ApplicationController < ActionController::Base
     AccountingDate.current
   end
 
-  def current_station_id
-    @current_station = Station.find_by_terminal_id(request.headers['TerminalID'])
-    return @current_station.id if @current_station
+  def current_machine_token
+    session[:machine_token]
   end
 
   def permission_granted?(model, operation = nil)

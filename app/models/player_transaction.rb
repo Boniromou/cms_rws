@@ -61,6 +61,13 @@ class PlayerTransaction < ActiveRecord::Base
     PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed', 'pending']).first
   end
 
+  def original_transaction
+    trans_type_name = self.transaction_type.name.split('_')[1]
+    trans_type = TransactionType.find_by_name(trans_type_name)
+    trans_type_id = trans_type.id if trans_type
+    PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed']).first
+  end
+
   def slip_type
     self.transaction_type.transaction_types_slip_types.find_by_property_id(self.property_id).slip_type
   end

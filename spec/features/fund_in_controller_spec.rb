@@ -364,54 +364,5 @@ describe FundInController do
       expect(page.source).to_not have_selector("#balance_deposit")
       expect(page.source).to_not have_selector("#balance_withdraw")
     end
-
-    # it '[28.2] Deposit with removed station', :js => true do
-    #   login_as_admin
-      
-    #   register_terminal
-      
-    #   click_link I18n.t("tree_panel.balance")
-    #   wait_for_ajax
-    #   fill_search_info_js("member_id", @player.member_id)
-      
-    #   find("#button_find").click
-    #   check_balance_page
-
-    #   expect(page.source).to have_selector("#balance_deposit")
-    #   @station5.terminal_id = nil
-    #   @station5.save
-
-    #   within "div#content" do
-    #     click_link I18n.t("button.deposit")
-    #   end
-
-    #   check_home_page
-    #   check_flash_message I18n.t("flash_message.not_authorize")
-    # end
-
-    # it '[28.3] Withdraw with removed station', :js => true do
-    #   mock_not_have_enable_station
-    #   login_as_admin
-      
-    #   register_terminal
-
-    #   click_link I18n.t("tree_panel.balance")
-    #   wait_for_ajax
-    #   fill_search_info_js("member_id", @player.member_id)
-      
-    #   find("#button_find").click
-    #   check_balance_page
-
-    #   expect(page.source).to have_selector("#balance_withdraw")
-    #   @station5.terminal_id = nil
-    #   @station5.save
-
-    #   within "div#content" do
-    #     click_link I18n.t("button.withdrawal")
-    #   end
-
-    #   check_home_page
-    #   check_flash_message I18n.t("flash_message.not_authorize")
-    # end
   end
 end

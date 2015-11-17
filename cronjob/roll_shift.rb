@@ -1,4 +1,5 @@
 require 'active_record'
+require 'action_view'
 
 env = $*[0] || "development"
 database = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))

@@ -159,8 +159,8 @@ en:
     session_timeout: "You need to sign in or sign up before continuing"
     not_authorize: "You are not authorize for this request."
     contact_service: "Operation failed, please contact customer service for more information."
-    deposit_complete: "Deposit {%amount} is completed."
-    withdraw_complete: "Withdraw {%amount} is completed."
+    deposit_complete: "Deposit %{amount} is completed."
+    withdraw_complete: "Withdraw %{amount} is completed."
   transaction_history:
     start_date: "Start Date"
     end_date: "End Date"

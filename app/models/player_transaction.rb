@@ -73,8 +73,10 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def location
-    machine_token_array = self.machine_token.split('|') if self.machine_token
-    return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
+    if self.machine_token
+      machine_token_array = self.machine_token.split('|') 
+      return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
+    end
     'N/A'
   end
 

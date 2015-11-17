@@ -1,17 +1,17 @@
-<div id="location_name" class="station_widget"><%= default_station_widget_message %></div>
+<div id="location_name" class="location_widget"><%= default_location_widget_message %></div>
 
 <%= javascript_include_tag "custom.effect.js" %>
 
 <script>
-  function updateStation() {
+  function updateLocation() {
     $.ajax({
       url: '/machines/current_location/',
       type: 'get',
       success: function(data) {
-        $('.station_widget').each(function(index, element) {
+        $('.location_widget').each(function(index, element) {
           var widget = $(element);
           var pre = widget.html();
-          if ( pre == "<%= default_station_widget_message %>" )
+          if ( pre == "<%= default_location_widget_message %>" )
             widget.html(data)
           else if ( pre != data && !widget.hasClass("animating") )
             animateUpdate(element, data);
@@ -20,5 +20,5 @@
     });
   };
   
-    updateStation();
+    updateLocation();
 </script>

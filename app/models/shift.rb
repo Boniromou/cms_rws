@@ -13,7 +13,7 @@ class Shift < ActiveRecord::Base
   def roll!(machine_token, user_id)
     raise 'rolled_error' if self.roll_shift_at != nil
 
-    self.roll_shift_on_machine_token = machine_token
+    self.machine_token = machine_token
     self.roll_shift_by_user_id = user_id
     self.roll_shift_at = Time.now.utc
 

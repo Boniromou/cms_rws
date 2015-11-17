@@ -1,10 +1,10 @@
 class PlayerTransactionPolicy < ApplicationPolicy
   def deposit?
-    (is_admin? || has_permission?('player_transaction', 'deposit')) && @user.have_enable_station
+    (is_admin? || has_permission?('player_transaction', 'deposit')) && @user.have_active_location
   end
 
   def withdraw?
-    (is_admin? || has_permission?('player_transaction', 'withdraw')) && @user.have_enable_station
+    (is_admin? || has_permission?('player_transaction', 'withdraw')) && @user.have_active_location
   end
 
   def print?

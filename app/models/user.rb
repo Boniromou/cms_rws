@@ -3,11 +3,11 @@ class User < ActiveRecord::Base
 
   attr_accessible :name, :uid
 
-  def set_have_enable_station(have_enable_station)
-  	@have_enable_station = have_enable_station
+  def set_have_active_location(have_active_location)
+  	@have_active_location = have_active_location
   end
 
-  def have_enable_station
-  	@have_enable_station
+  def have_active_location
+  	@have_active_location
   end
 end

@@ -15,7 +15,7 @@ module CageInfoHelper
     "Waiting for accounting date"
   end
 
-  def default_station_widget_message
+  def default_location_widget_message
     "N/A"
   end
 

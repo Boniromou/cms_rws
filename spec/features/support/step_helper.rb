@@ -184,6 +184,7 @@ module StepHelper
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
+    location = player_transaction.location
     user = User.find(player_transaction.user_id)
     if player_transaction.transaction_type_id == 1
       deposit_str = to_display_amount_str(player_transaction.amount)
@@ -201,7 +202,7 @@ module StepHelper
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[4].text).to eq player_transaction.location
+    expect(item[4].text).to eq location
     expect(item[5].text).to eq user.name
     expect(item[6].text).to eq player_transaction.display_status
     expect(item[7].text).to eq deposit_str
@@ -237,7 +238,7 @@ module StepHelper
   end
 
   def check_fm_report_result_items(transaction_list)
-    items = all("table#datatable_col_reorder tr")
+    items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
@@ -251,7 +252,7 @@ module StepHelper
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
-    station = Station.find(player_transaction.station_id)
+    location = player_transaction.location
     user = User.find(player_transaction.user_id)
     if player_transaction.transaction_type_id == 1
       deposit_str = to_display_amount_str(player_transaction.amount)
@@ -264,7 +265,7 @@ module StepHelper
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[4].text).to eq station.name
+    expect(item[4].text).to eq location
     expect(item[5].text).to eq user.name
     expect(item[6].text).to eq player_transaction.status
     expect(item[7].text).to eq deposit_str
@@ -524,6 +525,15 @@ module StepHelper
   def check_lock_unlock_components
       expect(page).to have_selector "div#pop_up_dialog"
       expect(find("div#pop_up_dialog")[:style]).to include "none"
+  end
+
+  def create_player_transaction
+    @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
+    @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
+
+    @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1)
+    @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2)
+    @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3)
   end
 end
 RSpec.configure do |config|

@@ -33,7 +33,7 @@
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
                   <!-- <td><%= t.shift.name %></td> -->
-                  <td><%= Station.get_name_by_id(t.station_id) %></td>
+                  <td><%= %></td>
                   <td><%= t.user.name %></td>
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>

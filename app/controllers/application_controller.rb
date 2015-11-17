@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :check_session_expiration, :authenticate_user!, :pass_terminal_id
+  before_filter :check_session_expiration, :authenticate_user!, :update_user_location
 
   layout false
 
@@ -46,11 +46,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def pass_terminal_id
-    current_user.set_have_enable_station(true) if is_have_enable_station && current_user
+  def update_user_location
+    if current_user
+      if have_active_location?
+        current_user.set_have_active_location(true)
+      else
+        current_user.set_have_active_location(false)
+      end
+    end
   end
 
-  def is_have_enable_station
+  def have_active_location?
     session[:machine_token] == cookies[:machine_token] && cookies[:machine_token] != nil
   end
 

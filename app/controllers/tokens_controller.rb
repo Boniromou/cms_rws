@@ -1,5 +1,5 @@
 class TokensController < ApplicationController
-  skip_before_filter :check_session_expiration, :authenticate_user!, :pass_terminal_id
+  skip_before_filter :check_session_expiration, :authenticate_user!, :update_user_location
   include Hood::RWSHandler
 
   config_handler RequestHandler.instance, true

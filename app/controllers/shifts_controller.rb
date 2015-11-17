@@ -1,7 +1,7 @@
 class ShiftsController < ApplicationController
   layout 'cage'
 
-  skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id, :only => :current
+  skip_before_filter :check_session_expiration, :authenticate_user!, :update_user_location, :only => :current
 
   include FormattedTimeHelper
 

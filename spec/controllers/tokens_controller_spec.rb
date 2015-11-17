@@ -154,13 +154,13 @@ describe TokensController do
       expect(result[:error_msg]).to eq 'Session token is invalid.'
     end
 
-    # it '[33.3] Keep alive timeout' do
-    #   @token2 = Token.create!(:session_token => 'abcdddd123', :player_id => 10, :terminal_id => '1234567892', :expired_at => Time.now - 1800, :property_id => 20000)
-    #   post 'keep_alive', {:session_token => 'abcdddd123', :login_name => '123456'}
-    #   result = JSON.parse(response.body).symbolize_keys
-    #   expect(result[:error_code]).to eq 'InvalidSessionToken'
-    #   expect(result[:error_msg]).to eq 'Session token is invalid.'
-    # end
+    it '[33.3] Keep alive timeout' do
+      @token2 = Token.create!(:session_token => 'abm39492i', :player_id => 10, :expired_at => Time.now - 1800)
+      post 'keep_alive', {:session_token => 'abm39492i', :login_name => '123456', :property_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidSessionToken'
+      expect(result[:error_msg]).to eq 'Session token is invalid.'
+    end
   end
 
   describe '[41] get player Currency API ' do

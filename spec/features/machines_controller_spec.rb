@@ -46,7 +46,7 @@ describe MachinesController do
       	  end
 	    end
 
-	    it '[43.4] Login Cage Terminal ID not exist', :js => true do
+	    it '[43.4] Login Cage machine token not exist', :js => true do
 	      mock_not_have_machine_token
 	      login_as_admin
 	      visit home_path

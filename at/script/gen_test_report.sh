@@ -9,7 +9,7 @@ rspec -fh spec/features/players_controller_spec.rb -o at/report/players_controll
 rspec -fh spec/features/player_transactions_controller_spec.rb -o at/report/player_transactions_controller_spec.html
 rspec -fh spec/features/shifts_controller_spec.rb -o at/report/shifts_controller_spec.html
 rspec -fh spec/features/user_session_spec.rb -o at/report/user_session_spec.html
-rspec -fh spec/features/terminals_controller_spec.rb -o at/report/terminals_controller_spec.html
+rspec -fh spec/features/machines_controller_spec.rb -o at/report/machines_controller_spec.html
 rspec -fh spec/features/lock_histories_controller_spec.rb -o at/report/lock_histories_controller_spec.html
 rspec -fh spec/features/pin_histories_controller_spec.rb -o at/report/pin_histories_controller_spec.html
 

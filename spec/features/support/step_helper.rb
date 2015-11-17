@@ -310,34 +310,6 @@ module StepHelper
     expect(item[3].text).to eq change_history[:member_id]
   end
 
-  def check_stations_table_items(station_list,permission_list)
-    items = all("table#datatable_col_reorder tbody tr")
-    expect(items.length).to eq station_list.length
-    items.length.times do |i|
-      expect(items[i][:id]).to eq "station_#{station_list[i].id}"
-      within items[i] do
-        check_stations_table_contents(all("td"),station_list[i],permission_list)
-      end
-    end
-  end
-
-  def check_stations_table_contents(item, station, permission_list)
-    expect(item[0].text).to eq station.id.to_s
-    expect(item[1].text).to eq station.location.name
-    expect(item[2].text).to eq station.name
-    expect(item[3].text).to eq station.terminal_id || ""
-    expect(item[4].text).to eq station.updated_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    within item[5] do
-      if permission_list[:change_status]
-        expect(page.source).to have_selector("button#change_station_status_#{station.id}")
-      end
-      if permission_list[:register]
-        btn_prefix = ""
-        btn_prefix = "un" unless station.terminal_id.nil?
-        expect(page.source).to have_selector("button##{btn_prefix}register_terminal_#{station.id}")
-      end
-    end
-  end
 
   def click_pop_up_confirm(btn_id, content_list)
     find("div#button_set button##{btn_id}").click
@@ -347,22 +319,6 @@ module StepHelper
       end
     end
     find("div#pop_up_dialog div#pop_up_confirm_btn button#confirm").trigger('click')
-  end
-
-  def set_terminal_id(terminal_id)
-    visit page.current_url + "?terminal_id=" + terminal_id
-  end
-
-  def register_terminal
-    @location5 = Location.create!(:name => "LOCATION5", :status => "active")
-    @station5 = Station.create!(:name => "STATION5", :status => "active", :location_id => @location5.id)
-    visit list_stations_path("active")
-    content_list = [I18n.t("terminal_id.confirm_reg1"), I18n.t("terminal_id.confirm_reg2", name: @station5.full_name)]
-    click_pop_up_confirm("register_terminal_" + @station5.id.to_s, content_list)
-
-    check_flash_message I18n.t("terminal_id.register_success", station_name: @station5.full_name)
-    @station5.reload
-    expect(@station5.terminal_id).to_not eq nil
   end
 
   def go_to_balance_enquiry_page

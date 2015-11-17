@@ -17,7 +17,7 @@ describe MachinesController do
     Warden.test_reset!
   end
 
-  describe '[39] Validate Terminal ID API' do
+  describe '[39] Validate machine token API' do
     before(:each) do
       clean_dbs
       bypass_rescue
@@ -38,7 +38,7 @@ describe MachinesController do
       expect(result[:zone_name]).to eq '01'
     end
 
-    it '[39.2] Validate Terminal ID fail' do
+    it '[39.2] Validate machine token fail' do
       allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'InvalidMachineToken', :error_msg => 'Validate terminal id failed.'})
       get 'validate', {:machine_token => "20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37", :property_id => "20000"}
       result = JSON.parse(response.body).symbolize_keys

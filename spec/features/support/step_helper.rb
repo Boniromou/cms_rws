@@ -238,7 +238,7 @@ module StepHelper
   end
 
   def check_fm_report_result_items(transaction_list)
-    items = all("table#datatable_col_reorder tr")
+    items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
@@ -252,7 +252,7 @@ module StepHelper
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
-    station = Station.find(player_transaction.station_id)
+    location = player_transaction.location
     user = User.find(player_transaction.user_id)
     if player_transaction.transaction_type_id == 1
       deposit_str = to_display_amount_str(player_transaction.amount)
@@ -265,7 +265,7 @@ module StepHelper
     expect(item[1].text).to eq player.member_id
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[4].text).to eq station.name
+    expect(item[4].text).to eq location
     expect(item[5].text).to eq user.name
     expect(item[6].text).to eq player_transaction.status
     expect(item[7].text).to eq deposit_str

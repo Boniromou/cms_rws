@@ -27,17 +27,6 @@ describe PlayersController do
       clean_dbs
     end
 
-    it '[3.1] Show Create Player Page' do
-      login_as_admin
-      visit home_path
-      click_link I18n.t("tree_panel.create_player")
-      check_title("tree_panel.create_player")
-      expect(page.source).to have_selector("form#new_player input#player_member_id")
-      expect(page.source).to have_selector("form#new_player input#player_card_id")
-      expect(page.source).to have_selector("form#new_player input#player_first_name")
-      expect(page.source).to have_selector("form#new_player input#player_last_name")
-    end
-
     it '[3.2] Successfully create player' do
       login_as_admin
       visit new_player_path
@@ -174,10 +163,10 @@ describe PlayersController do
     it '[3.8] click unauthorized action', js: true do 
       @test_user = User.create!(:uid => 2, :name => 'test.user')
       login_as_not_admin(@test_user)
-      set_permission(@test_user,"cashier",:player,["create"])
+      set_permission(@test_user,"cashier",:player,["profile"])
       visit home_path
       set_permission(@test_user,"cashier",:player,[])
-      click_link I18n.t("tree_panel.create_player")
+      click_link I18n.t("tree_panel.profile")
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end     

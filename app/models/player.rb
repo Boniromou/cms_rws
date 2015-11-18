@@ -1,16 +1,20 @@
 class Player < ActiveRecord::Base
   belongs_to :currency
   has_many :tokens
-  include ActionView::Helpers
+  has_many :players_lock_types
   include FundHelper
-  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name
+  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id, :property_id
   validates_uniqueness_of :member_id, :card_id
 
   STATUS_LOCKED = 'locked'
   STATUS_NORMAL = 'active'
 
+  LOCK_TYPE_CAGE_LOCK = 'cage_lock'
+
   def full_name
-    self.first_name + " " + self.last_name
+    first_name = self.first_name || ""
+    last_name = self.last_name || ""
+    first_name + " " + last_name
   end
 
   def balance_str
@@ -21,22 +25,60 @@ class Player < ActiveRecord::Base
     return status == STATUS_LOCKED
   end
 
-  def lock_account!
-    self.status = STATUS_LOCKED
-    self.save
+  def cage_locked?
+    has_lock_type?(LOCK_TYPE_CAGE_LOCK)
   end
 
-  def unlock_account!
-    self.status = STATUS_NORMAL
-    self.save
+  def has_lock_type?(lock_type)
+    self.lock_types.include?(lock_type)
+  end
+
+  def lock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
+    Player.transaction do
+      PlayersLockType.add_lock_to_player(self.id, lock_type_name)
+      update_lock_status
+      discard_tokens
+    end
+  end
+
+  def unlock_account!(lock_type_name = LOCK_TYPE_CAGE_LOCK)
+    Player.transaction do
+      PlayersLockType.remove_lock_to_player(self.id, lock_type_name)
+      update_lock_status
+    end
+  end
+
+  def valid_tokens
+    self.tokens.where("expired_at > ?", Time.now)
+  end
+
+  def discard_tokens
+    if self.valid_tokens != []
+      self.valid_tokens.each do |token| 
+        token.discard
+      end
+    end
+  end
+
+  def update_lock_status
+    if self.status == STATUS_NORMAL && self.lock_types.length > 0
+      self.status = STATUS_LOCKED
+      self.save
+    elsif self.status == STATUS_LOCKED && self.lock_types.length == 0
+      self.status = STATUS_NORMAL
+      self.save
+    end
+  end
+
+  def lock_types
+    result = []
+    self.players_lock_types.each do |players_lock_type|
+      result << players_lock_type.lock_type.name if players_lock_type.status == 'active'
+    end
+    result
   end
 
   class << self
-    def instance
-      @player = Player.new unless @player
-      @player
-    end
-
     def create_by_params(params)
       verify_player_params(params)
 
@@ -50,6 +92,29 @@ class Player < ActiveRecord::Base
       player.member_id = member_id
       player.first_name = first_name
       player.last_name = last_name
+      player.currency_id = 1
+      player.status = STATUS_NORMAL
+      begin
+        player.save!
+      rescue ActiveRecord::RecordInvalid => ex
+        duplicated_filed = ex.record.errors.keys.first.to_s
+        raise CreatePlayer::DuplicatedFieldError, duplicated_filed
+      end
+      player
+    end
+
+    def create_by_pis(params)
+      verify_player_info(params)
+      card_id = params[:card_id]
+      member_id = params[:member_id]
+      # first_name = params[:first_name].downcase
+      # last_name = params[:last_name].downcase
+
+      player = new
+      player.card_id = card_id
+      player.member_id = member_id
+      # player.first_name = first_name
+      # player.last_name = last_name
       player.currency_id = 1
       player.status = STATUS_NORMAL
       begin
@@ -88,17 +153,26 @@ class Player < ActiveRecord::Base
       end
     end
 
-    def retrieve_info(card_id, terminal_id, pin, property_id)
-      player = Player.find_by_card_id(card_id)
-      return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
-      return {:status => 400, :error_code => 'PlayerLocked', :error_msg => 'Player is locked'} if player.account_locked?
-      login_name = player.member_id
-      currency = player.currency.name
-      balance = @wallet_requester.get_player_balance(player.member_id)
-      #TODO gen a real token
-      session_token = 'abm39492i9jd9wjn'
-      # Token.create(login_name, session_token, property_id, terminal_id)
-      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
+    def create_inactivate(player_info)
+      player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activate')
+    end
+
+    def update_info(player_info)
+      return false if player_info.nil? || player_info[:member_id].nil? || player_info[:card_id].nil? || player_info[:pin_status].nil?
+      player = Player.find_by_member_id(player_info[:member_id])
+      player = Player.create_by_pis(player_info) if player == nil && player_info[:pin_status] != 'blank'
+      is_discard_tokens = player_info[:pin_status] == 'reset'
+      if player_info[:card_id] != player.card_id
+        player.card_id = player_info[:card_id]
+        player.save
+        is_discard_tokens = true
+      end
+      player.discard_tokens if is_discard_tokens
+      if player_info[:blacklist]
+        player.lock_account!('blacklist')
+      else
+        player.unlock_account!('blacklist')
+      end
     end
   end
 
@@ -119,6 +193,21 @@ class Player < ActiveRecord::Base
       raise CreatePlayer::ParamsError, "member_id_length_error" if member_id.nil? || member_id.blank?
       raise CreatePlayer::ParamsError, "first_name_blank_error" if first_name.nil? || first_name.blank?
       raise CreatePlayer::ParamsError, "last_name_blank_error" if last_name.nil? || last_name.blank?
+
+      raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
+      raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)
+    end
+
+    def verify_player_info(params)
+      card_id = params[:card_id]
+      member_id = params[:member_id]
+      first_name = params[:first_name]
+      last_name = params[:last_name]
+
+      raise CreatePlayer::ParamsError, "card_id_length_error" if card_id.nil? || card_id.blank?
+      raise CreatePlayer::ParamsError, "member_id_length_error" if member_id.nil? || member_id.blank?
+      # raise CreatePlayer::ParamsError, "first_name_blank_error" if first_name.nil? || first_name.blank?
+      # raise CreatePlayer::ParamsError, "last_name_blank_error" if last_name.nil? || last_name.blank?
 
       raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
       raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)

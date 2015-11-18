@@ -5,30 +5,18 @@ class AuditLog < ActiveRecord::Base
                  :player => { :all => "general.all",
                               :create => "player.create",
                               :deposit => "player.deposit",
-                              :withdrawal => "player.withdrawal",
+                              :withdraw => "player.withdrawal",
                               :edit => "player.edit",
                               :lock => "player.lock",
                               :unlock => "player.unlock"},
                  :player_transaction => { :all => "general.all",
                                           :print => "transaction_history.print" },
                  :shift => { :all => "general.all",
-                             :roll_shift => "shift.roll" },
-                 :location => { :all => "general.all",
-                                :create => "button.create",
-                                :enable => "button.enable",
-                                :disable => "button.disable"},
-                 :station => { :all => "general.all",
-                               :create => "button.create",
-                               :enable => "button.enable",
-                               :disable => "button.disable",
-                               :register => "button.register",
-                               :unregister => "button.unregister"}
+                             :roll_shift => "shift.roll" }
   }
 
   ACTION_TYPE_LIST = { 
-    :player => {:create => "create", :deposit => "update", :withdrawal => "update", :edit => "update", :lock => "update", :unlock => "update"},
-    :location => {:add => "create", :disable => "update", :enable => "update"},
-    :station => {:create => "create", :disable => "update", :enable => "update", :register => "update", :unregister => "update"},
+    :player => {:create => "create", :deposit => "update", :withdraw => "update", :edit => "update", :lock => "update", :unlock => "update"},
     :player_transaction => {:print => "read"},
     :shift => {:roll_shift => "create"}
   }
@@ -58,10 +46,6 @@ class AuditLog < ActiveRecord::Base
   def self.location_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "location", ip, session_id, options, &block)
   end
-
-  def self.station_log(action, action_by, ip, session_id, options={}, &block)
-    compose_log(action, action_by, "station", ip, session_id, options, &block)
-  end
   
   def self.fund_in_out_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "player", ip, session_id, options, &block)
@@ -73,13 +57,6 @@ class AuditLog < ActiveRecord::Base
 
   def self.shift_log(action, action_by, ip, session_id, options={}, &block)
     compose_log(action, action_by, "shift", ip, session_id, options, &block)
-  end
-
-  class << self
-    def instance
-      @audit_log = AuditLog.new unless @audit_log
-      @audit_log
-    end
   end
 
   private

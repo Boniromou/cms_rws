@@ -7,7 +7,7 @@
             <a id="byMemberTab" class="tab-link" href="#tabs-a"><%= t("transaction_history.by_member") %></a>
           </li>
           <li>
-            <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_transaction_id") %></a>
+            <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_slip_number") %></a>
           </li>
         </ul>
 
@@ -34,29 +34,18 @@
             <div class="col-md-7">
               <section class="smart-form">
                 <label class="input">
-                  <%= text_field_tag(:"id_number",@card_id, autofocus: true) %>
+                  <%= text_field_tag(:"id_number", @card_id, autofocus: true) %>
                 </label>
               </section>
             </div>
           </div>
 <br/>
           <div class="row">
-            <div class="col-md-6">
-              <section class="smart-form">
-              
-        
-                <label class="label lower"><%= t("transaction_history.start_date") %></label>
-                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_start_time , name: "start_time"} %>
-              </section>
-            </div>
-            
-            <div class="col-md-6">
-              <section class="smart-form">
-           
-                <label class="label lower"><%= t("transaction_history.end_date") %></label>
-                <%= render partial: "shared/datetime_picker", locals: { calender_time: today_end_time , name: "end_time"} %>
-              </section>
-            </div>
+            <div class="col-sm-12">
+            <label><%= t("ac_date.name") %></label></div>
+          </div>
+            <div class="row">
+            <%= render "shared/date_range_picker" %>
           </div>
         </div>
 
@@ -65,13 +54,13 @@
           <div class="row">
             <div class="col-md-3">
               <section class="smart-form">
-                <label class="label lower"><%= t("transaction_history.transaction_id") %></label>
+                <label class="label lower"><%= t("transaction_history.slip_number") %></label>
               </section>
             </div>
             <div class="col-md-9">
               <section class="smart-form">
                 <label class="input">
-                  <%= text_field_tag(:"transaction_id", nil, autofocus: true) %>
+                  <%= text_field_tag(:"slip_number", nil, autofocus: true) %>
                 </label>
               </section>
             </div>

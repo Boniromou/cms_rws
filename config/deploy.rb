@@ -3,6 +3,20 @@ set :default_stage, 'integration0'
 require 'capistrano/ext/multistage'
 require 'lax-capistrano-recipes/rws'
 require 'bundler/capistrano'
+require 'active_record'
+
+env = $*[0] || "development"
+database = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))
+DB = database[env]
+ActiveRecord::Base.establish_connection(:adapter => "mysql2",
+                                        :host => DB['host'],
+                                        :username => DB['username'],
+                                        :password => DB['password'],
+                                        :database => DB['database'],
+                                        :port => DB['port'])
+
+require File.expand_path("../../app/models/configuration", __FILE__)
+require File.expand_path("../../config/initializers/application", __FILE__)
 
 set :app_server, "thin"
 set :application, "cms_rws"
@@ -30,7 +44,7 @@ set :user, "laxino"
 set :group, "laxino_rnd"
 
 # Define who should recieve alerts from Monit
-set :alert_recipients, ['thomas.wong@laxino.com', 'ming.wong@laxino.com']
+set :alert_recipients, ['ming.wong@laxino.com']
 
 # Before you can execute sudo comands on the app server,
 # please comment out the following line in the /etc/sudoers
@@ -43,6 +57,8 @@ set(:deploy_to) { "#{env_path}/app_#{stage}" }
 set(:repository) { "ssh://#{repo_host}/opt/laxino/git_repos/#{project.sub('.', '/')}/#{application}.git" }
 
 # Define your cron jobs here
-#set(:cronjobs) {
-#  []
-#}
+set(:cronjobs) {
+  ["0,30 * * * * #{deploy_to}/current/cronjob/clean_expired_token.sh #{stage} >> #{deploy_to}/current/log/clean_expired_token_#{stage}.log 2>&1", 
+   "0 #{ROLL_SHIFT_TIME} * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift_#{stage}.log 2>&1",
+   "*/5 * * * * #{deploy_to}/current/cronjob/update_player.sh #{stage} >> #{deploy_to}/current/log/update_player_#{stage}.log 2>&1"]
+}

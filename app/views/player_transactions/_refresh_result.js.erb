@@ -1,0 +1,5 @@
+$('input#search').click();
+<% if @transaction && @transaction.status == 'completed' && policy(:PlayerTransaction).print_void? %>
+  var html = "<%= escape_javascript(render :partial => "shared/slip_form", :locals =>{:operation => @operation}, :formats => [ :html ]) %>"
+  printHtml(html);
+<% end %>

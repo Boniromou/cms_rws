@@ -1,0 +1,57 @@
+<div id="button_set">
+  <%= close_to_profile(@inactivate) %>
+  <% pop_up_btn :id => "confirm_set_pin", :str => t("button.confirm"), :form_id => "pin_request", :style => "confirm_pin_btn", :form_valid_function => "formValid()" do %>
+  <p><%= t("confirm_box.set_pin", {:member_id => @player.member_id}) %></p>
+    
+  <% end %>
+</div>
+
+<%= javascript_include_tag "format.number.js" %>
+<script type='text/javascript'>
+  function formValid(){
+    new_pin = $('#new_pin').val();
+    confirm_pin = $('#confirm_pin').val();
+    return new_pin == confirm_pin && new_pin != "" && confirm_pin.length == 4
+  }
+
+  function showLengthError(){
+     $("#length_error").css('visibility', 'visible');
+  }
+
+  function showNotMatchError(){
+     $("#not_match_error").css('visibility', 'visible');
+  }
+
+  function checkLength() {
+    new_pin = $('#new_pin').val();
+    confirm_pin = $('#confirm_pin').val();
+    return new_pin != "" && confirm_pin.length == 4    
+  }
+
+  function checkMatch() {
+    new_pin = $('#new_pin').val();
+    confirm_pin = $('#confirm_pin').val();
+    return new_pin == confirm_pin
+  }
+
+  function hideError(){
+    $("label.invisible_error").css('visibility', 'hidden');
+  }
+
+  $('#confirm_set_pin').click(function() {
+    if( formValid()){
+      hideError();
+            
+    } else {
+      hideError();
+      if (!checkMatch())
+          showNotMatchError();
+      else
+        if (!checkLength())
+          showLengthError();
+
+    }
+
+    return false;
+  });
+</script>

@@ -10,39 +10,50 @@
         <div id="player_trnasaction_result">
           <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
-              <th><%= t("transaction_history.transaction_id")%></th>
-              <th><%= t("transaction_history.member_name")%></th>
+              <th><%= t("transaction_history.slip_no")%></th>
+              <!-- <th><%= t("transaction_history.member_name")%></th> -->
               <th><%= t("transaction_history.member_id")%></th>
               <th><%= t("transaction_history.accounting_date")%></th>
               <th><%= t("transaction_history.date")%></th>
-              <th><%= t("transaction_history.shift")%></th>
-              <th><%= t("transaction_history.station")%></th>
+              <!-- <th><%= t("transaction_history.shift")%></th> -->
+              <th><%= t("transaction_history.location")%></th>
               <th><%= t("transaction_history.name")%></th>
               <th><%= t("transaction_history.status")%></th>
               <th><%= t("transaction_history.deposit")%></th>
               <th><%= t("transaction_history.withdrawal")%></th>
+              <th><%= t("transaction_history.void_slip_no")%></th>
               <th><%= t("transaction_history.action")%></th>
             </thead>
             <tbody>
               <% @player_transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
-                  <% shift = Shift.find_by_id(t.shift_id) %>
-                  <% player = Player.find_by_id(t.player_id) %>
-                  <% user = User.find_by_id(t.user_id) %>
-                  <td><%= t.id %></td>
-                  <td><%= player.first_name.upcase %> <%= player.last_name.upcase %></td>
-                  <td><%= player.member_id %></td>
-                  <td><%= shift.accounting_date%></td>
+                  <td><%= t.slip_number %></td>
+                  <!-- <td><%= t.player.full_name.upcase %></td> -->
+                  <td><%= t.player.member_id %></td>
+                  <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
-                  <td><%= shift.name %></td>
-                  <td><%= Station.get_name_by_id(t.station_id) %></td>
-                  <td><%= user.name %></td>
-                  <td><%= t.status %></td>
+                  <!-- <td><%= t.shift.name %></td> -->
+                  <td><%= t.location %></td>
+                  <td><%= t.user.name %></td>
+                  <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <td><%= t.withdrawal_amt_str %></td>
+                  <td><%= t.withdraw_amt_str %></td>
+                  <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>
-                    <% if policy(PlayerTransaction.instance).reprint? %>
-                      <%= button_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
+                    <% if policy(:player_transaction).void? && t.status == 'completed'%>
+                      <% if t.can_void? %>
+                        <% trans_type = t.transaction_type.name %>
+                        <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
+                          <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
+                        <% end %>
+                      <% else %>
+                        <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
+                          <%= link_to t("button.print_void"), reprint_path + "?transaction_id=#{t.void_transaction.id}", :id => "reprint_void", :class => "btn btn-primary", :method => "get", :remote => true %>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                    <% if policy(:player_transaction).reprint? %>
+                      <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
                     <% end %>
                   </td>
                 </tr>
@@ -50,7 +61,7 @@
             </tbody>
           </table>
         </div>
-        <% if policy(PlayerTransaction.instance).print_report? %>
+        <% if policy(:player_transaction).print_report? %>
           <div>
             <button id="print_player_transaction" class="btn btn-primary pull-right"><%= t("button.print") %></button>
           </div>
@@ -64,6 +75,13 @@
   </div>
 </div>
 <% end %>
+<%= render partial: "shared/pop_up_panel" %>
+<%= form_tag(void_deposit_path, :remote => true, :id => "void_deposit", :style => 'display: none;') do |f|%>
+  <%= hidden_field_tag :transaction_id, 0 %>
+<% end %>
+<%= form_tag(void_withdraw_path, :remote => true, :id => "void_withdraw", :style => 'display: none;') do |f|%>
+  <%= hidden_field_tag :transaction_id, 0 %>
+<% end %>
 
 
 <%= javascript_include_tag "print.js" %>
@@ -72,6 +90,10 @@
   function trimToPrintContent(raw) {
     $('thead th:last-child', raw).remove();
     $('tbody tr td:last-child', raw).remove();
+    $('table', raw).css("border","1px double");
+    $('tbody tr td', raw).css("border","1px double");
+    $('thead th', raw).css("border","1px double");
+    $('table', raw).attr('height', 10);
   }
 
   var raw_result = $('div#player_trnasaction_result').clone();
@@ -85,6 +107,18 @@
 
       return false;
     });
+  });
+  
+  $('button.void_deposit_btn').click(function() {
+    var target = event.target? event.target : event.srcElement;
+    transaction_id = target.id.replace("void_deposit_","");
+    $('form#void_deposit input#transaction_id').val(transaction_id);
+  });
+  
+  $('button.void_withdraw_btn').click(function() {
+    var target = event.target? event.target : event.srcElement;
+    transaction_id = target.id.replace("void_withdraw_","");
+    $('form#void_withdraw input#transaction_id').val(transaction_id);
   });
 </script>
 

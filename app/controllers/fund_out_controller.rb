@@ -1,5 +1,4 @@
 class FundOutController < FundController
-  rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
 
   def operation_sym
     :withdraw?
@@ -10,14 +9,10 @@ class FundOutController < FundController
   end
 
   def action_str
-    "withdrawal"
+    "withdraw"
   end
 
-  def handle_balance_not_enough(e)
-    handle_fund_error({ key: "invalid_amt.no_enough_to_withdrawal", replace: { balance: to_formatted_display_amount_str(e.message)} })
-  end
-
-  def call_wallet(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, user_id)
-    wallet_requester.withdraw(member_id, amount, ref_trans_id, trans_date, shift_id, station_id, user_id)
+  def call_wallet(member_id, amount, ref_trans_id, trans_date, shift_id, machine_token, user_id)
+    wallet_requester.withdraw(member_id, amount, ref_trans_id, trans_date, shift_id, machine_token, user_id)
   end
 end

@@ -4,6 +4,7 @@ class AuditLogsController < ApplicationController
 
   def search
     @action_lists = AuditLog::ACTION_MENU
+    @default_date = Time.now.strftime("%Y-%m-%d")
   end
 
   def do_search
@@ -18,15 +19,6 @@ class AuditLogsController < ApplicationController
     respond_to do |format|
       format.html { render partial: "audit_logs/search_result", formats: [:html] }
       format.js { render partial: "audit_logs/search_result", formats: [:js] }
-    end
-  end
-
-  private
-  def parse_search_time(date_str, is_end_time=false)
-    if is_end_time
-      Time.strptime(date_str + " 23:59:59", "%Y-%m-%d %H:%M:%S")
-    else
-      Time.strptime(date_str, "%Y-%m-%d")
     end
   end
 end

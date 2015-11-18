@@ -18,7 +18,10 @@ CmsRws::Application.routes.draw do
   get "search" => 'players#search' ,:as => :players_search
   post "search" => "players#do_search"
   get "profile" => "players#profile"
-  get "edit" => "players#edit"
+  get "reset_pin" => "players#reset_pin"
+  get "create_pin" => "players#create_pin"
+  post "reset_pin" => "players#do_reset_pin"
+  get "inactivated" => "players#player_not_activated"
   post "lock_account" => "players#lock_account"
   post "unlock_account" => "players#unlock_account"
   post "update" => "players#update"
@@ -30,6 +33,9 @@ CmsRws::Application.routes.draw do
   get 'fund_out' => 'fund_out#new'
   post 'fund_out' => 'fund_out#create'
   
+  post 'void_deposit' => 'void_deposit#create'
+  post 'void_withdraw' => 'void_withdraw#create'
+
   get 'print'=> 'player_transactions#print'
   get 'reprint'=> 'player_transactions#reprint'
   get 'transactions' => 'player_transactions#index'
@@ -55,24 +61,23 @@ CmsRws::Application.routes.draw do
   
   get 'search_audit_logs' => 'audit_logs#search'
   post 'search_audit_logs' => 'audit_logs#do_search'
-
-  get 'list_locations' => 'locations#list'
-  post 'change_location_status' => 'locations#change_status'
-  get 'list_locations/:status' => 'locations#list', :as => :list_locations
-  post 'add_location' => 'locations#add'
   
-  get 'list_stations/:status' => 'stations#list', :as => :list_stations
-  post 'create_station' => 'stations#create'
-  post 'change_station_status' => 'stations#change_status'
-  post 'register_terminal' => 'stations#register'
-  post 'unregister_terminal' => 'stations#unregister'
-  get 'stations/current/:terminal_id' => 'stations#current'
-  
+  get 'machines/current_location' => 'machines#current_location'
 
   get 'validate_token' => 'tokens#validate'
   post 'retrieve_player_info' => 'tokens#retrieve_player_info'
   post 'keep_alive' => 'tokens#keep_alive'
-  get 'discard_token' => 'tokens#discard_token'
+  get 'keep_eternal_alive' => 'eternal_tokens#keep_eternal_alive'
+  get 'discard_token' => 'tokens#discard'
+  get 'get_player_currency' => 'tokens#get_player_currency'
+
+  get 'validate_machine_token' => 'machines#validate'
+
+  get 'search_lock_histories' => 'lock_histories#search'
+  post 'search_lock_histories' => 'lock_histories#do_search'
+
+  get 'search_pin_histories' => 'pin_histories#search'
+  post 'search_pin_histories' => 'pin_histories#do_search'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

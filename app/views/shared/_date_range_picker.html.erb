@@ -3,7 +3,7 @@
                       <label><%= t("general.start_time") %></label>
                       <div class="form-group">
                         <div class="input-group">
-                          <input class="form-control" name="start_time" id="from" type="text" placeholder="" value="<%= Time.now.strftime("%Y-%m-%d") %>">
+                          <input class="form-control" name="start_time" id="start" type="text" placeholder="" value="<%= @default_date %>">
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         </div>
                       </div>
@@ -12,7 +12,7 @@
                       <label><%= t("general.end_time") %></label>
                       <div class="form-group">
                         <div class="input-group">
-                          <input class="form-control" name="end_time" id="to" type="text" placeholder="" value="<%= Time.now.strftime("%Y-%m-%d") %>">
+                          <input class="form-control" name="end_time" id="end" type="text" placeholder="" value="<%= @default_date %>">
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         </div>
                       </div>
@@ -20,27 +20,72 @@
                     
 
                     <script>
+                      
                       // Date Range Picker
-                      $("#from").datepicker({
-                        //defaultDate: "+1w",
+                      $("#start").datepicker({
                         changeMonth: true,
+                        changeYear: true,
                         dateFormat: "yy-mm-dd",
                         numberOfMonths: 1,
                         prevText: '<i class="fa fa-chevron-left"></i>',
                         nextText: '<i class="fa fa-chevron-right"></i>',
                         onClose: function (selectedDate) {
-                            $("#to").datepicker("option", "minDate", selectedDate);
+                          var flag = false;
+                          if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(selectedDate) == true){
+
+                            var parts = selectedDate.split("-");
+                            var day = parseInt(parts[2], 10);
+                            var month = parseInt(parts[1], 10);
+                            var year = parseInt(parts[0], 10);
+
+                            if(year > 1000 && year < 3000 && month > 0 && month < 12)
+                            {
+                                
+                              var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+                              if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+                                  monthLength[1] = 29;
+
+                              if(day > 0 && day <= monthLength[month - 1])
+                                flag = true;
+                            }
+                          }
+                        if (flag == true)
+                          $("#end").datepicker("option", "minDate", selectedDate);
                         }
                       });
-                      $("#to").datepicker({
-                        //defaultDate: "+1w",
+
+                      $("#end").datepicker({
                         changeMonth: true,
                         dateFormat: "yy-mm-dd",
+                        changeYear: true,
                         numberOfMonths: 1,
                         prevText: '<i class="fa fa-chevron-left"></i>',
                         nextText: '<i class="fa fa-chevron-right"></i>',
                         onClose: function (selectedDate) {
-                            $("#from").datepicker("option", "maxDate", selectedDate);
+                          var flag = false;
+
+                          if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(selectedDate) == true){
+
+                            var parts = selectedDate.split("-");
+                            var day = parseInt(parts[2], 10);
+                            var month = parseInt(parts[1], 10);
+                            var year = parseInt(parts[0], 10);
+                          
+                            if(year > 1000 && year < 3000 && month > 0 && month < 12)
+                            {
+                                
+                              var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+                              if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+                                  monthLength[1] = 29;
+
+                              if(day > 0 && day <= monthLength[month - 1])
+                                flag = true;
+                            }
+                          }
+                          if (flag == true)
+                            $("#start").datepicker("option", "maxDate", selectedDate);
                         }
-                      });
+                      });      
                     </script>

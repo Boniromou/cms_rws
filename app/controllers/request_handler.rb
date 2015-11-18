@@ -1,69 +1,74 @@
 require 'singleton'
-  class RequestHandler
-    include Singleton
+class RequestHandler
+  include Singleton
 
-    def update(inbound)
-      @inbound = inbound
-      @wallet_requester = Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
-      begin
-        event_name = inbound[:_event_name].to_sym
-        @outbound = self.__send__("process_#{event_name}_event") || {}
-      rescue Exception => e
-        puts e.backtrace
-        puts e.message
-        {:status => 500, :error_code => 'internal error', :error_msg => 'e.message'}
-      end
-      if @outbound[:error_code].nil?
-        @outbound.merge!({:status=>200, :error_code=>'OK', :error_msg=>'Request is carried out successfully.'})
-      end
-      @outbound
+  def update(inbound)
+    @inbound = inbound
+    begin
+      event_name = inbound[:_event_name].to_sym
+      @outbound = self.__send__("process_#{event_name}_event") || {}
+    rescue Request::RequestError => e
+      @outbound = e.to_hash
+    rescue Exception => e
+      puts e.backtrace
+      puts e.message
+      {:status => 500, :error_code => 'internal error', :error_msg => 'e.message'}
     end
-
-    def process_validate_token_event
-      # response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      # unless response.is_a?(Hash)
-      #   return {}
-      # else 
-      #   return response
-      # end
-      {}
+    if @outbound[:error_code].nil?
+      @outbound.merge!({:status=>200, :error_code=>'OK', :error_msg=>'Request is carried out successfully.'})
     end
-    
-    def process_retrieve_player_info_event
-      card_id = @inbound[:card_id]
-      terminal_id = @inbound[:terminal_id]
-      pin = @inbound[:pin]
-      property_id = @inbound[:property_id]
-
-      player = Player.find_by_card_id(card_id)
-      return {:status => 400, :error_code => 'InvalidCardId', :error_msg => 'Card id is not exist'} unless player
-      login_name = player.member_id
-      currency = player.currency.name
-      balance = @wallet_requester.get_player_balance(player.member_id)
-      #TODO gen a real token
-      session_token = 'abm39492i9jd9wjn'
-
-      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
-    end
-
-    def process_keep_alive_event
-      response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      unless response.is_a?(Hash)
-        response.keep_alive
-        return {}
-      else
-        return response
-      end
-    end
-
-    def process_discard_token_event
-      response = Token.validate(@inbound[:login_name], @inbound[:session_token])
-      unless response.is_a?(Hash)
-        response.discard
-        return {}
-      else
-        return response
-      end
-    end
+    @outbound
   end
 
+  def process_validate_token_event
+    Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
+    {}
+  end
+  
+  def process_retrieve_player_info_event
+    machine_type = @inbound[:machine_type]
+    card_id = @inbound[:card_id]
+    machine_token = @inbound[:machine_token]
+    pin = @inbound[:pin]
+    property_id = @inbound[:property_id]
+    PlayerInfo.retrieve_info(card_id, machine_type, machine_token, pin, property_id)
+  end
+
+  def process_keep_alive_event
+    Token.keep_alive(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
+    {}
+  end
+
+  def process_discard_token_event
+    Token.discard(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
+    {}
+  end
+
+  def process_keep_eternal_alive_event
+    property_id = @inbound[:property_id]
+    member_id = @inbound[:login_name]
+    session_token = 'null'
+    player = Player.where(:property_id => property_id, :member_id => member_id).first
+    return {:status => 400, :error_code=>'PlayerNotFound', :error_msg=>'Player is not exist.'} unless player
+    token = Token.where(:player_id => player.id, :session_token => session_token).first
+    token = Token.new unless token
+    token.player_id = player.id
+    token.expired_at = '3012-12-20 00:00:00'
+    token.session_token = 'null'
+    token.save({:validate => false})
+    {}
+  end
+
+  def process_get_player_currency_event
+    property_id = @inbound[:property_id]
+    login_name = @inbound[:login_name]
+    PlayerInfo.get_currency(login_name, property_id)
+  end
+
+  def process_validate_machine_token_event
+    machine_type = @inbound[:machine_type]
+    property_id = @inbound[:property_id]
+    machine_token = @inbound[:machine_token]
+    Machine.validate(machine_type, machine_token, property_id)
+  end
+end

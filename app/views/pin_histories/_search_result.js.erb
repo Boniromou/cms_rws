@@ -1,0 +1,7 @@
+$.loading_selector = $('div#pin_history_result');
+
+$('div#pin_history_result').css({ opacity: "0.0" }).html("<%= escape_javascript(render :partial => "pin_histories/search_result", :formats => [ :html ] , :layout => nil) %>").delay(50).animate({ opacity: "1.0" }, 300);
+$('input#datetimepicker_start_time').val("<%= format_time(@start_time) %>");
+$('input#datetimepicker_end_time').val("<%= format_time(@end_time) %>");
+
+<%= render :partial => "shared/flash_message", :formats => [ :js ] %>

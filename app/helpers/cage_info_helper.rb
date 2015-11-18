@@ -1,17 +1,9 @@
 module CageInfoHelper
-  def current_cage_location_str
-    current_station.capitalize
-  end
-
   def update_accounting_date_interval
     polling_interval
   end
 
   def update_shift_interval
-    polling_interval
-  end
-
-  def update_station_interval
     polling_interval
   end
 
@@ -23,20 +15,15 @@ module CageInfoHelper
     "Waiting for accounting date"
   end
 
-  def default_station_widget_message
-    "No location"
+  def default_location_widget_message
+    "N/A"
   end
 
   protected
 
   def polling_interval
     #milliseconds
-    6 * 1000 + rand(1..500)
-  end
-
-  def current_station
-    @station = Station.find(current_station_id) if current_station_id
-    return @station.full_name if @station
-    'No station'
+    # 60 * 1000 + rand(1..500)
+    POLLING_TIME
   end
 end

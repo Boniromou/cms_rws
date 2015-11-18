@@ -4,30 +4,42 @@ class PlayerTransactionsController < ApplicationController
   include PlayerTransactionsHelper
 
   def search
-    return unless permission_granted? PlayerTransaction.new
+    return unless permission_granted? :PlayerTransaction
     @card_id = params[:card_id]
+    @default_date = params[:accounting_date] || current_accounting_date.accounting_date
   end
 
   def do_search
-    return unless permission_granted? PlayerTransaction.new, :search?
+    return unless permission_granted? :PlayerTransaction, :search?
         
     begin
-    @start_time = parse_datetime(params[:start_time], today_start_time)
-    @end_time = parse_datetime(params[:end_time], today_end_time)
-      
+    @start_time = parse_search_time(params[:start_time])
+    @end_time = parse_search_time(params[:end_time], true) 
+
     id_type = params[:id_type]
     id_number = params[:id_number]
-    
-    transaction_id = params[:transaction_id]
+
     selected_tab_index = params[:selected_tab_index]
-    @player_transactions = PlayerTransaction.search_query(id_type, id_number, @start_time, @end_time, transaction_id, selected_tab_index)
-       
-    rescue SearchPlayerTransaction::OverRangeError => e
+    slip_number = params[:slip_number]
+    if selected_tab_index == '0'
+      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number)
+      PlayerInfo.update(id_type,id_number)
+      @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index)
+    else
+      @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, slip_number, selected_tab_index)
+    end
+    rescue Remote::PlayerNotFound => e
+      @player_transactions = []
+    rescue Search::NoResultException => e
+      @player_transactions = []
+    rescue SearchPlayerTransaction::NoIdNumberError => e
+      flash[:error] = "transaction_history." + e.message
+    rescue Search::OverRangeError => e
       flash[:error] = "report_search." + e.message
-    rescue SearchPlayerTransaction::DateTimeError => e
-      flash[:error] = "report_search." + e.message
+    rescue Search::DateTimeError => e
+      flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 
-      flash[:error] = "report_search.datetime_format_not_valid"
+      flash[:error] = "transaction_history.datetime_format_not_valid"
     end
 
     respond_to do |format|
@@ -38,19 +50,19 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def print
-    return unless permission_granted? PlayerTransaction.new
-    AuditLog.print_log("print", current_user.name, client_ip, sid,:description => {:station => current_station, :shift => current_shift.name}) do
+    return unless permission_granted? :PlayerTransaction
+    AuditLog.print_log("print", current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
     end
     member_id = params[:member_id]
     redirect_to balance_path + "?member_id=#{member_id}"
   end
 
   def reprint
-    return unless permission_granted? PlayerTransaction.new
+    return unless permission_granted? :PlayerTransaction
     transaction_id = params[:transaction_id]
     @transaction = PlayerTransaction.find(transaction_id)
     @player = Player.find(@transaction.player_id)
-    @operation =  @transaction.action_type_str
+    @operation =  @transaction.transaction_type.name
   end
   
   def get_start_time(time_str)

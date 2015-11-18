@@ -1,7 +1,7 @@
 class ShiftsController < ApplicationController
   layout 'cage'
 
-  skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id, :only => :current
+  skip_before_filter :check_session_expiration, :authenticate_user!, :update_user_location, :only => :current
 
   include FormattedTimeHelper
 
@@ -13,7 +13,7 @@ class ShiftsController < ApplicationController
   end
 
   def new
-    return unless permission_granted? Shift.new, :roll?
+    return unless permission_granted? :Shift, :roll?
 
     @current_shift = current_shift
 
@@ -21,23 +21,18 @@ class ShiftsController < ApplicationController
     @current_accounting_date = @current_shift.accounting_date
 
     @next_shift_name = Shift.next_shift_name_by_name(@current_shift_name)
-    if @current_shift_name == 'night'
-      @next_accounting_date = @current_accounting_date + 1
-    else
-      @next_accounting_date = @current_accounting_date
-    end
+    @next_accounting_date = AccountingDate.next_shift_accounting_date(@current_shift_name, @current_accounting_date)
   end
 
   def create
-    return unless permission_granted? Shift.new, :roll?
+    return unless permission_granted? :Shift, :roll?
 
     begin
       current_shift_id = params[:shift][:current_shift_id].to_i
       current_shift = Shift.find_by_id(current_shift_id)
 
-      AuditLog.shift_log("roll_shift", current_user.name, client_ip, sid, :description => {:station => current_station, :shift => current_shift.name}) do
-        #TODO: Station id
-        current_shift.roll!(current_station_id, current_user.id)
+      AuditLog.shift_log("roll_shift", current_user.name, client_ip, sid, :description => {:machine_token => current_machine_token, :shift => current_shift.name}) do
+        current_shift.roll!(current_machine_token, current_user.id)
       end
 
       flash[:success] = { key: "shift.roll_success", replace: { timestamp: format_time(current_shift.roll_shift_at) } }

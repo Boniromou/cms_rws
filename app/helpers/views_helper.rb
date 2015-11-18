@@ -8,9 +8,22 @@ module ViewsHelper
     content_tag(:a, icon, :href => home_path, "data-remote".to_sym => true, :id => "close_to_home", :class => "btn btn-primary")
   end
 
-  def close_to_balance
+  def close_to_balance(inactivate=false)
     icon = create_icon("fa fa-times")
-    content_tag(:a, "Cancel", :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
+    unless inactivate
+      content_tag(:a, "Cancel", :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default") 
+    else
+      content_tag(:a, "Cancel", :href => inactivated_path + "?member_id=#{@player.member_id}&card_id=#{@player.card_id}&status=#{@player.status}&operation=#{@operation}" , "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
+    end
+  end
+
+  def close_to_profile(inactivate=false)
+    icon = create_icon("fa fa-times")
+    unless inactivate
+      content_tag(:a, "Cancel", :href =>  profile_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
+    else
+      content_tag(:a, "Cancel", :href =>  inactivated_path + "?member_id=#{@player.member_id}&card_id=#{@player.card_id}&status=#{@player.status}&operation=#{@operation}" , "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
+    end
   end
 
   def create_icon(style)

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :check_session_expiration, :authenticate_user!, :pass_terminal_id
+  before_filter :check_session_expiration, :authenticate_user!, :update_user_location
 
   layout false
 
@@ -25,9 +25,17 @@ class ApplicationController < ActionController::Base
   end
 
   def wallet_requester
-    Requester::Standard.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
+    Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
+  end
+
+  def patron_requester
+    Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
   end
   
+  def station_requester
+    Requester::Station.new(STATION_URL)
+  end
+
   protected
 
   def check_session_expiration
@@ -38,15 +46,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def pass_terminal_id
-    current_user.set_have_enable_station(true) if is_have_enable_station
+  def update_user_location
+    if current_user
+      if have_active_location?
+        current_user.set_have_active_location(true)
+      else
+        current_user.set_have_active_location(false)
+      end
+    end
   end
 
-  def is_have_enable_station
-    @station = Station.find_by_terminal_id(request.headers['TerminalID'])
-    if @station
-      return current_user && @station.status == 'active' && request.headers['TerminalID'] != nil
-    end
+  def have_active_location?
+    session[:machine_token] == cookies[:machine_token] && cookies[:machine_token] != nil
   end
 
   def sid
@@ -61,9 +72,8 @@ class ApplicationController < ActionController::Base
     AccountingDate.current
   end
 
-  def current_station_id
-    @current_station = Station.find_by_terminal_id(request.headers['TerminalID'])
-    return @current_station.id if @current_station
+  def current_machine_token
+    session[:machine_token]
   end
 
   def permission_granted?(model, operation = nil)
@@ -95,5 +105,10 @@ class ApplicationController < ActionController::Base
       format.js { render partial: "shared/error500", formats: [:js], :status => :internal_server_error }
     end
     return
+  end
+
+  def get_location_info
+    return I18n.t("general.zone_and_location") + ': ' + session[:location_info] if session[:location_info]
+    I18n.t("general.zone_and_location") + ': ' + 'N/A'
   end
 end

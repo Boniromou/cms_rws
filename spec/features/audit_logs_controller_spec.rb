@@ -19,6 +19,7 @@ describe AuditLogsController do
   
   describe '[13] Search audit log' do
     before(:each) do
+      create_shift_data
       AuditLog.delete_all
       @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => "2014-09-29 12:00:00", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al1.save(:validate => false)
@@ -33,8 +34,8 @@ describe AuditLogsController do
     it '[13.1] Search audit log by time' do
       login_as_admin
       visit '/search_audit_logs'
-      fill_in "from", :with => "2014-9-29"
-      fill_in "to", :with => "2014-9-29"
+      fill_in "start", :with => "2014-9-29"
+      fill_in "end", :with => "2014-9-29"
       click_button I18n.t("button.search")
       expect(page.source).to have_selector("tr#audit#{@al1.id}_body")
       expect(page.source).not_to have_selector("tr#audit#{@al2.id}_body")

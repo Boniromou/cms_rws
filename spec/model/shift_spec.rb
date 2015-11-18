@@ -6,7 +6,6 @@ describe Shift do
     AccountingDate.delete_all
     ShiftType.delete_all
     User.delete_all
-    Station.delete_all
   end
 
   describe 'Roll' do

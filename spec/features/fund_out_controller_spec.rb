@@ -23,6 +23,7 @@ describe FundOutController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(200.0)
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
+      allow(PlayerInfo).to receive(:validate_pin).and_return(true)
     end
     
     after(:each) do

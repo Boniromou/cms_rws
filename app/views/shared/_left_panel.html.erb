@@ -25,13 +25,13 @@
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
           <ul style="display:block;"> 
-            <% if policy(:Player).create? %>
+         <!--    <% if policy(:Player).create? %>
               <li id="nav_create_player">
                 <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.create_player")%></span>
                 <% end %>
               </li>
-            <% end %>
+            <% end %> -->
             <% if policy(:Player).profile? %>
               <li id="nav_player_profile">
                 <%= link_to players_search_path + "?operation=profile", :title => t("tree_panel.profile") , :remote => true do %>
@@ -67,13 +67,13 @@
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>
           <ul style="display:block;">
-            <% if policy(:Shift).roll? %>
+           <!--  <% if policy(:Shift).roll? %>
               <li id="nav_roll_shift">
                 <%= link_to shifts_path, :title => t("tree_panel.roll_shift"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.roll_shift") %></span>
                 <% end %>
               </li>
-            <% end %>
+            <% end %> -->
             <% if policy(:Shift).search_fm? %>
               <li id="nav_front_money">
                 <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>

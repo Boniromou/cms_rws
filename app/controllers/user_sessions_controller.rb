@@ -12,7 +12,11 @@ class UserSessionsController < Devise::SessionsController
         Rails.logger.error "retrieve location name fail"
       return
       end
-      session[:location_info] = response[:zone_name] + '/' + response[:location_name] if response[:error_code] == 'OK' && response[:zone_name] != nil && response[:location_name] != nil
+      if response[:error_code] == 'OK' && response[:zone_name] != nil && response[:location_name] != nil
+        session[:location_info] = response[:zone_name] + '/' + response[:location_name]
+      else
+        session[:location_info] = nil
+      end
       session[:machine_token] = get_machine_token if session[:location_info]
     end
   end  

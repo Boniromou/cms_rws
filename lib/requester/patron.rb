@@ -84,7 +84,7 @@ class Requester::Patron < Requester::Standard
     message = result_hash[:error_msg].to_s || "no message"
     raise Remote::InvalidTimeRange, "error_code #{error_code}: #{message}" if ['InvalidTimeRange'].include?(error_code)
     audit_log_array = result_hash[:audit_logs]
-    raise Remote::NoPinAuditLog, "error_code #{error_code}: #{message}" if audit_log_array.nil?
+    raise Remote::NoPinAuditLog, "error_code #{error_code}: #{message}" if audit_log_array.nil? || audit_log_array.blank? 
     return audit_log_array
   end
 end

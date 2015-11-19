@@ -1189,4 +1189,44 @@ describe PlayersController do
       check_flash_message I18n.t("reset_pin.call_patron_fail")
     end
   end
+  
+  describe '[59] Show Promotional Credit' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[59.1] seach player profile with credit balance=0', :js => true do
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+
+      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
+      login_as_admin
+
+      mock_have_active_location
+
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      check_search_page
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_balance_page(9999)
+
+      expect(page.source).to have_selector("div a#balance_deposit")
+      expect(page.source).to have_selector("div a#balance_withdraw")
+      expect(find("div a#balance_deposit")[:disabled]).to eq nil
+      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
+
+    end
+  end
 end

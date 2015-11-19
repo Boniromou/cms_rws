@@ -48,6 +48,17 @@ module MockHelper
   def mock_current_machine_token
     allow_any_instance_of(ApplicationController).to receive(:current_machine_token).and_return('20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
   end
+
+  def mock_wallet_balance(balance, credit_balance = nil)
+    if credit_balance.nil?
+      if balance == 'no_balance'
+        credit_balance = 'no_balance'
+      else
+        credit_balance = 0.0
+      end
+    end
+    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => balance, :credit_balance => credit_balance})
+  end
 end
 
 RSpec.configure do |config|

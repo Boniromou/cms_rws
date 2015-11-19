@@ -29,7 +29,7 @@ describe VoidController do
     
     def create_player_transaction
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001')
     end
 
     it '[47.1] Display void button', :js => true do
@@ -74,8 +74,8 @@ describe VoidController do
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
-      expect(void_transaction.status).to eq 'completed'
       expect(page.source).to have_selector("iframe")
+      expect(void_transaction.status).to eq 'completed'
     end
 
     it '[47.3] disconnection Void depopsit fail', :js => true do

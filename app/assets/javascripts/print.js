@@ -22,7 +22,7 @@ function printHtml(html, landscape, title) {
       window.frames["printFrame"].focus();
       window.frames["printFrame"].print();
       document.body.removeChild(printFrame);
-  }, 500);
+  }, 1000);
 
   return false;
 }

@@ -20,7 +20,7 @@ describe PlayersController do
       mock_cage_info
 
       allow_any_instance_of(Requester::Wallet).to receive(:create_player).and_return('OK')
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
     end
 
     after(:each) do
@@ -271,7 +271,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
@@ -333,7 +333,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
@@ -342,7 +342,7 @@ describe PlayersController do
     end
 
     it '[5.1] view player balance enquiry', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+      mock_wallet_balance(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
@@ -405,7 +405,7 @@ describe PlayersController do
       login_as_admin
 
       visit home_path
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+      mock_wallet_balance(99.99)
       mock_have_active_location
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
@@ -426,7 +426,7 @@ describe PlayersController do
     end
 
     it '[5.6] unauthorized to all actions' do
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+      mock_wallet_balance(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       @test_user = User.create!(:uid => 2, :name => 'test.user')
@@ -455,7 +455,7 @@ describe PlayersController do
     end     
 
     it '[5.8] balance enquiry with locked player', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+      mock_wallet_balance(99.99)
       mock_have_active_location
       
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "locked")
@@ -485,7 +485,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
@@ -606,7 +606,7 @@ describe PlayersController do
 
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
@@ -691,7 +691,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
       @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
@@ -775,7 +775,7 @@ describe PlayersController do
     end
 
     it '[37.1] Player balance not found', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
+      mock_wallet_balance('no_balance')
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
@@ -868,7 +868,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
     end
 
     after(:each) do
@@ -985,7 +985,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
     end
 
     after(:each) do
@@ -1092,7 +1092,7 @@ describe PlayersController do
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created' })
       allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return({:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset'})
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -1196,7 +1196,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0.0)
+      mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
     end
 
@@ -1205,7 +1205,7 @@ describe PlayersController do
     end
 
     it '[59.1] seach player profile with credit balance=0', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(99.99)
+      mock_wallet_balance(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin

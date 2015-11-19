@@ -86,10 +86,11 @@
 
 <script>
   function trimToPrintContent(raw) {
-    $('table', raw).css("border","1px double");
-    $('tbody tr td', raw).css("border","1px double");
-    $('thead th', raw).css("border","1px double");
+    $('table', raw).css("border","1px solid");
     $('table', raw).attr('height', 10);
+    $('table', raw).attr('rules', 'all');
+    $('table', raw).attr('cellpadding', 5);
+    $('table', raw).css("margin-bottom","15px");
   }
   var raw_result = $('div#fm_search_result').clone();
   trimToPrintContent(raw_result);
@@ -97,7 +98,7 @@
   $(document).ready(function() {
     $('button#print_fm').click(function() {
 
-      printHtml(content, false, 'FM Activity Report');
+      printHtml(content, true, 'FM Activity Report', true);
 
       return false;
     });

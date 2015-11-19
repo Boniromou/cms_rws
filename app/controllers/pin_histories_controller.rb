@@ -17,15 +17,17 @@ class PinHistoriesController < ApplicationController
     @pin_histories = patron_requester.get_pin_audit_logs(start_time, end_time)
 
     if @pin_histories.class != Array
-      Rails.logger.error "retrieve location name fail"
+      Rails.logger.error "get pin audit log fail"
       @pin_histories = []
     end
-    rescue FrontMoneyHelper::NoResultException => e
+    rescue Remote::NoPinAuditLog 
       @pin_histories = []
     rescue Search::OverRangeError => e
       flash[:error] = "report_search." + e.message
     rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
+    rescue Remote::InvalidTimeRange
+      flash[:error] = "pin_history.invalid_time_range"
     end
     respond_to do |format|
       format.html { render partial: "pin_histories/search_result", formats: [:html] }

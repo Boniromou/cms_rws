@@ -1,4 +1,4 @@
-function printHtml(html, landscape, title) {
+function printHtml(html, landscape, title, have_title) {
   var printFrame = document.createElement('iframe');
 
   printFrame.name = "printFrame";
@@ -11,8 +11,13 @@ function printHtml(html, landscape, title) {
   frameDoc.document.write('<html><head><title>');
   frameDoc.document.write(title);
   frameDoc.document.write('</title>');
-  if ( typeof landscape !== 'undefined' && landscape )
-    frameDoc.document.write('<style>@media print{@page {size: landscape; margin: 0;}}</style>'); //only work on Chrome
+  if ( typeof landscape !== 'undefined' && landscape ){   
+    frameDoc.document.write('<style>@media print{@page {size: landscape; '); //only work on Chrome
+    if ( typeof have_title !== 'undefined' && have_title )
+      frameDoc.document.write('}}</style>');
+    else
+      frameDoc.document.write('margin: 0;}}</style>');
+  }
   frameDoc.document.write('</head><body>');
   frameDoc.document.write(html);
   frameDoc.document.write('</body></html>');

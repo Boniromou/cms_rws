@@ -96,8 +96,8 @@ class ApplicationController < ActionController::Base
 
   def handle_fatal_error(e)
     @from = params[:from]
-    Rails.logger.error "#{e.message}"
-    Rails.logger.error "#{e.backtrace.inspect}"
+    Rails.logger.error "Error message: #{e.message}"
+    Rails.logger.error "Backtrace: #{e.backtrace.inspect}"
     puts e.backtrace
     puts e.message
     respond_to do |format|

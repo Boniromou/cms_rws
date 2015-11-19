@@ -18,23 +18,23 @@
         <% if show_info %>
         <div class="row">
           <div><label class="col-xs-4 box"><strong><%= t("general.card_id")%> :</strong></label></div>
-          <div><label class="col-xs-3 box"><%= label_tag :player_card_id, @player.card_id, :id => "player_card_id" %></label></div>
+          <div><label class="col-xs-5 box"><%= label_tag :player_card_id, format_card_id(@player.card_id), :id => "player_card_id" %></label></div>
         </div>
         <div class="row">
           <div><label class="col-xs-4 box"><strong><%= t("general.member_id")%> :</strong></label></div>
-          <div><label class="col-xs-3 box"><%= label_tag :player_member_id, @player.member_id, :id => "player_member_id" %></label></div>
+          <div><label class="col-xs-5 box"><%= label_tag :player_member_id, @player.member_id, :id => "player_member_id" %></label></div>
         </div>
         <div class="row">
           <div><label class="col-xs-4 box"><strong><%= t("general.status")%> :</strong></label></div>
           <% if !@player.account_locked? %>
-            <div><label class="col-xs-3 box">
+            <div><label class="col-xs-5 box">
               <span class="badge bg-color-greenLight">
                 <%= label_tag :player_status, t("player_status.#{@player.status}"), :id => "player_status" %>
               </span>
             </label></div>
           <% else %>
             <% @player.lock_types.each do |lock_type| %>
-              <div><label class="col-xs-3 box">
+              <div><label class="col-xs-5 box">
                 <span class="badge bg-color-red">
                   <%= label_tag :player_status, t("player_status.#{lock_type}"), :id => "player_#{lock_type}" %>
                 </span>

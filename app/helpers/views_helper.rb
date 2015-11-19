@@ -61,4 +61,8 @@ module ViewsHelper
     c = capture(&block).to_s.gsub("\n","").html_safe
     concat render partial: "shared/pop_up_btn" , locals: {:btn_id => btn_id,:btn_str => btn_str, :form_id => form_id, :style => style, :form_valid_function => form_valid_function, :content => c }
   end
+
+  def format_card_id(card_id)
+    card_id.gsub(/(\d{4})(?=\d)/, '\\1-')
+  end
 end

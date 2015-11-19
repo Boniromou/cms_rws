@@ -20,7 +20,9 @@ class PinHistoriesController < ApplicationController
       Rails.logger.error "get pin audit log fail"
       @pin_histories = []
     end
-    rescue Remote::NoPinAuditLog 
+    rescue Remote::NoPinAuditLog
+      @pin_histories = []
+    rescue FrontMoneyHelper::NoResultException => e
       @pin_histories = []
     rescue Search::OverRangeError => e
       flash[:error] = "report_search." + e.message

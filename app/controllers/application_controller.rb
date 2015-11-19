@@ -108,7 +108,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_location_info
-    return I18n.t("general.zone_and_location") + ': ' + session[:location_info] if session[:location_info]
-    I18n.t("general.zone_and_location") + ': ' + 'N/A'
+    return session[:location_info] if session[:location_info]
+    'N/A'
   end
 end

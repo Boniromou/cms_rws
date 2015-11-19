@@ -7,11 +7,11 @@
 
 <table width='300' style='font-weight: bold;'>
   <tr>
-    <td colspan="4" class='header_info_padding'><%= render 'shared/current_location_widget' %></td>
+    <td width='35%' class='header_info_padding'><%= t("general.zone_and_location") %>:</td>
+    <td width='30%' class='header_info_padding'><%= render 'shared/current_location_widget' %></td>
   </tr>
   <tr>
-    <td width='25%' class='header_info_padding'><%= render 'shared/current_accounting_date_widget' %></td>
-    <td width='5%' class='header_info_padding'>,</td>
+    <td width='35%' class='header_info_padding'><%= render 'shared/current_accounting_date_widget' %></td>
     <td width='30%' class='header_info_padding'><%= render 'shared/current_shift_widget' %></td>
     <td style='visibility: hidden;'>.</td>
   </tr>

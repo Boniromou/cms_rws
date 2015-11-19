@@ -1,21 +1,28 @@
 <style>
-  td.cage_info {
+  td.cage_info_title {
     padding-top: 10px;
     padding-bottom: 10px;
-    text-align: center;
+    text-align: right;
+  }
+
+  td.cage_info_content {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    text-align: left;
   }
 </style>
-
-
-    <header>
-    <div class='cage_info'><%= render 'shared/current_location_widget' %></div>
-    </header>
 <table align='center'>
-  
   <tr>
-    <td class='cage_info'>Account Date:</td>
+    <td class='cage_info_title'><%= t("general.zone_and_location") %>:</td>
     <!-- <td class='cage_info'><div style='visibility: hidden;'>.</div></td> -->
-    <td class='cage_info'><%= render 'shared/current_accounting_date_widget' %></td>
+    <td class='cage_info_content'><%= render 'shared/current_location_widget' %></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class='cage_info_title'><%= t("ac_date.name") %>:</td>
+    <!-- <td class='cage_info'><div style='visibility: hidden;'>.</div></td> -->
+    <td class='cage_info_content'><%= render 'shared/current_accounting_date_widget' %></td>
     <td></td>
   </tr>
   <!-- <tr>
@@ -24,8 +31,8 @@
     <td></td>
   </tr> -->
   <tr>
-    <td class='cage_info'>Calendar Date:</td>
-    <td class='cage_info'><div id="local_date_time"/></td>
+    <td class='cage_info_title'>Calendar Date:</td>
+    <td class='cage_info_content'><div id="local_date_time"/></td>
     <td></td>
   </tr>
 </table>

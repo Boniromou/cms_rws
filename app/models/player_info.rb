@@ -34,7 +34,7 @@ class PlayerInfo
         response = patron_requester.validate_pin(login_name, pin)
         if response.class != Hash
           Rails.logger.error "validate pin fail"
-          return false
+          raise Remote::CallPatronFail.new
         end
         return true if response.class == Hash
       rescue Remote::PinError

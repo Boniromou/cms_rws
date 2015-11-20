@@ -27,9 +27,6 @@ module FundInOut
 
   class AlreadyVoided < FundError
   end
-
-  class CallPatronFail < FundError
-  end
 end
 
 module PlayerProfile
@@ -107,6 +104,12 @@ module Remote
   end
 
   class NoPinAuditLog < RaiseError
+  end
+
+  class PatronError < RaiseError
+  end
+  
+  class CallPatronFail < PatronError
   end
 end
 

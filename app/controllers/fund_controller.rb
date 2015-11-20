@@ -6,7 +6,7 @@ class FundController < ApplicationController
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error
-  rescue_from FundInOut::CallPatronFail, :with => :handle_call_patron_fail
+  rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
 
   def operation_sym
     raise NotImplementedError
@@ -40,10 +40,8 @@ class FundController < ApplicationController
     amount = params[:player_transaction][:amount]
     pin = params[:player_transaction][:pin]
     if action_str == 'withdraw'
-      response = PlayerInfo.validate_pin(@member_id, pin)
-      raise Request::InvalidPin.new unless response
-      # raise FundInOut::CallPatronFail if response.class != Hash
-      # Rails.logger.error "validate pin fail" if response.class != Hash
+      # response = PlayerInfo.validate_pin(@member_id, pin)
+      # raise Request::InvalidPin.new unless response
     end
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do

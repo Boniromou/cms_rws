@@ -40,8 +40,8 @@ class FundController < ApplicationController
     amount = params[:player_transaction][:amount]
     pin = params[:player_transaction][:pin]
     if action_str == 'withdraw'
-      # response = PlayerInfo.validate_pin(@member_id, pin)
-      # raise Request::InvalidPin.new unless response
+      response = PlayerInfo.validate_pin(@member_id, pin)
+      raise Request::InvalidPin.new unless response
     end
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do

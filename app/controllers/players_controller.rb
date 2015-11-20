@@ -43,6 +43,7 @@ class PlayersController < ApplicationController
 
   def handle_player_not_activated(e)
     @player_balance = 'no_balance'
+    @credit_balance = 'no_balance'
     @inactivate = true
     @player = e.player
     @operation = params[:operation]

@@ -1197,22 +1197,37 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
+      mock_have_active_location
 
-      mock_wallet_balance(0.0)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
     end
 
     after(:each) do
       clean_dbs
     end
 
-    it '[59.1] seach player profile with credit balance=0', :js => true do
-      mock_wallet_balance(99.99)
+    def check_footer_btn(deposit,withdraw,credit_deposit,credit_expire)
+      expect(page.source).to have_selector("div a#balance_deposit")
+      expect(page.source).to have_selector("div a#balance_withdraw")
+      expect(page.source).to have_selector("div a#credit_deposit")
+      expect(page.source).to have_selector("div a#credit_expire")
+      expect(find("div a#balance_deposit")[:disabled]).to eq btn_disable_status(deposit)
+      expect(find("div a#balance_withdraw")[:disabled]).to eq btn_disable_status(withdraw)
+      expect(find("div a#credit_deposit")[:disabled]).to eq btn_disable_status(credit_deposit)
+      expect(find("div a#credit_expire")[:disabled]).to eq btn_disable_status(credit_expire)
+    end
 
+    def btn_disable_status(status)
+      if status
+        nil
+      else
+        'disabled'
+      end
+    end
+
+    def check_credit_balance_base
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin
-
-      mock_have_active_location
 
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -1222,13 +1237,38 @@ describe PlayersController do
       find("#button_find").click
       
       check_player_info
-      check_balance_page(9999)
-
-      expect(page.source).to have_selector("div a#balance_deposit")
-      expect(page.source).to have_selector("div a#balance_withdraw")
-      expect(find("div a#balance_deposit")[:disabled]).to eq nil
-      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
-
     end
+
+
+    it '[59.1] seach player profile with credit balance=0', :js => true do
+      mock_wallet_balance(99.99,0.0)
+      
+      check_credit_balance_base
+
+      check_balance_page(9999,0,"")
+      
+      check_footer_btn(true,true,true,false)
+    end
+
+    it '[59.2] seach player profile with credit balance=100', :js => true do
+      mock_wallet_balance(99.99,100.0)
+      
+      check_credit_balance_base
+
+      check_balance_page(9999,10000, I18n.t("balance_enquiry.expiry",expired_at: @credit_expired_at))
+      
+      check_footer_btn(true,true,false,true)
+    end
+
+    it '[59.3] seach player profile with disconnect with wallet', :js => true do
+      mock_wallet_balance('no_balance','no_balance')
+      
+      check_credit_balance_base
+
+      check_balance_page('no_balance','no_balance', "")
+      
+      check_footer_btn(true,true,false,false)
+    end
+
   end
 end

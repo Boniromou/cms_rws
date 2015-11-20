@@ -1,10 +1,10 @@
 <% if policy(:PlayerTransaction).deposit? %>
   <% if @player.account_locked? %>
     <%= link_to t("button.deposit"), "#" , :title => t("button.deposit"), :id => "balance_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
-   <% else %>
+  <% else %>
     <%= link_to t("button.deposit"), fund_in_path + "?member_id=#{@player.member_id}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit", :class => "btn btn-primary" %>
-   <% end %>
- <% end %>
+  <% end %>
+<% end %>
 <% if policy(:PlayerTransaction).withdraw? %>
   <% if @player.account_locked? %>
     <%= link_to t("button.withdrawal"), "#" , :title => t("button.withdrawal"), :id => "balance_withdraw", :class => "btn btn-primary", disabled: 'disabled' %>
@@ -12,7 +12,17 @@
     <%= link_to t("button.withdrawal"), fund_out_path + "?member_id=#{@player.member_id}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw", :class => "btn btn-primary" %>
   <% end %>
 <% end %>
-
-<% if @inactivate && policy(:Player).reset_pin? %>
-  <%= link_to t("button.create_pin"), reset_pin_path + "?member_id=#{@player.member_id}" , :title => t("button.create_pin"), :remote => true, :id => "create_pin", :class => "btn btn-primary" %>
-<% end %> 
+<% if policy(:PlayerTransaction).credit_deposit? %>
+  <% if @player.account_locked? || !can_credit_deposit(@credit_balance)%>
+    <%= link_to t("button.credit_deposit"), "#" , :title => t("button.credit_deposit"), :id => "credit_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
+  <% else %>
+    <%= link_to t("button.credit_deposit"), "#" , :title => t("button.credit_deposit"), :remote => true, :id => "credit_deposit", :class => "btn btn-primary" %>
+  <% end %>
+<% end %>
+<% if policy(:PlayerTransaction).credit_expire? %>
+  <% if @player.account_locked? || !can_credit_expire(@credit_balance)%>
+    <%= link_to t("button.credit_expire"), "#" , :title => t("button.credit_expire"), :id => "credit_expire", :class => "btn btn-primary", disabled: 'disabled' %>
+  <% else %>
+    <%= link_to t("button.credit_expire"), "#" , :title => t("button.credit_expire"), :remote => true, :id => "credit_expire", :class => "btn btn-primary" %>
+  <% end %>
+<% end %>

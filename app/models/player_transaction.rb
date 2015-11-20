@@ -12,8 +12,10 @@ class PlayerTransaction < ActiveRecord::Base
   WITHDRAW = 'withdraw'
   VOID_DEPOSIT = 'void_deposit'
   VOID_WITHDRAW = 'void_withdraw'
+  CREDIT_DEPOSIT = 'credit_deposit'
+  CREDIT_EXPIRE = 'credit_expire'
 
-  TRANSACTION_TYPE_ID_LIST = {:deposit => 1, :withdraw => 2, :void_deposit => 3, :void_withdraw => 4}
+  TRANSACTION_TYPE_ID_LIST = {:deposit => 1, :withdraw => 2, :void_deposit => 3, :void_withdraw => 4, :credit_deposit => 5, :credit_expire => 6}
 
   def deposit_amt_str
     result = ""
@@ -27,10 +29,22 @@ class PlayerTransaction < ActiveRecord::Base
     result
   end
 
+  def credit_deposit_amt_str
+    result = ""
+    result = to_display_amount_str(amount) if self.transaction_type.name == CREDIT_DEPOSIT
+    result
+  end
+
+  def credit_expire_amt_str
+    result = ""
+    result = to_display_amount_str(amount) if self.transaction_type.name == CREDIT_EXPIRE
+    result
+  end
+
   def completed!
     self.status = 'completed'
     self.save!
-    self.update_slip_number!
+    self.update_slip_number! if self.transaction_type.name != CREDIT_DEPOSIT && self.transaction_type.name != CREDIT_DEPOSIT
   end
 
   def rejected!
@@ -139,6 +153,14 @@ class PlayerTransaction < ActiveRecord::Base
 
     def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
       init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
+    end
+
+    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
+    end
+
+    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil)
+      init_player_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id)
     end
 
     def get_player_by_card_member_id(type, id)

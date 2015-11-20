@@ -67,7 +67,7 @@
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
 
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
-    <% if operation == 'withdraw' %>
+    <% if operation.downcase == 'withdraw' %>
         <h3 class="tit">提款單</h3>
         <h3 class="tit">提款單</h3>
     <% else %>

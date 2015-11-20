@@ -230,3 +230,5 @@ en:
     call_patron_fail: "Set PIN fail, please contact customer service for more details."
   pin_history:
     invalid_time_range: "Time range is not valid"
+  credit_deposit_expire:
+    remark: "Remark"

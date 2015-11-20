@@ -3,6 +3,7 @@ class FundController < ApplicationController
 
   layout 'cage'
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
+  rescue_from Remote::CreditNotEnough, :with => :handle_balance_not_enough
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error
@@ -46,7 +47,7 @@ class FundController < ApplicationController
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = do_fund_action(@member_id, server_amount)
-      result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, current_shift.id, current_machine_token, current_user.id)
+      result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
@@ -76,7 +77,7 @@ class FundController < ApplicationController
 
   def handle_balance_not_enough(e)
     @transaction.rejected!
-    handle_fund_error({ key: "invalid_amt.no_enough_to_withdraw", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
+    handle_fund_error({ key: "invalid_amt.no_enough_to_#{action_str}", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
   end
 
   def handle_pin_error

@@ -62,6 +62,26 @@ class Requester::Wallet < Requester::Standard
     end
   end
 
+  def credit_deposit(login_name, amount, ref_trans_id, trans_date)
+    retry_call(RETRY_TIMES) do
+      response = remote_rws_call('post', "#{@path}/credit_deposit", :body => {:login_name => login_name, 
+                                                                              :amt => amount,
+                                                                              :ref_trans_id => ref_trans_id, 
+                                                                              :trans_date => trans_date})
+      parse_credit_deposit_response(response)
+    end
+  end
+
+  def credit_expire(login_name, amount, ref_trans_id, trans_date)
+    retry_call(RETRY_TIMES) do
+      response = remote_rws_call('post', "#{@path}/credit_expire", :body => {:login_name => login_name, 
+                                                                        :amt => amount,
+                                                                        :ref_trans_id => ref_trans_id, 
+                                                                        :trans_date => trans_date})
+      parse_credit_expire_response(response)
+    end
+  end
+
   protected
 
   def parse_get_player_balance_response(result, create_player_proc)
@@ -116,6 +136,23 @@ class Requester::Wallet < Requester::Standard
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
+    return 'OK'
+  end
+
+  def parse_credit_deposit_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
+    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
+    return 'OK'
+  end
+
+  def parse_credit_expire_response(result)
+    result_hash = remote_response_checking(result, :error_code)
+    error_code = result_hash[:error_code].to_s
+    message = result_hash[:error_msg].to_s || "no message"
+    raise Remote::CreditNotEnough, result_hash[:credit_balance] if ['CreditNotEnough'].include?(error_code)
+    raise Remote::CreditExpireError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
 end

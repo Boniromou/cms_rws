@@ -50,6 +50,7 @@ module MockHelper
   end
 
   def mock_wallet_balance(balance, credit_balance = nil)
+    @credit_expired_at = (Time.now + 2.day).utc
     if credit_balance.nil?
       if balance == 'no_balance'
         credit_balance = 'no_balance'
@@ -57,7 +58,7 @@ module MockHelper
         credit_balance = 0.0
       end
     end
-    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => balance, :credit_balance => credit_balance})
+    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => balance, :credit_balance => credit_balance, :credit_expired_at => @credit_expired_at})
   end
 end
 

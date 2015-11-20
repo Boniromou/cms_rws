@@ -66,7 +66,7 @@ describe FundOutController do
     end
 
     it '[7.5] Invalid Withdraw (invalid balance)', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "200.0")
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough.new("200.0"))
 
       login_as_admin 
       go_to_withdraw_page

@@ -815,8 +815,9 @@ describe PlayersController do
     end
 
     it '[38.1] Retry create player success', :js => true do
-      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
-      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99})
+      @credit_expird_at = (Time.now + 2.day).utc
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
       allow_any_instance_of(Requester::Wallet).to receive(:create_player).and_return('OK')
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
@@ -840,6 +841,7 @@ describe PlayersController do
 
     it '[38.2] Retry create player  fail', :js => true do
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'})
+      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'})
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 1, :status => "active")
       login_as_admin

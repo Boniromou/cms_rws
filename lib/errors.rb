@@ -65,6 +65,13 @@ end
 
 module Remote
   class RemoteError < CageError
+    def initialize(result = nil)
+      @result = result
+    end
+
+    def result
+      @result || self.message
+    end
   end
 
   class RetryError < RemoteError
@@ -76,10 +83,7 @@ module Remote
   class RaiseError < RemoteError
   end
 
-  class WalletError < ReturnError
-  end
-
-  class GetBalanceError < WalletError
+  class GetBalanceError < ReturnError
   end
 
   class UnexpectedResponseFormat < RetryError

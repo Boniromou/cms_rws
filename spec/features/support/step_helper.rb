@@ -136,7 +136,7 @@ module StepHelper
   def check_player_info
     expect(find("label#player_full_name").text).to eq @player.full_name.upcase
     expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-    expect(find("label#player_card_id").text).to eq @player.card_id.to_s
+    expect(find("label#player_card_id").text).to eq @player.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
     if @player.status == 'active'
       expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player.status}")
     else
@@ -452,7 +452,7 @@ module StepHelper
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.full_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.member_id)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax

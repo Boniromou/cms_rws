@@ -307,23 +307,6 @@ describe PlayersController do
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
       check_not_found
-      click_link I18n.t("button.create")
-    end
-    
-    it '[4.4] direct to create player' do
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
-      @player = Player.new
-      @player.member_id = 12345
-      @player.first_name = "test"
-      @player.last_name = "player"
-      login_as_admin
-      visit players_search_path + "?operation=balance"
-      fill_search_info("member_id", @player.member_id)
-      find("#button_find").click
-      check_not_found
-      find("div#message_content a.btn").click
-      check_title("tree_panel.create_player")
-      expect(find("form#new_player input#player_member_id").value).to eq @player.member_id.to_s
     end
   end
   
@@ -522,24 +505,6 @@ describe PlayersController do
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
       check_not_found
-      click_link I18n.t("button.create")
-    end
-    
-    it '[12.4] direct to create player' do
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
-      @player = Player.new
-      @player.member_id = 123456
-      @player.card_id = 1234567890
-      @player.first_name = "test"
-      @player.last_name = "player"
-      login_as_admin
-      visit players_search_path + "?operation=balance"
-      fill_search_info("card_id", @player.card_id)
-      find("#button_find").click
-      check_not_found
-      find("div#message_content a.btn").click
-      check_title("tree_panel.create_player")
-      expect(find("form#new_player input#player_card_id").value).to eq @player.card_id.to_s
     end
   end
   
@@ -578,7 +543,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.full_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.member_id)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
@@ -732,7 +697,7 @@ describe PlayersController do
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.full_name.upcase)
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.member_id)
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
@@ -945,7 +910,7 @@ describe PlayersController do
       find("#button_find").click
       check_profile_page('no_balance')
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      expect(find("label#player_card_id").text).to eq @player.card_id.to_s
+      expect(find("label#player_card_id").text).to eq @player.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
       expect(page.source).to have_selector("a#create_pin")
     end
@@ -1009,7 +974,7 @@ describe PlayersController do
       check_title("tree_panel.profile")
       expect(find("label#player_balance").text).to eq '--'
       expect(find("label#player_member_id").text).to eq '123456'
-      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
@@ -1042,7 +1007,7 @@ describe PlayersController do
       check_title("tree_panel.profile")
       expect(find("label#player_balance").text).to eq '--'
       expect(find("label#player_member_id").text).to eq '123456'
-      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
@@ -1074,7 +1039,7 @@ describe PlayersController do
       check_title("tree_panel.profile")
       expect(find("label#player_balance").text).to eq '--'
       expect(find("label#player_member_id").text).to eq '123456'
-      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
@@ -1107,7 +1072,7 @@ describe PlayersController do
       check_title("tree_panel.profile")
       expect(find("label#player_balance").text).to eq '0.00'
       expect(find("label#player_member_id").text).to eq '123456'
-      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.active")
 
       find("#reset_pin").click
@@ -1140,7 +1105,7 @@ describe PlayersController do
       check_title("tree_panel.balance")
       expect(find("label#player_balance").text).to eq '--'
       expect(find("label#player_member_id").text).to eq '123456'
-      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
@@ -1173,7 +1138,7 @@ describe PlayersController do
       check_title("tree_panel.balance")
       expect(find("label#player_balance").text).to eq '--'
       expect(find("label#player_member_id").text).to eq '123456'
-      expect(find("label#player_card_id").text).to eq '1234567890'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click

@@ -185,7 +185,11 @@ class PlayersController < ApplicationController
       end
       Player.update_info(player_info)
       flash[:success] = { key: "reset_pin.set_pin_success", replace: {name: params[:player][:member_id]}}
-      redirect_to :action => 'profile', :member_id => params[:player][:member_id]
+      if params[:operation].downcase == 'profile' 
+        redirect_to :action => 'profile', :member_id => params[:player][:member_id]
+      else
+        redirect_to balance_path + "?member_id=#{params[:player][:member_id]}"
+      end
     rescue Remote::PlayerNotFound
       flash[:error] = "reset_pin.set_pin_fail"
       redirect_to_set_pin_path(params[:player][:member_id], params[:player][:card_id], params[:status], params[:inactivate], params[:operation])

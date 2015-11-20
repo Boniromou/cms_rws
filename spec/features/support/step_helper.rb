@@ -111,9 +111,9 @@ module StepHelper
     fill_in "id_number", :with => id_number
   end
 
-  def check_balance_page(balance = 0)
+  def check_balance_page(balance = 0, credit_balance = nil, expired_at = nil)
     check_title("tree_panel.balance")
-    expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
+    check_balance_amount(balance,credit_balance, expired_at)
   end
 
   def check_balance_page_without_balance
@@ -121,9 +121,15 @@ module StepHelper
     expect(find("label#player_balance").text).to eq  I18n.t("balance_enquiry.no_balance")
   end
 
-  def check_profile_page(balance = 0)
+  def check_profile_page(balance = 0, credit_balance = nil, expired_at = nil)
     check_title("tree_panel.profile")
+    check_balance_amount(balance,credit_balance,expired_at)
+  end
+
+  def check_balance_amount(balance,credit_balance,expired_at)
     expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
+    expect(find("label#credit_balance").text).to eq to_display_amount_str(credit_balance) unless credit_balance.nil?
+    expect(find("label#credit_expired_at").text).to eq expired_at unless expired_at.nil?
   end
 
   def check_edit_page

@@ -20,7 +20,7 @@ describe FundOutController do
       mock_have_active_location
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player_balance = 20000
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(200.0)
+      mock_wallet_balance(200.0)
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
       allow(PlayerInfo).to receive(:validate_pin).and_return(true)
@@ -66,7 +66,7 @@ describe FundOutController do
     end
 
     it '[7.5] Invalid Withdraw (invalid balance)', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "200.0")
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough.new("200.0"))
 
       login_as_admin 
       go_to_withdraw_page
@@ -242,7 +242,7 @@ describe FundOutController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(100.0)
+      mock_wallet_balance(100.0)
 
       find("button#print_slip").click
       expect(page.source).to have_selector("iframe")
@@ -267,7 +267,7 @@ describe FundOutController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
       
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(100.0)
+      mock_wallet_balance(100.0)
 
       find("a#close_link").click
       wait_for_ajax
@@ -291,7 +291,7 @@ describe FundOutController do
       expect(page).to have_selector("button#print_slip")
       expect(page).to have_selector("a#close_link")
       
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(100.0)
+      mock_wallet_balance(100.0)
 
       find("button#print_slip").click
       expect(page.source).to have_selector("iframe")
@@ -331,7 +331,7 @@ describe FundOutController do
       mock_have_active_location
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
       @player_balance = 20000
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(200.0)
+      mock_wallet_balance(200.0)
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
     end
 

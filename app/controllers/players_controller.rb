@@ -43,6 +43,7 @@ class PlayersController < ApplicationController
 
   def handle_player_not_activated(e)
     @player_balance = 'no_balance'
+    @credit_balance = 'no_balance'
     @inactivate = true
     @player = e.player
     @operation = params[:operation]
@@ -62,7 +63,10 @@ class PlayersController < ApplicationController
       @id_number = member_id
       @id_type = :member_id
     end
-    @player_balance = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
+    balance_response = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
+    @player_balance = balance_response[:balance]
+    @credit_balance = balance_response[:credit_balance]
+    @credit_expired_at = balance_response[:credit_expired_at]
 
     respond_to do |format|
       format.html { render "players/player_info", formats: [:html] }

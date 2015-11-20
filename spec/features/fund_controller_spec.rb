@@ -20,7 +20,7 @@ describe FundController do
       mock_patron_not_change
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
 
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(0)
+      mock_wallet_balance(0)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used' })
@@ -40,7 +40,7 @@ describe FundController do
       login_as_admin
       go_to_deposit_page
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
+      mock_wallet_balance('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund_in").click
       find("div#pop_up_dialog div button#confirm").click
@@ -100,7 +100,7 @@ describe FundController do
       login_as_admin
       go_to_withdraw_page
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return('no_balance')
+      mock_wallet_balance('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_fund_out").click
       find("div#pop_up_dialog div button#confirm").click

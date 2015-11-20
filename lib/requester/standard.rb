@@ -9,9 +9,15 @@ class Requester::Standard < Requester::Base
       puts "***************retry_times: #{RETRY_TIMES - retry_times}***************"
       return block.call
     rescue Remote::ReturnError => e
-      return e.message
+      return e.result
     rescue Remote::RaiseError => e
       raise e
+    rescue Remote::RetryError => e
+      if retry_times > 0
+        return retry_call(retry_times - 1, &block)
+      else
+        return e.result
+      end
     rescue Exception => e
       Rails.logger.error "#{e.message}"
       Rails.logger.error "#{e.backtrace.inspect}"

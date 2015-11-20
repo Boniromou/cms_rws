@@ -18,7 +18,6 @@ class Requester::Wallet < Requester::Standard
       response = remote_rws_call('get', "#{@path}/query_player_balance", :query => {:login_name => login_name})
       parse_get_player_balance_response(response, create_player_proc)
     end
-    return 'no_balance' unless result.class == Float
     result
   end
 
@@ -70,11 +69,15 @@ class Requester::Wallet < Requester::Standard
     message = result_hash[:error_msg].to_s || "no message"
     if['InvalidLoginName'].include?(error_code) and !create_player_proc.nil?
       create_player_proc.call
-      raise Remote::RetryError, "error_code #{error_code}: #{message}"
+      raise Remote::RetryError.new({:balance => 'no_balance', :credit_balance => 'no_balance', :credit_expired_at => 'no_balance'}), "error_code #{error_code}: #{message}"
     end
-    raise Remote::GetBalanceError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    raise Remote::GetBalanceError, 'balance is nil when OK' if result_hash[:balance].nil?
-    return result_hash[:balance].to_f
+    raise balance_no_result_error, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
+    raise balance_no_result_error, 'balance is nil when OK' if result_hash[:balance].nil?
+    return {:balance => result_hash[:balance].to_f, :credit_balance => result_hash[:credit_balance].to_f, :credit_expired_at => result_hash[:credit_expired_at]}
+  end
+
+  def balance_no_result_error
+    Remote::GetBalanceError.new({:balance => 'no_balance', :credit_balance => 'no_balance', :credit_expired_at => 'no_balance'})
   end
 
   def parse_create_player_response(result)
@@ -97,7 +100,7 @@ class Requester::Wallet < Requester::Standard
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
+    raise Remote::AmountNotEnough.new(result_hash[:balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
@@ -106,7 +109,7 @@ class Requester::Wallet < Requester::Standard
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::AmountNotEnough, result_hash[:balance] if ['AmountNotEnough'].include?(error_code)
+    raise Remote::AmountNotEnough.new(result_hash[:balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
     raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end

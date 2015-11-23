@@ -17,7 +17,7 @@ class PlayerPolicy < ApplicationPolicy
   end
 
   def unlock?
-    lock?
+    is_admin? || has_permission?('player', 'unlock')
   end
 
   def reset_pin?

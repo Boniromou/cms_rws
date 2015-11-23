@@ -65,6 +65,12 @@ class RequestHandler
     PlayerInfo.get_currency(login_name, property_id)
   end
 
+  def process_lock_player_event
+    property_id = @inbound[:property_id]
+    login_name = @inbound[:login_name]
+    PlayerInfo.lock_player(login_name, property_id)
+  end
+
   def process_validate_machine_token_event
     machine_type = @inbound[:machine_type]
     property_id = @inbound[:property_id]

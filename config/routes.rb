@@ -64,12 +64,14 @@ CmsRws::Application.routes.draw do
   
   get 'machines/current_location' => 'machines#current_location'
 
+  post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
+  get 'get_player_currency' => 'player_infos#get_player_currency'
+  post 'lock_player' => 'player_infos#lock_player'
+
   get 'validate_token' => 'tokens#validate'
-  post 'retrieve_player_info' => 'tokens#retrieve_player_info'
   post 'keep_alive' => 'tokens#keep_alive'
   get 'keep_eternal_alive' => 'eternal_tokens#keep_eternal_alive'
   get 'discard_token' => 'tokens#discard'
-  get 'get_player_currency' => 'tokens#get_player_currency'
 
   get 'validate_machine_token' => 'machines#validate'
 

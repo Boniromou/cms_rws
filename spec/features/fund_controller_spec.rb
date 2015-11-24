@@ -68,7 +68,7 @@ describe FundController do
     it '[48.3] Show Pending transcaction in transcation history', :js => true do
       login_as_admin
       create_player_transaction
-      visit search_transactions_path 
+      visit search_transactions_path + "?operation=cash"
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number

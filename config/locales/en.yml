@@ -71,7 +71,8 @@ en:
     user_name: "User Name"
     password: "Password"
   deposit_withdrawal:
-    amount: "Amount"
+    fund_amount: "Amount"
+    credit_amount: "Credit Amount"
     fund_in_amt: "Deposit Amount (HKD)"
     fund_out_amt: "Withdrawal Amount (HKD)"
     credit_deposit_amt: "Deposit Credit Amount (HKD)"
@@ -80,7 +81,7 @@ en:
     no_balance: "--"
     query_balance_fail: "Enquiry Balance failed, please contact customer service for more details."
     expiry: "Expiry: %{expired_at}"
-    account_credit: "Credit Balance(missing)"
+    account_credit: "Credit Balance"
   button:
     add: "Add"
     cancel: "Cancel"
@@ -204,6 +205,8 @@ en:
     by_slip_number: "by Slip no."
     slip_number: "Slip no."
     remark: "Remark"
+    credit_deposit: "Add Credit"
+    credit_expire: "Expire Credit"
   shift_name:
     morning: "Morning"
     swing: "Swing"

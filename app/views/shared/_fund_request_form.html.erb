@@ -4,7 +4,7 @@
   </div>
   <% unless fund_request_path[1..-1] == 'credit_expire' %>
     <div class="row">
-      <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.amount")%>:</strong></label></td>
+      <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{fund_request_path[1..-1].split('_')[0]}_amount")%>:</strong></label></td>
       <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
           <div class='col-xs-4 box'>
             <label class='invisible_error'>
@@ -32,13 +32,14 @@
   <% if remark == true %>
     <div class="row">
       <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.remark")%>:</strong></label></td>
-      <%= f.text_area :data, :id => "player_transaction_data", :class => "col-xs-7 box", :size => "7x5" %>
+      <%= f.text_area :data, :autofocus => true, :id => "player_transaction_data", :class => "col-xs-7 box", :size => "7x5", :oninput => "validateMaxLength($(this), value, 256)" %>
     </div>
   <% end %>
 <% end %>
 
 <script>
   $(document).ready(function() {
+    $('textarea[autofocus="autofocus"]').focus();
     $('input[autofocus="autofocus"]').focus();
   });
 </script>

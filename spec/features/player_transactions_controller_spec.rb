@@ -336,4 +336,86 @@ describe PlayersController do
       expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
     end
   end
+
+  describe '[62] Promotion Credit History' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_patron_not_change
+      
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+
+      mock_wallet_balance(0.0)
+    end
+
+    after(:each) do
+      PlayerTransaction.delete_all
+    end
+
+    it '[62.1] Show Promotion Credit History (search by accounting date)', js: true do
+      login_as_admin
+      create_player_transaction
+      create_credit_transaction
+      visit home_path
+      click_link I18n.t("tree_panel.promotional_credit")
+      check_player_transaction_page_js
+
+      fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
+      fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
+      find("input#search").click
+      wait_for_ajax
+
+      check_credit_transaction_result_items([@credit_transaction1, @credit_transaction2, @credit_transaction3])
+    end
+
+    it '[62.2] Show Promotion Credit History (search by accounting date & member_id)', js: true do
+      login_as_admin
+      create_player_transaction
+      create_credit_transaction
+      visit home_path
+      click_link I18n.t("tree_panel.promotional_credit")
+      check_player_transaction_page_js
+
+      fill_search_info_js("member_id", @player2.member_id)
+      fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
+      fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
+      find("input#search").click
+      wait_for_ajax
+
+      check_credit_transaction_result_items([@credit_transaction2])
+    end
+
+    it '[62.3] Promotion Credit History not found', js: true do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.promotional_credit")
+      check_player_transaction_page_js
+      fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
+      fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
+      find("input#search").click
+      wait_for_ajax
+
+      expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
+    end
+
+    it '[62.4] Show Promotion Credit History fail with empty time range', js: true do
+      login_as_admin
+      create_player_transaction
+      create_credit_transaction
+      visit home_path
+      click_link I18n.t("tree_panel.promotional_credit")
+      check_player_transaction_page_js
+
+      fill_in "start", :with => ("")
+      fill_in "end", :with => ("")
+      fill_search_info_js("member_id", @player2.member_id)
+      find("input#search").click
+      wait_for_ajax
+
+      check_flash_message I18n.t("transaction_history.datetime_format_not_valid")
+      expect(page).to_not have_selector("div#wid-id-2")
+    end
+  end
 end

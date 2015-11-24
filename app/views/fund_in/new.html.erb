@@ -1,7 +1,7 @@
 <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),[t("tree_panel.balance"), t("tree_panel.fund_in")]) %>
 
 <% back_button = close_to_balance %>
-<% content = render partial: "shared/fund_request_form" , :locals => {:fund_request_path => fund_in_path }%>
+<% content = render partial: "shared/fund_request_form" , :locals => {:remark => false, :fund_request_path => fund_in_path }%>
 <% footer = render "shared/confirm_fund_panel" %>
 <%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content, :footer => footer} %>
 

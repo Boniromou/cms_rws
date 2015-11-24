@@ -1,4 +1,8 @@
-<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.player_transaction")) %>
+<% if @operation == 'cash' %>
+	<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.player_transaction")) %>
+<% else %>
+	<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.promotional_credit")) %>
+<% end %>
 
 <%= javascript_include_tag "print.js" %>
 

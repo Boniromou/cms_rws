@@ -5,9 +5,9 @@ class Requester::Wallet < Requester::Standard
   def create_player(login_name, currency, player_id, player_currency_id)
     retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/create_internal_player", :body => {:login_name => login_name, 
-                                                                                                        :currency => currency, 
-                                                                                                        :player_id => player_id, 
-                                                                                                        :player_currency_id => player_currency_id})
+                                                                                      :currency => currency, 
+                                                                                      :player_id => player_id, 
+                                                                                      :player_currency_id => player_currency_id})
       parse_create_player_response(response)
     end
   end
@@ -21,42 +21,42 @@ class Requester::Wallet < Requester::Standard
     result
   end
 
-  def deposit(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
+  def deposit(login_name, amount, ref_trans_id, trans_date)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/deposit", :body => {:login_name => login_name, :amt => amount,
-                                                                                         :ref_trans_id => ref_trans_id, :trans_date => trans_date,
-                                                                                         :shift_id => shift_id, :device_id => station_id,
-                                                                                         :issuer_id => name})
+      response = remote_rws_call('post', "#{@path}/deposit", :body => {:login_name => login_name, 
+                                                                       :amt => amount,
+                                                                       :ref_trans_id => ref_trans_id, 
+                                                                       :trans_date => trans_date})
       parse_deposit_response(response)
     end
   end
 
-  def withdraw(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
+  def withdraw(login_name, amount, ref_trans_id, trans_date)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/withdraw", :body => {:login_name => login_name, :amt => amount,
-                                                                                          :ref_trans_id => ref_trans_id, :trans_date => trans_date,
-                                                                                          :shift_id => shift_id, :device_id => station_id,
-                                                                                          :issuer_id => name})
+      response = remote_rws_call('post', "#{@path}/withdraw", :body => {:login_name => login_name, 
+                                                                        :amt => amount,
+                                                                        :ref_trans_id => ref_trans_id, 
+                                                                        :trans_date => trans_date})
       parse_withdraw_response(response)
     end
   end
 
-  def void_deposit(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
+  def void_deposit(login_name, amount, ref_trans_id, trans_date)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/void_deposit", :body => {:login_name => login_name, :amt => amount,
-                                                                                         :ref_trans_id => ref_trans_id, :trans_date => trans_date,
-                                                                                         :shift_id => shift_id, :device_id => station_id,
-                                                                                         :issuer_id => name})
+      response = remote_rws_call('post', "#{@path}/void_deposit", :body => {:login_name => login_name, 
+                                                                            :amt => amount,
+                                                                            :ref_trans_id => ref_trans_id, 
+                                                                            :trans_date => trans_date})
       parse_void_deposit_response(response)
     end
   end
 
-  def void_withdraw(login_name, amount, ref_trans_id, trans_date, shift_id, station_id, name)
+  def void_withdraw(login_name, amount, ref_trans_id, trans_date)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/void_withdraw", :body => {:login_name => login_name, :amt => amount,
-                                                                                          :ref_trans_id => ref_trans_id, :trans_date => trans_date,
-                                                                                          :shift_id => shift_id, :device_id => station_id,
-                                                                                          :issuer_id => name})
+      response = remote_rws_call('post', "#{@path}/void_withdraw", :body => {:login_name => login_name, 
+                                                                             :amt => amount,
+                                                                             :ref_trans_id => ref_trans_id, 
+                                                                             :trans_date => trans_date})
       parse_void_withdraw_response(response)
     end
   end

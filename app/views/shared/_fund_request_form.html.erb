@@ -2,20 +2,44 @@
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
+  <% unless fund_request_path[1..-1] == 'credit_expire' %>
+    <div class="row">
+      <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{fund_request_path[1..-1].split('_')[0]}_amount")%>:</strong></label></td>
+      <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
+          <div class='col-xs-4 box'>
+            <label class='invisible_error'>
+              <%= t("invalid_amt."+fund_request_path[1..-1]) %>
+            </label>
+          </div>
+    </div>
+  <% else %>
+    <div>
+      <%= hidden_field(:player_transaction, :amount, :value => @credit_balance) %>
+    </div>
+    <div class="row">
+      <label class="col-xs-4 box"><strong><%= t("balance_enquiry.account_credit")%>:</strong></label></td>
+      <label class="col-xs-4 box"><%= label_tag :credit_balance, to_formatted_display_amount_str(@credit_balance), :id => "credit_balance" %></label></td>
+    </div>
+  <% end %>
 
-  <div class="row">
-    <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.amount")%>:</strong></label></td>
-    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
-        <div class='col-xs-4 box'>
-          <label class='invisible_error'>
-            <%= t("invalid_amt."+fund_request_path[1..-1]) %>
-          </label>
-        </div>
-  </div>
+  <% if fund_request_path.split('_')[0] == '/credit' %>
+    <div class="row">
+      <label class="col-xs-4 box"></label></td>
+      <label class="col-xs-4 box"><%= label_tag :credit_expired_at, t("balance_enquiry.expiry", expired_at: (Time.now + 24*60*60).strftime("%F %R")), :id => "credit_expired_at" %></label></td>
+    </div>
+  <% end %>
+
+  <% if remark == true %>
+    <div class="row">
+      <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.remark")%>:</strong></label></td>
+      <%= f.text_area :data, :autofocus => true, :id => "player_transaction_data", :class => "col-xs-7 box", :size => "7x5", :oninput => "validateMaxLength($(this), value, 256)" %>
+    </div>
+  <% end %>
 <% end %>
 
 <script>
   $(document).ready(function() {
+    $('textarea[autofocus="autofocus"]').focus();
     $('input[autofocus="autofocus"]').focus();
   });
 </script>

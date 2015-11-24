@@ -7,12 +7,14 @@ class PlayerTransactionsController < ApplicationController
     return unless permission_granted? :PlayerTransaction
     @card_id = params[:card_id]
     @default_date = params[:accounting_date] || current_accounting_date.accounting_date
+    @operation = params[:operation]
   end
 
   def do_search
     return unless permission_granted? :PlayerTransaction, :search?
         
     begin
+    @operation = params[:operation]
     @start_time = parse_search_time(params[:start_time])
     @end_time = parse_search_time(params[:end_time], true) 
 
@@ -21,10 +23,11 @@ class PlayerTransactionsController < ApplicationController
 
     selected_tab_index = params[:selected_tab_index]
     slip_number = params[:slip_number]
+
     if selected_tab_index == '0'
-      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number)
+      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number, @operation)
       PlayerInfo.update(id_type,id_number)
-      @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index)
+      @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index, @operation)
     else
       @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, slip_number, selected_tab_index)
     end

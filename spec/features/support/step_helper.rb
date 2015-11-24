@@ -232,6 +232,30 @@ module StepHelper
     end
   end
 
+  def check_credit_transaction_result_contents(item, player_transaction)
+    player = Player.find(player_transaction.player_id)
+    shift = Shift.find(player_transaction.shift_id)
+    accounting_date = AccountingDate.find(shift.accounting_date_id)
+    location = player_transaction.location
+    user = User.find(player_transaction.user_id)
+    if player_transaction.transaction_type_id == 5
+      credit_deposit_str = to_display_amount_str(player_transaction.amount)
+      credit_expire_str = ""
+    else
+      credit_deposit_str = ""
+      credit_expire_str = to_display_amount_str(player_transaction.amount)
+    end
+    expect(item[0].text).to eq player.member_id
+    expect(item[1].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[2].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[3].text).to eq location
+    expect(item[4].text).to eq user.name
+    expect(item[5].text).to eq player_transaction.display_status
+    expect(item[6].text).to eq credit_deposit_str
+    expect(item[7].text).to eq credit_expire_str
+    expect(item[8].text).to eq player_transaction.data
+  end
+
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
@@ -239,6 +263,17 @@ module StepHelper
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
         check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted, void_granted, reprint_void_granted)
+      end
+    end
+  end
+
+  def check_credit_transaction_result_items(transaction_list)
+    items = all("table#datatable_col_reorder tbody tr")
+    expect(items.length).to eq transaction_list.length
+    items.length.times do |i|
+      expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
+      within items[i] do
+        check_credit_transaction_result_contents(all("td"),transaction_list[i])
       end
     end
   end
@@ -354,6 +389,23 @@ module StepHelper
 
     within "div#content" do
         click_link I18n.t("button.deposit")
+    end
+  end
+
+  def go_to_credit_deposit_page
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+    wait_for_ajax
+    check_balance_page
+    
+    within "div#content" do
+        click_link I18n.t("button.credit_deposit")
     end
   end
 
@@ -496,6 +548,15 @@ module StepHelper
     @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1)
     @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2)
     @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3)
+  end
+
+  def create_credit_transaction
+    @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
+    @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
+
+    @credit_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :data => 'test1')
+    @credit_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :data => 'test2')
+    @credit_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 6, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :data => 'test3')
   end
 end
 RSpec.configure do |config|

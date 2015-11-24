@@ -98,6 +98,15 @@ module Remote
   class AmountNotEnough < WithdrawError
   end
 
+  class CreditDepositError < RaiseError
+  end
+
+  class CreditExprieError < RaiseError
+  end
+  
+  class CreditNotEnough < CreditExprieError
+  end
+  
   class PlayerNotFound < RaiseError
   end
 

@@ -36,6 +36,12 @@ CmsRws::Application.routes.draw do
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'
 
+  get 'credit_deposit' => 'credit_deposit#new'
+  post 'credit_deposit' => 'credit_deposit#create'
+
+  get 'credit_expire' => 'credit_expire#new'
+  post 'credit_expire' => 'credit_expire#create'
+
   get 'print'=> 'player_transactions#print'
   get 'reprint'=> 'player_transactions#reprint'
   get 'transactions' => 'player_transactions#index'

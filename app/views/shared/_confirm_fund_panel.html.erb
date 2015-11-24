@@ -4,14 +4,14 @@
     <p><%= t("deposit_withdrawal."+@operation+"_amt") %></p>
     <p style="font-size: 18px;" id="fund_amt"></p>
     <% if @operation == 'fund_out' %>
-    <form class="form-horizontal">
-      <div class="form-group">
-          <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
-          <div class="col-sm-3">
-            <%= text_field_tag 'player_transaction[pin]', nil, :form => "fund_request", :type => "password" %>
-          </div>
-      </div>
-    </form>
+      <form class="form-horizontal">
+        <div class="form-group">
+            <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
+            <div class="col-sm-3">
+              <%= text_field_tag 'player_transaction[pin]', nil, :form => "fund_request", :type => "password" %>
+            </div>
+        </div>
+      </form>
     <% end %>
   <% end %>
 </div>
@@ -36,7 +36,7 @@
     $("label.invisible_error").css('visibility', 'hidden');
   }
 
-  $('#confirm_fund_in, #confirm_fund_out').click(function() {
+  $('#confirm_fund_in, #confirm_fund_out, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
     if( formValid()){
       hideError();
             

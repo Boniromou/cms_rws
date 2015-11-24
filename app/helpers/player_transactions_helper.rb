@@ -12,8 +12,8 @@ module PlayerTransactionsHelper
     true
   end
 
-  def get_start_and_end_shifts(start_time, end_time, id_number)
-  	raise SearchPlayerTransaction::NoIdNumberError, "no_id" if id_number.blank?
+  def get_start_and_end_shifts(start_time, end_time, id_number, operation)
+  	raise SearchPlayerTransaction::NoIdNumberError, "no_id" if id_number.blank? && operation == 'cash'
     raise Search::DateTimeError, "range_error" if to_number(@end_time) < to_number(@start_time)
 
     date_gap = (to_number(@end_time) - to_number(@start_time)) / 86400

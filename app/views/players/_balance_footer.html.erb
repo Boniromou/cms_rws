@@ -13,16 +13,16 @@
   <% end %>
 <% end %>
 <% if policy(:PlayerTransaction).credit_deposit? %>
-  <% if @player.account_locked? || !can_credit_deposit(@credit_balance)%>
+  <% if @player.account_locked? || !can_credit_deposit(@credit_balance) %>
     <%= link_to t("button.credit_deposit"), "#" , :title => t("button.credit_deposit"), :id => "credit_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
   <% else %>
-    <%= link_to t("button.credit_deposit"), "#" , :title => t("button.credit_deposit"), :remote => true, :id => "credit_deposit", :class => "btn btn-primary" %>
+    <%= link_to t("button.credit_deposit"), credit_deposit_path + "?member_id=#{@player.member_id}", :title => t("button.credit_deposit"), :remote => true, :id => "credit_deposit", :class => "btn btn-primary" %>
   <% end %>
 <% end %>
 <% if policy(:PlayerTransaction).credit_expire? %>
-  <% if @player.account_locked? || !can_credit_expire(@credit_balance)%>
-    <%= link_to t("button.credit_expire"), "#" , :title => t("button.credit_expire"), :id => "credit_expire", :class => "btn btn-primary", disabled: 'disabled' %>
+  <% if @player.account_locked? || !can_credit_expire(@credit_balance) %>
+    <%= link_to t("button.credit_expire"), "#", :title => t("button.credit_expire"), :id => "credit_expire", :class => "btn btn-primary", disabled: 'disabled' %>
   <% else %>
-    <%= link_to t("button.credit_expire"), "#" , :title => t("button.credit_expire"), :remote => true, :id => "credit_expire", :class => "btn btn-primary" %>
+    <%= link_to t("button.credit_expire"), credit_expire_path + "?member_id=#{@player.member_id}" , :title => t("button.credit_expire"), :remote => true, :id => "credit_expire", :class => "btn btn-primary" %>
   <% end %>
 <% end %>

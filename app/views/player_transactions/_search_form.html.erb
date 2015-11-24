@@ -6,13 +6,18 @@
           <li>
             <a id="byMemberTab" class="tab-link" href="#tabs-a"><%= t("transaction_history.by_member") %></a>
           </li>
-          <li>
-            <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_slip_number") %></a>
-          </li>
+          <% if @operation == 'cash' %>
+            <li>
+              <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_slip_number") %></a>
+            </li>
+          <% end %>
         </ul>
 
         <div id="tabs-a">
           <br/>
+          <div>
+            <%= hidden_field_tag(:"operation", @operation) %>
+          </div>
           <div class="row">
             <div class="col-md-5">
               <section class="smart-form">
@@ -48,25 +53,26 @@
             <%= render "shared/date_range_picker" %>
           </div>
         </div>
-
-        <div id="tabs-b">
-          <br/>
-          <div class="row">
-            <div class="col-md-3">
-              <section class="smart-form">
-                <label class="label lower"><%= t("transaction_history.slip_number") %></label>
-              </section>
+        <% if @operation == 'cash' %>
+          <div id="tabs-b">
+            <br/>
+            <div class="row">
+              <div class="col-md-3">
+                <section class="smart-form">
+                  <label class="label lower"><%= t("transaction_history.slip_number") %></label>
+                </section>
+              </div>
+              <div class="col-md-9">
+                <section class="smart-form">
+                  <label class="input">
+                    <%= text_field_tag(:"slip_number", nil, autofocus: true) %>
+                  </label>
+                </section>
+              </div>
             </div>
-            <div class="col-md-9">
-              <section class="smart-form">
-                <label class="input">
-                  <%= text_field_tag(:"slip_number", nil, autofocus: true) %>
-                </label>
-              </section>
-            </div>
+            <br/>
           </div>
-          <br/>
-        </div>
+        <% end %>
       </div>
               
       <div class="form-actions">

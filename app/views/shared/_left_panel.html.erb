@@ -55,8 +55,13 @@
             <% end %>
             <% if policy(:PlayerTransaction).search? %>
               <li id="nav_search_transactions">
-                <%= link_to search_transactions_path, :title => t("tree_panel.player_transaction"), :remote => true do %>
+                <%= link_to search_transactions_path + "?operation=cash", :title => t("tree_panel.player_transaction"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
+                <% end %>
+              </li>
+              <li id="nav_search_transactions">
+                <%= link_to search_transactions_path + "?operation=credit", :title => t("tree_panel.promotional_credit"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.promotional_credit") %></span>
                 <% end %>
               </li>
             <% end %>

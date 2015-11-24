@@ -27,6 +27,12 @@ class FundController < ApplicationController
     member_id = params[:member_id]
     @operation = operation_str
     @player = Player.find_by_member_id(member_id)
+    if action_str == 'credit_expire'
+      balance_response = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
+      @player_balance = balance_response[:balance]
+      @credit_balance = balance_response[:credit_balance]
+      @credit_expired_at = balance_response[:credit_expired_at]
+    end
   end
 
   def create
@@ -40,17 +46,19 @@ class FundController < ApplicationController
     end
     amount = params[:player_transaction][:amount]
     pin = params[:player_transaction][:pin]
+    remark = params[:player_transaction][:data]
     if action_str == 'withdraw'
       response = PlayerInfo.validate_pin(@member_id, pin)
       raise Request::InvalidPin.new unless response
     end
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount)
+      @transaction = do_fund_action(@member_id, server_amount, remark)
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
+    redirect_to balance_path + "?member_id=#{@member_id}" if action_str == 'credit_expire' || action_str == 'credit_deposit' 
   end
 
   def get_server_amount(amount)
@@ -94,8 +102,8 @@ class FundController < ApplicationController
 
   protected
 
-  def do_fund_action(member_id, amount, ref_trans_id = nil)
-    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id
+  def do_fund_action(member_id, amount, ref_trans_id = nil, remark)
+    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, remark
   end
 
   def handle_wallet_result(transaction, result)

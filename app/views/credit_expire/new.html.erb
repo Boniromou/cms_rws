@@ -1,0 +1,11 @@
+<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),[t("tree_panel.balance"), t("tree_panel.credit_expire")]) %>
+
+<% back_button = close_to_balance %>
+<% content = render partial: "shared/fund_request_form" , :locals => {:remark => true, :fund_request_path => credit_expire_path, :remark => true}%>
+<% footer = render "shared/confirm_fund_panel" %>
+<%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content, :footer => footer} %>
+
+<%= render partial: "shared/pop_up_panel" %>
+
+<%= javascript_include_tag "validate.input.js" %>
+<%= javascript_include_tag "block.enter.js" %>

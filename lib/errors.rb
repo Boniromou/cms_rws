@@ -101,10 +101,13 @@ module Remote
   class CreditDepositError < RaiseError
   end
 
-  class CreditExprieError < RaiseError
+  class CreditExist < CreditDepositError
+  end
+
+  class CreditExpireError < RaiseError
   end
   
-  class CreditNotEnough < CreditExprieError
+  class CreditNotEnough < CreditExpireError
   end
   
   class PlayerNotFound < RaiseError

@@ -4,6 +4,7 @@ class FundController < ApplicationController
   layout 'cage'
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
   rescue_from Remote::CreditNotEnough, :with => :handle_balance_not_enough
+  rescue_from Remote::CreditExist, :with => :handle_credit_exist
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error
@@ -85,7 +86,7 @@ class FundController < ApplicationController
 
   def handle_balance_not_enough(e)
     @transaction.rejected!
-    handle_fund_error({ key: "invalid_amt.no_enough_to_#{action_str}", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
+    handle_fund_error({ key: "invalid_amt.no_enough_to_#{action_str}", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} })
   end
 
   def handle_pin_error
@@ -98,6 +99,10 @@ class FundController < ApplicationController
     flash[:alert] = 'flash_message.contact_service'
     flash[:fade_in] = false
     redirect_to balance_path + "?member_id=#{@member_id}"
+  end
+
+  def handle_credit_exist
+    handle_fund_error("invalid_amt.credit_exist")
   end
 
   protected

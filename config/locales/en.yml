@@ -76,6 +76,7 @@ en:
     fund_in_amt: "Deposit Amount (HKD)"
     fund_out_amt: "Withdrawal Amount (HKD)"
     credit_deposit_amt: "Deposit Credit Amount (HKD)"
+    credit_expire_amt: "Expire Credit Amount (HKD)"
   balance_enquiry:
     account_balance: "Account Balance(HKD)"
     no_balance: "--"
@@ -167,6 +168,7 @@ en:
     no_enough_to_withdraw: "the account balance is not enough to withdrawal. Current balance: %{balance}"
     no_enough_to_void_deposit: "the account balance is not enough to void deposit. Current balance: %{balance}"
     no_enough_to_credit_expire: "the account credit balance is not enough to expire. Current credit balance: %{balance}"
+    credit_exist: "the account already has promotional_credit"
   invalid_pin:
     invalid_pin: "PIN is not correct"
   flash_message:
@@ -182,6 +184,7 @@ en:
     end_date: "End Date"
     transaction_id: "Transaction ID"
     report: "Player Transaction Report"
+    credit_report: "Promotional Credit Transaction Report"
     member_name: "Member Name"
     member_id: "Member ID"
     accounting_date: "Accounting Date"
@@ -205,8 +208,8 @@ en:
     by_slip_number: "by Slip no."
     slip_number: "Slip no."
     remark: "Remark"
-    credit_deposit: "Add Credit"
-    credit_expire: "Expire Credit"
+    credit_deposit: "Add"
+    credit_expire: "Expire"
   shift_name:
     morning: "Morning"
     swing: "Swing"
@@ -239,7 +242,7 @@ en:
     user_name: "action by"
   void_transaction:
     success: "Void transaction %{slip_number} successful"
-    already_void: "Transaction %{slip_number} has been void(missing)"
+    already_void: "Transaction %{slip_number} has been void"
   reset_pin:
     new_pin: "New PIN"
     confirm_pin: "Confirm PIN"

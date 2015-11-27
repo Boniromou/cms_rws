@@ -251,9 +251,10 @@ module StepHelper
     expect(item[3].text).to eq location
     expect(item[4].text).to eq user.name
     expect(item[5].text).to eq player_transaction.display_status
-    expect(item[6].text).to eq credit_deposit_str
-    expect(item[7].text).to eq credit_expire_str
-    expect(item[8].text).to eq player_transaction.data
+    expect(item[6].text).to eq I18n.t("transaction_history.#{player_transaction.transaction_type.name}")
+    expect(item[7].text).to eq credit_deposit_str
+    expect(item[8].text).to eq credit_expire_str
+    expect(item[9].text).to eq player_transaction.data
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
@@ -406,6 +407,23 @@ module StepHelper
     
     within "div#content" do
         click_link I18n.t("button.credit_deposit")
+    end
+  end
+
+  def go_to_credit_expire_page
+    begin
+      find_link(I18n.t("tree_panel.balance"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
+    click_link I18n.t("tree_panel.balance")
+    fill_search_info_js("member_id", @player.member_id)
+    find("#button_find").click
+    wait_for_ajax
+    check_balance_page
+    
+    within "div#content" do
+        click_link I18n.t("button.credit_expire")
     end
   end
 

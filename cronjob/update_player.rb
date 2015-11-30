@@ -7,6 +7,7 @@ require File.expand_path("../../app/models/lock_type", __FILE__)
 require File.expand_path("../../app/models/token", __FILE__)
 require File.expand_path("../../app/models/property", __FILE__)
 require File.expand_path("../../lib/requester/patron", __FILE__)
+require File.expand_path("../../lib/requester/requester_factory", __FILE__)
 require File.expand_path("../../lib/errors", __FILE__)
 require File.expand_path("../lib/update_player_helper",__FILE__)
 
@@ -20,8 +21,10 @@ ActiveRecord::Base.establish_connection(:adapter => "mysql2",
                                         :database => DB['database'],
                                         :port => DB['port'])
 
+request_config_file = File.expand_path("../../config/request_config.yml",__FILE__)                                        
+
 puts "*************** #{Time.now.utc} ****************"
 puts "Start update players"
-Cronjob::UpdatePlayerHelper.new(env).run
+Cronjob::UpdatePlayerHelper.new(env, request_config_file).run
 puts "Finish update plsyers"
 puts "*************** #{Time.now.utc} ****************"

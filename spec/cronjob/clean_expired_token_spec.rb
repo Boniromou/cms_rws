@@ -3,6 +3,7 @@ require 'cronjob_spec_helper'
 describe Token do
   def clean_dbs
     Token.delete_all
+    PlayersLockType.delete_all
     Player.delete_all
   end
 

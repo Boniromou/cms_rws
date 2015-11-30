@@ -107,7 +107,7 @@ class FundController < ApplicationController
 
   protected
 
-  def do_fund_action(member_id, amount, ref_trans_id = nil, remark)
+  def do_fund_action(member_id, amount, ref_trans_id = nil, remark = nil)
     PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, remark
   end
 

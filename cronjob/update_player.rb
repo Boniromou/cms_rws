@@ -21,10 +21,10 @@ ActiveRecord::Base.establish_connection(:adapter => "mysql2",
                                         :database => DB['database'],
                                         :port => DB['port'])
 
-request_config_file = File.expand_path("../../config/request_config.yml",__FILE__)                                        
+requester_config_file = File.expand_path("../../config/requester_config.yml",__FILE__)                                        
 
 puts "*************** #{Time.now.utc} ****************"
 puts "Start update players"
-Cronjob::UpdatePlayerHelper.new(env, request_config_file).run
+Cronjob::UpdatePlayerHelper.new(env, requester_config_file).run
 puts "Finish update plsyers"
 puts "*************** #{Time.now.utc} ****************"

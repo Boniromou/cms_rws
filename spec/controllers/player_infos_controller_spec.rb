@@ -60,6 +60,16 @@ describe PlayerInfosController do
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'PlayerLocked'
     end
+
+    it '[29.4] Validate PIN fail' do
+      mock_token = "afe1f247-5eaa-4c2c-91c7-33a5fb637713"
+      allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'OK'})
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 100.00, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_raise(Remote::PinError)
+      get 'retrieve_player_info', {:card_id => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidPin'
+    end
   end
 
   describe '[41] get player Currency API ' do
@@ -81,6 +91,12 @@ describe PlayerInfosController do
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
       expect(result[:currency]).to eq 'HKD'
+    end
+
+    it '[41.2] Return Currency fail' do
+      get 'get_player_currency', {:login_name => '1234'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidLoginName'
     end
   end
 

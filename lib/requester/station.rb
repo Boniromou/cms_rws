@@ -1,9 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + "/base")
 
 class Requester::Station < Requester::Standard
-  def initialize(base_path)
-      config = Hood::CONFIG
-      @lax_requester = LaxSupport::AuthorizedRWS::LaxRWS.new(config.internal_property_id, config.service_id, config.service_key)
+  def initialize(property_id, secret_access_key, base_path, servicd_id)
+      @lax_requester = LaxSupport::AuthorizedRWS::LaxRWS.new(property_id, servicd_id, secret_access_key)
       @lax_requester.timeout = 5
       @path = base_path
   end

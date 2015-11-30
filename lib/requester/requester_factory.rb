@@ -11,21 +11,27 @@ module Requester
     end
 
     def get_wallet_requester
-      get_requester('wallet')
+      create_external_requester('wallet')
     end
 
     def get_patron_requester
-      get_requester('patron')
+      create_external_requester('patron')
     end
 
-    def get_wallet_requester
-      get_requester('station')
+    def get_station_requester
+      create_internal_requester('station')
     end
 
   protected
-    def get_requester(type)
+    def create_external_requester(type)
       request_class = eval("Requester::#{type.capitalize}")
       request_class.new(@property_id, @secret_key, @urls[type.to_sym])
+    end
+
+    def create_internal_requester(type)
+      config = Hood::CONFIG
+      request_class = eval("Requester::#{type.capitalize}")
+      Requester::Station.new(config.internal_property_id, config.service_key, @urls[type.to_sym], config.service_id)
     end
   end
 end

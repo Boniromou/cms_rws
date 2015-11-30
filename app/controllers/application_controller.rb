@@ -25,15 +25,15 @@ class ApplicationController < ActionController::Base
   end
 
   def wallet_requester
-    Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH)
+    REQUESTER_FACTORY.get_wallet_requester
   end
 
   def patron_requester
-    Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
+    REQUESTER_FACTORY.get_patron_requester
   end
   
   def station_requester
-    Requester::Station.new(STATION_URL)
+    REQUESTER_FACTORY.get_station_requester
   end
 
   protected

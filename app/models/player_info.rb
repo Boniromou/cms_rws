@@ -2,12 +2,15 @@ class PlayerInfo
   
   class << self
     def patron_requester
-      Requester::Patron.new(PROPERTY_ID, 'test_key', PATRON_URL)
+      REQUESTER_FACTORY.get_patron_requester
+    end
+
+    def wallet_requester
+      REQUESTER_FACTORY.get_wallet_requester
     end
 
     def retrieve_info(card_id, machine_type, machine_token, pin, property_id)
       begin
-        @wallet_requester = Requester::Wallet.new(PROPERTY_ID, 'test_key', WALLET_URL + WALLET_PATH) unless @wallet_requester
         raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id)
         player = Player.find_by_card_id_and_property_id(card_id, property_id)
         raise Request::InvalidCardId.new unless player
@@ -15,7 +18,7 @@ class PlayerInfo
         login_name = player.member_id
         raise Request::InvalidPin.new unless validate_pin(login_name, pin)
         currency = player.currency.name
-        balance_response = @wallet_requester.get_player_balance(player.member_id)
+        balance_response = wallet_requester.get_player_balance(player.member_id)
         balance = balance_response[:balance]
         credit_balance = balance_response[:credit_balance]
         credit_expired_at = balance_response[:credit_expired_at]

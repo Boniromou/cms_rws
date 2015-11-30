@@ -11,7 +11,7 @@ class VoidDepositController < VoidController
     "void_deposit"
   end
 
-  def call_wallet(member_id, amount, ref_trans_id, trans_date, shift_id, machine_token, user_id)
-    wallet_requester.void_deposit(member_id, amount, ref_trans_id, trans_date, shift_id, machine_token, user_id)
+  def call_wallet(member_id, amount, ref_trans_id, trans_date)
+    wallet_requester.void_deposit(member_id, amount, ref_trans_id, trans_date)
   end
 end

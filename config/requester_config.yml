@@ -1,24 +1,24 @@
 development:
-  :wallet_url: http://mingwong01.rnd.laxino.com:5555/cwms
-  :patron_url: http://mingwong01.rnd.laxino.com:6666/pis
-  :station_url: http://marcusao01.rnd.laxino.com:5000
+  :wallet: http://mingwong01.rnd.laxino.com:5555/cwms
+  :patron: http://mingwong01.rnd.laxino.com:6666/pis
+  :station: http://marcusao01.rnd.laxino.com:5000
 
 test:
-  :wallet_url: http://mingwong01.rnd.laxino.com:5555/cwms
-  :patron_url: http://mingwong01.rnd.laxino.com:6666/pis
-  :station_url: http://marcusao01.rnd.laxino.com:5000
+  :wallet: http://mingwong01.rnd.laxino.com:5555/cwms
+  :patron: http://mingwong01.rnd.laxino.com:6666/pis
+  :station: http://marcusao01.rnd.laxino.com:5000
 
 mockup0:
-  :wallet_url: http://mo-mock-cwms-vapp01.rnd.laxino.com:80/cwms
-  :patron_url: http://mo-mock-pis-vapp01.rnd.laxino.com:80/pis
-  :station_url: http://mo-mock-sm-vapp01.rnd.laxino.com:80
+  :wallet: http://mo-mock-cwms-vapp01.rnd.laxino.com:80/cwms
+  :patron: http://mo-mock-pis-vapp01.rnd.laxino.com:80/pis
+  :station: http://mo-mock-sm-vapp01.rnd.laxino.com:80
   
 integration0:
-  :wallet_url: http://mo-int-cwms-vapp01.rnd.laxino.com:80/cwms
-  :patron_url: http://mo-int-pis-vapp01.rnd.laxino.com:80/pis
-  :station_url: http://mo-int-sm-vapp01.rnd.laxino.com:80
+  :wallet: http://mo-int-cwms-vapp01.rnd.laxino.com:80/cwms
+  :patron: http://mo-int-pis-vapp01.rnd.laxino.com:80/pis
+  :station: http://mo-int-sm-vapp01.rnd.laxino.com:80
 
 staging0:
-  :wallet_url: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
-  :patron_url: http://mo-stg-pis-vapp01.rnd.laxino.com:80/pis
-  :station_url: http://mo-stg-sm-vapp01.rnd.laxino.com:80
+  :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
+  :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80/pis
+  :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80

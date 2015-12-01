@@ -24,14 +24,14 @@ module Requester
 
   protected
     def create_external_requester(type)
-      request_class = eval("Requester::#{type.capitalize}")
-      request_class.new(@property_id, @secret_key, @urls[type.to_sym])
+      requester_class = eval("Requester::#{type.capitalize}")
+      requester_class.new(@property_id, @secret_key, @urls[type.to_sym])
     end
 
     def create_internal_requester(type)
       config = Hood::CONFIG
-      request_class = eval("Requester::#{type.capitalize}")
-      Requester::Station.new(config.internal_property_id, config.service_key, @urls[type.to_sym], config.service_id)
+      requester_class = eval("Requester::#{type.capitalize}")
+      requester_class.new(config.internal_property_id, config.service_key, @urls[type.to_sym], config.service_id)
     end
   end
 end

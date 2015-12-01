@@ -33,14 +33,14 @@ module Requester
     def remote_response_checking(result, *arg)
       if result.body && result_hash = YAML.load(result.body).symbolize_keys
         arg.each do |tag|
-          return {:error_code =>"#{self.class.name} expected result has tag #{tag}, but got #{result_hash}"} unless result_hash[tag.to_sym]
+          raise Remote::UnexpectedResponseFormat.new("#{self.class.name} expected result has tag #{tag}, but got #{result_hash}") unless result_hash[tag.to_sym]
         end
         return result_hash
       else
-        return {:error_code =>"#{self.class.name} got invalid result: #{result}"}
+        raise Remote::UnexpectedResponseFormat.new("#{self.class.name} got invalid result: #{result}")
       end
       rescue Exception => e
-        return {:error_code =>"#{self.class.name} got invalid result: #{result}"}
+        raise Remote::UnexpectedResponseFormat.new("#{self.class.name} got invalid result: #{result}")
     end
 
     def retry_call(retry_times, &block)

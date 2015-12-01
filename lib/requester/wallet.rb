@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/standard")
+require File.expand_path(File.dirname(__FILE__) + "/base")
 
-class Requester::Wallet < Requester::Standard
+class Requester::Wallet < Requester::Base
   
   def create_player(login_name, currency, player_id, player_currency_id)
     retry_call(RETRY_TIMES) do

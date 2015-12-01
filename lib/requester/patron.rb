@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/standard")
+require File.expand_path(File.dirname(__FILE__) + "/base")
 
-class Requester::Patron < Requester::Standard
+class Requester::Patron < Requester::Base
   
   def get_player_info(id_type, id_value)
     retry_call(RETRY_TIMES) do

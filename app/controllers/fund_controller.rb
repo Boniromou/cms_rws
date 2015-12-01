@@ -54,7 +54,7 @@ class FundController < ApplicationController
     end
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount, remark)
+      @transaction = do_fund_action(@member_id, server_amount, nil, remark)
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end

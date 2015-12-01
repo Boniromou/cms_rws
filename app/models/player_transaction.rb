@@ -122,7 +122,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction = new
       transaction[:player_id] = player_id
       transaction[:amount] = amount
-      transaction[:transaction_type_id] = TransactionType.find_by_name(trans_type).id;
+      transaction[:transaction_type_id] = TransactionType.find_by_name(trans_type).id
       transaction[:shift_id] = shift_id
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"

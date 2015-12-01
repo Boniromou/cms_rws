@@ -66,7 +66,8 @@ class Requester::Wallet < Requester::Base
       response = remote_rws_call('post', "#{@path}/credit_deposit", :body => {:login_name => login_name, 
                                                                               :amt => amount,
                                                                               :ref_trans_id => ref_trans_id, 
-                                                                              :trans_date => trans_date})
+                                                                              :trans_date => trans_date,
+                                                                              :credit_expired_at => Time.now.utc + 86400})
       parse_credit_deposit_response(response)
     end
   end
@@ -76,8 +77,7 @@ class Requester::Wallet < Requester::Base
       response = remote_rws_call('post', "#{@path}/credit_expire", :body => {:login_name => login_name, 
                                                                         :amt => amount,
                                                                         :ref_trans_id => ref_trans_id, 
-                                                                        :trans_date => trans_date,
-                                                                        :credit_expired_at => Time.now.utc})
+                                                                        :trans_date => trans_date})
       parse_credit_expire_response(response)
     end
   end

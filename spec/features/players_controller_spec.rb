@@ -761,6 +761,8 @@ describe PlayersController do
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
+      
+      check_flash_message I18n.t("balance_enquiry.query_balance_fail")
 
     end
   end

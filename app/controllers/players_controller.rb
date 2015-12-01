@@ -68,6 +68,8 @@ class PlayersController < ApplicationController
     @credit_balance = balance_response[:credit_balance]
     @credit_expired_at = balance_response[:credit_expired_at]
 
+    flash[:error] = "balance_enquiry.query_balance_fail" if @player_balance == 'no_balance'
+
     respond_to do |format|
       format.html { render "players/player_info", formats: [:html] }
       format.js { render"players/player_info", formats: [:js] }

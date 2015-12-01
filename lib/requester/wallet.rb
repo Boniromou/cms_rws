@@ -85,7 +85,11 @@ class Requester::Wallet < Requester::Base
   protected
 
   def parse_get_player_balance_response(result, create_player_proc)
-    result_hash = remote_response_checking(result, :error_code)
+    begin
+      result_hash = remote_response_checking(result, :error_code)
+    rescue Remote::UnexpectedResponseFormat => e
+      raise balance_no_result_error,"UnexpectedResponseFormat"
+    end
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
     if['InvalidLoginName'].include?(error_code) and !create_player_proc.nil?

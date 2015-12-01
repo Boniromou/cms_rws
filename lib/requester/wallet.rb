@@ -98,6 +98,7 @@ class Requester::Wallet < Requester::Base
     end
     raise balance_no_result_error, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
     raise balance_no_result_error, 'balance is nil when OK' if result_hash[:balance].nil?
+    result_hash[:credit_expired_at] = 'no_balance' if result_hash[:credit_balance].to_f <= 0
     return {:balance => result_hash[:balance].to_f, :credit_balance => result_hash[:credit_balance].to_f, :credit_expired_at => result_hash[:credit_expired_at]}
   end
 

@@ -1,9 +1,9 @@
 <div id="button_set">
   <%= close_to_balance %>
-  <% pop_up_btn :id => "confirm_#{@operation}", :str => t("button.confirm"), :form_id => "fund_request", :style => "confirm_fund_btn", :form_valid_function => "formValid()" do %>
-    <p><%= t("deposit_withdrawal."+@operation+"_amt") %></p>
+  <% pop_up_btn :id => "confirm_#{@action}", :str => t("button.confirm"), :form_id => "fund_request", :style => "confirm_fund_btn", :form_valid_function => "formValid()" do %>
+    <p><%= t("deposit_withdrawal."+@action+"_amt") %></p>
     <p style="font-size: 18px;" id="fund_amt"></p>
-    <% if @operation == 'fund_out' %>
+    <% if @action == 'withdraw' %>
       <form class="form-horizontal">
         <div class="form-group">
             <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
@@ -36,7 +36,7 @@
     $("label.invisible_error").css('visibility', 'hidden');
   }
 
-  $('#confirm_fund_in, #confirm_fund_out, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
+  $('#confirm_deposit, #confirm_withdraw, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
     if( formValid()){
       hideError();
             

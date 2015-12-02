@@ -22,9 +22,7 @@ describe LockHistoriesController do
     end
 
     after(:each) do
-      ChangeHistory.delete_all
-      PlayersLockType.delete_all
-      Player.delete_all
+      clean_dbs
     end
 
     it '[46.1] Display lock player change log', :js => true do

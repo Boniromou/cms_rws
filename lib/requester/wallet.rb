@@ -161,7 +161,7 @@ class Requester::Wallet < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::AmountNotEnough.new(result_hash[:credit_balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
+    raise Remote::AmountNotMatch.new(result_hash[:credit_balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
     raise Remote::CreditExpireError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end

@@ -8,6 +8,7 @@ class FundController < ApplicationController
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error
   rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
+  rescue_from Remote::AmountNotMatch, :with => :handle_balance_not_enough
 
   def operation_sym
     raise NotImplementedError
@@ -20,9 +21,9 @@ class FundController < ApplicationController
   def new
     return unless permission_granted? :PlayerTransaction, operation_sym
 
-    member_id = params[:member_id]
+    @member_id = params[:member_id]
     @action = action_str
-    @player = Player.find_by_member_id(member_id)
+    @player = Player.find_by_member_id(@member_id)
   end
 
   def create
@@ -91,6 +92,7 @@ class FundController < ApplicationController
   end
 
   def handle_credit_exist
+    @transaction.rejected!
     flash[:alert] = 'invalid_amt.credit_exist'
     flash[:fade_in] = false
     redirect_to balance_path + "?member_id=#{@member_id}"

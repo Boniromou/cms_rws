@@ -9,19 +9,11 @@ class TokensController < ApplicationController
     handle_request(:validate_token)
   end
 
-  def retrieve_player_info
-    handle_request(:retrieve_player_info)
-  end
-
   def keep_alive
     handle_request(:keep_alive)
   end
 
   def discard
     handle_request(:discard_token)
-  end
-
-  def get_player_currency
-    handle_request(:get_player_currency)
   end
 end

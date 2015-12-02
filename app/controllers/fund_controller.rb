@@ -8,7 +8,7 @@ class FundController < ApplicationController
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error
   rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
-  rescue_from Remote::AmountNotMatch, :with => :handle_balance_not_enough
+  rescue_from Remote::AmountNotMatch, :with => :handle_credit_not_match
 
   def operation_sym
     raise NotImplementedError
@@ -94,6 +94,13 @@ class FundController < ApplicationController
   def handle_credit_exist
     @transaction.rejected!
     flash[:alert] = 'invalid_amt.credit_exist'
+    flash[:fade_in] = false
+    redirect_to balance_path + "?member_id=#{@member_id}"
+  end
+
+  def handle_credit_not_match(e)
+    @transaction.rejected!
+    flash[:alert] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
     flash[:fade_in] = false
     redirect_to balance_path + "?member_id=#{@member_id}"
   end

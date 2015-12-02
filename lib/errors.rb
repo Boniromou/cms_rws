@@ -107,6 +107,9 @@ module Remote
   class CreditExpireError < RaiseError
   end
   
+  class AmountNotMatch < CreditExpireError
+  end
+  
   class PlayerNotFound < RaiseError
   end
 

@@ -61,13 +61,13 @@ class Requester::Wallet < Requester::Base
     end
   end
 
-  def credit_deposit(login_name, amount, ref_trans_id, trans_date)
+  def credit_deposit(login_name, amount, ref_trans_id, trans_date, credit_expired_at)
     retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/credit_deposit", :body => {:login_name => login_name, 
                                                                               :credit_amt => amount,
                                                                               :ref_trans_id => ref_trans_id, 
                                                                               :trans_date => trans_date,
-                                                                              :credit_expired_at => Time.now.utc + CREDIT_LIFE_TIME})
+                                                                              :credit_expired_at => credit_expired_at})
       parse_credit_deposit_response(response)
     end
   end
@@ -127,7 +127,7 @@ class Requester::Wallet < Requester::Base
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
     raise Remote::AmountNotEnough.new(result_hash[:balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
-    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
+    raise Remote::WithdrawError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
 
@@ -144,7 +144,7 @@ class Requester::Wallet < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
+    raise Remote::WithdrawError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end
 
@@ -161,7 +161,7 @@ class Requester::Wallet < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::CreditNotEnough.new(result_hash[:credit_balance].to_f), "error_code #{error_code}: #{message}}" if ['CreditNotEnough'].include?(error_code)
+    raise Remote::AmountNotMatch.new(result_hash[:credit_balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotMatch'].include?(error_code)
     raise Remote::CreditExpireError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end

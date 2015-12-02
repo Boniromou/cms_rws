@@ -3,12 +3,12 @@ class FundController < ApplicationController
 
   layout 'cage'
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
-  rescue_from Remote::CreditNotEnough, :with => :handle_balance_not_enough
   rescue_from Remote::CreditNotExpired, :with => :handle_credit_exist
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error
   rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
+  rescue_from Remote::AmountNotMatch, :with => :handle_credit_not_match
 
   def operation_sym
     (action_str + '?').to_sym
@@ -21,15 +21,9 @@ class FundController < ApplicationController
   def new
     return unless permission_granted? :PlayerTransaction, operation_sym
 
-    member_id = params[:member_id]
+    @member_id = params[:member_id]
     @action = action_str
-    @player = Player.find_by_member_id(member_id)
-    if action_str == 'credit_expire'
-      balance_response = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
-      @player_balance = balance_response[:balance]
-      @credit_balance = balance_response[:credit_balance]
-      @credit_expired_at = balance_response[:credit_expired_at]
-    end
+    @player = Player.find_by_member_id(@member_id)
   end
 
   def create
@@ -98,7 +92,15 @@ class FundController < ApplicationController
   end
 
   def handle_credit_exist
+    @transaction.rejected!
     flash[:alert] = 'invalid_amt.credit_exist'
+    flash[:fade_in] = false
+    redirect_to balance_path + "?member_id=#{@member_id}"
+  end
+
+  def handle_credit_not_match(e)
+    @transaction.rejected!
+    flash[:alert] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
     flash[:fade_in] = false
     redirect_to balance_path + "?member_id=#{@member_id}"
   end

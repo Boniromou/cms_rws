@@ -30,7 +30,7 @@ describe CreditDepositController do
     it '[60.1] Add credit success', :js => true do
       allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_return('OK')
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 0.00, :credit_expired_at => Time.now})
-      login_as_admin 
+      login_as_admin
       go_to_credit_deposit_page
       fill_in "player_transaction_amount", :with => 100
       fill_in "player_transaction_data", :with => 'test'
@@ -39,16 +39,16 @@ describe CreditDepositController do
       wait_for_ajax
 
       credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      credit_transaction.should_not be_nil
-      credit_transaction.transaction_type.name.should == 'credit_deposit'
-      credit_transaction.status.should == 'completed'
-      credit_transaction.amount.should == 10000
-      credit_transaction.data.should == 'test'
+      expect(credit_transaction).not_to be_nil
+      expect(credit_transaction.transaction_type.name).to eq 'credit_deposit'
+      expect(credit_transaction.status).to eq 'completed'
+      expect(credit_transaction.amount).to eq 10000
+      expect(credit_transaction.data).to eq 'test'
       check_flash_message I18n.t("flash_message.credit_deposit_complete", amount: to_display_amount_str(credit_transaction.amount))
     end
 
     it '[60.2] Add credit fail with credit already added', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_raise(Remote::CreditExist)
+      allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_raise(Remote::CreditNotExpired)
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 0.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_deposit_page
@@ -58,9 +58,7 @@ describe CreditDepositController do
       click_pop_up_confirm("confirm_credit_deposit", content_list)
       wait_for_ajax
 
-      check_title("tree_panel.credit_deposit")
-      expect(find("label#player_full_name").text).to eq @player.full_name.upcase
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
+      check_balance_page
       check_flash_message I18n.t("invalid_amt.credit_exist")
     end
 
@@ -76,11 +74,11 @@ describe CreditDepositController do
       wait_for_ajax
 
       credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      credit_transaction.should_not be_nil
-      credit_transaction.transaction_type.name.should == 'credit_deposit'
-      credit_transaction.status.should == 'pending'
-      credit_transaction.amount.should == 10000
-      credit_transaction.data.should == 'test'
+      expect(credit_transaction).not_to be_nil
+      expect(credit_transaction.transaction_type.name).to eq 'credit_deposit'
+      expect(credit_transaction.status).to eq 'pending'
+      expect(credit_transaction.amount).to eq 10000
+      expect(credit_transaction.data).to eq 'test'
       check_player_lock_types
       @player.reload
       expect(@player.status).to eq 'locked'

@@ -98,7 +98,9 @@ class FundController < ApplicationController
   end
 
   def handle_credit_exist
-    handle_fund_error("invalid_amt.credit_exist")
+    flash[:alert] = 'invalid_amt.credit_exist'
+    flash[:fade_in] = false
+    redirect_to balance_path + "?member_id=#{@member_id}"
   end
 
   protected

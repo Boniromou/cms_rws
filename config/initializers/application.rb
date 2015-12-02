@@ -9,4 +9,4 @@ CHANGE_LOG_SEARCH_RANGE = Configuration.retrieve_config('change_log_search_range
 TOKEN_LIFE_TIME = Configuration.retrieve_config('token_life_time') * 60
 SESSION_EXPIRATION_TIME = Configuration.retrieve_config('session_life_time') * 60
 ROLL_SHIFT_TIME = Configuration.find_by_key_and_property_id('roll_shift_time', PROPERTY_ID).value
-CREDIT_LIFE_TIME = Configuration.retrieve_config('credit_life_time', PROPERTY_ID) * 24 * 3600
+CREDIT_LIFE_TIME = Configuration.retrieve_config('credit_life_time') * 24 * 3600

@@ -11,11 +11,11 @@ class FundController < ApplicationController
   rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
 
   def operation_sym
-    raise NotImplementedError
+    (action_str + '?').to_sym
   end
 
   def action_str
-    raise NotImplementedError
+    self.class.name.gsub("Controller","").underscore
   end
 
   def new

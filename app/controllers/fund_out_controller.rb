@@ -1,9 +1,4 @@
 class FundOutController < FundController
-
-  def operation_sym
-    :withdraw?
-  end
-
   def action_str
     "withdraw"
   end

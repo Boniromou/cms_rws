@@ -3,10 +3,6 @@ class CreditDepositController < FundController
     :credit_deposit?
   end
 
-  def operation_str
-    "credit_deposit"
-  end
-
   def action_str
     "credit_deposit"
   end

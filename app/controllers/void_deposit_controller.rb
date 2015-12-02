@@ -3,10 +3,6 @@ class VoidDepositController < VoidController
     :void_deposit?
   end
 
-  def operation_str
-    "void_deposit"
-  end
-
   def action_str
     "void_deposit"
   end

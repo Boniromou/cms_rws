@@ -4,10 +4,6 @@ class CreditExpireController < FundController
     :credit_expire?
   end
 
-  def operation_str
-    "credit_expire"
-  end
-
   def action_str
     "credit_expire"
   end

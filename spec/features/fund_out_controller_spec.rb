@@ -60,7 +60,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
@@ -71,7 +71,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
@@ -93,7 +93,7 @@ describe FundOutController do
       login_as_admin  
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -105,13 +105,13 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
-      find("div#pop_up_dialog div button#cancel").click
+      find("div#pop_up_dialog div button#cancel").trigger('click')
       sleep(5)
       find("div#pop_up_dialog")[:class].include?("fadeOut").should == true
       find("div#pop_up_dialog")[:style].include?("none").should == true   
@@ -122,7 +122,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -139,7 +139,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
       expect(page).to have_selector("button#print_slip")
@@ -196,7 +196,7 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       set_permission(@test_user,"cashier",:player_transaction,[])
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
@@ -211,7 +211,7 @@ describe FundOutController do
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -229,7 +229,7 @@ describe FundOutController do
       login_as_admin
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -254,7 +254,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -278,7 +278,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -315,7 +315,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog")[:style].include?("block").should == false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
@@ -346,7 +346,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
@@ -368,7 +368,7 @@ describe FundOutController do
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)

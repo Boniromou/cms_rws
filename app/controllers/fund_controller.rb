@@ -4,7 +4,7 @@ class FundController < ApplicationController
   layout 'cage'
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
   rescue_from Remote::CreditNotEnough, :with => :handle_balance_not_enough
-  rescue_from Remote::CreditExist, :with => :handle_credit_exist
+  rescue_from Remote::CreditNotExpired, :with => :handle_credit_exist
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
   rescue_from Request::InvalidPin, :with => :handle_pin_error

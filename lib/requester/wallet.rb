@@ -152,7 +152,7 @@ class Requester::Wallet < Requester::Base
     result_hash = remote_response_checking(result, :error_code)
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::CreditExist, "error_code #{error_code}: #{message}}" if ['CreditExist'].include?(error_code)
+    raise Remote::CreditNotExpired, "error_code #{error_code}: #{message}}" if ['CreditNotExpired'].include?(error_code)
     raise Remote::CreditDepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
     return 'OK'
   end

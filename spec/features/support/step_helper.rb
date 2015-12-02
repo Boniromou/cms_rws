@@ -447,7 +447,7 @@ module StepHelper
     go_to_deposit_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
-    find("button#confirm_fund_in").click
+    find("button#confirm_deposit").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
     
     expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
@@ -462,7 +462,7 @@ module StepHelper
     go_to_withdraw_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
-    find("button#confirm_fund_out").click
+    find("button#confirm_withdraw").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
 
     find("div#pop_up_dialog")[:class].include?("fadeIn").should == true

@@ -3,10 +3,6 @@ class VoidWithdrawController < VoidController
     :void_withdraw?
   end
 
-  def operation_str
-    "void_withdraw"
-  end
-
   def action_str
     "void_withdraw"
   end

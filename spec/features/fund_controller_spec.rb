@@ -42,7 +42,7 @@ describe FundController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
       mock_wallet_balance('no_balance')
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_in").click
+      find("button#confirm_deposit").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 
@@ -85,7 +85,7 @@ describe FundController do
       mock_have_active_location
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog")[:style].include?("block").should == true
       find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
@@ -102,7 +102,7 @@ describe FundController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
       mock_wallet_balance('no_balance')
       fill_in "player_transaction_amount", :with => 100
-      find("button#confirm_fund_out").click
+      find("button#confirm_withdraw").click
       find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 

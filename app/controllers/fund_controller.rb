@@ -14,10 +14,6 @@ class FundController < ApplicationController
     raise NotImplementedError
   end
 
-  def operation_str
-    raise NotImplementedError
-  end
-
   def action_str
     raise NotImplementedError
   end
@@ -26,7 +22,7 @@ class FundController < ApplicationController
     return unless permission_granted? :PlayerTransaction, operation_sym
 
     member_id = params[:member_id]
-    @operation = operation_str
+    @action = action_str
     @player = Player.find_by_member_id(member_id)
     if action_str == 'credit_expire'
       balance_response = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)

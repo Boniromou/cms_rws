@@ -4,10 +4,6 @@ class FundOutController < FundController
     :withdraw?
   end
 
-  def operation_str
-    "fund_out"
-  end
-
   def action_str
     "withdraw"
   end

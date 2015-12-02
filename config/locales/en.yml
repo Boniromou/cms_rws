@@ -73,8 +73,8 @@ en:
   deposit_withdrawal:
     fund_amount: "Amount"
     credit_amount: "Credit Amount"
-    fund_in_amt: "Deposit Amount (HKD)"
-    fund_out_amt: "Withdrawal Amount (HKD)"
+    deposit_amt: "Deposit Amount (HKD)"
+    withdraw_amt: "Withdrawal Amount (HKD)"
     credit_deposit_amt: "Deposit Credit Amount (HKD)"
     credit_expire_amt: "Expire Credit Amount (HKD)"
   balance_enquiry:

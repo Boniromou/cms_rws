@@ -3,7 +3,6 @@ class FundController < ApplicationController
 
   layout 'cage'
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
-  rescue_from Remote::CreditNotEnough, :with => :handle_balance_not_enough
   rescue_from Remote::CreditNotExpired, :with => :handle_credit_exist
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
   rescue_from FundInOut::CallWalletFail, :with => :handle_call_wallet_fail
@@ -24,12 +23,6 @@ class FundController < ApplicationController
     member_id = params[:member_id]
     @action = action_str
     @player = Player.find_by_member_id(member_id)
-    if action_str == 'credit_expire'
-      balance_response = wallet_requester.get_player_balance(member_id, 'HKD', @player.id, @player.currency_id)
-      @player_balance = balance_response[:balance]
-      @credit_balance = balance_response[:credit_balance]
-      @credit_expired_at = balance_response[:credit_expired_at]
-    end
   end
 
   def create

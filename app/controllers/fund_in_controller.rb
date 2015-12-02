@@ -1,8 +1,4 @@
 class FundInController < FundController
-  def operation_sym
-    :deposit?
-  end
-
   def action_str
     "deposit"
   end

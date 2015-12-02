@@ -67,7 +67,7 @@ class Requester::Wallet < Requester::Base
                                                                               :credit_amt => amount,
                                                                               :ref_trans_id => ref_trans_id, 
                                                                               :trans_date => trans_date,
-                                                                              :credit_expired_at => Time.now.utc + 86400})
+                                                                              :credit_expired_at => Time.now.utc + CREDIT_LIFE_TIME})
       parse_credit_deposit_response(response)
     end
   end

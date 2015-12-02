@@ -101,7 +101,7 @@ module Remote
   class CreditDepositError < RaiseError
   end
 
-  class CreditExist < CreditDepositError
+  class CreditNotExpired < CreditDepositError
   end
 
   class CreditExpireError < RaiseError

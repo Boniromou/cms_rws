@@ -69,7 +69,7 @@ module ViewsHelper
   def show_remark(data)
     if data
       data_hash = YAML.load(data)
-      return data_hash[:remark] if data_hash.class = Hash
+      return data_hash[:remark] if data_hash.class == Hash
     end
   end
 end

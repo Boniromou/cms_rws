@@ -65,15 +65,24 @@ class ApplicationController < ActionController::Base
   end
 
   def current_shift
-    Shift.current
+    Shift.current(current_property_id)
   end
 
   def current_accounting_date
-    AccountingDate.current
+    AccountingDate.current(current_property_id)
   end
 
   def current_machine_token
     session[:machine_token]
+  end
+
+  def current_property_id
+    current_user.property_id || Machine.parse_machine_token(cookise[:machine_token])[:property_id]
+  end
+
+  def config_helper
+    @config_helper = ConfigHelper.new(current_property_id) unless @config_helper
+    @config_helper
   end
 
   def permission_granted?(model, operation = nil)

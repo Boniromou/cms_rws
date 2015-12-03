@@ -18,9 +18,9 @@ class Shift < ActiveRecord::Base
     self.roll_shift_at = Time.now.utc
 
     new_shift = Shift.new
-    new_shift_name = self.class.next_shift_name_by_name(name)
+    new_shift_name = self.class.next_shift_name_by_name(name, self.property_id)
     new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
-    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name)
+    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.property_id)
 
     Shift.transaction do
       self.save
@@ -35,9 +35,9 @@ class Shift < ActiveRecord::Base
     self.updated_at = Time.now.utc.to_formatted_s(:db)
 
     new_shift = Shift.new
-    new_shift_name = self.class.next_shift_name_by_name(name)
+    new_shift_name = self.class.next_shift_name_by_name(name, self.property_id)
     new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
-    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name)
+    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.property_id)
     new_shift.created_at = Time.now.utc.to_formatted_s(:db)
     new_shift.updated_at = Time.now.utc.to_formatted_s(:db)
 
@@ -48,14 +48,14 @@ class Shift < ActiveRecord::Base
   end
 
   class << self
-    def current
-      shift = Shift.find_by_roll_shift_at_and_property_id(nil, Property.current_property_id)
+    def current(property_id)
+      shift = Shift.find_by_roll_shift_at_and_property_id(nil, property_id)
       raise 'Current shift not found!' unless shift
       shift
     end
 
-    def next_shift_name_by_name( shift_name )
-      shift_names = PropertiesShiftType.shift_types(Property.current_property_id)
+    def next_shift_name_by_name(shift_name, property_id)
+      shift_names = PropertiesShiftType.shift_types(property_id)
       return shift_names[0]if shift_names.index(shift_name).nil?
       shift_names[(shift_names.index(shift_name) + 1) % shift_names.length] 
     end

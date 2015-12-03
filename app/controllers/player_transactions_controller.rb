@@ -26,7 +26,7 @@ class PlayerTransactionsController < ApplicationController
 
     if selected_tab_index == '0'
       shifts = get_start_and_end_shifts(@start_time, @end_time, id_number, @operation)
-      PlayerInfo.update(id_type,id_number) if id_number
+      PlayerInfo.update(id_type,id_number) unless id_number
       @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index, @operation)
     else
       @player_transactions = PlayerTransaction.search_query(nil, nil, nil, nil, slip_number, selected_tab_index)

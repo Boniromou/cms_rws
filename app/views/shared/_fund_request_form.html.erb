@@ -32,7 +32,7 @@
   <% if remark == true %>
     <div class="row">
       <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.remark")%>:</strong></label></td>
-      <%= f.text_area :data, :autofocus => true, :id => "player_transaction_data", :class => "col-xs-7 box", :size => "7x5", :oninput => "validateMaxLength($(this), value, 256)" %>
+      <%= f.text_area :remark, :autofocus => true, :id => "player_transaction_remark", :class => "col-xs-7 box", :size => "7x5", :oninput => "validateMaxLength($(this), value, 256)" %>
     </div>
   <% end %>
 <% end %>

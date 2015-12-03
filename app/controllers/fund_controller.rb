@@ -37,14 +37,14 @@ class FundController < ApplicationController
     end
     amount = params[:player_transaction][:amount]
     pin = params[:player_transaction][:pin]
-    remark = params[:player_transaction][:data]
+    data = {:remark => params[:player_transaction][:remark]}.to_yaml
     if action_str == 'withdraw'
       response = PlayerInfo.validate_pin(@member_id, pin)
       raise Request::InvalidPin.new unless response
     end
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount, nil, remark)
+      @transaction = do_fund_action(@member_id, server_amount, nil, data)
       result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
@@ -107,8 +107,8 @@ class FundController < ApplicationController
 
   protected
 
-  def do_fund_action(member_id, amount, ref_trans_id = nil, remark = nil)
-    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, remark
+  def do_fund_action(member_id, amount, ref_trans_id = nil, data = nil)
+    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
   end
 
   def handle_wallet_result(transaction, result)

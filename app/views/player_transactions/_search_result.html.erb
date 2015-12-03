@@ -68,7 +68,7 @@
                     <td><%= t("transaction_history.#{t.transaction_type.name}") %></td>
                     <td><%= t.credit_deposit_amt_str %></td>
                     <td><%= t.credit_expire_amt_str %></td>
-                    <td style="width: 15%; text-align: left;"><%= t.data %></td>
+                    <td style="width: 15%; text-align: left;"><%= show_remark(t.data) %></td>
                   <% end %>
                 </tr>
               <% end %>

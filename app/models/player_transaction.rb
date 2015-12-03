@@ -116,7 +116,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   class << self
   include FundHelper
-    def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, remark = nil)
+    def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       player = Player.find_by_member_id(member_id)
       player_id = player[:id]
       transaction = new
@@ -129,7 +129,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:user_id] = user_id
       transaction[:trans_date] = Time.now
       transaction[:property_id] = player[:property_id]
-      transaction[:data] = remark
+      transaction[:data] = data
       transaction.save
       if ref_trans_id.nil?
         transaction[:ref_trans_id] = make_trans_id(transaction.id)
@@ -140,28 +140,28 @@ class PlayerTransaction < ActiveRecord::Base
       transaction
     end
 
-    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, remark)
+    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, remark)
+    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, remark)
+    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, remark)
+    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
     end
 
-    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, remark)
-      init_player_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, remark)
+    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
+      init_player_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
-    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, remark)
-      init_player_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, remark)
+    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
+      init_player_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def get_player_by_card_member_id(type, id)

@@ -7,7 +7,7 @@ class UserSessionsController < Devise::SessionsController
 
   def set_location_info
     if get_machine_token
-      response = station_requester.validate_machine_token(MACHINE_TYPE, get_machine_token, PROPERTY_ID)
+      response = station_requester.validate_machine_token(MACHINE_TYPE, get_machine_token, Property.current_property_id)
       if response.class != Hash
         Rails.logger.error "retrieve location name fail"
       return

@@ -8,7 +8,7 @@ class Configuration < ActiveRecord::Base
       end
 
       def retrieve_config(key)
-        Configuration.find_by_key_and_property_id(key, PROPERTY_ID).value.to_i
+        Configuration.find_by_key_and_property_id(key, Property.current_property_id).value.to_i
       end
     end
 end

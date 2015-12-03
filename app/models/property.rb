@@ -7,5 +7,9 @@ class Property < ActiveRecord::Base
       Property.all.each {|p| r[p.id] = p.secret_key}
       r
     end
+
+    def current_property_id
+      20000
+    end
   end
 end

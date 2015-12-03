@@ -49,13 +49,13 @@ class Shift < ActiveRecord::Base
 
   class << self
     def current
-      shift = Shift.find_by_roll_shift_at_and_property_id(nil, PROPERTY_ID)
+      shift = Shift.find_by_roll_shift_at_and_property_id(nil, Property.current_property_id)
       raise 'Current shift not found!' unless shift
       shift
     end
 
     def next_shift_name_by_name( shift_name )
-      shift_names = PropertiesShiftType.shift_types(PROPERTY_ID)
+      shift_names = PropertiesShiftType.shift_types(Property.current_property_id)
       return shift_names[0]if shift_names.index(shift_name).nil?
       shift_names[(shift_names.index(shift_name) + 1) % shift_names.length] 
     end

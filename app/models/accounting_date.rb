@@ -9,7 +9,7 @@ class AccountingDate < ActiveRecord::Base
     end
 
     def next_shift_accounting_date_id( shift_name )
-      shift_names = PropertiesShiftType.shift_types(PROPERTY_ID)
+      shift_names = PropertiesShiftType.shift_types(Property.current_property_id)
       last_shift_name = shift_names[-1]
       if shift_name == last_shift_name
         new_ac_date = new
@@ -22,7 +22,7 @@ class AccountingDate < ActiveRecord::Base
     end
 
     def next_shift_accounting_date( shift_name, current_ac_date )
-      shift_names = PropertiesShiftType.shift_types(PROPERTY_ID)
+      shift_names = PropertiesShiftType.shift_types(Property.current_property_id)
       last_shift_name = shift_names[-1]
       if shift_name == last_shift_name
         return current_ac_date + 1

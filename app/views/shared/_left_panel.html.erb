@@ -89,7 +89,7 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(:AuditLog).search? %>
+      <% if policy(:AuditLog).search_audit_log? %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
           <ul style="display:block;">

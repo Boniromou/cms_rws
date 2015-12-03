@@ -4,6 +4,8 @@ class AccountingDatesController < ApplicationController
   skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id, :only => :current
 
   def current
-    @current_accounting_date = current_accounting_date.accounting_date
+    respond_to do |format|
+      format.html { render :text => current_accounting_date.accounting_date , :layout => false }
+    end
   end
 end

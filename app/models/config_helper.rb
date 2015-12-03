@@ -25,7 +25,8 @@ class ConfigHelper
   end
 
   def session_expiration_time
-    retrieve_config('session_life_time').to_i * 60
+    life_time = retrieve_config('session_life_time') || 60
+    life_time.to_i * 60
   end
 
   def credit_life_time
@@ -37,6 +38,8 @@ class ConfigHelper
   end
 
   def retrieve_config(key)
-    Configuration.find_by_key_and_property_id(key, @property_id).value
+    configuration = Configuration.find_by_key_and_property_id(key, @property_id)
+    return configuration.value if configuration
+    nil
   end
 end

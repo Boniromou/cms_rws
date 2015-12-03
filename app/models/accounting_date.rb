@@ -13,11 +13,11 @@ class AccountingDate < ActiveRecord::Base
       last_shift_name = shift_names[-1]
       if shift_name == last_shift_name
         new_ac_date = new
-        new_ac_date.accounting_date = current.accounting_date + 1
+        new_ac_date.accounting_date = current(property_id).accounting_date + 1
         new_ac_date.save
         new_ac_date.id
       else
-        current.id
+        current(property_id).id
       end
     end
 

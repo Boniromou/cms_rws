@@ -11,7 +11,7 @@ module StepHelper
   end
 
   def login_as_root
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin', :property_id => 20000)
     login_as(@root_user)
   end
 
@@ -26,12 +26,14 @@ module StepHelper
   end
 
   def login_as_not_admin(user)
+    user.property_id = 20000
+    user.save
     login_as user
     Rails.cache.write user.uid.to_s, {:status => true, :admin => false}
   end
 
   def login_as_admin
-    @root_user = User.create!(:uid => 1, :name => 'portal.admin')
+    @root_user = User.create!(:uid => 1, :name => 'portal.admin', :property_id => 20000)
     login_as_not_admin(@root_user)
     Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true}
   end

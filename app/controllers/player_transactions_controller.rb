@@ -25,7 +25,7 @@ class PlayerTransactionsController < ApplicationController
     slip_number = params[:slip_number]
 
     if selected_tab_index == '0'
-      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number, @operation)
+      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number, @operation, config_helper.trans_history_search_range)
       PlayerInfo.update(id_type,id_number)
       @player_transactions = PlayerTransaction.search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index, @operation)
     else

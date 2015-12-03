@@ -19,12 +19,12 @@ describe Token do
     end
 
     it '[50.1] roll shift' do
-      Shift.current.roll_by_system
+      Shift.current(20000).roll_by_system
       expect(Shift.find(:all).length).to eq 2
-      expect(Shift.current.name).to eq 'swing'
-      Shift.current.roll_by_system
+      expect(Shift.current(20000).name).to eq 'swing'
+      Shift.current(20000).roll_by_system
       expect(Shift.find(:all).length).to eq 3
-      expect(Shift.current.name).to eq 'night'
+      expect(Shift.current(20000).name).to eq 'night'
     end
   end
 end

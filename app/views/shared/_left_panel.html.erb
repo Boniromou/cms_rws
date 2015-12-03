@@ -93,23 +93,21 @@
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
           <ul style="display:block;">
-            <% if policy(:AuditLog).search? %>
+            <% if policy(:AuditLog).search_audit_log? %>
               <li id="nav_audit_log">
                 <%= link_to search_audit_logs_path, :title => t("tree_panel.audit_log"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.audit_log") %></span>
                 <% end %>
               </li>
             <% end %>
-            <!-- TODO permission -->
-            <% if policy(:AuditLog).search? %>
+            <% if policy(:ChangeHistory).lock_player_log? %>
               <li id="nav_audit_log">
                 <%= link_to search_lock_histories_path, :title => t("tree_panel.lock_history"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.lock_history") %></span>
                 <% end %>
               </li>
             <% end %>
-            <!-- TODO permission -->
-            <% if policy(:AuditLog).search? %>
+            <% if policy(:ChangeHistory).pin_change_log? %>
               <li id="nav_audit_log">
                 <%= link_to search_pin_histories_path, :title => t("tree_panel.pin_history"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.pin_history") %></span>

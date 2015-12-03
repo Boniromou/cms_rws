@@ -5,12 +5,12 @@ class PinHistoriesController < ApplicationController
   include PinHistoriesHelper
 
   def search
-    return unless permission_granted? :Shift, :search_fm?
+    return unless permission_granted? :ChangeHistory, :pin_change_log?
     @default_date = params[:accounting_date] || current_accounting_date.accounting_date
   end
 
   def do_search
-    return unless permission_granted? :Shift, :search_fm?
+    return unless permission_granted? :ChangeHistory, :pin_change_log?
     begin
 
     start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time])

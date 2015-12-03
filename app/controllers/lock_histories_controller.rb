@@ -4,8 +4,7 @@ class LockHistoriesController < ApplicationController
   include FrontMoneyHelper
 
   def search
-    # TODO permission
-    return unless permission_granted? :Shift, :search_fm?
+    return unless permission_granted? :ChangeHistory, :lock_player_log?
 
     @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
     respond_to do |format|
@@ -15,8 +14,8 @@ class LockHistoriesController < ApplicationController
   end
 
   def do_search
-    # TODO permission
-    return unless permission_granted? :Shift, :search_fm?
+    return unless permission_granted? :ChangeHistory, :lock_player_log?
+    
     begin
     accounting_date = params[:accounting_date]
     @accounting_date = parse_date(accounting_date, current_accounting_date.accounting_date)

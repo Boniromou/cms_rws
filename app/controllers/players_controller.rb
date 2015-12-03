@@ -2,35 +2,7 @@ class PlayersController < ApplicationController
   layout 'cage'
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
-
-  def new
-    return unless permission_granted? :Player
-    @player = Player.new
-    @player.card_id = params[:card_id]
-    @player.member_id = params[:member_id]
-    @player.first_name = params[:first_name]
-    @player.last_name = params[:last_name]
-  end
-
-  def create
-    return unless permission_granted? :Player
-    begin
-      AuditLog.player_log("create", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
-        player = Player.create_by_params(params[:player])
-        wallet_requester.create_player(params[:player][:member_id], 'HKD', player.id, player.currency_id)
-      end
-      flash[:success] = {key: "create_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
-      redirect_to :action => 'balance', :member_id => params[:player][:member_id]
-    rescue CreatePlayer::ParamsError => e
-      flash[:error] = "create_player." + e.message
-      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
-    rescue CreatePlayer::DuplicatedFieldError => e
-      field = e.message
-      flash[:error] = {key: "create_player." + field + "_exist", replace: {field.to_sym => params[:player][field.to_sym]}}
-      redirect_to :action => 'new', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
-    end
-  end
-
+  
   def balance
     @operation = 'balance'
     player_info

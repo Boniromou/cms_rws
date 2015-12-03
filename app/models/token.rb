@@ -17,8 +17,12 @@ class Token < ActiveRecord::Base
   end
 
   def keep_alive
-    self.expired_at = Time.now.utc + TOKEN_LIFE_TIME
+    self.expired_at = Time.now.utc + self.token_life_time
     self.save
+  end
+  
+  def token_life_time
+    ConfigHelper.new(self.player.property_id).token_life_time
   end
 
 	class << self
@@ -35,7 +39,7 @@ class Token < ActiveRecord::Base
     	token = new
     	token.player_id = player_id
 		  token.session_token = SecureRandom.uuid
-		  token.expired_at = Time.now.utc + TOKEN_LIFE_TIME
+		  token.expired_at = Time.now.utc + token.token_life_time
 		  token.save
       token
     end

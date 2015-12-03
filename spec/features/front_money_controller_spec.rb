@@ -65,7 +65,7 @@ describe FrontMoneyController do
       wait_for_ajax
       transaction_list = [@player_transaction1,@player_transaction2,@player_transaction3]
       check_fm_report_result_items(transaction_list)
-      expect(find("input#accounting_date").value).to eq AccountingDate.current.accounting_date.strftime("%Y-%m-%d")
+      expect(find("input#accounting_date").value).to eq AccountingDate.current(@root_user.property_id).accounting_date.strftime("%Y-%m-%d")
     end
   end
   

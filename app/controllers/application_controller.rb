@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def check_session_expiration
-    if session[:accessed_at] && Time.now.utc - session[:accessed_at] > SESSION_EXPIRATION_TIME
+    if session[:accessed_at] && Time.now.utc - session[:accessed_at] > config_helper.session_expiration_time
       reset_session
     else
       session[:accessed_at] = Time.now.utc
@@ -65,15 +65,27 @@ class ApplicationController < ActionController::Base
   end
 
   def current_shift
-    Shift.current
+    Shift.current(current_property_id)
   end
 
   def current_accounting_date
-    AccountingDate.current
+    AccountingDate.current(current_property_id)
   end
 
   def current_machine_token
     session[:machine_token]
+  end
+
+  def current_property_id
+    user_property_id = current_user.property_id if current_user
+    machine_info = Machine.parse_machine_token(cookies[:machine_token])
+    machine_property = machine_info[:property_id] if machine_info
+    user_property_id || machine_property
+  end
+
+  def config_helper
+    @config_helper = ConfigHelper.new(current_property_id) unless @config_helper
+    @config_helper
   end
 
   def permission_granted?(model, operation = nil)

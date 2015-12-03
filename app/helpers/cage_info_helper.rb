@@ -23,7 +23,7 @@ module CageInfoHelper
 
   def polling_interval
     #milliseconds
-    # 60 * 1000 + rand(1..500)
-    POLLING_TIME
+     60 * 1000 + rand(1..500)
+    #POLLING_TIME
   end
 end

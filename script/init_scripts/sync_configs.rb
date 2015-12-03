@@ -32,13 +32,13 @@ puts "Start writing config of property: #{property}"
 configs.each do |config|
 	if ds.where(:key => config[0], :property_id => property)
 		ds.where(:key => config[0], :property_id => property).update(:value => config[1][0], 
-																	 :description => config[1][0], 
+																	 :description => config[1][1], 
 																	 :updated_at => Time.now)
 	else
 		ds.insert(:key => config[0], 
 				  :property_id => property,
 				  :value => config[1][0], 
-				  :description => config[1][0], 
+				  :description => config[1][1], 
 				  :created_at => Time.now,
 				  :updated_at => Time.now)
 	end

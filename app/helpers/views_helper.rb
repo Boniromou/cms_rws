@@ -65,4 +65,11 @@ module ViewsHelper
   def format_card_id(card_id)
     card_id.gsub(/(\d{4})(?=\d)/, '\\1-')
   end
+
+  def show_remark(data)
+    if data
+      data_hash = YAML.load(data)
+      return data_hash[:remark] if data_hash.class = Hash
+    end
+  end
 end

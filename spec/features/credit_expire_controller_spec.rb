@@ -32,17 +32,13 @@ describe CreditExpireController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_expire_page
-      fill_in "player_transaction_data", :with => 'test'
+      fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_expire_amt")]
       click_pop_up_confirm("confirm_credit_expire", content_list)
       wait_for_ajax
-
       credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      expect(credit_transaction).not_to be_nil
-      expect(credit_transaction.transaction_type.name).to eq 'credit_expire'
-      expect(credit_transaction.status).to eq 'completed'
-      expect(credit_transaction.amount).to eq 5000
-      expect(credit_transaction.data).to eq 'test'
+      check_credit_transaction(credit_transaction, 'credit_expire', 'completed', 5000, 'test')
+
       check_balance_page
       check_flash_message I18n.t("flash_message.credit_expire_complete", amount: to_display_amount_str(credit_transaction.amount))
     end
@@ -52,7 +48,7 @@ describe CreditExpireController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_expire_page
-      fill_in "player_transaction_data", :with => 'test'
+      fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_expire_amt")]
       click_pop_up_confirm("confirm_credit_expire", content_list)
       wait_for_ajax
@@ -65,17 +61,12 @@ describe CreditExpireController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_expire_page
-      fill_in "player_transaction_data", :with => 'test'
+      fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_expire_amt")]
       click_pop_up_confirm("confirm_credit_expire", content_list)
       wait_for_ajax
-
       credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      expect(credit_transaction).not_to be_nil
-      expect(credit_transaction.transaction_type.name).to eq 'credit_expire'
-      expect(credit_transaction.status).to eq 'pending'
-      expect(credit_transaction.amount).to eq 5000
-      expect(credit_transaction.data).to eq 'test'
+      check_credit_transaction(credit_transaction, 'credit_expire', 'pending', 5000, 'test')
       check_player_lock_types
       @player.reload
       expect(@player.status).to eq 'locked'

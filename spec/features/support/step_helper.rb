@@ -578,7 +578,16 @@ module StepHelper
     @credit_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :data => 'test2')
     @credit_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 6, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :data => 'test3')
   end
+
+  def check_credit_transaction(credit_transaction, transaction_type_name, status, amount, remark)
+    expect(credit_transaction).not_to be_nil
+    expect(credit_transaction.transaction_type.name).to eq transaction_type_name
+    expect(credit_transaction.status).to eq status
+    expect(credit_transaction.amount).to eq amount
+    expect(YAML.load(credit_transaction.data)[:remark]).to eq remark
+  end
 end
+
 RSpec.configure do |config|
   config.include StepHelper, type: :feature
 end

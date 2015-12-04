@@ -9,3 +9,4 @@
   session_life_time: [60]
   roll_shift_time: ['6,14,22', 'time of rolling shift']
   credit_life_time: [1, 'life time of credit']
+  pin_log_search_range: [30, 'search range of pin log']

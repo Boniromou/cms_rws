@@ -27,7 +27,7 @@ database = YAML.load_file("#{RAILS_ROOT}/config/database.yml")[env]
 DB = connect_db(database)
 ds = DB[:configurations]
 
-configs = YAML.load_file("#{RAILS_ROOT}/script/init_scripts/#{env}/configuration.yml")[property.to_i]
+configs = YAML.load_file("#{RAILS_ROOT}/script/init_scripts/configuration.yml")[env][property.to_i]
 puts "*************** #{Time.now.utc} ****************"
 puts "Start writing config of property: #{property}"
 if delete_old_config == 'true'
@@ -37,14 +37,14 @@ configs.each do |config|
 	if ds.where(:key => config[0], :property_id => property).first
 		ds.where(:key => config[0], :property_id => property).update(:value => config[1][0], 
 																	 :description => config[1][1], 
-																	 :updated_at => Time.now)
+																	 :updated_at => Time.now.utc)
 	else
 		ds.insert(:key => config[0], 
 				  :property_id => property,
 				  :value => config[1][0], 
 				  :description => config[1][1], 
-				  :created_at => Time.now,
-				  :updated_at => Time.now)
+				  :created_at => Time.now.utc,
+				  :updated_at => Time.now.utc)
 	end
 end
 

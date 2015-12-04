@@ -184,8 +184,8 @@ module StepHelper
   end
 
   def check_search_ch_page
-    expect(page.source).to have_selector("input#accounting_date")
-    # expect(page.source).to have_selector("select#shift_name")
+    expect(find("input#start").value).to eq @accounting_date
+    expect(find("input#end").value).to eq @accounting_date
   end
 
   def check_player_transaction_result_contents(item, player_transaction, reprint_granted, void_granted, reprint_void_granted)

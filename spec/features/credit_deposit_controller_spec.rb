@@ -33,17 +33,14 @@ describe CreditDepositController do
       login_as_admin
       go_to_credit_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      fill_in "player_transaction_data", :with => 'test'
+      fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_deposit_amt")]
       click_pop_up_confirm("confirm_credit_deposit", content_list)
       wait_for_ajax
 
       credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      expect(credit_transaction).not_to be_nil
-      expect(credit_transaction.transaction_type.name).to eq 'credit_deposit'
-      expect(credit_transaction.status).to eq 'completed'
-      expect(credit_transaction.amount).to eq 10000
-      expect(credit_transaction.data).to eq 'test'
+      check_credit_transaction(credit_transaction, 'credit_deposit', 'completed', 10000, 'test')
+      
       check_flash_message I18n.t("flash_message.credit_deposit_complete", amount: to_display_amount_str(credit_transaction.amount))
     end
 
@@ -53,7 +50,7 @@ describe CreditDepositController do
       login_as_admin 
       go_to_credit_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      fill_in "player_transaction_data", :with => 'test'
+      fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_deposit_amt")]
       click_pop_up_confirm("confirm_credit_deposit", content_list)
       wait_for_ajax
@@ -68,17 +65,14 @@ describe CreditDepositController do
       login_as_admin 
       go_to_credit_deposit_page
       fill_in "player_transaction_amount", :with => 100
-      fill_in "player_transaction_data", :with => 'test'
+      fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_deposit_amt")]
       click_pop_up_confirm("confirm_credit_deposit", content_list)
       wait_for_ajax
 
       credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
-      expect(credit_transaction).not_to be_nil
-      expect(credit_transaction.transaction_type.name).to eq 'credit_deposit'
-      expect(credit_transaction.status).to eq 'pending'
-      expect(credit_transaction.amount).to eq 10000
-      expect(credit_transaction.data).to eq 'test'
+      check_credit_transaction(credit_transaction, 'credit_deposit', 'pending', 10000, 'test')
+      
       check_player_lock_types
       @player.reload
       expect(@player.status).to eq 'locked'

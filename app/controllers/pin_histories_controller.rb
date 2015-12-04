@@ -2,7 +2,7 @@ class PinHistoriesController < ApplicationController
   layout 'cage'
   include FormattedTimeHelper
   include FrontMoneyHelper
-  include PinHistoriesHelper
+  include SearchHelper
 
   def search
     return unless permission_granted? :ChangeHistory, :pin_change_log?
@@ -13,7 +13,7 @@ class PinHistoriesController < ApplicationController
     return unless permission_granted? :ChangeHistory, :pin_change_log?
     begin
 
-    start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time])
+    start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.pin_log_search_range)
     @pin_histories = patron_requester.get_pin_audit_logs(start_time, end_time)
 
     if @pin_histories.class != Array

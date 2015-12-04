@@ -65,7 +65,6 @@ class PlayerInfo
     
     def update!(id_type, id_value)
       player_info = patron_requester.get_player_info(id_type, id_value)
-      # player_info = {:card_id => '02338431000000041732', :member_id => '8888', :blacklist => false, :pin_status => 'blank'}
       if player_info.class != Hash
         Rails.logger.error "update player info fail"
         return

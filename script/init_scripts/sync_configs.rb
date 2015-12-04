@@ -17,6 +17,7 @@ end
 
 env = ARGV[0]
 property = ARGV[1]
+delete_old_config = ARGV[2]
 if env.nil? || property.nil?
   puts "Usage: ruby xxx.rb [env] [property_id]"
   exit
@@ -29,8 +30,11 @@ ds = DB[:configurations]
 configs = YAML.load_file("#{RAILS_ROOT}/script/init_scripts/#{env}/configuration.yml")[property.to_i]
 puts "*************** #{Time.now.utc} ****************"
 puts "Start writing config of property: #{property}"
+if delete_old_config == 'true'
+	ds.where(:property_id => property).delete
+end
 configs.each do |config|
-	if ds.where(:key => config[0], :property_id => property)
+	if ds.where(:key => config[0], :property_id => property).first
 		ds.where(:key => config[0], :property_id => property).update(:value => config[1][0], 
 																	 :description => config[1][1], 
 																	 :updated_at => Time.now)

@@ -28,7 +28,7 @@ class FundController < ApplicationController
 
   def create
     return unless permission_granted? :PlayerTransaction, operation_sym
-
+#TODO move to model logic
     @member_id = params[:player][:member_id]
     @player = Player.find_by_member_id(@member_id)
     if @player.account_locked?
@@ -36,9 +36,9 @@ class FundController < ApplicationController
       return
     end
     amount = params[:player_transaction][:amount]
-    pin = params[:player_transaction][:pin]
     data = {:remark => params[:player_transaction][:remark]}.to_yaml
     if action_str == 'withdraw'
+      pin = params[:player_transaction][:pin]
       response = PlayerInfo.validate_pin(@member_id, pin)
       raise Request::InvalidPin.new unless response
     end

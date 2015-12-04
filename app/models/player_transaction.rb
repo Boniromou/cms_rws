@@ -95,6 +95,7 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def update_slip_number!
+  #TODO get slip number 
     PlayerTransaction.transaction do
       transaction_slip = self.slip_type.transaction_slips.lock.find_by_property_id(self.property_id)
       self.slip_number = transaction_slip.provide_next_number!
@@ -127,7 +128,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      transaction[:trans_date] = Time.now
+      transaction[:trans_date] = Time.now.utc
       transaction[:property_id] = player[:property_id]
       transaction[:data] = data
       transaction.save
@@ -136,7 +137,7 @@ class PlayerTransaction < ActiveRecord::Base
       else
         transaction[:ref_trans_id] = ref_trans_id
       end
-        transaction.save
+      transaction.save
       transaction
     end
 

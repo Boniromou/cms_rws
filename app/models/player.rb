@@ -53,10 +53,8 @@ class Player < ActiveRecord::Base
   end
 
   def discard_tokens
-    if self.valid_tokens != []
-      self.valid_tokens.each do |token| 
-        token.discard
-      end
+    self.valid_tokens.each do |token| 
+      token.discard
     end
   end
 

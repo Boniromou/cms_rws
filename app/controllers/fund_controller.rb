@@ -28,28 +28,28 @@ class FundController < ApplicationController
 
   def create
     return unless permission_granted? :PlayerTransaction, operation_sym
-
-    @member_id = params[:player][:member_id]
-    @player = Player.find_by_member_id(@member_id)
+#TODO move to model logic
+    member_id = params[:player][:member_id]
+    @player = Player.find_by_member_id(member_id)
     if @player.account_locked?
       handle_fund_error("player_status.is_locked")
       return
     end
     amount = params[:player_transaction][:amount]
-    pin = params[:player_transaction][:pin]
     data = {:remark => params[:player_transaction][:remark]}.to_yaml
     if action_str == 'withdraw'
-      response = PlayerInfo.validate_pin(@member_id, pin)
+      pin = params[:player_transaction][:pin]
+      response = PlayerInfo.validate_pin(member_id, pin)
       raise Request::InvalidPin.new unless response
     end
     server_amount = get_server_amount(amount)
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount, nil, data)
-      result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
+      @transaction = do_fund_action(member_id, server_amount, nil, data)
+      result = call_wallet(member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
-    redirect_to balance_path + "?member_id=#{@member_id}" if action_str == 'credit_expire' || action_str == 'credit_deposit' 
+    redirect_to balance_path + "?member_id=#{member_id}" if action_str == 'credit_expire' || action_str == 'credit_deposit' 
   end
 
   def get_server_amount(amount)
@@ -65,13 +65,13 @@ class FundController < ApplicationController
     @player.lock_account!('pending')
     flash[:alert] = 'flash_message.contact_service'
     flash[:fade_in] = false
-    redirect_to balance_path + "?member_id=#{@member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}"
   end
 
   def handle_fund_error(msg)
     flash[:alert] = msg
     flash[:fade_in] = false
-    redirect_to :action => 'new', member_id: @member_id
+    redirect_to :action => 'new', member_id: @player.member_id
   end
 
   def handle_balance_not_enough(e)
@@ -82,27 +82,27 @@ class FundController < ApplicationController
   def handle_pin_error
     flash[:alert] = 'invalid_pin.invalid_pin'
     flash[:fade_in] = false
-    redirect_to balance_path + "?member_id=#{@member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}"
   end
 
   def handle_call_patron_fail
     flash[:alert] = 'flash_message.contact_service'
     flash[:fade_in] = false
-    redirect_to balance_path + "?member_id=#{@member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}"
   end
 
   def handle_credit_exist
     @transaction.rejected!
     flash[:alert] = 'invalid_amt.credit_exist'
     flash[:fade_in] = false
-    redirect_to balance_path + "?member_id=#{@member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}"
   end
 
   def handle_credit_not_match(e)
     @transaction.rejected!
     flash[:alert] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
     flash[:fade_in] = false
-    redirect_to balance_path + "?member_id=#{@member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}"
   end
 
   protected

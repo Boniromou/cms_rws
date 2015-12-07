@@ -1,5 +1,5 @@
 class Shift < ActiveRecord::Base
-  attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_machine_token, :accounting_date_id, :roll_shift_at
+  attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_machine_token, :accounting_date_id, :roll_shift_at, :property_id
   belongs_to :shift_type
 
   def name

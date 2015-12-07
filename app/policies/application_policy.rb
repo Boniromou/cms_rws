@@ -62,7 +62,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      scope
+      scope.where(:property_id => user.property_id)
     end
   end
 end

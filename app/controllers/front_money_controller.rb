@@ -19,6 +19,7 @@ class FrontMoneyController < ApplicationController
       end_shift = @accounting_date.shifts.last
       raise FrontMoneyHelper::NoResultException.new "shift not found" if start_shift.nil? || end_shift.nil?
       @player_transactions = PlayerTransaction.search_transactions_by_user_and_shift(current_user.id, start_shift.id, end_shift.id)
+      @player_transactions = policy_scope(@player_transactions)
     rescue FrontMoneyHelper::NoResultException => e
       @player_transactions = []
     end

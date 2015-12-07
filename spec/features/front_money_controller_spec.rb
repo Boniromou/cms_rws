@@ -15,8 +15,8 @@ describe FrontMoneyController do
       clean_dbs
       create_shift_data
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active", :property_id => 20000)
     end
 
     after(:each) do
@@ -37,7 +37,7 @@ describe FrontMoneyController do
     end
 
     it '[11.2] Search FM Activity Report Unauthorized' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shift,[""])
       visit home_path
@@ -67,6 +67,20 @@ describe FrontMoneyController do
       check_fm_report_result_items(transaction_list)
       expect(find("input#accounting_date").value).to eq AccountingDate.current(@root_user.property_id).accounting_date.strftime("%Y-%m-%d")
     end
+
+    it '[11.5] only search the property transaction', :js => true do
+      login_as_admin
+      create_player_transaction
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :property_id => 1003)
+      visit search_front_money_path
+      
+      check_search_fm_page
+      
+      find("input#search").click
+      wait_for_ajax
+      transaction_list = [@player_transaction1,@player_transaction2,@player_transaction3]
+      check_fm_report_result_items(transaction_list)
+    end
   end
   
   describe '[17] Print FM Activity Report ' do
@@ -74,8 +88,8 @@ describe FrontMoneyController do
       clean_dbs
       create_shift_data
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active", :property_id => 20000)
     end
 
     after(:each) do
@@ -83,7 +97,7 @@ describe FrontMoneyController do
     end
 
     it '[17.2] unauthorized print FM Activity report', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shift,["search_fm"])
       create_player_transaction

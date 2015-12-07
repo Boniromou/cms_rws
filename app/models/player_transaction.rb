@@ -1,5 +1,5 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data
+  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :property_id
   belongs_to :player
   belongs_to :shift
   belongs_to :user

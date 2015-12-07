@@ -34,7 +34,7 @@ module ShiftHelper
     PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
     PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
     Shift.delete_all
-    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id)
+    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :property_id => 20000)
   end
   
   def create_day_sequence

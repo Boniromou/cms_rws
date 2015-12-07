@@ -15,22 +15,6 @@ class Shift < ActiveRecord::Base
 
     self.machine_token = machine_token
     self.roll_shift_by_user_id = user_id
-    self.roll_shift_at = Time.now.utc
-
-    new_shift = Shift.new
-    new_shift_name = self.class.next_shift_name_by_name(name, self.property_id)
-    new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
-    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.property_id)
-
-    Shift.transaction do
-      self.save
-      new_shift.save
-    end
-  end
-
-  def roll_by_system
-    raise 'rolled_error' if self.roll_shift_at != nil
-
     self.roll_shift_at = Time.now.utc.to_formatted_s(:db)
     self.updated_at = Time.now.utc.to_formatted_s(:db)
 

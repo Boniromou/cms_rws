@@ -39,7 +39,7 @@ class FundController < ApplicationController
     data = {:remark => params[:player_transaction][:remark]}.to_yaml
     if action_str == 'withdraw'
       pin = params[:player_transaction][:pin]
-      response = PlayerInfo.validate_pin(member_id, pin)
+      response = requester_helper.validate_pin(member_id, pin)
       raise Request::InvalidPin.new unless response
     end
     server_amount = get_server_amount(amount)

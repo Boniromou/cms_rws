@@ -20,6 +20,13 @@ class RequestHandler
     @outbound
   end
 
+  def get_requester_helper(property_id)
+    requester_config_file = "#{Rails.root}/config/requester_config.yml"
+    requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, property_id, Property.get_property_keys[property_id])
+    RequesterHelper.new(requester_facotry)
+  end
+    
+
   def process_validate_token_event
     Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
     {}
@@ -31,7 +38,7 @@ class RequestHandler
     machine_token = @inbound[:machine_token]
     pin = @inbound[:pin]
     property_id = @inbound[:property_id]
-    PlayerInfo.retrieve_info(card_id, machine_type, machine_token, pin, property_id)
+    get_requester_helper(property_id).retrieve_info(card_id, machine_type, machine_token, pin, property_id)
   end
 
   def process_keep_alive_event
@@ -75,6 +82,6 @@ class RequestHandler
     machine_type = @inbound[:machine_type]
     property_id = @inbound[:property_id]
     machine_token = @inbound[:machine_token]
-    Machine.validate(machine_type, machine_token, property_id)
+    get_requester_helper(property_id).validate_machine(machine_type, machine_token, property_id)
   end
 end

@@ -65,7 +65,7 @@ class PlayersController < ApplicationController
     @operation = params[:operation] if params[:operation]
     
     begin
-      PlayerInfo.update!(@id_type,@id_number)
+      requester_helper.update_player!(@id_type,@id_number)
     rescue Remote::PlayerNotFound => e
       Rails.logger.error 'PlayerNotFound in PIS'
     end

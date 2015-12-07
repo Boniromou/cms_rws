@@ -88,6 +88,15 @@ class ApplicationController < ActionController::Base
     @config_helper
   end
 
+  def requester_helper
+    if !@requester_helper && current_property_id
+      requester_config_file = "#{Rails.root}/config/requester_config.yml"
+      requester_factory = Requester::RequesterFactory.new(requester_config_file, Rails.env, current_property_id, Property.get_property_keys[current_property_id])
+      @requester_helper = RequesterHelper.new(requester_factory)
+    end
+    @requester_helper
+  end
+
   def permission_granted?(model, operation = nil)
     begin
       if operation.nil?

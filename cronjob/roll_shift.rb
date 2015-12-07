@@ -41,8 +41,7 @@ property_table.all.each do |record|
 	if config_table.where(:property_id => property_id, :key => "roll_shift_time").first
 		roll_shift_time = config_table.where(:property_id => property_id, :key => "roll_shift_time").first[:value].split(',')
 		current_hour = Time.now.utc.hour
-		if true
-		# if roll_shift_time.include?(current_hour)
+		if roll_shift_time.include?(current_hour)
 			current_shift = Shift.current(property_id)
 			puts '-------------------------------------------------'
 			puts "*************** #{Time.now.utc} ****************"

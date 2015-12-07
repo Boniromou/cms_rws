@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151111025226) do
+ActiveRecord::Schema.define(:version => 20151207093501) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(:version => 20151111025226) do
     t.datetime "updated_at",      :null => false
     t.datetime "purge_at"
   end
+
+  add_index "accounting_dates", ["accounting_date"], :name => "index_accounting_dates_on_accounting_date", :unique => true
 
   create_table "audit_logs", :force => true do |t|
     t.string   "audit_target"
@@ -56,7 +58,7 @@ ActiveRecord::Schema.define(:version => 20151111025226) do
     t.datetime "updated_at",                :null => false
   end
 
-  add_index "configurations", ["property_id"], :name => "fk_configurations_property_id"
+  add_index "configurations", ["property_id", "key"], :name => "index_configurations_on_property_id_and_key", :unique => true
 
   create_table "currencies", :force => true do |t|
     t.string   "name"
@@ -87,14 +89,15 @@ ActiveRecord::Schema.define(:version => 20151111025226) do
     t.integer  "transaction_type_id"
     t.string   "status"
     t.integer  "amount",              :limit => 8
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.string   "ref_trans_id"
     t.datetime "trans_date"
     t.datetime "purge_at"
-    t.integer  "property_id",                      :default => 20000, :null => false
+    t.integer  "property_id",                      :null => false
     t.integer  "slip_number"
     t.string   "machine_token"
+    t.string   "data"
   end
 
   add_index "player_transactions", ["player_id"], :name => "fk_player_id"
@@ -108,12 +111,12 @@ ActiveRecord::Schema.define(:version => 20151111025226) do
     t.string   "card_id"
     t.integer  "currency_id"
     t.string   "status"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "first_name"
     t.string   "last_name"
     t.datetime "purge_at"
-    t.integer  "property_id", :default => 20000, :null => false
+    t.integer  "property_id", :null => false
   end
 
   add_index "players", ["card_id"], :name => "index_players_on_card_id", :unique => true
@@ -164,12 +167,12 @@ ActiveRecord::Schema.define(:version => 20151111025226) do
     t.integer  "shift_type_id"
     t.integer  "roll_shift_by_user_id"
     t.datetime "roll_shift_at"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.integer  "accounting_date_id"
     t.integer  "lock_version"
     t.datetime "purge_at"
-    t.integer  "property_id",           :default => 20000, :null => false
+    t.integer  "property_id",           :null => false
     t.string   "machine_token"
   end
 
@@ -241,10 +244,10 @@ ActiveRecord::Schema.define(:version => 20151111025226) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "uid"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.datetime "purge_at"
-    t.integer  "property_id", :default => 20000, :null => false
+    t.integer  "property_id", :null => false
   end
 
   add_index "users", ["property_id"], :name => "fk_users_property_id"

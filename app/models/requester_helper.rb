@@ -13,7 +13,7 @@ class RequesterHelper
   end
 
   def station_requester
-    @requester_factory.station_requester
+    @requester_factory.get_station_requester
   end
 
   def retrieve_info(card_id, machine_type, machine_token, pin, property_id)
@@ -42,7 +42,6 @@ class RequesterHelper
   end
 
   def validate_machine(machine_type, machine_token, property_id)
-    station_requester = REQUESTER_FACTORY.get_station_requester
     response = station_requester.validate_machine_token(machine_type, machine_token, property_id)
   end
 

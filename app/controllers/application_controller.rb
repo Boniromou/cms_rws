@@ -25,15 +25,15 @@ class ApplicationController < ActionController::Base
   end
 
   def wallet_requester
-    REQUESTER_FACTORY.get_wallet_requester
+    requester_factory.get_wallet_requester
   end
 
   def patron_requester
-    REQUESTER_FACTORY.get_patron_requester
+    requester_factory.get_patron_requester
   end
   
   def station_requester
-    REQUESTER_FACTORY.get_station_requester
+    requester_factory.get_station_requester
   end
 
   protected
@@ -88,10 +88,12 @@ class ApplicationController < ActionController::Base
     @config_helper
   end
 
+  def requester_factory
+    requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_property_id, Property.get_property_keys[current_property_id])
+  end
+
   def requester_helper
     if !@requester_helper && current_property_id
-      requester_config_file = "#{Rails.root}/config/requester_config.yml"
-      requester_factory = Requester::RequesterFactory.new(requester_config_file, Rails.env, current_property_id, Property.get_property_keys[current_property_id])
       @requester_helper = RequesterHelper.new(requester_factory)
     end
     @requester_helper

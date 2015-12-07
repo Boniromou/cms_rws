@@ -36,13 +36,13 @@ class PlayerInfo
 
     def validate_pin(login_name, pin)
       begin
-      # patron_requester.validate_pin(login_name, pin)
         response = patron_requester.validate_pin(login_name, pin)
-        if response.class != Hash
+        unless response_valid?(response)
           Rails.logger.error "validate pin fail"
           raise Remote::CallPatronFail.new
+        else
+          return true
         end
-        return true if response.class == Hash
       rescue Remote::PinError
       rescue Remote::PlayerNotFound
         return false
@@ -65,7 +65,7 @@ class PlayerInfo
     
     def update!(id_type, id_value)
       player_info = patron_requester.get_player_info(id_type, id_value)
-      if player_info.class != Hash
+      unless response_valid?(player_info)
         Rails.logger.error "update player info fail"
         return
       end
@@ -82,6 +82,12 @@ class PlayerInfo
       rescue PlayerProfile::PlayerNotActivated => e
         return 'PlayerNotActivated'
       end
+    end
+
+    private
+    def response_valid?(response)
+      return false if response.class != Hash
+      true
     end
   end
 end

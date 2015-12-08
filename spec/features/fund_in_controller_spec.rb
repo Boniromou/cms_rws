@@ -18,7 +18,7 @@ describe FundInController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return('OK')
@@ -149,7 +149,7 @@ describe FundInController do
     end
 
     it '[6.10] click unauthorized action (Deposit)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
@@ -172,7 +172,7 @@ describe FundInController do
     end
 
     it '[6.11] click link to the unauthorized page' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_in_path + "?member_id=#{@player.member_id}"
@@ -181,7 +181,7 @@ describe FundInController do
     end
 
     it '[6.12] click unauthorized action (confirm dialog box Deposit)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
@@ -197,7 +197,7 @@ describe FundInController do
     end
     
     it '[6.13] click unauthorized action (print slip)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       go_to_deposit_page
@@ -321,7 +321,7 @@ describe FundInController do
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return('OK')

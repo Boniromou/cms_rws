@@ -30,7 +30,7 @@ class FundController < ApplicationController
     return unless permission_granted? :PlayerTransaction, operation_sym
 #TODO move to model logic
     member_id = params[:player][:member_id]
-    @player = Player.find_by_member_id(member_id)
+    @player = policy_scope(Player).find_by_member_id(member_id)
     if @player.account_locked?
       handle_fund_error("player_status.is_locked")
       return

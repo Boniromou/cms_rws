@@ -18,7 +18,7 @@ describe FundOutController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
       @player_balance = 20000
       mock_wallet_balance(200.0)
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')
@@ -159,7 +159,7 @@ describe FundOutController do
     end
 
     it '[7.11] click unauthorized action (Withdraw)' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
@@ -181,7 +181,7 @@ describe FundOutController do
     end
 
     it '[7.12] click link to the unauthorized page' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_out_path + "?member_id=#{@player.member_id}"
@@ -190,7 +190,7 @@ describe FundOutController do
     end
 
     it '[7.13] click unauthorized action (confirm dialog box Withdraw)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
@@ -206,7 +206,7 @@ describe FundOutController do
     end
     
     it '[7.14] click unauthorized action (print slip)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
@@ -329,7 +329,7 @@ describe FundOutController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
       @player_balance = 20000
       mock_wallet_balance(200.0)
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return('OK')

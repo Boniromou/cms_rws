@@ -88,7 +88,7 @@ describe ShiftsController do
     end
 
     it '[9.0] unauthorized roll shift redirect to home page' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shfit,["roll"])
 
@@ -110,7 +110,7 @@ describe ShiftsController do
     end
     
     it '[9.2] unauthorized roll shift' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:shfit,["roll"])
 

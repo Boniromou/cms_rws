@@ -22,6 +22,7 @@ class Shift < ActiveRecord::Base
     new_shift_name = self.class.next_shift_name_by_name(name, self.property_id)
     new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
     new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.property_id)
+    new_shift.property_id = self.property_id
     new_shift.created_at = Time.now.utc.to_formatted_s(:db)
     new_shift.updated_at = Time.now.utc.to_formatted_s(:db)
 

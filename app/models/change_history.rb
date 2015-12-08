@@ -1,11 +1,11 @@
 class ChangeHistory < ActiveRecord::Base
 	scope :since, -> start_time { where("action_at >= ?", start_time) if start_time.present? }
-  	scope :until, -> end_time { where("action_at <= ?", end_time) if end_time.present? }
-  	scope :by_property_id, -> property_id { where("property_id = ?", property_id) if property_id.present? }
+  scope :until, -> end_time { where("action_at <= ?", end_time) if end_time.present? }
+  scope :by_property_id, -> property_id { where("property_id = ?", property_id) if property_id.present? }
 
-  	def search_query_by_time(start_time, end_time)
-      by_transaction_id(transaction_id)
-    end
+  def search_query_by_time(start_time, end_time)
+    by_transaction_id(transaction_id)
+  end
 
 	class << self
 		def create(user, player, action)

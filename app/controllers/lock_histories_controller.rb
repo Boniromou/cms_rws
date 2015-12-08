@@ -16,7 +16,7 @@ class LockHistoriesController < ApplicationController
     begin
     start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.change_log_search_range)
     
-    @lock_histories = ChangeHistory.by_property_id(current_user.property_id).since(start_time).until(end_time).where('action=? OR action=?', 'lock', 'unlock')
+    @lock_histories = policy_scope(ChangeHistory.since(start_time).until(end_time).where('action=? OR action=?', 'lock', 'unlock'))
     rescue FrontMoneyHelper::NoResultException => e
       @lock_histories = []
     end

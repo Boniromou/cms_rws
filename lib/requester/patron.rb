@@ -44,6 +44,7 @@ class Requester::Patron < Requester::Base
     message = result_hash[:error_msg].to_s || "no message"
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
     player_info = result_hash[:player]
+    player_info = add_property_id_to_player_info(player_info)
     return player_info
   end
 
@@ -65,6 +66,7 @@ class Requester::Patron < Requester::Base
     player_info = result_hash[:player]
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
     raise Remote::PinError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
+    player_info = add_property_id_to_player_info(player_info)
     return player_info
   end
 
@@ -75,6 +77,7 @@ class Requester::Patron < Requester::Base
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
     player_info = result_hash[:player]
     raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
+    player_info = add_property_id_to_player_info(player_info)
     return player_info
   end
 
@@ -87,4 +90,10 @@ class Requester::Patron < Requester::Base
     raise Remote::NoPinAuditLog, "error_code #{error_code}: #{message}" if audit_log_array.nil? || audit_log_array.blank? 
     return audit_log_array
   end
+  
+  def add_property_id_to_player_info(player_info)
+    player_info[:property_id] = @property_id if player_info.class == Hash
+  end
+
+
 end

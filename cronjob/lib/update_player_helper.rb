@@ -22,6 +22,7 @@ module Cronjob
         member_ids = member_ids[1..-1]
         player_info_array = patron_requester(property_id).get_player_infos(member_ids)
         player_info_array.each do |player_info|
+          player_info[:property_id] = property.id
           Player.update_info(player_info)
         end
       end

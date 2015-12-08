@@ -17,6 +17,7 @@ describe Player do
       @token3 = Token.generate(@player2.id)
       @token4 = Token.generate(@player2.id)
       @requester_config_file = "#{Rails.root}/config/requester_config.yml"
+      allow(Property).to receive(:all).and_return(Property.where(:id => 20000))
     end
 
     it '[51.1] get player info success without player info change' do

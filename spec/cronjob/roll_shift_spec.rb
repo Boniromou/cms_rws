@@ -8,7 +8,7 @@ describe Token do
     ShiftType.delete_all
   end
 
-  describe '[51] Auto roll shift' do
+  describe '[50] Auto roll shift' do
     before(:each) do
       clean_dbs
       create_shift_data

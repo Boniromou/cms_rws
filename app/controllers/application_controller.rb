@@ -89,7 +89,7 @@ class ApplicationController < ActionController::Base
   end
 
   def requester_factory
-    if !@requester_factory || requester_factory.property_id != current_property_id
+    if !@requester_factory || @requester_factory.property_id != current_property_id
       @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_property_id, Property.get_property_keys[current_property_id])
     end
     @requester_factory

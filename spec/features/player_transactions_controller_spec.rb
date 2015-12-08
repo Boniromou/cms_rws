@@ -18,8 +18,8 @@ describe PlayersController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
     end
@@ -47,7 +47,7 @@ describe PlayersController do
     it '[8.3] successfully generate report. (search by slip ID)', js: true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :property_id => 20000)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -86,7 +86,7 @@ describe PlayersController do
     end
 
     it '[8.6] Transaction history unauthorized', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -108,7 +108,7 @@ describe PlayersController do
     end
     
     it '[8.9] Re-print slip unauthorized', js: true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
@@ -176,6 +176,23 @@ describe PlayersController do
       check_flash_message I18n.t("transaction_history.no_id")
       expect(page).to_not have_selector("div#wid-id-2")
     end
+    
+    it '[8.14] cannot search othoer property transactions. (search by accounting date)', js: true do
+      login_as_admin
+      create_player_transaction
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :property_id => 1003)
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
+      check_player_transaction_page_js
+
+      fill_search_info_js("member_id", @player2.member_id)
+      fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
+      fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
+      find("input#search").click
+      wait_for_ajax
+
+      check_player_transaction_result_items([@player_transaction2])
+    end
   end
   
   describe '[16] Print Transaction report' do
@@ -185,8 +202,8 @@ describe PlayersController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
     end
@@ -196,7 +213,7 @@ describe PlayersController do
     end
     
     it '[16.2] unauthorized print transaction report', js: true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user')
+      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
       login_as_not_admin(@test_user)
       visit home_path
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -222,7 +239,7 @@ describe PlayersController do
       mock_have_active_location
       mock_patron_not_change
       reset_slip_number
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
       allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return('OK')
@@ -292,8 +309,8 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
     end
@@ -303,7 +320,7 @@ describe PlayersController do
     end
 
     it '[58.1] Search transaction history with card change', :js => true do
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567893", :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000})
       login_as_admin
       visit home_path
       create_player_transaction
@@ -325,7 +342,7 @@ describe PlayersController do
 
     it '[58.2] Search transaction history with player not exist in cage' do
       @player.delete
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank'})
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :property_id => 20000})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
@@ -344,8 +361,8 @@ describe PlayersController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
     end

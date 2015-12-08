@@ -78,48 +78,21 @@ class Player < ActiveRecord::Base
 
   class << self
     def create_by_params(params)
-      verify_player_params(params)
-
-      card_id = params[:card_id]
-      member_id = params[:member_id]
-      first_name = params[:first_name].downcase
-      last_name = params[:last_name].downcase
-
-      player = new
-      player.card_id = card_id
-      player.member_id = member_id
-      player.first_name = first_name
-      player.last_name = last_name
-      player.currency_id = 1
-      player.status = STATUS_NORMAL
-      begin
-        player.save!
-      rescue ActiveRecord::RecordInvalid => ex
-        duplicated_filed = ex.record.errors.keys.first.to_s
-        raise CreatePlayer::DuplicatedFieldError, duplicated_filed
-      end
-      player
-    end
-
-    def create_by_pis(params)
       verify_player_info(params)
-      card_id = params[:card_id]
-      member_id = params[:member_id]
-      # first_name = params[:first_name].downcase
-      # last_name = params[:last_name].downcase
 
       player = new
-      player.card_id = card_id
-      player.member_id = member_id
-      # player.first_name = first_name
-      # player.last_name = last_name
-      player.currency_id = 1
+      player.card_id = params[:card_id]
+      player.member_id = params[:member_id]
+      player.first_name = params[:first_name].downcase if params[:first_name]
+      player.last_name = params[:last_name].downcase if params[:first_name]
+      player.property_id = params[:property_id]
+      player.currency_id = Currency.find_by_name('HKD').id
       player.status = STATUS_NORMAL
       begin
         player.save!
       rescue ActiveRecord::RecordInvalid => ex
         duplicated_filed = ex.record.errors.keys.first.to_s
-        raise CreatePlayer::DuplicatedFieldError, duplicated_filed
+        raise CreatePlayer::DuplicatedFieldError, "CreatePlayer::DuplicatedFieldError, duplicated_filed : #{duplicated_filed} (#{player[duplicated_filed.to_sym]})"
       end
       player
     end
@@ -157,8 +130,8 @@ class Player < ActiveRecord::Base
 
     def update_info(player_info)
       return false if player_info.nil? || player_info[:member_id].nil? || player_info[:card_id].nil? || player_info[:pin_status].nil?
-      player = Player.find_by_member_id(player_info[:member_id])
-      player = Player.create_by_pis(player_info) if player == nil && player_info[:pin_status] != 'blank'
+      player = Player.find_by_member_id_and_property_id(player_info[:member_id], player_info[:property_id])
+      player = Player.create_by_params(player_info) if player == nil && player_info[:pin_status] != 'blank'
       is_discard_tokens = player_info[:pin_status] == 'reset'
       if player_info[:card_id] != player.card_id
         player.card_id = player_info[:card_id]

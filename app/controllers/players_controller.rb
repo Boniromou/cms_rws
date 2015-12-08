@@ -29,7 +29,7 @@ class PlayersController < ApplicationController
   def player_info
     return unless permission_granted? :Player
     member_id = params[:member_id]
-    @player = Player.find_by_member_id(member_id)
+    @player = policy_scope(Player).find_by_member_id(member_id)
     unless @player
       raise PlayerProfile::PlayerNotFound
       @id_number = member_id
@@ -70,7 +70,7 @@ class PlayersController < ApplicationController
       Rails.logger.error 'PlayerNotFound in PIS'
     end
 
-    @player = Player.find_by_type_id(@id_type, @id_number)
+    @player = policy_scope(Player).find_by_type_id(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player
     member_id = @player.member_id if @player
     redirect_to eval( @operation + "_path" )  + "?member_id=" + member_id
@@ -80,25 +80,11 @@ class PlayersController < ApplicationController
     redirect_to :action => 'search', :found => false, :id_number => @id_number, :id_type => @id_type, :operation => @operation
   end
 
-  def update
-    return unless permission_granted? :Player
-    begin
-      AuditLog.player_log("edit", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
-        Player.update_by_params(params[:player])
-      end
-      flash[:success] = {key: "update_player.success", replace: {first_name: params[:player][:first_name].upcase, last_name: params[:player][:last_name].upcase}}
-      redirect_to :action => 'profile', :member_id => params[:player][:member_id]
-    rescue RuntimeError => e
-      flash[:error] = "update_player." + e.message
-      redirect_to :action => 'edit', :card_id => params[:player][:card_id], :member_id => params[:player][:member_id], :first_name => params[:player][:first_name], :last_name => params[:player][:last_name]
-    end
-  end
-
   def lock_account
     return unless permission_granted? :Player, :lock?
 
     member_id = params[:member_id]
-    player = Player.find_by_member_id(member_id)
+    player = policy_scope(Player).find_by_member_id(member_id)
 
     AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       player.lock_account!
@@ -113,7 +99,7 @@ class PlayersController < ApplicationController
     return unless permission_granted? :Player, :unlock?
 
     member_id = params[:member_id]
-    player = Player.find_by_member_id(member_id)
+    player = policy_scope(Player).find_by_member_id(member_id)
 
     AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       player.unlock_account!
@@ -181,7 +167,7 @@ class PlayersController < ApplicationController
 
   protected
   def redirect_to_set_pin_path(member_id, card_id, status, inactivate, operation)
-    @player = Player.find_by_member_id(member_id)
+    @player = policy_scope(Player).find_by_member_id(member_id)
     @player = Player.new(:member_id => member_id, :card_id => card_id, :status => status) unless @player 
     @inactivate = inactivate
     @operation = operation

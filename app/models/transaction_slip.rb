@@ -3,11 +3,15 @@ class TransactionSlip < ActiveRecord::Base
   belongs_to :property
   belongs_to :slip_type
 
-  def provide_next_number!
-    next_number = self.next_number
-    self.next_number = self.next_number + 1
-    self.save!
-    next_number
+  class << self
+    def assign_slip_number(player_transaction)
+      TransactionSlip.transaction do
+        slip = TransactionSlip.lock.find_by_slip_type_id_and_property_id(player_transaction.slip_type.id, player_transaction.property_id)
+        player_transaction.slip_number = slip.next_number
+        slip.next_number = slip.next_number + 1
+        slip.save!
+        player_transaction.save!
+      end
+    end
   end
-
 end

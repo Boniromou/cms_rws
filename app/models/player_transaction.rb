@@ -95,12 +95,7 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def update_slip_number!
-  #TODO get slip number 
-    PlayerTransaction.transaction do
-      transaction_slip = self.slip_type.transaction_slips.lock.find_by_property_id(self.property_id)
-      self.slip_number = transaction_slip.provide_next_number!
-      self.save!
-    end
+    TransactionSlip.assign_slip_number(self)
   end
 
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }

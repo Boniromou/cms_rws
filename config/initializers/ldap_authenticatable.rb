@@ -13,8 +13,9 @@ module Devise
         result = UserManagement::authenticate(username, password)
         if result['success']
           user = User.find_by_uid(result['system_user']['id'])
+          property_ids = User.get_property_ids_by_uid(result['system_user']['id'])
           if !user
-            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'])
+            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'], :property_id => property_ids.first)
           end
           success!(user)
           return

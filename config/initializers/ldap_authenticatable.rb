@@ -12,10 +12,10 @@ module Devise
       def authenticate!
         result = UserManagement::authenticate(username, password)
         if result['success']
-          user = User.find_by_uid(result['system_user']['id'])
-          property_ids = User.get_property_ids_by_uid(result['system_user']['id'])
+          property_id = User.get_property_ids_by_uid(result['system_user']['id']).first
+          user = User.find_by_uid_and_property_id(result['system_user']['id'], property_id)
           if !user
-            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'], :property_id => property_ids.first)
+            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'], :property_id => property_id)
           end
           success!(user)
           return

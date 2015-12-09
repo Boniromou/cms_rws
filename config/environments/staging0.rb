@@ -37,7 +37,7 @@ CmsRws::Application.configure do
 
   config.cache_store = :dalli_store,
                         'stg-cons-vapp01.rnd.laxino.com:11211', 'stg-cons-vapp01.rnd.laxino.com:11212',
-                        {:namespace => 'cirrus_stg',
+                        {:namespace => 'cirrus_stg_ex',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
                          :compress => true }
@@ -47,8 +47,3 @@ end
 
 SSO_URL = 'http://mo-stg-sso-vapp01.rnd.laxino.com:80'
 REGISTRATION_PATH = '/register'
-WALLET_URL = 'http://mo-stg-cwms-vapp01.rnd.laxino.com:80'
-WALLET_PATH = '/cwms'
-PATRON_URL = 'http://mo-stg-pis-vapp01.rnd.laxino.com:80'
-PATRON_PATH = '/pis'
-STATION_URL = 'http://mo-stg-sm-vapp01.rnd.laxino.com:80'

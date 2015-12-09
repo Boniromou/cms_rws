@@ -23,7 +23,7 @@ describe FundController do
       mock_wallet_balance(0)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used' })
+      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used', :property_id => 20000})
       allow_any_instance_of(RequesterHelper).to receive(:validate_pin).and_return(true)
     end
     

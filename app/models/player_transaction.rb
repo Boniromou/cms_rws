@@ -42,9 +42,11 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def completed!
-    self.status = 'completed'
-    self.save!
-    self.update_slip_number! if self.transaction_type.name != CREDIT_DEPOSIT && self.transaction_type.name != CREDIT_EXPIRE
+    PlayerTransaction.transaction do
+      self.status = 'completed'
+      self.save!
+      self.update_slip_number! unless [CREDIT_DEPOSIT,CREDIT_EXPIRE].include?(self.transaction_type.name)
+    end
   end
 
   def rejected!

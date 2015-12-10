@@ -16,6 +16,7 @@ describe UserSessionsController do
 
     allow(UserManagement).to receive(:authenticate).and_return({'success' => true, 'system_user' => {'username' => @root_user_name, 'id' => 1}})
     allow_any_instance_of(ApplicationPolicy).to receive(:is_admin?).and_return(true)
+    allow(User).to receive(:get_property_ids_by_uid).and_return([20000])
 
     visit login_path
     fill_in "user_username", with: @root_user_name

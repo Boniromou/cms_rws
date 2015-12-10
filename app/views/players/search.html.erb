@@ -1,4 +1,4 @@
-<%= search_page_bread_crumb(t(@search_title)) %>
+<%= search_page_bread_crumb(t("tree_panel." + @operation)) %>
 
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
@@ -47,7 +47,7 @@
 
 
 <br/>
-<% if @found == "false" %>
+<% if @show_not_found_message %>
   <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
     <button class="close" data-dismiss="alert">×</button>
     <div id="message_content">

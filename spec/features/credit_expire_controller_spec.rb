@@ -18,7 +18,7 @@ describe CreditExpireController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active")
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 1, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
     end

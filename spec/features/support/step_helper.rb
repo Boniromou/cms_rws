@@ -16,7 +16,7 @@ module StepHelper
   end
 
   def login_as_admin_new
-    Rails.cache.write '1', {:status => true, :admin => true}
+    Rails.cache.write '1', {:status => true, :admin => true, :properties => [20000]}
     result = {'success' => true, 'system_user' => {'id' => 1, 'username' => 'portal.admin'}}
     UserManagement.stub(:authenticate).and_return(result)
     visit '/login'
@@ -27,7 +27,7 @@ module StepHelper
 
   def login_as_not_admin(user)
     login_as user
-    Rails.cache.write user.uid.to_s, {:status => true, :admin => false}
+    Rails.cache.write user.uid.to_s, {:status => true, :admin => false,  :properties => [20000]}
   end
 
   def login_as_admin(property_id = 20000)

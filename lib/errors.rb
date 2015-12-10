@@ -27,6 +27,9 @@ module FundInOut
 
   class AlreadyVoided < FundError
   end
+
+  class PlayerLocked <FundError
+  end
 end
 
 module PlayerProfile

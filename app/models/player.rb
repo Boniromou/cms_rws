@@ -116,12 +116,8 @@ class Player < ActiveRecord::Base
       end
     end
 
-    def find_by_type_id(id_type, id_number)
-      if id_type == "member_id"
-        find_by_member_id(id_number)
-      else
-        find_by_card_id(id_number)
-      end
+    def find_by_id_type_and_number(id_type, id_number)
+      self.send "find_by_#{id_type}", id_number
     end
 
     def create_inactivate(player_info)

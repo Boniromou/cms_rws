@@ -42,9 +42,11 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def completed!
-    self.status = 'completed'
-    self.save!
-    self.update_slip_number! if self.transaction_type.name != CREDIT_DEPOSIT && self.transaction_type.name != CREDIT_EXPIRE
+    PlayerTransaction.transaction do
+      self.status = 'completed'
+      self.save!
+      self.update_slip_number! unless [CREDIT_DEPOSIT,CREDIT_EXPIRE].include?(self.transaction_type.name)
+    end
   end
 
   def rejected!
@@ -95,12 +97,7 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def update_slip_number!
-  #TODO get slip number 
-    PlayerTransaction.transaction do
-      transaction_slip = self.slip_type.transaction_slips.lock.find_by_property_id(self.property_id)
-      self.slip_number = transaction_slip.provide_next_number!
-      self.save!
-    end
+    TransactionSlip.assign_slip_number(self)
   end
 
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }

@@ -9,6 +9,7 @@ class FundController < ApplicationController
   rescue_from Request::InvalidPin, :with => :handle_pin_error
   rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
   rescue_from Remote::AmountNotMatch, :with => :handle_credit_not_match
+  rescue_from FundInOut::PlayerLocked, :with => :handle_player_locked
 
   def operation_sym
     (action_str + '?').to_sym
@@ -28,34 +29,50 @@ class FundController < ApplicationController
 
   def create
     return unless permission_granted? :PlayerTransaction, operation_sym
-#TODO move to model logic
-    member_id = params[:player][:member_id]
-    @player = policy_scope(Player).find_by_member_id(member_id)
-    if @player.account_locked?
-      handle_fund_error("player_status.is_locked")
-      return
-    end
-    amount = params[:player_transaction][:amount]
-    data = {:remark => params[:player_transaction][:remark]}.to_yaml
-    if action_str == 'withdraw'
-      pin = params[:player_transaction][:pin]
-      response = requester_helper.validate_pin(member_id, pin)
-      raise Request::InvalidPin.new unless response
-    end
-    server_amount = get_server_amount(amount)
+    @player, amount, data = extract_params
+    check_player_lock_state
+    validate_pin if need_validate?
+    server_amount = get_server_amount(amount)# TODO method name
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(member_id, server_amount, nil, data)
-      result = call_wallet(member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
+      @transaction = do_fund_action(@player.member_id, server_amount, nil, data)
+      result = call_wallet(@player.member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
-    redirect_to balance_path + "?member_id=#{member_id}" if action_str == 'credit_expire' || action_str == 'credit_deposit' 
+    redirect_to balance_path + "?member_id=#{@player.member_id}" if action_str == 'credit_expire' || action_str == 'credit_deposit' 
+  end
+
+  def extract_params
+    member_id = params[:player][:member_id]
+    player = policy_scope(Player).find_by_member_id(member_id)
+    amount = params[:player_transaction][:amount]
+    data = {:remark => params[:player_transaction][:remark]}.to_yaml
+    return player,amount,data
+  end
+
+  def check_player_lock_state
+    raise FundInOut::PlayerLocked if @player.account_locked?
+  end
+
+  def validate_pin
+    pin = params[:player_transaction][:pin]
+    response = requester_helper.validate_pin(@player.member_id, pin)
+    raise Request::InvalidPin.new unless response
+  end
+
+  def need_validate?
+    false
   end
 
   def get_server_amount(amount)
     validate_amount_str(amount)
     to_server_amount(amount)
   end
+  
+  def handle_player_locked(e)
+    handle_fund_error("player_status.is_locked")
+  end
+
 
   def handle_amount_invalid_error(e)
     handle_fund_error("invalid_amt." + action_str)

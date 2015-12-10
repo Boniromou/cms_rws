@@ -38,8 +38,3 @@ end
 
 SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
 REGISTRATION_PATH = '/register'
-WALLET_URL = 'http://mingwong01.rnd.laxino.com:4444'
-WALLET_PATH = '/iwms'
-PATRON_URL = 'http://mingwong01.rnd.laxino.com:6666'
-PATRON_PATH = '/pis'
-STATION_URL = 'http://marcusao01.rnd.laxino.com:5000'

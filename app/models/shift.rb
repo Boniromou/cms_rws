@@ -35,7 +35,7 @@ class Shift < ActiveRecord::Base
   class << self
     def current(property_id)
       shift = Shift.find_by_roll_shift_at_and_property_id(nil, property_id)
-      raise 'Current shift not found!' unless shift
+      raise "Current shift not found!, property_id: #{property_id}" unless shift
       shift
     end
 

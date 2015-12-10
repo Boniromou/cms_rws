@@ -75,8 +75,8 @@ en:
     credit_amount: "Credit Amount"
     deposit_amt: "Deposit Amount (HKD)"
     withdraw_amt: "Withdrawal Amount (HKD)"
-    credit_deposit_amt: "Deposit Credit Amount (HKD)"
-    credit_expire_amt: "Expire Credit Amount (HKD)"
+    credit_deposit_amt: "Deposit Credit Amount"
+    credit_expire_amt: "Confirm to expire all credits? Remaining credits:"
   balance_enquiry:
     account_balance: "Account Balance(HKD)"
     no_balance: "--"
@@ -106,8 +106,8 @@ en:
     print_void: "Print Void"
     create_pin: "Set PIN"
     reset_pin: "Reset PIN"
-    credit_deposit: "Add Credit(missing)"
-    credit_expire: "Expire Credit(missing)"
+    credit_deposit: "Add Credit"
+    credit_expire: "Expire Credit"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
@@ -208,7 +208,7 @@ en:
     by_slip_number: "by Slip no."
     slip_number: "Slip no."
     remark: "Remark"
-    credit_deposit: "Add"
+    credit_deposit: "Deposit"
     credit_expire: "Expire"
   shift_name:
     morning: "Morning"

@@ -36,11 +36,11 @@ class PlayerTransactionPolicy < ApplicationPolicy
   end
 
   def credit_deposit?
-    is_admin? || has_permission?('player_transaction', 'add_deposit')
+    is_admin? || has_permission?('player_transaction', 'add_credit')
   end
 
   def credit_expire?
-    is_admin? || has_permission?('player_transaction', 'expire_deposit')
+    is_admin? || has_permission?('player_transaction', 'expire_credit')
   end    
 
   def print_void?
@@ -49,13 +49,5 @@ class PlayerTransactionPolicy < ApplicationPolicy
 
   def reprint_void?
     is_admin? || has_permission?('player_transaction', 'reprint_void_slip')
-  end
-
-  def credit_deposit?
-    is_admin? || has_permission?('player_transaction', 'credit_deposit')
-  end
-
-  def credit_expire?
-    is_admin? || has_permission?('player_transaction', 'credit_expire')
   end
 end

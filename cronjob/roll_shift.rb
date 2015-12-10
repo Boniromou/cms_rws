@@ -40,7 +40,7 @@ property_table.all.each do |record|
 	property_id = record[:id]
 	if config_table.where(:property_id => property_id, :key => "roll_shift_time").first
 		roll_shift_time = config_table.where(:property_id => property_id, :key => "roll_shift_time").first[:value].split(',')
-		current_hour = Time.now.utc.hour
+		current_hour = Time.now.utc.hour.to_s
 		if roll_shift_time.include?(current_hour)
 			current_shift = Shift.current(property_id)
 			puts '-------------------------------------------------'

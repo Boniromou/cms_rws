@@ -177,8 +177,8 @@ en:
     contact_service: "Operation failed, please contact customer service for more information."
     deposit_complete: "Deposit %{amount} is completed."
     withdraw_complete: "Withdraw %{amount} is completed."
-    credit_deposit_complete: "Deposit Credit %{amount} is completed.(missing)"
-    credit_expire_complete: "Expire Credit %{amount} is completed.(missing)"
+    credit_deposit_complete: "Deposit Credit %{amount} is completed."
+    credit_expire_complete: "Expire Credit %{amount} is completed."
   transaction_history:
     start_date: "Start Date"
     end_date: "End Date"

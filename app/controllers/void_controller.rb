@@ -1,12 +1,13 @@
 class VoidController < FundController
   rescue_from FundInOut::AlreadyVoided, :with => :handle_already_voided
+  rescue_from FundInOut::VoidTransactionNotExist, :with => :handle_transaction_not_exist
 
   def create
     return unless permission_granted? :PlayerTransaction, operation_sym
 
     player_transaction_id = params[:transaction_id]
     raise FundInOut::VoidTransactionNotExist unless player_transaction_id
-    @target_transaction = PlayerTransaction.find(player_transaction_id)
+    @target_transaction = policy_scope(PlayerTransaction).find_by_id(player_transaction_id)
     raise FundInOut::VoidTransactionNotExist unless @target_transaction
     raise FundInOut::AlreadyVoided if @target_transaction.voided?
     @player = @target_transaction.player
@@ -36,6 +37,10 @@ class VoidController < FundController
   def handle_balance_not_enough(e)
     @transaction.rejected!
     handle_fund_error({ key: "invalid_amt.no_enough_to_void_deposit", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
+  end
+
+  def handle_transaction_not_exist(e)
+    handle_fund_error('void_transaction.not_exist')
   end
 
   def handle_already_voided(e)

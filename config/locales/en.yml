@@ -243,6 +243,7 @@ en:
   void_transaction:
     success: "Void transaction %{slip_number} successful"
     already_void: "Transaction %{slip_number} has been void"
+    not_exist: "Transaction not exist"
   reset_pin:
     new_pin: "New PIN"
     confirm_pin: "Confirm PIN"

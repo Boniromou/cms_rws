@@ -41,6 +41,10 @@ class ConfigHelper
     retrieve_config('pin_log_search_range').to_i
   end
 
+  def transaction_void_range
+    retrieve_config('transaction_void_range').to_i
+  end
+
   def retrieve_config(key)
     configuration = Configuration.find_by_key_and_property_id(key, @property_id)
     return configuration.value if configuration

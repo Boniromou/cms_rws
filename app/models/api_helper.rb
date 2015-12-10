@@ -13,6 +13,7 @@ class ApiHelper
       player = Player.find_by_member_id_and_property_id(login_name, property_id)
       raise Request::InvalidLoginName.new unless player
       player.lock_account!
+      ChangeHistory.create(User.new(:name => 'system'), player, 'lock')
       {}
     end
   end

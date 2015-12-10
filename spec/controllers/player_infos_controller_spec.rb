@@ -6,7 +6,8 @@ describe PlayerInfosController do
     Token.delete_all
     PlayersLockType.delete_all
     PlayerTransaction.delete_all
-    Player.delete_all    
+    Player.delete_all
+    ChangeHistory.delete_all
   end
 
   before(:all) do
@@ -122,6 +123,14 @@ describe PlayerInfosController do
       @player.reload
       expect(@player.status).to eq 'locked'
       expect(@player.has_lock_type?('cage_lock')).to eq true
+
+      ch = ChangeHistory.first
+      expect(ch.action_by).to eq 'system'
+      expect(ch.object).to eq 'player'
+      expect(ch.action).to eq 'lock'
+      expect(ch.change_detail).to eq "Member ID: #{@player.member_id}"
+      expect(ch.property_id).to eq @player.property_id
+
     end
 
     it '[63.2] Player not found' do

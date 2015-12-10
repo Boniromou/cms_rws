@@ -45,5 +45,5 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-SSO_URL = 'http://mo-stg-sso-vapp01.rnd.laxino.com:80'
+SSO_URL = 'http://mo-stg-exsso-vapp01.rnd.laxino.com:80'
 REGISTRATION_PATH = '/register'

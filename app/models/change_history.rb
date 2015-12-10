@@ -14,7 +14,7 @@ class ChangeHistory < ActiveRecord::Base
 			change_history.object = 'player'
 			change_history.action = action
 			change_history.change_detail = "Member ID: #{player.member_id}"
-			change_history.property_id = user.property_id
+			change_history.property_id = player.property_id
 			change_history.action_at = Time.now.utc
 			change_history.save!
 		end

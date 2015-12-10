@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151207093501) do
+ActiveRecord::Schema.define(:version => 20151210083910) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -119,9 +119,9 @@ ActiveRecord::Schema.define(:version => 20151207093501) do
     t.integer  "property_id", :null => false
   end
 
-  add_index "players", ["card_id"], :name => "index_players_on_card_id", :unique => true
+  add_index "players", ["card_id", "property_id"], :name => "index_players_on_card_id_and_property_id", :unique => true
   add_index "players", ["currency_id"], :name => "fk_currency_id"
-  add_index "players", ["member_id"], :name => "by_member_id", :unique => true
+  add_index "players", ["member_id", "property_id"], :name => "index_players_on_member_id_and_property_id", :unique => true
   add_index "players", ["property_id"], :name => "fk_players_property_id"
 
   create_table "players_lock_types", :force => true do |t|

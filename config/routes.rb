@@ -75,7 +75,6 @@ CmsRws::Application.routes.draw do
 
   get 'validate_token' => 'tokens#validate'
   post 'keep_alive' => 'tokens#keep_alive'
-  get 'keep_eternal_alive' => 'eternal_tokens#keep_eternal_alive'
   get 'discard_token' => 'tokens#discard'
 
   get 'validate_machine_token' => 'machines#validate'

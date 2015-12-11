@@ -80,6 +80,7 @@ describe UserSessionsController do
   describe '[2] Display information' do
     before(:each) do
       mock_cage_info
+      mock_current_property_id
     end
 
     it '[2.1] Show information', js: true do

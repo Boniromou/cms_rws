@@ -1,6 +1,6 @@
 require "feature_spec_helper"
 
-describe FundOutController do
+describe WithdrawController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!

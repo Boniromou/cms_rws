@@ -1,3 +1,0 @@
-$('div#content').css({ opacity: "0.0" }).html("<%= escape_javascript(render :file => "fund_out/new", :formats => [ :html ]) %>").delay(50).animate({ opacity: "1.0" }, 300);
-
-<%= render :partial => "shared/flash_message", :formats => [ :js ] %>

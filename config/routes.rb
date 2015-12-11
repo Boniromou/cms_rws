@@ -26,11 +26,11 @@ CmsRws::Application.routes.draw do
   post "unlock_account" => "players#unlock_account"
   post "update" => "players#update"
 
-  get 'fund_in' => 'fund_in#new'
-  post 'fund_in' => 'fund_in#create'
+  get 'fund_in' => 'deposit#new'
+  post 'fund_in' => 'deposit#create'
 
-  get 'fund_out' => 'fund_out#new'
-  post 'fund_out' => 'fund_out#create'
+  get 'fund_out' => 'withdraw#new'
+  post 'fund_out' => 'withdraw#create'
   
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'

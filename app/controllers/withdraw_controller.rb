@@ -1,8 +1,4 @@
-class FundOutController < FundController
-  def action_str
-    "withdraw"
-  end
-
+class WithdrawController < FundController
   def need_validate?
     true
   end

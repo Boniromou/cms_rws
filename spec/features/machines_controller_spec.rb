@@ -18,8 +18,8 @@ describe MachinesController do
 	      visit root_path
 	      within '#cage_info' do
 	        expect(page).to have_content @location
-	        @location.should == 'N/A'
-	        expect(page).to have_content @accounting_date
+	        check_location_name 'N/A'
+	        expect(page).to have_content 'Waiting for accounting date'
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
 	    end
@@ -30,7 +30,7 @@ describe MachinesController do
 	      visit root_path
 	      within '#cage_info' do
 	        check_location_name '01/0102'
-	        expect(page).to have_content @accounting_date
+	        expect(page).to have_content 'Waiting for accounting date'
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
 	    end
@@ -41,7 +41,7 @@ describe MachinesController do
 	      visit root_path
 	      within '#cage_info' do
 	        check_location_name 'N/A'
-	        expect(page).to have_content @accounting_date
+	        expect(page).to have_content 'Waiting for accounting date'
 	        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       	  end
 	    end

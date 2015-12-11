@@ -64,6 +64,10 @@ module MockHelper
     end
     allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => balance, :credit_balance => credit_balance, :credit_expired_at => @credit_expired_at})
   end
+
+  def mock_current_property_id(property_id = 20000)
+    allow_any_instance_of(ApplicationController).to receive(:current_property_id).and_return(property_id)
+  end
 end
 
 RSpec.configure do |config|

@@ -10,4 +10,9 @@ class CreditExpireController < FundController
     @credit_balance = balance_response[:credit_balance]
     @credit_expired_at = balance_response[:credit_expired_at].to_time
   end
+
+  def create
+    super
+    redirect_to balance_path + "?member_id=#{@player.member_id}"
+  end
 end

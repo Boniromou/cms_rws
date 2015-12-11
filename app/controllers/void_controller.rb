@@ -3,32 +3,30 @@ class VoidController < FundController
   rescue_from FundInOut::VoidTransactionNotExist, :with => :handle_transaction_not_exist
 
   def create
-    return unless permission_granted? :PlayerTransaction, operation_sym
-
-    player_transaction_id = params[:transaction_id]
-    raise FundInOut::VoidTransactionNotExist unless player_transaction_id
-    @target_transaction = policy_scope(PlayerTransaction).find_by_id(player_transaction_id)
-    raise FundInOut::VoidTransactionNotExist unless @target_transaction
-    raise FundInOut::AlreadyVoided if @target_transaction.voided?
-    @player = @target_transaction.player
-    @member_id = @player.member_id
-
-    server_amount = @target_transaction.amount
-    amount = cents_to_dollar(server_amount)
-    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@member_id, server_amount, @target_transaction.ref_trans_id)
-      result = call_wallet(@member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
-      handle_wallet_result(@transaction, result)
-    end
-
+    super
     flash[:success] = {key: "void_transaction.success", replace: {:slip_number => @target_transaction.slip_number}}
-    @operation =  @transaction.transaction_type.name
     
     respond_to do |format|
       format.js { render partial: "player_transactions/refresh_result", formats: [:js] }
     end
   end
-  
+
+  def extract_params
+    player_transaction_id = params[:transaction_id]
+    raise FundInOut::VoidTransactionNotExist unless player_transaction_id
+    @target_transaction = policy_scope(PlayerTransaction).find_by_id(player_transaction_id)
+    raise FundInOut::VoidTransactionNotExist unless @target_transaction
+    @player = @target_transaction.player
+    @server_amount = @target_transaction.amount
+    @amount = cents_to_dollar(@server_amount)
+    @ref_trans_id = @target_transaction.ref_trans_id
+    @data = nil
+  end
+
+  def check_transaction_acceptable
+    raise FundInOut::AlreadyVoided if @target_transaction.voided?
+  end
+
   def handle_call_wallet_fail(e)
     @player.lock_account!('pending')
     handle_fund_error('flash_message.contact_service')

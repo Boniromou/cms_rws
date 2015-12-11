@@ -29,28 +29,24 @@ class FundController < ApplicationController
 
   def create
     return unless permission_granted? :PlayerTransaction, operation_sym
-    @player, amount, data = extract_params
-    check_player_lock_state
+    extract_params
+    check_transaction_acceptable
     validate_pin if need_validate?
-    server_amount = get_server_amount(amount)# TODO method name
-    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@player.member_id, server_amount, nil, data)
-      result = call_wallet(@player.member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
-      handle_wallet_result(@transaction, result)
-    end
+    execute_transaction(@player, @amount, @server_amount, @ref_trans_id, @data)
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
-    redirect_to balance_path + "?member_id=#{@player.member_id}" if action_str == 'credit_expire' || action_str == 'credit_deposit' 
   end
 
   def extract_params
     member_id = params[:player][:member_id]
-    player = policy_scope(Player).find_by_member_id(member_id)
-    amount = params[:player_transaction][:amount]
-    data = {:remark => params[:player_transaction][:remark]}.to_yaml
-    return player,amount,data
+    @player = policy_scope(Player).find_by_member_id(member_id)
+    @amount = params[:player_transaction][:amount]
+    validate_amount_str(@amount)
+    @server_amount = to_server_amount(@amount)
+    @ref_trans_id = nil
+    @data = {:remark => params[:player_transaction][:remark]}.to_yaml
   end
 
-  def check_player_lock_state
+  def check_transaction_acceptable
     raise FundInOut::PlayerLocked if @player.account_locked?
   end
 
@@ -64,9 +60,12 @@ class FundController < ApplicationController
     false
   end
 
-  def get_server_amount(amount)
-    validate_amount_str(amount)
-    to_server_amount(amount)
+  def execute_transaction(player, amount, server_amount, ref_trans_id, data)
+    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @transaction = do_fund_action(player.member_id, server_amount, ref_trans_id, data)
+      result = call_wallet(player.member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
+      handle_wallet_result(@transaction, result)
+    end
   end
   
   def handle_player_locked(e)

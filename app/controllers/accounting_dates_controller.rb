@@ -4,8 +4,10 @@ class AccountingDatesController < ApplicationController
   skip_before_filter :check_session_expiration, :authenticate_user!,:pass_terminal_id, :only => :current
 
   def current
+    result = default_accounting_date_widget_message
+    result = current_accounting_date.accounting_date if current_property_id
     respond_to do |format|
-      format.html { render :text => current_accounting_date.accounting_date , :layout => false }
+      format.html { render :text => result , :layout => false }
     end
   end
 end

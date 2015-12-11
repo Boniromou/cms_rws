@@ -33,9 +33,9 @@
               </span>
             </label></div>
           <% else %>
-            <div><label class="col-xs-5 box" style="margin-bottom: 5px;">
+            <div><label class="col-xs-5 box">
               <% @player.lock_types.each do |lock_type| %>
-                <span class="badge bg-color-red">
+                <span class="badge bg-color-red" style="margin-bottom: 5px;">
                   <%= label_tag :player_status, t("player_status.#{lock_type}"), :id => "player_#{lock_type}" %>
                 </span><br/>
               <% end %>

@@ -34,6 +34,8 @@ class FundController < ApplicationController
     execute_transaction
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
   end
+  
+  protected
 
   def extract_params
     member_id = params[:player][:member_id]
@@ -57,10 +59,19 @@ class FundController < ApplicationController
 
   def execute_transaction
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(@player.member_id, @server_amount, @ref_trans_id, @data)
+      @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data)
       result = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
+  end
+
+  def create_player_transaction(member_id, amount, ref_trans_id = nil, data = nil)
+    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
+  end
+
+  def handle_wallet_result(transaction, result)
+    return transaction.completed! if result == 'OK'
+    raise FundInOut::CallWalletFail
   end
   
   def handle_player_locked(e)
@@ -114,16 +125,5 @@ class FundController < ApplicationController
     flash[:alert] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
     flash[:fade_in] = false
     redirect_to balance_path + "?member_id=#{@player.member_id}"
-  end
-
-  protected
-
-  def do_fund_action(member_id, amount, ref_trans_id = nil, data = nil)
-    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
-  end
-
-  def handle_wallet_result(transaction, result)
-    return transaction.completed! if result == 'OK'
-    raise FundInOut::CallWalletFail
   end
 end

@@ -5,7 +5,6 @@ class AuditLogsController < ApplicationController
   def search
     return unless permission_granted? :AuditLog, :search_audit_log?
 
-    @action_lists = AuditLog::ACTION_MENU
     @default_date = Time.now.strftime("%Y-%m-%d")
   end
 

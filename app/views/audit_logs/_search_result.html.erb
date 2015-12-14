@@ -17,8 +17,8 @@
             <tbody>
               <% @audit_logs.each do |al| %>
                 <tr id=<%= "audit#{al.id}_body" %> align="center">
-                  <td><%= format_time(al.created_at) %></td>
-                  <td><%= t(display_action(al.action)) %></td>
+                  <td><%= format_time(al.action_at) %></td>
+                  <td><%= t(display_action(al.audit_target, al.action)) %></td>
                   <td><%= al.action_by %></td>
                   <td><%= t(display_target(al.audit_target)) %></td>
                   <td><%= t(display_action_status(al.action_status)) %></td>

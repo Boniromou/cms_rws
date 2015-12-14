@@ -10,51 +10,31 @@ module AuditLogsHelper
     end
   end
 
+  def gen_audit_target_options
+    selection = Rigi::AUDIT_CONFIG.map { |audit_target, v| [ t(v[:locale_key]), audit_target.to_s ] }
+    selection.unshift([ t("general.all"), "all" ])
+    options_for_select selection
+  end
+
   def display_target(target_name)
-    case target_name
-      when "player"
-        "general.player"
-      when "player_transaction"
-        "general.player_transaction"
-      when "shift"
-        "general.shift"
-      else
-        nil
-    end
+    Rigi::AUDIT_CONFIG[target_name.to_sym][:locale_key]
   end
 
-  def display_action(action_name)
-    case action_name
-      when "create"
-        "player.create"
-      when "deposit"
-        "player.deposit"
-      when "withdrawal"
-        "player.withdrawal"
-      when "edit"
-        "player.edit"
-      when "print"
-        "transaction_history.print"
-      when "roll_shift"
-        "shift.roll"
-      when "lock"
-        "player.lock"
-      when "unlock"
-        "player.unlock"
-      when "void_deposit"
-        "player.void_deposit"
-      when "void_withdraw"
-        "player.void_withdraw"
-      when "credit_deposit"
-        "player.credit_deposit"
-      when "credit_expire"
-        "player.credit_expire"
-      else
-        nil
-    end
+  def display_action(target_name, action_name)
+    Rigi::AUDIT_CONFIG[target_name.to_sym][:action_name][action_name.to_sym][:locale_key]
   end
 
-  def gen_hidden_action_list(action_lists, dom_id="action_lists_to_load")
+  def gen_hidden_action_list(dom_id="action_lists_to_load")
+    action_lists = {}
+    action_lists[:all] = { :all => "general.all" }
+    Rigi::AUDIT_CONFIG.each do |audit_target, category|
+      action_lists[audit_target] = {}
+      action_lists[audit_target][:all] = "general.all"
+      category[:action_name].map do |action, action_attribute|
+        action_lists[audit_target][action] = action_attribute[:locale_key]
+      end
+    end
+
     content_tag :div, :id => dom_id, :style => "display: none;" do
       action_lists.each do |audit_target, actions|
         actions_dom = content_tag(:div, :id => audit_target) do
@@ -64,4 +44,5 @@ module AuditLogsHelper
       end
     end
   end
+
 end

@@ -22,9 +22,9 @@ describe AuditLogsController do
       clean_dbs
       create_shift_data
       AuditLog.delete_all
-      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => "2014-09-29 12:00:00", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "deposit", :action_status => "success", :action_by => "portal.admin", :action_at => "2014-09-29 12:00:00", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al1.save(:validate => false)
-      @al2 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => "2014-09-30 12:00:00", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al2 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "deposit", :action_status => "success", :action_by => "portal.admin", :action_at => "2014-09-30 12:00:00", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al2.save(:validate => false)
     end
     
@@ -46,9 +46,9 @@ describe AuditLogsController do
   describe '[13] Search audit log' do
     before(:each) do
       AuditLog.delete_all
-      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "deposit", :action_status => "success", :action_by => "portal.admin", :action_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al1.save(:validate => false)
-      @al2 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "ray.chan", :created_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al2 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "deposit", :action_status => "success", :action_by => "ray.chan", :action_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al2.save(:validate => false)
     end
     
@@ -77,9 +77,9 @@ describe AuditLogsController do
   describe '[13] Search audit log' do
     before(:each) do
       AuditLog.delete_all
-      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "deposit", :action_status => "success", :action_by => "portal.admin", :action_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al1.save(:validate => false)
-      @al2 = AuditLog.new({ :audit_target => "player", :action_type => "update", :action_error => "", :action => "edit", :action_status => "success", :action_by => "portal.admin", :created_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al2 = AuditLog.new({ :audit_target => "player", :action_type => "update", :action_error => "", :action => "lock", :action_status => "success", :action_by => "portal.admin", :action_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al2.save(:validate => false)
     end
     
@@ -113,9 +113,9 @@ describe AuditLogsController do
   describe '[13] Search audit log' do
     before(:each) do
       AuditLog.delete_all
-      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "create", :action_status => "success", :action_by => "portal.admin", :created_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al1 = AuditLog.new({ :audit_target => "player", :action_type => "create", :action_error => "", :action => "deposit", :action_status => "success", :action_by => "portal.admin", :action_at => Time.now.utc, :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al1.save(:validate => false)
-      @al2 = AuditLog.new({ :audit_target => "system_user", :action_type => "update", :action_error => "", :action => "lock", :action_status => "success", :action_by => "portal.admin", :created_at => "2014-09-29 12:00:01", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
+      @al2 = AuditLog.new({ :audit_target => "system_user", :action_type => "update", :action_error => "", :action => "lock", :action_status => "success", :action_by => "portal.admin", :action_at => "2014-09-29 12:00:01", :session_id => "qwer1234", :ip => "127.0.0.1", :description => "" })
       @al2.save(:validate => false)
     end
     

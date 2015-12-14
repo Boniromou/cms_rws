@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151210083910) do
+ActiveRecord::Schema.define(:version => 20151214075321) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20151210083910) do
     t.string   "session_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.datetime "action_at"
   end
 
   create_table "change_histories", :force => true do |t|
@@ -58,7 +59,7 @@ ActiveRecord::Schema.define(:version => 20151210083910) do
     t.datetime "updated_at",                :null => false
   end
 
-  add_index "configurations", ["property_id", "key"], :name => "index_configurations_on_property_id_and_key", :unique => true
+  add_index "configurations", ["property_id"], :name => "fk_configurations_property_id"
 
   create_table "currencies", :force => true do |t|
     t.string   "name"

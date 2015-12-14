@@ -1,0 +1,40 @@
+audit_target:
+  player: 
+    locale_key: "general.player"
+    action_name:
+      deposit: 
+        action_type: "update"
+        locale_key: "player.deposit"
+      withdraw:
+        action_type: "update"
+        locale_key: "player.withdrawal"
+      void_deposit:
+        action_type: "update"
+        locale_key: "player.void_deposit"
+      void_withdraw:
+        action_type: "update"
+        locale_key: "player.void_withdraw"
+      credit_deposit:
+        action_type: "update"
+        locale_key: "player.credit_deposit"
+      credit_expire:
+        action_type: "update"
+        locale_key: "player.credit_expire"
+      lock: 
+        action_type: "update"
+        locale_key: "player.lock"
+      unlock:
+        action_type: "update"
+        locale_key: "player.unlock"
+  player_transaction:
+    locale_key: "general.player_transaction"
+    action_name:
+      print:
+        action_type: "read"
+        locale_key: "transaction_history.print"
+  shift:
+    locale_key: "general.shift"
+    action_name:
+      roll: 
+        action_type: "create"
+        locale_key: "shift.roll"

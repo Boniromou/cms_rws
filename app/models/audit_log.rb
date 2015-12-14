@@ -1,103 +1,68 @@
 class AuditLog < ActiveRecord::Base
-  attr_accessible :action, :action_by, :action_error, :action_status, :action_type, :audit_target, :description, :ip, :session_id, :created_at
-
-  ACTION_MENU = {:all => { :all => "general.all" },
-                 :player => { :all => "general.all",
-                              :create => "player.create",
-                              :deposit => "player.deposit",
-                              :withdraw => "player.withdrawal",
-                              :void_deposit => "player.void_deposit",
-                              :void_withdraw => "player.void_withdraw",
-                              :credit_deposit => "player.credit_deposit",
-                              :credit_expire => "player.credit_expire",
-                              :edit => "player.edit",
-                              :lock => "player.lock",
-                              :unlock => "player.unlock"},
-                 :player_transaction => { :all => "general.all",
-                                          :print => "transaction_history.print" },
-                 :shift => { :all => "general.all",
-                             :roll_shift => "shift.roll" }
-  }
-
-  ACTION_TYPE_LIST = { 
-    :player => {:create => "create", 
-                :deposit => "update", 
-                :withdraw => "update", 
-                :void_deposit => "update", 
-                :void_withdraw => "update", 
-                :credit_deposit => "update", 
-                :credit_expire => "update", 
-                :edit => "update", 
-                :lock => "update", 
-                :unlock => "update"},
-    :player_transaction => {:print => "read"},
-    :shift => {:roll_shift => "create"}
-  }
-
-  scope :since, -> start_time { where("created_at > ?", start_time) if start_time.present? }
-  scope :until, -> end_time { where("created_at < ?", end_time) if end_time.present? }
+  attr_accessible :audit_target, :action_type, :action, :action_status, :action_error, :session_id, :ip, :action_by, :action_at, :description
+  validates_presence_of :audit_target, :action, :action_status, :action_by, :action_at#, :action_type
+  validate :action_type, :inclusion => { :in => %w(create read update delete) }
+  scope :since, -> start_time { where("action_at > ?", start_time) if start_time.present? }
+  scope :until, -> end_time { where("action_at < ?", end_time) if end_time.present? }
   scope :match_action_by, -> actioner { where("action_by LIKE ?", "%#{actioner}%") if actioner.present? }
   scope :by_target, -> target { where("audit_target = ?", target) if target.present? }
   scope :by_action, -> action { where("action = ?", action) if action.present? }
   scope :by_action_type, -> action_type { where("action_type = ?", action_type) if action_type.present? }
   scope :by_action_status, -> action_status { where("action_status = ?", action_status) if action_status.present? }
 
-  def self.search_query(*args)
-    audit_target = args[0]
-    action = args[1]
-    action_type = args[2]
-    action_by= args[3]
-    start_time = args[4]
-    end_time = args[5]
-    by_target(audit_target).by_action(action).by_action_type(action_type).match_action_by(action_by).since(start_time).until(end_time)
-  end
-
-  def self.player_log(action, action_by, ip, session_id, options={}, &block)
-    compose_log(action, action_by, "player", ip, session_id, options, &block)
-  end
-
-  def self.location_log(action, action_by, ip, session_id, options={}, &block)
-    compose_log(action, action_by, "location", ip, session_id, options, &block)
-  end
-  
-  def self.fund_in_out_log(action, action_by, ip, session_id, options={}, &block)
-    compose_log(action, action_by, "player", ip, session_id, options, &block)
-  end
-
-  def self.print_log(action, action_by, ip, session_id, options={}, &block)
-    compose_log(action, action_by, "player_transaction", ip, session_id, options, &block)
-  end
-
-  def self.shift_log(action, action_by, ip, session_id, options={}, &block)
-    compose_log(action, action_by, "shift", ip, session_id, options, &block)
-  end
-
-  private
-  def self.compose_log(action, action_by, audit_target, ip, session_id, options={}, &block)
-    content = options.merge({:action => action, :action_by => action_by, :audit_target => audit_target, :ip => ip, :session_id => session_id})
-    begin
-      block.call if block
-      logging(content)
-    rescue Exception => e
-      unless e.class == ArgumentError
-        logging(content.merge({:action_error => e.message, :action_status => "fail"}))
-      end
-      raise e
+  class << self
+    def search_query(*args)
+      args.extract_options!
+      audit_target, action, action_type, action_by, start_time, end_time = args
+      by_target(audit_target).by_action(action).by_action_type(action_type).match_action_by(action_by).since(start_time).until(end_time)
     end
-  end
+  
+    #
+    # =>
+    # def self.test_player_log(action, action_by, session_id, ip, options={}, &block)
+    #   compose_log("test_player", action, action_by, session_id, ip, options, &block)
+    # end
+    #
+    # ...
+    #
+    Rigi::AUDIT_CONFIG.each do |audit_target, _|
+      define_method("#{audit_target}_log") do |*args, &block|
+        send(:compose_log, audit_target, *args, &block)
+      end
+    end
 
-  def self.logging(content={})
-    action = content[:action]
-    action_by = content[:action_by]
-    action_error = content[:action_error]
-    action_status = content[:action_status] || "success"
-    audit_target = content[:audit_target]
-    action_type = content[:action_type] || ACTION_TYPE_LIST[audit_target.to_sym][action.to_sym]
-    description = content[:description]
-    ip = content[:ip]
-    session_id = content[:session_id]
-    content_to_insert = {:action => action, :action_by => action_by, :action_error => action_error, :action_status => action_status, :action_type => action_type, :audit_target => audit_target, :description => description, :ip => ip, :session_id => session_id}
-    self.create!(content_to_insert)
-    Rails.logger.info "[AuditLogs] capture an action and created a log with content=#{content_to_insert.inspect}"
+    private
+    def compose_log(*args, &block)
+      options = args.extract_options!
+      audit_target, action, action_by, session_id, ip = args
+      content = options.merge({:audit_target => audit_target, :action => action, :action_by => action_by, :session_id => session_id, :ip => ip})
+      begin
+        block.call if block
+      rescue Exception => e
+        logging(content.merge({:action_error => e.message, :action_status => "fail"}))
+        raise e
+      end
+      logging(content)
+    end
+
+    def logging(content={})
+      audit_target = content[:audit_target]
+      action = content[:action]
+      action_by = content[:action_by]
+      action_type = content[:action_type] || retrieve_action_type(audit_target, action)
+      action_error = content[:action_error]
+      action_status = content[:action_status] || "success"
+      action_at = content[:action_at] || Time.now
+      session_id = content[:session_id]
+      ip = content[:ip]
+      description = content[:description]
+      content_to_insert = { :audit_target => audit_target, :action_type => action_type, :action_error => action_error, :action => action, :action_status => action_status, :action_by => action_by, :action_at => action_at, :session_id => session_id, :ip => ip, :description => description }
+      self.create!(content_to_insert)
+      Rails.logger.info "[AuditLogs] capture an action and created a log with content=#{content_to_insert.inspect}"
+    end
+
+    def retrieve_action_type(audit_target, action_name)
+      Rigi::AUDIT_CONFIG[audit_target.to_sym][:action_name][action_name.to_sym][:action_type]
+    end
   end
 end

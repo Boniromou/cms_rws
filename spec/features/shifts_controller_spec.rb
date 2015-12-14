@@ -128,7 +128,7 @@ describe ShiftsController do
       audit_log.audit_target.should == "shift"
       audit_log.action_by.should == @root_user.name
       audit_log.action_type.should == "create"
-      audit_log.action.should == "roll_shift"
+      audit_log.action.should == "roll"
       audit_log.action_status.should == "success"
       audit_log.action_error.should be_nil
       audit_log.ip.should_not be_nil
@@ -206,6 +206,7 @@ describe ShiftsController do
       @shifts = ['morning', 'swing', 'night']
 
       allow_any_instance_of(CageInfoHelper).to receive(:polling_interval).and_return(100)
+      mock_current_property_id
     end
 
     it '[10.1] Successfully update shift to other windows', js: true do

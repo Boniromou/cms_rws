@@ -58,7 +58,7 @@ class FundController < ApplicationController
   end
 
   def execute_transaction
-    AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+    AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data)
       result = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)

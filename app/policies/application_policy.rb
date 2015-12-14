@@ -1,4 +1,5 @@
 class ApplicationPolicy
+  include Rigi::PunditHelper::Policy
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -32,6 +33,10 @@ class ApplicationPolicy
 
   def destroy?
     false
+  end
+  
+  def have_active_location?
+    @user.have_active_location
   end
 
   def scope

@@ -1,13 +1,6 @@
 class ShiftPolicy < ApplicationPolicy
-  def roll?
-    is_admin? || has_permission?('shift', 'roll')
-  end
-
-  def search_fm?
-    is_admin? || has_permission?('shift', 'fm_activity_report')
-  end
-
-  def print_fm?
-    is_admin? || has_permission?('shift', 'print_fm_activity_report')
-  end
+  policy_target :shift
+  map_policy :roll?
+  map_policy :search_fm?, :action_name => :fm_activity_report
+  map_policy :print_fm?, :action_name => :print_fm_activity_report
 end

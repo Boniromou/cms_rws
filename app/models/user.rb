@@ -11,6 +11,11 @@ class User < ActiveRecord::Base
   	@have_active_location
   end
 
+  def is_admin?
+    user = Rails.cache.fetch "#{self.uid}"
+    user && user[:admin]
+  end
+
   class << self
     def get_property_ids_by_uid(uid)
       user = Rails.cache.fetch "#{uid}"

@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(:version => 20151214075321) do
     t.datetime "updated_at",                :null => false
   end
 
-  add_index "configurations", ["property_id"], :name => "fk_configurations_property_id"
+  add_index "configurations", ["property_id", "key"], :name => "index_configurations_on_property_id_and_key", :unique => true
 
   create_table "currencies", :force => true do |t|
     t.string   "name"

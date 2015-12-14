@@ -1,53 +1,23 @@
 class PlayerTransactionPolicy < ApplicationPolicy
+  policy_target :player_transaction
+  map_policy :print?, :action_name => :print_slip
+  map_policy :search?, :action_name => :transaction_history
+  map_policy :reprint?, :action_name => :reprint_slip
+  map_policy :print_report?, :action_name => :print_transaction_report
+  map_policy :void?
+  map_policy :void_deposit?, :delegate_policies => [:void?]
+  map_policy :void_withdraw?, :delegate_policies => [:void?]
+  map_policy :credit_deposit?, :action_name => :add_credit
+  map_policy :credit_expire?, :action_name => :expire_credit
+  map_policy :print_void?, :action_name => :print_void_slip
+  map_policy :reprint_void?, :action_name => :reprint_void_slip
+  map_policy :can_deposit?, :action_name => :deposit
+  map_policy :can_withdraw?, :action_name => :withdraw
   def deposit?
-    (is_admin? || has_permission?('player_transaction', 'deposit')) && @user.have_active_location
+    have_active_location? && can_deposit?
   end
 
   def withdraw?
-    (is_admin? || has_permission?('player_transaction', 'withdraw')) && @user.have_active_location
-  end
-
-  def print?
-    is_admin? || has_permission?('player_transaction', 'print_slip')
-  end
-
-  def search?
-    is_admin? || has_permission?('player_transaction', 'transaction_history')
-  end
-  
-  def reprint?
-    is_admin? || has_permission?('player_transaction', 'reprint_slip')
-  end
-
-  def print_report?
-    is_admin? || has_permission?('player_transaction', 'print_transaction_report')
-  end
-
-  def void?
-    is_admin? || has_permission?('player_transaction', 'void')
-  end
-
-  def void_deposit?
-    void?
-  end
-
-  def void_withdraw?
-    void?
-  end
-
-  def credit_deposit?
-    is_admin? || has_permission?('player_transaction', 'add_credit')
-  end
-
-  def credit_expire?
-    is_admin? || has_permission?('player_transaction', 'expire_credit')
-  end    
-
-  def print_void?
-    is_admin? || has_permission?('player_transaction', 'print_void_slip')
-  end
-
-  def reprint_void?
-    is_admin? || has_permission?('player_transaction', 'reprint_void_slip')
+    have_active_location? && can_withdraw?
   end
 end

@@ -31,8 +31,7 @@ class FundController < ApplicationController
     return unless permission_granted? :PlayerTransaction, operation_sym
     extract_params
     check_transaction_acceptable
-    validate_pin if need_validate?
-    execute_transaction(@player, @amount, @server_amount, @ref_trans_id, @data)
+    execute_transaction
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
   end
 
@@ -56,14 +55,10 @@ class FundController < ApplicationController
     raise Request::InvalidPin.new unless response
   end
 
-  def need_validate?
-    false
-  end
-
-  def execute_transaction(player, amount, server_amount, ref_trans_id, data)
+  def execute_transaction
     AuditLog.fund_in_out_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-      @transaction = do_fund_action(player.member_id, server_amount, ref_trans_id, data)
-      result = call_wallet(player.member_id, amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
+      @transaction = do_fund_action(@player.member_id, @server_amount, @ref_trans_id, @data)
+      result = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
       handle_wallet_result(@transaction, result)
     end
   end

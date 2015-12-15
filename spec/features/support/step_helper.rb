@@ -18,7 +18,7 @@ module StepHelper
   def login_as_admin_new
     Rails.cache.write '1', {:status => true, :admin => true, :properties => [20000]}
     result = {'success' => true, 'system_user' => {'id' => 1, 'username' => 'portal.admin'}}
-    UserManagement.stub(:authenticate).and_return(result)
+    allow(UserManagement).to receive(:authenticate).and_return(result)
     visit '/login'
     fill_in "user_username", :with => 'portal.admin'
     fill_in "user_password", :with => 'Cc123456'
@@ -465,7 +465,7 @@ module StepHelper
     find("button#confirm_withdraw").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
 
-    find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+    expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
     expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
     expect(page).to have_selector("div#pop_up_dialog div button#confirm")
     expect(page).to have_selector("div#pop_up_dialog div button#cancel")

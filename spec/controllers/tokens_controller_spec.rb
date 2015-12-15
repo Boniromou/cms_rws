@@ -68,7 +68,7 @@ describe TokensController do
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
       token_test = Token.find_by_session_token('abm39492i9jd9wjn')
-      token_test.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(token_test.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to eq (Time.now.utc - 100).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
 
     it '[32.2] Logout fail' do
@@ -99,7 +99,7 @@ describe TokensController do
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
-      @token.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should == (Time.now.utc + 1800).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(@token.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to eq (Time.now.utc + 1800).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
 
     it '[33.2] Keep alive fail with wrong token' do

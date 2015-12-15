@@ -61,7 +61,7 @@ describe WithdrawController do
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_withdraw").click
-      find("div#pop_up_dialog")[:style].include?("block").should == false
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
 
@@ -72,7 +72,7 @@ describe WithdrawController do
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
       find("button#confirm_withdraw").click
-      find("div#pop_up_dialog")[:style].include?("block").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
       expect(find("label#player_full_name").text).to eq @player.full_name.upcase
@@ -94,8 +94,8 @@ describe WithdrawController do
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
-      find("div#pop_up_dialog")[:style].include?("block").should == true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -106,15 +106,15 @@ describe WithdrawController do
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
-      find("div#pop_up_dialog")[:style].include?("block").should == true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
       find("div#pop_up_dialog div button#cancel").trigger('click')
       sleep(5)
-      find("div#pop_up_dialog")[:class].include?("fadeOut").should == true
-      find("div#pop_up_dialog")[:style].include?("none").should == true   
+      expect(find("div#pop_up_dialog")[:class].include?("fadeOut")).to eq true
+      expect(find("div#pop_up_dialog")[:style].include?("none")).to eq true   
     end
 
 
@@ -124,7 +124,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -146,16 +146,16 @@ describe WithdrawController do
       expect(page).to have_selector("a#close_link")
       
       audit_log = AuditLog.find_by_audit_target("player")
-      audit_log.should_not be_nil
-      audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.name
-      audit_log.action_type.should == "update"
-      audit_log.action.should == "withdraw"
-      audit_log.action_status.should == "success"
-      audit_log.action_error.should be_nil
-      audit_log.ip.should_not be_nil
-      audit_log.session_id.should_not be_nil
-      audit_log.description.should_not be_nil
+      expect(audit_log).to_not eq nil
+      expect(audit_log.audit_target).to eq "player"
+      expect(audit_log.action_by).to eq @root_user.name
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "withdraw"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to eq nil
+      expect(audit_log.ip).to_not eq nil
+      expect(audit_log.session_id).to_not eq nil
+      expect(audit_log.description).to_not eq nil
     end
 
     it '[7.11] click unauthorized action (Withdraw)' do
@@ -213,7 +213,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -231,7 +231,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -256,7 +256,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -280,7 +280,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -299,16 +299,16 @@ describe WithdrawController do
       check_balance_page(@player_balance - 10000)
       
       audit_log = AuditLog.find_by_audit_target("player_transaction")
-      audit_log.should_not be_nil
-      audit_log.audit_target.should == "player_transaction"
-      audit_log.action_by.should == @root_user.name
-      audit_log.action_type.should == "read"
-      audit_log.action.should == "print"
-      audit_log.action_status.should == "success"
-      audit_log.action_error.should be_nil
-      audit_log.ip.should_not be_nil
-      audit_log.session_id.should_not be_nil
-      audit_log.description.should_not be_nil
+      expect(audit_log).to_not eq nil
+      expect(audit_log.audit_target).to eq "player_transaction"
+      expect(audit_log.action_by).to eq @root_user.name
+      expect(audit_log.action_type).to eq "read"
+      expect(audit_log.action).to eq "print"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to eq nil
+      expect(audit_log.ip).to_not eq nil
+      expect(audit_log.session_id).to_not eq nil
+      expect(audit_log.description).to_not eq nil
     end
     
     it '[7.18] Invalid Withdrawal (empty)', :js => true do
@@ -316,7 +316,7 @@ describe WithdrawController do
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_withdraw").click
-      find("div#pop_up_dialog")[:style].include?("block").should == false
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
   end
@@ -348,7 +348,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -370,7 +370,7 @@ describe WithdrawController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")

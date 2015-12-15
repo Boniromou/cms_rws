@@ -60,7 +60,7 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 0
       find("button#confirm_deposit").click
 
-      find("div#pop_up_dialog")[:style].include?("block").should == false
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq  false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
 
@@ -79,8 +79,8 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
 
-      find("div#pop_up_dialog")[:style].include?("block").should == true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
@@ -93,17 +93,17 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
 
-      find("div#pop_up_dialog")[:style].include?("block").should == true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
 
       find("div#pop_up_dialog div button#cancel").click
-      find("div#pop_up_dialog")[:class].include?("fadeOut").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeOut")).to eq true
       sleep(5)
-      find("div#pop_up_dialog")[:style].include?("none").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("none")).to eq true
       
     end
 
@@ -136,16 +136,16 @@ describe DepositController do
       expect(page).to have_selector("a#close_link")
       
       audit_log = AuditLog.last
-      audit_log.should_not be_nil
-      audit_log.audit_target.should == "player"
-      audit_log.action_by.should == @root_user.name
-      audit_log.action_type.should == "update"
-      audit_log.action.should == "deposit"
-      audit_log.action_status.should == "success"
-      audit_log.action_error.should be_nil
-      audit_log.ip.should_not be_nil
-      audit_log.session_id.should_not be_nil
-      audit_log.description.should_not be_nil
+      expect(audit_log).to_not eq nil
+      expect(audit_log.audit_target).to eq "player"
+      expect(audit_log.action_by).to eq @root_user.name
+      expect(audit_log.action_type).to eq "update"
+      expect(audit_log.action).to eq "deposit"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to eq nil
+      expect(audit_log.ip).to_not eq nil
+      expect(audit_log.session_id).to_not eq nil
+      expect(audit_log.description).to_not eq nil
     end
 
     it '[6.10] click unauthorized action (Deposit)', :js => true do
@@ -204,7 +204,7 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -223,7 +223,7 @@ describe DepositController do
       find("button#confirm_deposit").click
 
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -248,7 +248,7 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -272,7 +272,7 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      find("div#pop_up_dialog")[:class].include?("fadeIn").should == true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
@@ -292,16 +292,16 @@ describe DepositController do
       check_balance_page(10000)
       
       audit_log = AuditLog.find_by_audit_target("player_transaction")
-      audit_log.should_not be_nil
-      audit_log.audit_target.should == "player_transaction"
-      audit_log.action_by.should == @root_user.name
-      audit_log.action_type.should == "read"
-      audit_log.action.should == "print"
-      audit_log.action_status.should == "success"
-      audit_log.action_error.should be_nil
-      audit_log.ip.should_not be_nil
-      audit_log.session_id.should_not be_nil
-      audit_log.description.should_not be_nil
+      expect(audit_log).to_not eq nil
+      expect(audit_log.audit_target).to eq "player_transaction"
+      expect(audit_log.action_by).to eq @root_user.name
+      expect(audit_log.action_type).to eq "read"
+      expect(audit_log.action).to eq "print"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to eq nil
+      expect(audit_log.ip).to_not eq nil
+      expect(audit_log.session_id).to_not eq nil
+      expect(audit_log.description).to_not eq nil
     end
 
     it '[6.17] Invalid Deposit (empty)', :js => true do
@@ -309,7 +309,7 @@ describe DepositController do
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_deposit").click
-      find("div#pop_up_dialog")[:style].include?("block").should == false
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
   end

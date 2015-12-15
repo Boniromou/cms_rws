@@ -192,7 +192,7 @@ describe PlayersController do
       login_as_not_admin(@test_user)
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
-      first("aside#left-panel ul li#nav_balance_enquiry").should be_nil
+      expect(first("aside#left-panel ul li#nav_balance_enquiry")).to eq nil
     end     
 
     it '[5.8] balance enquiry with locked player', :js => true do
@@ -477,10 +477,10 @@ describe PlayersController do
       check_flash_message expected_flash_message
       token_test1 = Token.find_by_session_token('abm39492i9jd9wjn')
       token_test2 = Token.find_by_session_token('3949245469jd9wjn')
-      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
-      token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
-      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
-      token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC").should <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
   end
   

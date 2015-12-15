@@ -86,7 +86,7 @@ describe FundController do
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 300
       find("button#confirm_withdraw").click
-      find("div#pop_up_dialog")[:style].include?("block").should == true
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       find("div#pop_up_dialog div button#confirm").click
       check_title("tree_panel.fund_out")
       expect(find("label#player_full_name").text).to eq @player.full_name.upcase

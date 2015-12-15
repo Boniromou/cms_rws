@@ -124,16 +124,16 @@ describe ShiftsController do
       roll_shift_and_check('morning', @today)
 
       audit_log = AuditLog.find_by_audit_target("shift")
-      audit_log.should_not be_nil
-      audit_log.audit_target.should == "shift"
-      audit_log.action_by.should == @root_user.name
-      audit_log.action_type.should == "create"
-      audit_log.action.should == "roll"
-      audit_log.action_status.should == "success"
-      audit_log.action_error.should be_nil
-      audit_log.ip.should_not be_nil
-      audit_log.session_id.should_not be_nil
-      audit_log.description.should_not be_nil
+      expect(audit_log).to_not eq nil
+      expect(audit_log.audit_target).to eq "shift"
+      expect(audit_log.action_by).to eq @root_user.name
+      expect(audit_log.action_type).to eq "create"
+      expect(audit_log.action).to eq "roll"
+      expect(audit_log.action_status).to eq "success"
+      expect(audit_log.action_error).to eq nil
+      expect(audit_log.ip).to_not eq nil
+      expect(audit_log.session_id).to_not eq nil
+      expect(audit_log.description).to_not eq nil
     end
 
     it '[9.4] successfully roll shift (night to morning)', js: true do

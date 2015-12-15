@@ -22,8 +22,8 @@ CmsRws::Application.routes.draw do
   get "create_pin" => "players#create_pin"
   post "reset_pin" => "players#do_reset_pin"
   get "inactivated" => "players#player_not_activated"
-  post "lock_account" => "players#lock_account"
-  post "unlock_account" => "players#unlock_account"
+  post "lock_account" => "players#lock"
+  post "unlock_account" => "players#unlock"
   post "update" => "players#update"
 
   get 'fund_in' => 'deposit#new'

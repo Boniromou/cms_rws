@@ -5,9 +5,11 @@ class ApplicationController < ActionController::Base
   layout false
 
   include Pundit
+  include Rigi::PunditHelper::Controller
   include CageInfoHelper
 
   rescue_from Exception, :with => :handle_fatal_error
+  rescue_from Pundit::NotAuthorizedError, :with => :handle_unauthorize
 
   def client_ip
     if Rails.env.development?
@@ -118,6 +120,15 @@ class ApplicationController < ActionController::Base
       return false
     end
     true
+  end
+
+  def handle_unauthorize
+    Rails.logger.info 'handle_unauthorize'
+    flash[:alert] = "flash_message.not_authorize"
+    respond_to do |format|
+      format.html { render "home/index", formats: [:html] }
+      format.js { render "home/unauthorized", formats: [:js] }
+    end
   end
 
   def handle_fatal_error(e)

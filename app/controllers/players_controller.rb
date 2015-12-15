@@ -1,5 +1,9 @@
 class PlayersController < ApplicationController
   layout 'cage'
+  before_filter :authorize_action, :only => [:balance, :profile, :lock, :unlock, :create_pin, :reset_pin, :do_reset_pin]
+  before_filter :only => [:search, :do_search] do |controller|
+    authorize_action :player, "#{params[:operation]}?".to_sym
+  end
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
   
@@ -12,7 +16,6 @@ class PlayersController < ApplicationController
   end
 
   def player_info
-    return unless permission_granted? :Player
     @operation = params[:action]
     member_id = params[:member_id]
     @player = policy_scope(Player).find_by_member_id(member_id)
@@ -47,8 +50,6 @@ class PlayersController < ApplicationController
 
   def search
     @operation = params[:operation]
-    action = (@operation+ "?").to_sym unless @operation.nil?
-    return unless permission_granted? :Player, action
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @player = Player.new
@@ -81,9 +82,7 @@ class PlayersController < ApplicationController
     search
   end
 
-  def lock_account
-    return unless permission_granted? :Player, :lock?
-
+  def lock
     member_id = params[:member_id]
     player = policy_scope(Player).find_by_member_id(member_id)
 
@@ -96,9 +95,7 @@ class PlayersController < ApplicationController
     redirect_to :action => 'profile', :member_id => member_id
   end
 
-  def unlock_account
-    return unless permission_granted? :Player, :unlock?
-
+  def unlock
     member_id = params[:member_id]
     player = policy_scope(Player).find_by_member_id(member_id)
 
@@ -127,7 +124,6 @@ class PlayersController < ApplicationController
   end
 
   def set_pin
-    return unless permission_granted? :Player, :reset_pin?
     @operation = params[:operation]
     
     respond_to do |format|
@@ -137,7 +133,6 @@ class PlayersController < ApplicationController
   end
 
   def do_reset_pin
-    return unless permission_granted? :Player, :reset_pin?
     begin
       audit_log = {:user => current_user.name, :member_id => params[:player][:member_id], :action_at => Time.now.utc, :action => params[:action].split('_')[0]}
       player_info = patron_requester.reset_pin(params[:player][:member_id], params[:pin], audit_log)

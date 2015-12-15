@@ -282,10 +282,6 @@ module Rigi
         Rails.logger.info "------ authorize action ------> target = #{policy_target}, action = #{policy_def}"
         authorize policy_target, policy_def
       end
-
-      def pundit_user
-        SystemUserContext.new(current_system_user, params[:property_id])
-      end
     end
   end
 end

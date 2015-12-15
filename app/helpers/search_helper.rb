@@ -28,7 +28,7 @@ module SearchHelper
     date_gap = (to_number(@end_time) - to_number(@start_time)) / 86400
     
     raise Search::OverRangeError, "limit_remark" if date_gap > search_range
-    start_ac_date = AccountingDate.find_by_accounting_date(to_string(@start_time))
+    start_ac_date = AccountingDate.find_by_accounting_date(to_string(@start_time)) || AccountingDate.first
     end_ac_date = AccountingDate.find_by_accounting_date(to_string(@end_time))
     end_ac_date = AccountingDate.order(:created_at).last if end_ac_date.nil?
 

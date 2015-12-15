@@ -2,6 +2,7 @@ class PlayerTransactionPolicy < ApplicationPolicy
   policy_target :player_transaction
   map_policy :print?, :action_name => :print_slip
   map_policy :search?, :action_name => :transaction_history
+  map_policy :do_search?, :delegate_policies => [:search?]
   map_policy :reprint?, :action_name => :reprint_slip
   map_policy :print_report?, :action_name => :print_transaction_report
   map_policy :void?

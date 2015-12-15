@@ -3,16 +3,15 @@ class PlayerTransactionsController < ApplicationController
   include FormattedTimeHelper
   include PlayerTransactionsHelper
   include SearchHelper
+  before_filter :authorize_action, :only => [:search, :do_search, :print, :reprint]
 
   def search
-    return unless permission_granted? :PlayerTransaction
     @card_id = params[:card_id]
     @default_date = params[:accounting_date] || current_accounting_date.accounting_date
     @operation = params[:operation]
   end
 
   def do_search
-    return unless permission_granted? :PlayerTransaction, :search?
         
     begin
     @operation = params[:operation]
@@ -53,7 +52,6 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def print
-    return unless permission_granted? :PlayerTransaction
     AuditLog.player_transaction_log("print", current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
     end
     member_id = params[:member_id]
@@ -61,7 +59,6 @@ class PlayerTransactionsController < ApplicationController
   end
 
   def reprint
-    return unless permission_granted? :PlayerTransaction
     transaction_id = params[:transaction_id]
     @transaction = PlayerTransaction.find(transaction_id)
     @player = Player.find(@transaction.player_id)

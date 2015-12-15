@@ -3,23 +3,23 @@ class PinHistoriesController < ApplicationController
   include FormattedTimeHelper
   include FrontMoneyHelper
   include SearchHelper
+  before_filter :only => [:search, :do_search] do |controller|
+    authorize_action :ChangeHistory, :pin_change_log?
+  end
 
   def search
-    return unless permission_granted? :ChangeHistory, :pin_change_log?
     @default_date = params[:accounting_date] || current_accounting_date.accounting_date
   end
 
   def do_search
-    return unless permission_granted? :ChangeHistory, :pin_change_log?
     begin
+      start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.pin_log_search_range)
+      @pin_histories = patron_requester.get_pin_audit_logs(start_time, end_time)
 
-    start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.pin_log_search_range)
-    @pin_histories = patron_requester.get_pin_audit_logs(start_time, end_time)
-
-    if @pin_histories.class != Array
-      Rails.logger.error "get pin audit log fail"
-      @pin_histories = []
-    end
+      if @pin_histories.class != Array
+        Rails.logger.error "get pin audit log fail"
+        @pin_histories = []
+      end
     rescue Remote::NoPinAuditLog
       @pin_histories = []
     rescue FrontMoneyHelper::NoResultException => e

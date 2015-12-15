@@ -104,24 +104,6 @@ class ApplicationController < ActionController::Base
     @requester_helper
   end
 
-  def permission_granted?(model, operation = nil)
-    begin
-      if operation.nil?
-        authorize model
-      else
-        authorize model, operation
-      end
-    rescue NotAuthorizedError => e
-      flash[:alert] = "flash_message.not_authorize"
-      respond_to do |format|
-        format.html { render "home/index", formats: [:html] }
-        format.js { render "home/unauthorized", formats: [:js] }
-      end
-      return false
-    end
-    true
-  end
-
   def handle_unauthorize
     Rails.logger.info 'handle_unauthorize'
     flash[:alert] = "flash_message.not_authorize"

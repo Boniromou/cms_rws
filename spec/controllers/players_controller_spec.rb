@@ -19,7 +19,7 @@ describe PlayersController do
       clean_dbs
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => 123456, :card_id => 1234567890, :currency_id => 1, :status => "active", :property_id => 20000)
       controller.class.skip_before_filter :check_session_expiration, :authenticate_user!
-      allow_any_instance_of(ApplicationController).to receive(:permission_granted?).and_return(true)
+      allow_any_instance_of(ApplicationController).to receive(:authorize_action).and_return(true)
       bypass_rescue
     end
 

@@ -2,16 +2,17 @@ class FrontMoneyController < ApplicationController
   layout 'cage'
   include FormattedTimeHelper
   include FrontMoneyHelper
+  before_filter :only => [:search, :do_search] do |controller|
+    authorize_action :Shift, :search_fm?
+  end
 
   def search
-    return unless permission_granted? :Shift, :search_fm?
     @shift_name_list = ["morning","swing","night"]
     @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
     @shift_name = params[:shift_name] || "morning"
   end
 
   def do_search
-    return unless permission_granted? :Shift, :search_fm?
     begin
       accounting_date = parse_date(params[:accounting_date], current_accounting_date.accounting_date)
       @accounting_date = AccountingDate.get_by_date(accounting_date)

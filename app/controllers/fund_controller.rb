@@ -2,6 +2,9 @@ class FundController < ApplicationController
   include FundHelper
 
   layout 'cage'
+  before_filter :only => [:new, :create] do |controller|
+    authorize_action :PlayerTransaction, operation_sym
+  end
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
   rescue_from Remote::CreditNotExpired, :with => :handle_credit_exist
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error
@@ -20,15 +23,12 @@ class FundController < ApplicationController
   end
 
   def new
-    return unless permission_granted? :PlayerTransaction, operation_sym
-
     @member_id = params[:member_id]
     @action = action_str
     @player = Player.find_by_member_id(@member_id)
   end
 
   def create
-    return unless permission_granted? :PlayerTransaction, operation_sym
     extract_params
     check_transaction_acceptable
     execute_transaction

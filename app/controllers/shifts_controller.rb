@@ -2,6 +2,9 @@ class ShiftsController < ApplicationController
   layout 'cage'
 
   skip_before_filter :check_session_expiration, :authenticate_user!, :update_user_location, :only => :current
+  before_filter :only => [:new, :create] do |controller|
+    authorize_action :Shift, :roll?
+  end
 
   include FormattedTimeHelper
 
@@ -13,8 +16,6 @@ class ShiftsController < ApplicationController
   end
 
   def new
-    return unless permission_granted? :Shift, :roll?
-
     @current_shift = current_shift
 
     @current_shift_name = @current_shift.name
@@ -25,8 +26,6 @@ class ShiftsController < ApplicationController
   end
 
   def create
-    return unless permission_granted? :Shift, :roll?
-
     begin
       current_shift_id = params[:shift][:current_shift_id].to_i
       current_shift = Shift.find_by_id(current_shift_id)

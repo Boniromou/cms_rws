@@ -1,16 +1,15 @@
 class AuditLogsController < ApplicationController
   layout 'cage'
   include FormattedTimeHelper
+  before_filter :only => [:search, :do_search] do |controller|
+    authorize_action :AuditLog, :search_audit_log?
+  end
 
   def search
-    return unless permission_granted? :AuditLog, :search_audit_log?
-
     @default_date = Time.now.strftime("%Y-%m-%d")
   end
 
   def do_search
-    return unless permission_granted? :AuditLog, :search_audit_log?
-
     start_time = parse_search_time(params[:start_time]) unless params[:start_time].blank?
     end_time = parse_search_time(params[:end_time], true) unless params[:end_time].blank?
     action_by = params[:action_by] unless params[:action_by].blank?

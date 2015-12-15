@@ -5,6 +5,7 @@ class FundController < ApplicationController
   before_filter :only => [:new, :create] do |controller|
     authorize_action :PlayerTransaction, operation_sym
   end
+  rescue_from Remote::CallWalletError, :with => :handle_call_wallet_fail
   rescue_from Remote::AmountNotEnough, :with => :handle_balance_not_enough
   rescue_from Remote::CreditNotExpired, :with => :handle_credit_exist
   rescue_from FundInOut::AmountInvalidError, :with => :handle_amount_invalid_error

@@ -92,22 +92,25 @@ module Remote
   class CreatePlayerError < ReturnError
   end
 
-  class DepositError < RaiseError
+  class CallWalletError < RaiseError
   end
 
-  class WithdrawError < RaiseError
+  class DepositError < CallWalletError
+  end
+
+  class WithdrawError < CallWalletError
   end
 
   class AmountNotEnough < WithdrawError
   end
 
-  class CreditDepositError < RaiseError
+  class CreditDepositError < CallWalletError
   end
 
   class CreditNotExpired < CreditDepositError
   end
 
-  class CreditExpireError < RaiseError
+  class CreditExpireError < CallWalletError
   end
   
   class AmountNotMatch < CreditExpireError

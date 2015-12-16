@@ -240,6 +240,8 @@ en:
     action: "action"
     action_at: "time"
     user_name: "action by"
+    lock: "Lock"
+    unlock: "Unlock"
   void_transaction:
     success: "Void transaction %{slip_number} successful"
     already_void: "Transaction %{slip_number} has been void"
@@ -254,5 +256,7 @@ en:
     call_patron_fail: "Set PIN fail, please contact customer service for more details."
   pin_history:
     invalid_time_range: "Time range is not valid"
+    reset_pin: "Reset"
+    create_pin: "Create"
   credit_deposit_expire:
     remark: "Remark"

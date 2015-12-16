@@ -21,19 +21,19 @@
                 </div> -->
               </div>
                 
-              
-            <div class="form-actions">
-              <div class="row">
-                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+            <div class="row">
+              <div class="col-sm-3">  
+                <div class="form-actions">
                   <%= submit_tag t("button.search"),:id => "search", :class => "btn btn-primary", :remote => true  %>
                 </div>
               </div>
             </div>
           <% end %>
+          <br/>
 
           <script type="text/javascript">
             $("#search").click(function(){
-              document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-6';
+              document.getElementById('flash_message').className = 'col-sm-3';
               document.getElementById('flash_message').style.marginLeft = '0px';
             });    
           </script>

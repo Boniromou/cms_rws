@@ -19,7 +19,7 @@
                 <tr id="history_<%= lh.id %>">
                   <td><%= lh.action_by %></td>
                   <td><%= format_time(lh.action_at) %></td>
-                  <td><%= lh.action %></td>
+                  <td><%= t("change_history.#{lh.action}") %></td>
                   <td><%= lh.change_detail %></td>
                 </tr>
             <% end %>

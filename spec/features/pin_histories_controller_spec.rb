@@ -28,7 +28,7 @@ describe PinHistoriesController do
     end
 
     it '[55.1] Display create PIN audit log', :js => true do
-      audit_log = {:user => 'portal.admin', :member_id => '88888888', :action => 'create', :action_at => '2015-01-01 00:00:00'}
+      audit_log = {:user => 'portal.admin', :member_id => '88888888', :action => 'create_pin', :action_at => '2015-01-01 00:00:00'}
       allow_any_instance_of(Requester::Patron).to receive(:get_pin_audit_logs).and_return([audit_log])
       lock_or_unlock_player_and_check
       visit search_pin_histories_path

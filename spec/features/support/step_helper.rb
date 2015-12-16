@@ -330,7 +330,7 @@ module StepHelper
   def check_ch_report_result(item, change_history)
     expect(item[0].text).to eq change_history.action_by
     expect(item[1].text).to eq change_history.action_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[2].text).to eq change_history.action
+    expect(item[2].text).to eq I18n.t("change_history.#{change_history.action}")
     expect(item[3].text).to eq 'Member ID: ' + @player.member_id.to_s
   end
 
@@ -348,7 +348,7 @@ module StepHelper
   def check_ph_report_result(item, change_history)
     expect(item[0].text).to eq change_history[:user]
     expect(item[1].text).to eq change_history[:action_at]
-    expect(item[2].text).to eq change_history[:action]
+    expect(item[2].text).to eq I18n.t("pin_history.#{change_history[:action]}")
     expect(item[3].text).to eq change_history[:member_id]
   end
 

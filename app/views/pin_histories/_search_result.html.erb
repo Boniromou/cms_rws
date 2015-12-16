@@ -20,7 +20,7 @@
                 <tr>
                   <td><%= ph[:user] %></td>
                   <td><%= format_time(ph[:action_at]) %></td>
-                  <td><%= ph[:action] %></td>
+                  <td><%= t("pin_history.#{ph[:action]}") %></td>
                   <td><%= ph[:member_id] %></td>
                 </tr>
             <% end %>

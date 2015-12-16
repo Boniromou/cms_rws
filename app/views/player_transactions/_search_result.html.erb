@@ -8,72 +8,7 @@
     <div class="widget-body no-padding">
       <% if @player_transactions.length > 0 %>
         <div id="player_trnasaction_result">
-          <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
-            <thead>
-              <% if @operation == 'cash' %>
-                <th><%= t("transaction_history.slip_no")%></th>
-              <% end %>
-              <th><%= t("transaction_history.member_id")%></th>
-              <th><%= t("transaction_history.accounting_date")%></th>
-              <th><%= t("transaction_history.date")%></th>
-              <th><%= t("transaction_history.location")%></th>
-              <th><%= t("transaction_history.name")%></th>
-              <th><%= t("transaction_history.status")%></th>
-              <% if @operation == 'cash' %>
-                <th><%= t("transaction_history.deposit")%></th>
-                <th><%= t("transaction_history.withdrawal")%></th>
-                <th><%= t("transaction_history.void_slip_no")%></th>
-                <th><%= t("transaction_history.action")%></th>
-              <% else %>
-                <th><%= t("transaction_history.action")%></th>
-                <th><%= t("transaction_history.deposit")%></th>
-                <th><%= t("transaction_history.expire")%></th>
-                <th><%= t("transaction_history.remark")%></th>
-              <% end %>
-            </thead>
-            <tbody>
-              <% @player_transactions.each do |t| %>
-                <tr id="transaction_<%= t.id %>">
-                  <% if @operation == 'cash' %>
-                    <td><%= t.slip_number %></td>
-                  <% end %>
-                  <td><%= t.player.member_id %></td>
-                  <td><%= t.shift.accounting_date%></td>
-                  <td><%= format_time(t.created_at) %></td>
-                  <td><%= t.location %></td>
-                  <td><%= t.user.name %></td>
-                  <td><%= t.display_status %></td>
-                  <% if @operation == 'cash' %>
-                    <td><%= t.deposit_amt_str %></td>
-                    <td><%= t.withdraw_amt_str %></td>
-                    <td><%= t.void_transaction.slip_number if t.voided? %></td>
-                    <td>
-                      <% if policy(:player_transaction).void? && t.status == 'completed'%>
-                        <% if t.can_void? %>
-                          <% trans_type = t.transaction_type.name %>
-                          <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
-                            <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
-                          <% end %>
-                        <% else %>
-                          <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
-                            <%= link_to t("button.print_void"), reprint_path + "?transaction_id=#{t.void_transaction.id}", :id => "reprint_void", :class => "btn btn-primary", :method => "get", :remote => true %>
-                          <% end %>
-                        <% end %>
-                      <% end %>
-                      <% if policy(:player_transaction).reprint? %>
-                        <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
-                      <% end %>
-                    </td>
-                  <% else %>
-                    <td><%= t("transaction_history.#{t.transaction_type.name}") %></td>
-                    <td><%= t.credit_deposit_amt_str %></td>
-                    <td><%= t.credit_expire_amt_str %></td>
-                    <td style="width: 15%; text-align: left;"><%= show_remark(t.data) %></td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+          <%= render "player_transactions/#{@operation}_table" %>
         </div>
         <% if policy(:player_transaction).print_report? %>
           <div>

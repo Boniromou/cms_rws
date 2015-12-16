@@ -61,7 +61,7 @@ describe FrontMoneyController do
       fill_in "accounting_date", :with => 1
       check_search_fm_page
       
-      find("input#search").click
+      find("input#search").trigger('click')
       wait_for_ajax
       transaction_list = [@player_transaction1,@player_transaction2,@player_transaction3]
       check_fm_report_result_items(transaction_list)

@@ -7,9 +7,7 @@ class FrontMoneyController < ApplicationController
   end
 
   def search
-    @shift_name_list = ["morning","swing","night"]
     @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
-    @shift_name = params[:shift_name] || "morning"
   end
 
   def do_search

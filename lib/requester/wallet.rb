@@ -88,7 +88,7 @@ class Requester::Wallet < Requester::Base
     begin
       result_hash = remote_response_checking(result, :error_code)
     rescue Remote::UnexpectedResponseFormat => e
-      raise balance_no_result_error,"UnexpectedResponseFormat"
+      raise Remote::NoBalanceError.new,"UnexpectedResponseFormat"
     end
     error_code = result_hash[:error_code].to_s
     message = result_hash[:error_msg].to_s || "no message"
@@ -96,14 +96,10 @@ class Requester::Wallet < Requester::Base
       create_player_proc.call
       raise Remote::RetryError.new({:balance => 'no_balance', :credit_balance => 'no_balance', :credit_expired_at => 'no_balance'}), "error_code #{error_code}: #{message}"
     end
-    raise balance_no_result_error, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    raise balance_no_result_error, 'balance is nil when OK' if result_hash[:balance].nil?
+    raise Remote::NoBalanceError.new, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
+    raise Remote::NoBalanceError.new, 'balance is nil when OK' if result_hash[:balance].nil?
     result_hash[:credit_expired_at] = 'no_balance' if result_hash[:credit_balance].to_f <= 0
     return {:balance => result_hash[:balance].to_f, :credit_balance => result_hash[:credit_balance].to_f, :credit_expired_at => result_hash[:credit_expired_at]}
-  end
-
-  def balance_no_result_error
-    Remote::GetBalanceError.new({:balance => 'no_balance', :credit_balance => 'no_balance', :credit_expired_at => 'no_balance'})
   end
 
   def parse_create_player_response(result)

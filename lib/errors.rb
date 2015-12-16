@@ -86,6 +86,12 @@ module Remote
   class GetBalanceError < ReturnError
   end
 
+  class NoBalanceError < GetBalanceError
+    def initialize(result = nil)
+      @result = result || {:balance => 'no_balance', :credit_balance => 'no_balance', :credit_expired_at => 'no_balance'}
+    end
+  end
+
   class UnexpectedResponseFormat < RetryError
   end
 

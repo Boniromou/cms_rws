@@ -42,7 +42,7 @@ module Requester
       rescue Exception => e
         raise Remote::UnexpectedResponseFormat.new("#{self.class.name} got invalid result: #{result}")
     end
-
+    
     def retry_call(retry_times, &block)
       begin
         puts "***************retry_times: #{RETRY_TIMES - retry_times}***************"
@@ -58,12 +58,15 @@ module Requester
           return e.result
         end
       rescue Exception => e
-        Rails.logger.error "#{e.message}"
-        Rails.logger.error "#{e.backtrace.inspect}"
         if retry_times > 0
           return retry_call(retry_times - 1, &block)
         else
           return e.message
+        end
+      ensure
+        if e
+          Rails.logger.error "#{e.message}"
+          Rails.logger.error "#{e.backtrace.inspect}"
         end
       end
     end

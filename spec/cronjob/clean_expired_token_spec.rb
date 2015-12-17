@@ -10,8 +10,8 @@ describe Token do
   describe '[40] Regular delete expired token' do
     before(:each) do
       clean_dbs
-      @player1 = Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => 123456, :currency_id => 1, :status => "active", :property_id => 20000)
-      @player2 = Player.create!(:first_name => "exist2", :last_name => "exist3", :member_id => 123457, :currency_id => 1, :status => "active", :card_id => 123, :property_id => 20000)
+      @player1 = Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => 123456, :currency_id => 2, :status => "active", :property_id => 20000)
+      @player2 = Player.create!(:first_name => "exist2", :last_name => "exist3", :member_id => 123457, :currency_id => 2, :status => "active", :card_id => 123, :property_id => 20000)
       @token1 = Token.generate(@player1.id)
       @token2 = Token.generate(@player1.id)
       @token3 = Token.generate(@player2.id)

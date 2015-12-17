@@ -14,6 +14,8 @@ class AccountingDate < ActiveRecord::Base
       if shift_name == last_shift_name
         new_ac_date = new
         new_ac_date.accounting_date = current(property_id).accounting_date + 1
+        new_ac_date.created_at = Time.now.utc.to_formatted_s(:db)
+        new_ac_date.updated_at = Time.now.utc.to_formatted_s(:db)
         new_ac_date.save
         new_ac_date.id
       else

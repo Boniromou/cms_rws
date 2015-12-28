@@ -23,7 +23,13 @@ module CageInfoHelper
 
   def polling_interval
     #milliseconds
-     60 * 1000 + rand(1..500)
-    #POLLING_TIME
+
+    if @config_helper && @config_helper.polling_time != 0 
+      polling_time =  @config_helper.polling_time
+    else
+      polling_time = 60 * 1000 
+    end
+    polling_time + rand(1..500)
+
   end
 end

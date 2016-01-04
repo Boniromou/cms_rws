@@ -31,6 +31,14 @@ module FormattedTimeHelper
     end
   end
 
+  def parse_search_date(date_str)
+    begin
+      Date.parse(date_str)
+    rescue ArgumentError
+      raise ArgumentError 
+    end
+  end
+
   def parse_datetime(datetime_str, default_time=Time.now)
     begin
       Time.strptime(datetime_str, "%Y-%m-%d %H:%M:%S").utc
@@ -54,10 +62,6 @@ module FormattedTimeHelper
   end
 
   def to_number(date_str)
-    date_str.localtime.to_date.to_time.to_i if date_str
-  end
-
-  def to_string(date_str)
-    date_str.localtime.to_date.to_s if date_str
+    date_str.to_time.to_i if date_str
   end
 end

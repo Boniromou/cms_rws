@@ -1,7 +1,6 @@
 class LockHistoriesController < ApplicationController
   layout 'cage'
   include FormattedTimeHelper
-  include FrontMoneyHelper
   include SearchHelper
   before_filter :only => [:search, :do_search] do |controller|
     authorize_action :ChangeHistory, :lock_player_log?
@@ -15,8 +14,14 @@ class LockHistoriesController < ApplicationController
     begin
       start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.change_log_search_range)
       @lock_histories = policy_scope(ChangeHistory.since(start_time).until(end_time).where('action=? OR action=?', 'lock', 'unlock'))
-    rescue FrontMoneyHelper::NoResultException => e
+    rescue Search::NoResultException => e
       @lock_histories = []
+    rescue Search::OverRangeError => e
+      flash[:error] = "report_search." + e.message
+    rescue Search::DateTimeError => e
+      flash[:error] = "transaction_history." + e.message
+    rescue ArgumentError 
+      flash[:error] = "transaction_history.datetime_format_not_valid"
     end
     respond_to do |format|
       format.html { render partial: "lock_histories/search_result", formats: [:html] }

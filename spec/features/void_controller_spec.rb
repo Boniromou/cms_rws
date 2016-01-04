@@ -53,7 +53,7 @@ describe VoidController do
     end
     
     it '[47.2] Void success', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
+      mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
       visit home_path
@@ -186,7 +186,7 @@ describe VoidController do
     end
     
     it '[47.7] Void deposit fail when the transaction had been voided', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
+      mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
       visit home_path
@@ -210,7 +210,7 @@ describe VoidController do
     end
     
     it '[47.8] Void deposit fail when the transaction not exist', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return('OK')
+      mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
       visit home_path

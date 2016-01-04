@@ -28,7 +28,7 @@ describe CreditExpireController do
     end
 
     it '[61.1] Expire credit success', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:credit_expire).and_return('OK')
+      mock_wallet_transaction_success(:credit_expire)
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_expire_page
@@ -57,7 +57,7 @@ describe CreditExpireController do
     end
 
     it '[61.3] Expire credit fail with disconnection with wallet', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:credit_expire).and_return('not OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:credit_expire).and_return(Requester::WalletTransactionResponse.new({:error_code => 'not OK'}))
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_expire_page

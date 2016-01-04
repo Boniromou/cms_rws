@@ -1,3 +1,4 @@
+require File.expand_path(File.dirname(__FILE__) + "/response")
 require 'lax-support'
 
 module Requester
@@ -61,12 +62,14 @@ module Requester
         if retry_times > 0
           return retry_call(retry_times - 1, &block)
         else
-          return e.message
+          return Response.new({:error_code => "Fail: #{e.class}", :error_msg => e.message})
         end
       ensure
         if e
           Rails.logger.error "#{e.message}"
           Rails.logger.error "#{e.backtrace.inspect}"
+          #puts e.message
+          #puts e.backtrace.inspect
         end
       end
     end

@@ -104,61 +104,54 @@ class Requester::Wallet < Requester::Base
 
   def parse_create_player_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::CreatePlayerError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    return 'OK'
+    response = WalletResponse.new(result_hash)
+    raise Remote::CreatePlayerError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
-    return 'OK'
+    response = Requester::WalletTransactionResponse.new(result_hash)
+    raise Remote::DepositError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_withdraw_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::AmountNotEnough.new(result_hash[:balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
-    raise Remote::WithdrawError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
-    return 'OK'
+    response = Requester::WalletTransactionResponse.new(result_hash)
+    raise Remote::AmountNotEnough.new(response.balance), response.exception_msg if response.amount_not_enough?
+    raise Remote::WithdrawError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_void_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::AmountNotEnough.new(result_hash[:balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotEnough'].include?(error_code)
-    raise Remote::DepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
-    return 'OK'
+    response = Requester::WalletTransactionResponse.new(result_hash)
+    raise Remote::AmountNotEnough.new(response.balance), response.exception_msg if response.amount_not_enough?
+    raise Remote::DepositError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_void_withdraw_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::WithdrawError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
-    return 'OK'
+    response = Requester::WalletTransactionResponse.new(result_hash)
+    raise Remote::WithdrawError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_credit_deposit_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::CreditNotExpired, "error_code #{error_code}: #{message}}" if ['CreditNotExpired'].include?(error_code)
-    raise Remote::CreditDepositError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
-    return 'OK'
+    response = Requester::WalletTransactionResponse.new(result_hash)
+    raise Remote::CreditNotExpired, response.exception_msg if response.credit_not_expired?
+    raise Remote::DepositError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_credit_expire_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::AmountNotMatch.new(result_hash[:credit_balance].to_f), "error_code #{error_code}: #{message}}" if ['AmountNotMatch'].include?(error_code)
-    raise Remote::CreditExpireError, "error_code #{error_code}: #{message}}" unless ['OK','AlreadyProcessed'].include?(error_code)
-    return 'OK'
+    response = Requester::WalletTransactionResponse.new(result_hash)
+    raise Remote::CreditNotExpired, response.exception_msg if response.amount_not_match?
+    raise Remote::DepositError, response.exception_msg unless response.success?
+    return response
   end
 end

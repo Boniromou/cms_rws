@@ -28,7 +28,7 @@ describe CreditDepositController do
     end
 
     it '[60.1] Add credit success', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_return('OK')
+      mock_wallet_transaction_success(:credit_deposit)
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 0.00, :credit_expired_at => Time.now})
       login_as_admin
       go_to_credit_deposit_page
@@ -60,7 +60,7 @@ describe CreditDepositController do
     end
 
     it '[60.3] Add credit fail with disconnection with wallet', :js => true do
-      allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_return('not OK')
+      allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_return(Requester::WalletTransactionResponse.new({:error_code => 'not OK'}))
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 0.00, :credit_expired_at => Time.now})
       login_as_admin 
       go_to_credit_deposit_page

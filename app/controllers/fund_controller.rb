@@ -61,8 +61,8 @@ class FundController < ApplicationController
   def execute_transaction
     AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data)
-      result = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
-      handle_wallet_result(@transaction, result)
+      response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime)
+      handle_wallet_result(@transaction, response)
     end
   end
 
@@ -70,8 +70,8 @@ class FundController < ApplicationController
     PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
   end
 
-  def handle_wallet_result(transaction, result)
-    return transaction.completed! if result == 'OK'
+  def handle_wallet_result(transaction, response)
+    return transaction.completed! if response.success?
     raise FundInOut::CallWalletFail
   end
   

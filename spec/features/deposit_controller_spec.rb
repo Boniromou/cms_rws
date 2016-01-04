@@ -21,7 +21,7 @@ describe DepositController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
-      allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return('OK')
+      mock_wallet_transaction_success(:deposit)
     end
     
     after(:each) do
@@ -324,7 +324,7 @@ describe DepositController do
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
-      allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return('OK')
+      mock_wallet_transaction_success(:deposit)
     end
     
     after(:each) do

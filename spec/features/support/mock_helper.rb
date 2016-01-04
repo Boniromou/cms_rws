@@ -68,6 +68,11 @@ module MockHelper
   def mock_current_property_id(property_id = 20000)
     allow_any_instance_of(ApplicationController).to receive(:current_property_id).and_return(property_id)
   end
+
+  def mock_wallet_transaction_success(trans_type_sym)
+    wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.'})
+    allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
+  end
 end
 
 RSpec.configure do |config|

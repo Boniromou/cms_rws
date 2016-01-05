@@ -29,7 +29,7 @@ describe CreditExpireController do
 
     it '[61.1] Expire credit success', :js => true do
       mock_wallet_transaction_success(:credit_expire)
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
+      mock_wallet_balance(0.00, 50.00, Time.now)
       login_as_admin 
       go_to_credit_expire_page
       fill_in "player_transaction_remark", :with => 'test'
@@ -45,7 +45,7 @@ describe CreditExpireController do
 
     it '[61.2] Expire credit fail with no enough credit balance', :js => true do
       allow_any_instance_of(Requester::Wallet).to receive(:credit_expire).and_raise(Remote::AmountNotMatch.new("0.0"))
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
+      mock_wallet_balance(0.00, 50.00, Time.now)
       login_as_admin 
       go_to_credit_expire_page
       fill_in "player_transaction_remark", :with => 'test'
@@ -58,7 +58,7 @@ describe CreditExpireController do
 
     it '[61.3] Expire credit fail with disconnection with wallet', :js => true do
       allow_any_instance_of(Requester::Wallet).to receive(:credit_expire).and_return(Requester::WalletTransactionResponse.new({:error_code => 'not OK'}))
-      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 0.00, :credit_balance => 50.00, :credit_expired_at => Time.now})
+      mock_wallet_balance(0.00, 50.00, Time.now)
       login_as_admin 
       go_to_credit_expire_page
       fill_in "player_transaction_remark", :with => 'test'

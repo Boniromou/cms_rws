@@ -49,7 +49,7 @@ module MockHelper
     allow_any_instance_of(ApplicationController).to receive(:current_machine_token).and_return('20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
   end
 
-  def mock_wallet_balance(balance, credit_balance = nil)
+  def mock_wallet_balance(balance, credit_balance = nil, credit_expired_at = nil)
     if credit_balance.nil?
       if balance == 'no_balance'
         credit_balance = 'no_balance'
@@ -60,7 +60,7 @@ module MockHelper
     if credit_balance == 'no_balance' || credit_balance == 0
       @credit_expired_at = 'no_balance'
     else
-      @credit_expired_at = (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
+      @credit_expired_at = credit_expired_at || (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
     end
     allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => balance, :credit_balance => credit_balance, :credit_expired_at => @credit_expired_at})
   end
@@ -71,6 +71,11 @@ module MockHelper
 
   def mock_wallet_transaction_success(trans_type_sym)
     wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.'})
+    allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
+  end
+
+  def mock_wallet_response_success(trans_type_sym)
+    wallet_response = Requester::WalletResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.'})
     allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
   end
 end

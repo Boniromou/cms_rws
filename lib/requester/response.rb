@@ -22,6 +22,44 @@ module Requester
   end
 
   class WalletResponse < Response
+    def invalid_login_name?
+      ['InvalidLoginName'].include?(error_code)
+    end
+  end
+
+  class CreatePlayerResponse < WalletResponse
+  end
+
+  class GetPlayerBalanceResponse < WalletResponse
+    def balance
+      if @result_hash[:balance]
+        return @result_hash[:balance].to_f
+      else
+        return 'no_balance'
+      end
+    end
+    
+    def credit_balance
+      if @result_hash[:credit_balance]
+        return @result_hash[:credit_balance].to_f
+      else
+        return 'no_balance'
+      end
+    end
+
+    def credit_expired_at
+      if @result_hash[:credit_expired_at] && credit_balance > 0
+        return @result_hash[:credit_expired_at].to_time
+      else
+        return 'no_balance'
+      end
+    end
+  end
+
+  class NoBalanceResponse < GetPlayerBalanceResponse
+    def initialize
+      @result_hash = {:error_code => 'NoBalance'}
+    end
   end
 
   class WalletTransactionResponse < WalletResponse

@@ -50,19 +50,16 @@ module MockHelper
   end
 
   def mock_wallet_balance(balance, credit_balance = nil, credit_expired_at = nil)
-    if credit_balance.nil?
-      if balance == 'no_balance'
-        credit_balance = 'no_balance'
-      else
-        credit_balance = 0.0
-      end
-    end
-    if credit_balance == 'no_balance' || credit_balance == 0
-      @credit_expired_at = 'no_balance'
+    balance = nil if balance == 'no_balance'
+    credit_balance = nil if credit_balance == 'no_balance'
+    credit_balance = 0.0 if !balance.nil? && credit_balance.nil?
+    if credit_balance.nil? || credit_balance == 0
+      credit_expired_at = nil
     else
-      @credit_expired_at = credit_expired_at || (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
+      credit_expired_at ||= (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
     end
-    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => balance, :credit_balance => credit_balance, :credit_expired_at => @credit_expired_at})
+    response = Requester::GetPlayerBalanceResponse.new({:error_code => 'OK', :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at})
+    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(response)
   end
 
   def mock_current_property_id(property_id = 20000)

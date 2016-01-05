@@ -1,11 +1,27 @@
 module Requester
+  module ResponseHelper
+    def self.included(base)
+      base.send :extend, ClassMethods
+    end
+    
+    module ClassMethods
+      def define_attr(*args)
+        args.each do |attr|
+          define_method(attr) do
+            @result_hash[attr]
+          end
+        end
+      end
+    end
+  end
+
   class Response
+    attr_reader :result_hash
+    include ResponseHelper
+    define_attr :error_code
+
     def initialize(result_hash)
       @result_hash = result_hash
-    end
-
-    def error_code
-      @result_hash[:error_code].to_s
     end
 
     def error_msg
@@ -21,6 +37,7 @@ module Requester
     end
   end
 
+# wallet
   class WalletResponse < Response
     def invalid_login_name?
       ['InvalidLoginName'].include?(error_code)
@@ -64,7 +81,7 @@ module Requester
 
   class WalletTransactionResponse < WalletResponse
     def trans_date
-      @result_hash[:trans_date]
+      @result_hash[:trans_date].to_time
     end
 
     def success?
@@ -86,5 +103,10 @@ module Requester
     def balance
       @result_hash[:balance].to_f if @result_hash[:balance]
     end
+  end
+
+# station
+  class StationResponse < Response
+    define_attr :property_id, :zone_id, :zone_name, :location_id, :location_name, :machine_id, :machine_name, :uuid 
   end
 end

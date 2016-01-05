@@ -38,11 +38,11 @@ module MockHelper
   end
 
   def mock_receive_location_name
-    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:error_code => 'OK', :error_msg => 'Request is carried out successfully.', :location_name => '0102', :zone_name => '01'})
+    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK', :error_msg => 'Request is carried out successfully.', :location_name => '0102', :zone_name => '01'}))
   end
 
   def mock_not_receive_location_name
-    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return({:location_name => nil})
+    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:location_name => nil}))
   end
 
   def mock_current_machine_token

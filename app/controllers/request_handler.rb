@@ -67,6 +67,7 @@ class RequestHandler
     machine_type = @inbound[:machine_type]
     property_id = @inbound[:property_id]
     machine_token = @inbound[:machine_token]
-    get_requester_helper(property_id).validate_machine(machine_type, machine_token, property_id)
+    response = get_requester_helper(property_id).validate_machine(machine_type, machine_token, property_id)
+    response.result_hash
   end
 end

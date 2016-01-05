@@ -37,7 +37,7 @@ class RequesterHelper
 
   def validate_machine_token(machine_type, machine_token, property_id)
     response = validate_machine(machine_type, machine_token, property_id)
-    return true if response[:error_code] == 'OK'
+    return true if response.success?
     false
   end
 

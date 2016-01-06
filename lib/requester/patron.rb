@@ -40,53 +40,40 @@ class Requester::Patron < Requester::Base
   def parse_get_player_info_response(result)
     #return {:member_id => 123, :card_id => 102130320923, :blacklist => true, :pin_status => 'null'}
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    player_info = result_hash[:player]
-    return player_info
+    response = Requester::PlayerInfoResponse.new(result_hash)
+    raise Remote::PlayerNotFound, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_get_player_infos_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    player_info_array = result_hash[:players]
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info_array.nil?
-    return player_info_array
+    response = Requester::PlayerInfosResponse.new(result_hash)
+    raise Remote::PlayerNotFound, response.exception_msg unless response.success?
+    raise Remote::PlayerNotFound, response.exception_msg unless response.players
+    return response
   end
 
   def parse_validate_pin_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::PinError, "error_code #{error_code}: #{message}" if ['InvalidPin'].include?(error_code)
-    player_info = result_hash[:player]
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
-    raise Remote::PinError, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    return player_info
+    response = Requester::ValidatePinResponse.new(result_hash)
+    raise Remote::PinError, response.exception_msg if response.invalid_pin?
+    raise Remote::PinError, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_reset_pin_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" unless ['OK'].include?(error_code)
-    player_info = result_hash[:player]
-    raise Remote::PlayerNotFound, "error_code #{error_code}: #{message}" if player_info.nil?
-    return player_info
+    response = Requester::PlayerInfoResponse.new(result_hash)
+    raise Remote::PlayerNotFound, response.exception_msg unless response.success?
+    return response
   end
 
   def parse_get_pin_audit_logs_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    error_code = result_hash[:error_code].to_s
-    message = result_hash[:error_msg].to_s || "no message"
-    raise Remote::InvalidTimeRange, "error_code #{error_code}: #{message}" if ['InvalidTimeRange'].include?(error_code)
+    response = Requester::PinAuditLogResponse.new(result_hash)
+    raise Remote::InvalidTimeRange, response.exception_msg if response.invalid_time_range
     audit_log_array = result_hash[:audit_logs]
-    raise Remote::NoPinAuditLog, "error_code #{error_code}: #{message}" if audit_log_array.nil? || audit_log_array.blank? 
-    return audit_log_array
+    raise Remote::NoPinAuditLog, response.exception_msg unless response.audit_logs
+    return response
   end
-
-
 end

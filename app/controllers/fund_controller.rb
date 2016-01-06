@@ -54,8 +54,8 @@ class FundController < ApplicationController
 
   def validate_pin
     pin = params[:player_transaction][:pin]
-    response = requester_helper.validate_pin(@player.member_id, pin)
-    raise Request::InvalidPin.new unless response
+    result = requester_helper.validate_pin(@player.member_id, pin)
+    raise Request::InvalidPin unless result
   end
 
   def execute_transaction

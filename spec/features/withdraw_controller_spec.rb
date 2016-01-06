@@ -22,7 +22,7 @@ describe WithdrawController do
       @player_balance = 20000
       mock_wallet_balance(200.0)
       mock_wallet_transaction_success(:withdraw)
-      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({}))
       allow_any_instance_of(RequesterHelper).to receive(:validate_pin).and_return(true)
     end
     
@@ -342,7 +342,7 @@ describe WithdrawController do
     end
 
     it '[52.1] Enter PIN withdraw success', :js => true do
-      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
       login_as_admin 
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100

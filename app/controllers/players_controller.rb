@@ -135,13 +135,14 @@ class PlayersController < ApplicationController
   def do_reset_pin
     begin
       audit_log = {:user => current_user.name, :member_id => params[:player][:member_id], :action_at => Time.now.utc, :action => params[:action].split('_')[0]}
-      player_info = patron_requester.reset_pin(params[:player][:member_id], params[:pin], audit_log)
-      if player_info.class != Hash
+      response = patron_requester.reset_pin(params[:player][:member_id], params[:pin], audit_log)
+      unless response.success?
         flash[:error] = "reset_pin.call_patron_fail"
         Rails.logger.error "reset pin fail"
         redirect_to_set_pin_path(params[:player][:member_id], params[:player][:card_id], params[:status], params[:inactivate], params[:operation])
         return
       end
+      player_info = response.player
       Player.update_info(player_info)
       flash[:success] = { key: "reset_pin.set_pin_success", replace: {name: params[:player][:member_id]}}
       redirect_to :action => params[:operation], :member_id => params[:player][:member_id]

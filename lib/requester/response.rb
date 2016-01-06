@@ -8,7 +8,11 @@ module Requester
       def define_attr(*args)
         args.each do |attr|
           define_method(attr) do
-            @result_hash[attr]
+            if @result_hash.class == Hash
+              @result_hash[attr]
+            else
+              nil
+            end
           end
         end
       end
@@ -108,5 +112,31 @@ module Requester
 # station
   class StationResponse < Response
     define_attr :property_id, :zone_id, :zone_name, :location_id, :location_name, :machine_id, :machine_name, :uuid 
+  end
+
+# patron
+  class PatronResponse < Response
+  end
+
+  class PlayerInfoResponse < PatronResponse
+    define_attr :player
+  end
+
+  class ValidatePinResponse < PlayerInfoResponse
+    def invalid_pin?
+      ['InvalidPin'].include?(error_code)
+    end
+  end
+
+  class PlayerInfosResponse < PatronResponse
+    define_attr :players
+  end
+
+  class PinAuditLogResponse < PatronResponse
+    define_attr :audit_logs
+
+    def invalid_time_range?
+      ['InvalidTimeRange'].include?(error_code)
+    end
   end
 end

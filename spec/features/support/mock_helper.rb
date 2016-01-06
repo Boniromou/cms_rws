@@ -34,7 +34,7 @@ module MockHelper
   end
 
   def mock_patron_not_change
-    allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK'})
+    mock_player_info_result({:error_code => 'OK'})
   end
 
   def mock_receive_location_name
@@ -74,6 +74,16 @@ module MockHelper
   def mock_wallet_response_success(trans_type_sym)
     wallet_response = Requester::WalletResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.'})
     allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
+  end
+
+  def mock_player_info_result(result_hash)
+    patron_response = Requester::PlayerInfoResponse.new(result_hash)
+    allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return(patron_response)
+  end
+
+  def mock_reset_pin_result(result_hash)
+    patron_response = Requester::PlayerInfoResponse.new(result_hash)
+    allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return(patron_response)
   end
 end
 

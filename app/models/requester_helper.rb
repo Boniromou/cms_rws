@@ -49,11 +49,10 @@ class RequesterHelper
   def validate_pin(login_name, pin)
     begin
       response = patron_requester.validate_pin(login_name, pin)
-      unless response_valid?(response)
-        Rails.logger.error "validate pin fail"
-        raise Remote::CallPatronFail.new
-      else
+      if response.success?
         return true
+      else
+        return false
       end
     rescue Remote::PinError
     rescue Remote::PlayerNotFound
@@ -62,12 +61,13 @@ class RequesterHelper
   end
   
   def update_player!(id_type, id_value)
-    player_info = patron_requester.get_player_info(id_type, id_value)
-    unless response_valid?(player_info)
+    response = patron_requester.get_player_info(id_type, id_value)
+    unless response.success?
       Rails.logger.error "update player info fail"
       return
     end
-    if player_info[:pin_status] == 'blank'
+    player_info = response.player
+    if player_info && player_info[:pin_status] == 'blank'
       player = Player.create_inactivate(player_info)
       raise PlayerProfile::PlayerNotActivated.new(player)
     end
@@ -80,10 +80,5 @@ class RequesterHelper
     rescue PlayerProfile::PlayerNotActivated => e
       return 'PlayerNotActivated'
     end
-  end
-
-  private
-  def response_valid?(response)
-    response.class == Hash
   end
 end

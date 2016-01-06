@@ -246,7 +246,7 @@ describe PlayersController do
       mock_wallet_transaction_success(:withdraw)
       mock_wallet_transaction_success(:void_deposit)
       mock_wallet_transaction_success(:void_withdraw)
-      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return({})
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
     end
     
     after(:each) do
@@ -320,7 +320,7 @@ describe PlayersController do
     end
 
     it '[58.1] Search transaction history with card change', :js => true do
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => "1234567893", :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567893", :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}})
       login_as_admin
       visit home_path
       create_player_transaction
@@ -342,7 +342,7 @@ describe PlayersController do
 
     it '[58.2] Search transaction history with player not exist in cage' do
       @player.delete
-      allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return({:error_code => 'OK', :card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :property_id => 20000})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :property_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")

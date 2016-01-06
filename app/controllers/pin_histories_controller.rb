@@ -1,7 +1,6 @@
 class PinHistoriesController < ApplicationController
   layout 'cage'
   include FormattedTimeHelper
-  include FrontMoneyHelper
   include SearchHelper
   before_filter :only => [:search, :do_search] do |controller|
     authorize_action :ChangeHistory, :pin_change_log?
@@ -23,7 +22,7 @@ class PinHistoriesController < ApplicationController
       end
     rescue Remote::NoPinAuditLog
       @pin_histories = []
-    rescue FrontMoneyHelper::NoResultException => e
+    rescue Search::NoResultException => e
       @pin_histories = []
     rescue Search::OverRangeError => e
       flash[:error] = "report_search." + e.message
@@ -31,6 +30,8 @@ class PinHistoriesController < ApplicationController
       flash[:error] = "transaction_history." + e.message
     rescue Remote::InvalidTimeRange
       flash[:error] = "pin_history.invalid_time_range"
+    rescue ArgumentError 
+      flash[:error] = "transaction_history.datetime_format_not_valid"
     end
     respond_to do |format|
       format.html { render partial: "pin_histories/search_result", formats: [:html] }

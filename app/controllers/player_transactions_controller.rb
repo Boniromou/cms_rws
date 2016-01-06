@@ -15,8 +15,6 @@ class PlayerTransactionsController < ApplicationController
         
     begin
     @operation = params[:operation]
-    @start_time = parse_search_time(params[:start_time])
-    @end_time = parse_search_time(params[:end_time], true) 
 
     id_type = params[:id_type]
     id_number = params[:id_number]
@@ -25,7 +23,7 @@ class PlayerTransactionsController < ApplicationController
     slip_number = params[:slip_number]
 
     if selected_tab_index == '0'
-      shifts = get_start_and_end_shifts(@start_time, @end_time, id_number, @operation, config_helper.trans_history_search_range)
+      shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, config_helper.trans_history_search_range)
       requester_helper.update_player(id_type,id_number) unless id_number.blank?
       @player_transactions = policy_scope(PlayerTransaction).search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index, @operation)
     else

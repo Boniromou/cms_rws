@@ -124,16 +124,18 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      transaction[:trans_date] = Time.now.utc
       transaction[:property_id] = player[:property_id]
       transaction[:data] = data
-      transaction.save
-      if ref_trans_id.nil?
-        transaction[:ref_trans_id] = make_trans_id(transaction.id)
-      else
-        transaction[:ref_trans_id] = ref_trans_id
+      PlayerTransaction.transaction do
+        transaction.save
+        transaction[:trans_date] = transaction[:created_at]
+        if ref_trans_id.nil?
+          transaction[:ref_trans_id] = make_trans_id(transaction.id)
+        else
+          transaction[:ref_trans_id] = ref_trans_id
+        end
+        transaction.save
       end
-      transaction.save
       transaction
     end
 

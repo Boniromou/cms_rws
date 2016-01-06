@@ -20,6 +20,7 @@
   
     $('#pop_up_dialog #confirm').click(function() {
       $(form_id).submit();
+      hidePopUpPanel();
       return false;
     });
 

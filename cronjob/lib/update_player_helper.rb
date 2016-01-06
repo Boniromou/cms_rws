@@ -20,7 +20,8 @@ module Cronjob
           member_ids += ',' + player.member_id
         end
         member_ids = member_ids[1..-1]
-        player_info_array = patron_requester(property_id).get_player_infos(member_ids)
+        response = patron_requester(property_id).get_player_infos(member_ids)
+        player_info_array = response.players
         player_info_array.each do |player_info|
           Player.update_info(player_info)
         end

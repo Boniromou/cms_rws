@@ -20,6 +20,6 @@ class Requester::Station < Requester::Base
   def parse_validate_machine_token_response(result)
     result_hash = remote_response_checking(result, :error_code)
     response = Requester::StationResponse.new(result_hash)
-    return resopnse
+    return response
   end
 end

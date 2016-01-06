@@ -540,7 +540,7 @@ describe PlayersController do
     end
 
     it '[38.1] Retry create player success', :js => true do
-      @credit_expird_at = (Time.now + 2.day).utc
+      @credit_expird_at = (Time.now + 2.day).utc.to_s
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
       mock_wallet_response_success(:create_player)
@@ -966,12 +966,12 @@ describe PlayersController do
     end
 
     it '[59.2] seach player profile with credit balance=100', :js => true do
-      credit_expired_at = Time.now + 2.day
+      credit_expired_at = (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
       mock_wallet_balance(99.99,100.0, credit_expired_at)
       
       check_credit_balance_base
 
-      check_balance_page(9999,10000, I18n.t("balance_enquiry.expiry",expired_at: credit_expired_at))
+      check_balance_page(9999,10000, I18n.t("balance_enquiry.expiry",expired_at: credit_expired_at.to_time(:local).strftime("%F %R")))
       
       check_footer_btn(true,true,false,true)
     end

@@ -71,7 +71,7 @@ class Requester::Patron < Requester::Base
   def parse_get_pin_audit_logs_response(result)
     result_hash = remote_response_checking(result, :error_code)
     response = Requester::PinAuditLogResponse.new(result_hash)
-    raise Remote::InvalidTimeRange, response.exception_msg if response.invalid_time_range
+    raise Remote::InvalidTimeRange, response.exception_msg if response.invalid_time_range?
     audit_log_array = result_hash[:audit_logs]
     raise Remote::NoPinAuditLog, response.exception_msg unless response.audit_logs
     return response

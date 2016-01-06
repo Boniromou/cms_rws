@@ -58,7 +58,7 @@ module MockHelper
     else
       credit_expired_at ||= (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
     end
-    response = Requester::GetPlayerBalanceResponse.new({:error_code => 'OK', :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at})
+    response = Requester::GetPlayerBalanceResponse.new({:error_code => 'OK', :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at.to_s})
     allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(response)
   end
 

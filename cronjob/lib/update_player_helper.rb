@@ -20,6 +20,9 @@ module Cronjob
           member_ids += ',' + player.member_id
         end
         member_ids = member_ids[1..-1]
+        if member_ids.nil?
+          puts 'no member need to update'
+        end
         response = patron_requester(property_id).get_player_infos(member_ids)
         player_info_array = response.players
         player_info_array.each do |player_info|

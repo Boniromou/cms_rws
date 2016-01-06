@@ -69,8 +69,8 @@ module Requester
     end
 
     def credit_expired_at
-      if @result_hash[:credit_expired_at] && credit_balance > 0
-        return @result_hash[:credit_expired_at].to_time
+      if @result_hash[:credit_expired_at] && credit_balance != 'no_balance' && credit_balance > 0
+        return @result_hash[:credit_expired_at].to_time(:local)
       else
         return 'no_balance'
       end
@@ -85,7 +85,7 @@ module Requester
 
   class WalletTransactionResponse < WalletResponse
     def trans_date
-      @result_hash[:trans_date].to_time
+      @result_hash[:trans_date].to_time(:local)
     end
 
     def success?

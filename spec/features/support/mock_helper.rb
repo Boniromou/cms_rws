@@ -67,7 +67,7 @@ module MockHelper
   end
 
   def mock_wallet_transaction_success(trans_type_sym)
-    wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.'})
+    wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")})
     allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
   end
 

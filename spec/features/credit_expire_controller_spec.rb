@@ -76,5 +76,24 @@ describe CreditExpireController do
       expect(find("div a#credit_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#credit_expire")[:disabled]).to eq 'disabled'
     end
+
+    it '[61.4] Update trans date', :js => true do
+      trans_date = (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")
+      wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => trans_date})
+      allow_any_instance_of(Requester::Wallet).to receive(:credit_expire).and_return(wallet_response)
+      mock_wallet_balance(0.00, 50.00, Time.now)
+      login_as_admin 
+      go_to_credit_expire_page
+      fill_in "player_transaction_remark", :with => 'test'
+      content_list = [I18n.t("deposit_withdrawal.credit_expire_amt")]
+      click_pop_up_confirm("confirm_credit_expire", content_list)
+      wait_for_ajax
+      credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
+      check_credit_transaction(credit_transaction, 'credit_expire', 'completed', 5000, 'test')
+
+      check_balance_page
+      check_flash_message I18n.t("flash_message.credit_expire_complete", amount: to_display_amount_str(credit_transaction.amount))
+      expect(credit_transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
   end
 end

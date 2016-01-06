@@ -319,6 +319,16 @@ describe WithdrawController do
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.withdraw")
     end
+    
+    it '[7.19] Update trans date', :js => true do
+      trans_date = (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")
+      wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => trans_date})
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_return(wallet_response)
+      login_as_admin
+      do_withdraw(100)
+      transaction = PlayerTransaction.first
+      expect(transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
   end
 
   describe '[52] Enter PIN withdraw success ' do

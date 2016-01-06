@@ -71,8 +71,14 @@ class FundController < ApplicationController
   end
 
   def handle_wallet_result(transaction, response)
-    return transaction.completed! if response.success?
-    raise FundInOut::CallWalletFail
+    if !response.success?
+      raise FundInOut::CallWalletFail
+    else
+      PlayerTransaction.transaction do
+        transaction.trans_date = response.trans_date
+        transaction.completed!
+      end
+    end
   end
   
   def handle_player_locked(e)

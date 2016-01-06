@@ -232,5 +232,34 @@ describe VoidController do
 
       check_flash_message I18n.t("void_transaction.not_exist")
     end
+    
+    it '[47.9] Update trans date', :js => true do
+      trans_date = (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")
+      wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => trans_date})
+      allow_any_instance_of(Requester::Wallet).to receive(:void_deposit).and_return(wallet_response)
+      login_as_admin
+      create_player_transaction
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction") 
+      check_player_transaction_page_js
+
+      fill_in "slip_number", :with => @player_transaction1.slip_number
+      find("input#selected_tab_index").set "1"
+
+      find("input#search").click
+      wait_for_ajax
+      check_player_transaction_result_items([@player_transaction1])
+      
+      content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
+      click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
+
+      check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
+      @player_transaction1.reload
+      check_player_transaction_result_items([@player_transaction1])
+      void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
+      expect(page.source).to have_selector("iframe")
+      expect(void_transaction.status).to eq 'completed'
+      expect(void_transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
   end
 end

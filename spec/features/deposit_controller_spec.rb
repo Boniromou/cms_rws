@@ -312,6 +312,16 @@ describe DepositController do
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
       expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
     end
+    
+    it '[6.18] Update trans date', :js => true do
+      trans_date = (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")
+      wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => trans_date})
+      allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return(wallet_response)
+      login_as_admin
+      do_deposit(100)
+      transaction = PlayerTransaction.first
+      expect(transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
   end
 
   describe '[28] Unauthorized permission without location (Deposit, Withdraw)' do

@@ -82,5 +82,25 @@ describe CreditDepositController do
       expect(find("div a#credit_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#credit_expire")[:disabled]).to eq 'disabled'
     end
+
+    it '[60.4] Update trans date', :js => true do
+      trans_date = (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")
+      wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => trans_date})
+      allow_any_instance_of(Requester::Wallet).to receive(:credit_deposit).and_return(wallet_response)
+      mock_wallet_balance(0.00, 0.00, Time.now)
+      login_as_admin
+      go_to_credit_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+      fill_in "player_transaction_remark", :with => 'test'
+      content_list = [I18n.t("deposit_withdrawal.credit_deposit_amt")]
+      click_pop_up_confirm("confirm_credit_deposit", content_list)
+      wait_for_ajax
+
+      credit_transaction = PlayerTransaction.find_by_player_id(@player.id)
+      check_credit_transaction(credit_transaction, 'credit_deposit', 'completed', 10000, 'test')
+      
+      check_flash_message I18n.t("flash_message.credit_deposit_complete", amount: to_display_amount_str(credit_transaction.amount))
+      expect(credit_transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
   end
 end

@@ -82,3 +82,20 @@ mockup0:
   no_block: false
   timeout: 30
 
+sandbox3:
+  servers:
+    - mo-snd-s3-vapp01.laxigames.local:11211
+    - mo-snd-s3-vapp01.laxigames.local:11212
+  expires: 3600
+  namespace: s3_snd
+  no_block: false
+  timeout: 30
+
+production3:
+  servers:
+    - mo-prd-s3-vapp01.laxigames.local:7000
+    - mo-prd-s3-vapp01.laxigames.local:7001
+  expires: 3600
+  namespace: s3_prd
+  no_block: false
+  timeout: 30

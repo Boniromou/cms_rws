@@ -47,3 +47,23 @@ mockup0:
   password: rothorn
   host: mo-mock-cms-vdb01.rnd.laxino.com
   port: 3306
+
+sandbox3:
+  adapter: mysql2
+  encoding: utf8
+  collation: utf8_bin
+  database: rothorn_cms_sandbox
+  username: rothorn
+  password: rothorn.pa$$w0rd123
+  host: mo-snd-cms-vdb01.laxigames.local
+  port: 6034
+
+sandbox3:
+  adapter: mysql2
+  encoding: utf8
+  collation: utf8_bin
+  database: rothorn_cms_sandbox
+  username: rothorn
+  password: rothorn.pa$$w0rd123
+  host: mo-prd-cms-vdb01.laxigames.local
+  port: 6034

@@ -30,10 +30,18 @@ sandbox2:
   <<: *default
   :internal_property_id: 5
 
+sandbox3:
+  <<: *default
+  :internal_property_id: 5
+
 production0:
   <<: *default
   :internal_property_id: 5
 
 smartocean2:
+  <<: *default
+  :internal_property_id: 5
+
+production3:
   <<: *default
   :internal_property_id: 5

@@ -58,11 +58,11 @@ sandbox3:
   host: mo-snd-cms-vdb01.laxigames.local
   port: 6034
 
-sandbox3:
+production3:
   adapter: mysql2
   encoding: utf8
   collation: utf8_bin
-  database: rothorn_cms_sandbox
+  database: rothorn_cms_production
   username: rothorn
   password: rothorn.pa$$w0rd123
   host: mo-prd-cms-vdb01.laxigames.local

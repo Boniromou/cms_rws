@@ -42,7 +42,7 @@ gem 'jquery-rails'
 gem 'devise', '3.2.4'
 gem 'pundit'
 
-gem 'hood', :path=>"vendor/gems/hood-1.4.6"
+gem 'hood', :path => "vendor/gems/hood-1.4.6"
 
 group :ldap do
   gem "net-ldap", "~> 0.3.1"

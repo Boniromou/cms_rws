@@ -3,20 +3,6 @@ set :default_stage, 'integration0'
 require 'capistrano/ext/multistage'
 require 'lax-capistrano-recipes/rws'
 require 'bundler/capistrano'
-require 'active_record'
-
-env = $*[0] || "development"
-database = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))
-DB = database[env]
-ActiveRecord::Base.establish_connection(:adapter => "mysql2",
-                                        :host => DB['host'],
-                                        :username => DB['username'],
-                                        :password => DB['password'],
-                                        :database => DB['database'],
-                                        :port => DB['port'])
-
-require File.expand_path("../../app/models/configuration", __FILE__)
-require File.expand_path("../../config/initializers/application", __FILE__)
 
 set :app_server, "thin"
 set :application, "cms_rws"

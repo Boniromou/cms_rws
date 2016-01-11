@@ -37,7 +37,7 @@ CmsRws::Application.configure do
 
   config.cache_store = :dalli_store,
                         'stg-cons-vapp01.rnd.laxino.com:11211', 'stg-cons-vapp01.rnd.laxino.com:11212',
-                        {:namespace => 'cirrus_stg_ex',
+                        {:namespace => 'cirrus_stg',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
                          :compress => true }
@@ -45,5 +45,5 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-SSO_URL = 'http://mo-stg-exsso-vapp01.rnd.laxino.com:80'
+SSO_URL = 'http://mo-stg-sso-vapp01.rnd.laxino.com:80'
 REGISTRATION_PATH = '/register'

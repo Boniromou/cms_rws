@@ -27,3 +27,9 @@ integration0:
 
 staging0:
   <<: *default
+  
+sandbox3:
+  <<: *default
+  
+production3:
+  <<: *default

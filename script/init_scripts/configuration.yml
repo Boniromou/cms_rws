@@ -1,17 +1,17 @@
 default: &default
   20000:
-    trans_history_search_range: [30, 'search range of transaction history']
-    polling_time: [1, 'interval of refreshing header']
+    trans_history_search_range: [30, 'search range of transaction history(day)']
+    polling_time: [1, 'interval of refreshing header(minute)']
     card_id_length: [20]
     member_id_length: [8]
-    audit_log_search_range: [7, 'search range of audit log']
-    change_log_search_range: [30, 'search range of player lock log']
+    audit_log_search_range: [7, 'search range of audit log(day)']
+    change_log_search_range: [30, 'search range of player lock log(day)']
     token_life_time: [30]
     session_life_time: [60]
-    roll_shift_time: ['6,14,22', 'time of rolling shift']
-    credit_life_time: [1, 'life time of credit']
-    pin_log_search_range: [30, 'search range of pin log']
-    transaction_void_range: [1, 'void range of transaction']
+    roll_shift_time: ['6,14,22', 'utc time of rolling shift(hour)']
+    credit_life_time: [1, 'life time of credit(minute)']
+    pin_log_search_range: [30, 'search range of pin log(day)']
+    transaction_void_range: [1, 'void range of transaction(day)']
 
 development:
   <<: *default

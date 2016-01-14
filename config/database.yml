@@ -66,4 +66,4 @@ production3:
   username: rothorn
   password: rothorn.pa$$w0rd123
   host: mo-prd-cms-vdb01.laxigames.local
-  port: 6034
+  port: 6033

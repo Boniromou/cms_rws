@@ -36,7 +36,7 @@ CmsRws::Application.configure do
   config.assets.debug = true
 
   config.cache_store = :dalli_store,
-                        'mo-prd-s3-vapp01.laxigames.local:7000', 'mo-prd-s3-vapp01.laxigames.local:7001',
+                        'mo-prd-s3-vapp01.laxigames.local:7000', 'mo-prd-s3-vapp01.laxigames.local:7001','mo-prd-s3-vapp02.laxigames.local:7000', 'mo-prd-s3-vapp02.laxigames.local:7001',
                         {:namespace => 'cirrus_prd',
                          :expires_in => 1.day,
                          :socket_timeout => 3,

@@ -11,7 +11,7 @@ set :repo_host, 'mo-prd-cbms-app01.laxigames.local'
 #   int - Integration
 #   stg - Staging
 #   prd - Production
-role :app, 'mo-prd-cms-app01.laxigames.local'
+role :app, 'mo-prd-cms-app01.laxigames.local','mo-prd-cms-app02.laxigames.local'
 
 role :cronjob_app, 'mo-prd-cms-app01.laxigames.local'
 

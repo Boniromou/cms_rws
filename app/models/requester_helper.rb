@@ -26,9 +26,9 @@ class RequesterHelper
       raise Request::InvalidPin.new unless validate_pin(login_name, pin)
       currency = player.currency.name
       balance_response = wallet_requester.get_player_balance(player.member_id)
-      balance = balance_response[:balance]
-      credit_balance = balance_response[:credit_balance]
-      credit_expired_at = balance_response[:credit_expired_at]
+      balance = balance_response.balance
+      credit_balance = balance_response.credit_balance
+      credit_expired_at = balance_response.credit_expired_at
       raise Request::RetrieveBalanceFail.new unless balance.class == Float
       session_token = Token.generate(player.id).session_token
       {:login_name => login_name, :currency => currency, :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at, :session_token => session_token}

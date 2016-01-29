@@ -136,9 +136,11 @@ en:
   lock_player:
     success: "Lock player [%{name}] successful"
     confirm_msg: "Are you sure to Lock player: %{name}?"
+    fail: "**Player [%{name}] already locked"
   unlock_player:
     success: "Unlock player [%{name}] successful"
     confirm_msg: "Are you sure to UnLock player: %{name}?"
+    fail: "**Player [%{name}] already unlocked"
   player_status:
     active: "Active"
     locked: "Locked"

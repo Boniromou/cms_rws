@@ -9,6 +9,8 @@ module ApplicationHelper
         "alert-warning"
       when :notice
         "alert-info"
+      when :fail
+        "alert-warning"
       else
         flash_type.to_s
     end

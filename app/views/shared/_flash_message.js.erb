@@ -28,7 +28,7 @@ function popFlashMessage() {
   if ($('div#message_content').length) {
     if (<%= flash[:success].present? || flash.now[:success].present? %>)
       popSuccess();
-    else if (<%= flash[:alert].present? || flash.now[:alert].present? %>)
+    else if (<%= flash[:alert].present? || flash.now[:alert].present? || flash[:fail].present? || flash.now[:fail].present?%>)
       popFail();
   }
 }

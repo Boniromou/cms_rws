@@ -89,15 +89,15 @@ class PlayersController < ApplicationController
     lock_status = ''
     AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       if player.cage_locked?
-        lock_status = 'fail'
+        flash[:fail] = { key: "lock_player.fail", replace: {name: player.member_id}}
       else
         player.lock_account!
         lock_status = 'success'
+        flash[:success] = { key: "lock_player.success", replace: {name: player.member_id}}
         ChangeHistory.create(current_user, player, 'lock')
       end
     end
 
-    flash[:success] = { key: "lock_player.#{lock_status}", replace: {name: player.member_id}}
     redirect_to :action => 'profile', :member_id => member_id
   end
 
@@ -108,15 +108,14 @@ class PlayersController < ApplicationController
     lock_status = ''
     AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       if !player.cage_locked?
-        lock_status = 'fail'
+        flash[:fail] = { key: "unlock_player.fail", replace: {name: player.member_id}}
       else
         player.unlock_account!
-        lock_status = 'success'
+        flash[:success] = { key: "unlock_player.success", replace: {name: player.member_id}}
         ChangeHistory.create(current_user, player, 'unlock')
       end
     end
 
-    flash[:success] = { key: "unlock_player.#{lock_status}", replace: {name: player.member_id}}
     redirect_to :action => 'profile', :member_id => member_id
   end
 

@@ -46,8 +46,7 @@ class VoidController < FundController
   end
   
   def handle_fund_error(msg)
-    flash[:alert] = msg
-    flash[:fade_in] = false
+    flash[:fail] = msg
     respond_to do |format|
       format.js { render partial: "player_transactions/refresh_result", formats: [:js] }
     end

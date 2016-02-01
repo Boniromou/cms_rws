@@ -12,6 +12,18 @@
             </label>
           </div>
     </div>
+    <div class="row" style="margin-top: 8px;">
+      <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.expire_duration")%>:</strong></label></td>
+      <label class="select col-xs-2 box">
+        <select  name="target_name" id="target_name">
+          <% @credit_life_time_array.each do |life_time| %>
+            <option valie=<%= life_time %>><%= life_time %></option>
+          <% end %>
+        </select>
+        <i></i>
+      </label>
+      <label class="col-xs-4 box"><%= t("credit_deposit_expire.duration_unit")%></label>
+    </div>
   <% else %>
     <div>
       <%= hidden_field(:player_transaction, :amount, :value => @credit_balance) %>

@@ -262,3 +262,5 @@ en:
     create_pin: "Create"
   credit_deposit_expire:
     remark: "Remark"
+    expire_duration: "**expire duration"
+    duration_unit: "**day(s)"

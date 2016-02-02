@@ -264,3 +264,4 @@ en:
     remark: "Remark"
     expire_duration: "**expire duration"
     duration_unit: "**day(s)"
+    exceed_limit: "**credit exceed limit"

@@ -15,6 +15,7 @@ class CreditDepositController < FundController
     super
     @credit_life_time_array = config_helper.credit_life_time_array
     @credit_expired_at = Time.now.localtime + @credit_life_time_array[0].day
+    @credit_limit = current_user.get_permission_attribute(:player_transaction, :add_credit)
   end
 
   def create

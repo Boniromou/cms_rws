@@ -9,5 +9,4 @@
     var date_str = getDateStr(expire_date) + ' ' + getTimeStrWithoutSecond(expire_date);
     updateExpiryDate(element, date_str);
   }
-  onOptionChange($("select#duration").val());
   $('select#duration').attr("onchange","onOptionChange(value)");

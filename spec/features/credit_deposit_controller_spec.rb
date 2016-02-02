@@ -139,5 +139,18 @@ describe CreditDepositController do
       
       check_flash_message I18n.t("flash_message.credit_deposit_complete", amount: to_display_amount_str(credit_transaction.amount))
     end
+    
+    it '[68.2] Update expiry time under credit amount text box', :js => true do
+      mock_wallet_transaction_success(:credit_deposit)
+      mock_wallet_balance(0.00, 0.00, Time.now)
+      login_as_admin
+      go_to_credit_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+      fill_in "player_transaction_remark", :with => 'test'
+      select1 = "#duration(3)"
+      expect(find("label#credit_expired_at").text).to have_content (Time.now + 0.5.day).strftime("%F %R")
+      page.select 3, :from => 'duration'
+      expect(find("label#credit_expired_at").text).to have_content (Time.now + 3.day).strftime("%F %R")
+    end
   end
 end

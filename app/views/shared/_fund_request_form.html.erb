@@ -25,6 +25,8 @@
         </label>
         <label class="col-xs-4 box"><%= t("credit_deposit_expire.duration_unit")%></label>
       </div>
+<%= javascript_include_tag "date.time.helper.js" %>
+<%= javascript_include_tag "update.expiry.date.js" %>
     <% end %>
   <% else %>
     <div>
@@ -51,8 +53,6 @@
   <% end %>
 <% end %>
 
-<%= javascript_include_tag "date.time.helper.js" %>
-<%= javascript_include_tag "update.expiry.date.js" %>
 <script>
   $(document).ready(function() {
     $('textarea[autofocus="autofocus"]').focus();

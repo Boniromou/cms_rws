@@ -583,7 +583,7 @@ module StepHelper
     expect(credit_transaction.status).to eq status
     expect(credit_transaction.amount).to eq amount
     expect(YAML.load(credit_transaction.data)[:remark]).to eq remark
-    expect(YAML.load(credit_transaction.data)[:duration]).to eq duration
+    expect(YAML.load(credit_transaction.data)[:duration]).to eq duration if credit_transaction.transaction_type.name == 'credit_deposit'
   end
 end
 

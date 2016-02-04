@@ -18,6 +18,7 @@ describe CreditDepositController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
+      mock_permission_attribute(999999999)
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
@@ -102,6 +103,19 @@ describe CreditDepositController do
       check_flash_message I18n.t("flash_message.credit_deposit_complete", amount: to_display_amount_str(credit_transaction.amount))
       expect(credit_transaction.trans_date).to eq trans_date.to_time(:local).utc
     end
+
+    it '[60.5] Add credit fail with exceed credit limited', :js => true do
+      mock_permission_attribute(50)
+      mock_wallet_transaction_success(:credit_deposit)
+      mock_wallet_balance(0.00, 0.00, Time.now)
+      login_as_admin
+      go_to_credit_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+      fill_in "player_transaction_remark", :with => 'test'
+      content_list = [I18n.t("deposit_withdrawal.credit_deposit_amt")]
+      click_pop_up_confirm("confirm_credit_deposit", content_list)
+      expect(find('label#credit_limit_alert')[:style]).to have_content 'visible'
+    end
   end
   
   describe '[68] Different expiration duration' do
@@ -112,6 +126,7 @@ describe CreditDepositController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
+      mock_permission_attribute(999999999)
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)

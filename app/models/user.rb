@@ -17,16 +17,10 @@ class User < ActiveRecord::Base
   end
 
   def get_permission_attribute(target, action)
-    return 50000
     cache_key = "#{APP_NAME}:permissions:#{self.uid}"
     permissions = Rails.cache.fetch cache_key
-    attributes = permissions[:permissions][:attributes]
-    if attributes.has_key(target)
-      attributes = attributes[target]
-      if attributes.has_key(action)
-        return attributes[action]
-      end
-    end
+    permissions[:permissions][:attributes][target][action]
+  rescue => e
     nil
   end
 

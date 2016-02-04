@@ -241,9 +241,11 @@ module StepHelper
     if player_transaction.transaction_type_id == 5
       credit_deposit_str = to_display_amount_str(player_transaction.amount)
       credit_expire_str = ""
+      credit_expire_duration_str = player_transaction.data_hash[:duration].to_s
     else
       credit_deposit_str = ""
       credit_expire_str = to_display_amount_str(player_transaction.amount)
+      credit_expire_duration_str = ""
     end
     expect(item[0].text).to eq player.member_id
     expect(item[1].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
@@ -254,7 +256,8 @@ module StepHelper
     expect(item[6].text).to eq I18n.t("transaction_history.#{player_transaction.transaction_type.name}")
     expect(item[7].text).to eq credit_deposit_str
     expect(item[8].text).to eq credit_expire_str
-    expect(item[9].text).to eq YAML.load(player_transaction.data)[:remark]
+    expect(item[9].text).to eq credit_expire_duration_str
+    expect(item[10].text).to eq YAML.load(player_transaction.data)[:remark]
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
@@ -572,8 +575,8 @@ module StepHelper
     @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
     @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
 
-    @credit_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :data => {:remark => 'test1'}.to_yaml, :property_id => 20000)
-    @credit_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :data => {:remark => 'test2'}.to_yaml, :property_id => 20000)
+    @credit_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :data => {:remark => 'test1', :duration => 0.5}.to_yaml, :property_id => 20000)
+    @credit_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :data => {:remark => 'test2', :duration => 3}.to_yaml, :property_id => 20000)
     @credit_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 6, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :data => {:remark => 'test3'}.to_yaml, :property_id => 20000)
   end
 

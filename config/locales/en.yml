@@ -212,6 +212,7 @@ en:
     remark: "Remark"
     credit_deposit: "Deposit"
     credit_expire: "Expire"
+    duration: "**expire duration"
   shift_name:
     morning: "Morning"
     swing: "Swing"

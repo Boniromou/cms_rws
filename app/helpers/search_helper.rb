@@ -28,7 +28,7 @@ module SearchHelper
     first_ac_date = Shift.where(:property_id => current_property_id).order(:created_at).first.accounting_date
     last_ac_date = Shift.where(:property_id => current_property_id).order(:created_at).last.accounting_date
 
-    raise Search::NoResultException, "accounting date not found" if to_number(end_ac_date) < to_number(first_ac_date)
+    raise Search::NoResultException, "accounting date not found" if to_number(end_ac_date) < to_number(first_ac_date) || to_number(last_ac_date) < to_number(start_ac_date)
 
     start_ac_date = AccountingDate.find_by_accounting_date(start_ac_date)
     end_ac_date = AccountingDate.find_by_accounting_date(end_ac_date)

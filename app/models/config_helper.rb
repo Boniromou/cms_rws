@@ -13,7 +13,7 @@ class ConfigHelper
   end
 
   def audit_log_search_range
-    retrieve_config('audit_log_search_range').to_i * 24 * 3600
+    retrieve_config('audit_log_search_range').to_i
   end
 
   def change_log_search_range

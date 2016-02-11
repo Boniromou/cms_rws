@@ -15,7 +15,7 @@ class AuditLogsController < ApplicationController
       end_time = parse_search_time(params[:end_time], true) unless params[:end_time].blank?
       date_gap = end_time - start_time
       search_range = config_helper.audit_log_search_range
-      raise Search::OverRangeError, "limit_remark" if date_gap > search_range
+      raise Search::OverRangeError, "limit_remark" if date_gap > search_range * 24 * 3600
       action_by = params[:action_by] unless params[:action_by].blank?
       action_type = params[:action_type] unless params[:action_type].blank?
       audit_target = params[:target_name] unless params[:target_name].blank? || params[:target_name] == "all"
@@ -24,7 +24,7 @@ class AuditLogsController < ApplicationController
     rescue Search::NoResultException => e
       @audit_logs = []
     rescue Search::OverRangeError => e
-      flash[:error] = "report_search." + e.message
+      flash[:error] = { key: "report_search." + e.message, replace: {day: search_range}}
     rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 

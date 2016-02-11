@@ -12,12 +12,13 @@ class LockHistoriesController < ApplicationController
 
   def do_search
     begin
-      start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.change_log_search_range)
+      search_range = config_helper.change_log_search_range
+      start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], search_range)
       @lock_histories = policy_scope(ChangeHistory.since(start_time).until(end_time).where('action=? OR action=?', 'lock', 'unlock'))
     rescue Search::NoResultException => e
       @lock_histories = []
     rescue Search::OverRangeError => e
-      flash[:error] = "report_search." + e.message
+      flash[:error] = { key: "report_search." + e.message, replace: {day: search_range}}
     rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 

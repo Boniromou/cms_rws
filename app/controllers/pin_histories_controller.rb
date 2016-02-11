@@ -12,7 +12,8 @@ class PinHistoriesController < ApplicationController
 
   def do_search
     begin
-      start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], config_helper.pin_log_search_range)
+      search_range = config_helper.pin_log_search_range
+      start_time, end_time = get_time_range_by_accounting_date(params[:start_time], params[:end_time], search_range)
       response = patron_requester.get_pin_audit_logs(start_time, end_time)
       @pin_histories = response.audit_logs
 
@@ -25,7 +26,7 @@ class PinHistoriesController < ApplicationController
     rescue Search::NoResultException => e
       @pin_histories = []
     rescue Search::OverRangeError => e
-      flash[:error] = "report_search." + e.message
+      flash[:error] = { key: "report_search." + e.message, replace: {day: search_range}}
     rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
     rescue Remote::InvalidTimeRange

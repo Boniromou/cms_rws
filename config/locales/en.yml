@@ -223,7 +223,7 @@ en:
   report_search:
     search_field_blank_error: "search field can not be blank"
     no_transaction_found: "No transaction found."
-    limit_remark: "The search date range is limited to 30 days."
+    limit_remark: "The search date range is limited to %{day} days."
   auditlog:
     audit_time: "Time"
     audit_action_by: "Action by"

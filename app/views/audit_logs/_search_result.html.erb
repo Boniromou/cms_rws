@@ -1,4 +1,5 @@
-      <legend>Result</legend>
+<% if @audit_logs %>
+    <legend>Result</legend>
       <% if @audit_logs.blank? %>
         <p> <%= t("general.no_result_found") %> </p>
       <% else %>
@@ -31,3 +32,4 @@
           </table>
         </div>
       <% end %>
+<% end %>      

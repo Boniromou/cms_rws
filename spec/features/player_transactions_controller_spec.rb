@@ -146,7 +146,7 @@ describe PlayersController do
       find("input#search").click
       wait_for_ajax
 
-      check_flash_message I18n.t("report_search.limit_remark")
+      check_flash_message I18n.t("report_search.limit_remark",{day: ConfigHelper.new(@player.property_id).trans_history_search_range})
       expect(page).to_not have_selector("div#wid-id-2")
     end
 

@@ -21,9 +21,9 @@ class PlayerTransactionsController < ApplicationController
 
     selected_tab_index = params[:selected_tab_index]
     slip_number = params[:slip_number]
-
+    search_range = config_helper.trans_history_search_range
     if selected_tab_index == '0'
-      shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, config_helper.trans_history_search_range)
+      shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range)
       requester_helper.update_player(id_type,id_number) unless id_number.blank?
       @player_transactions = policy_scope(PlayerTransaction).search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index, @operation)
     else
@@ -36,7 +36,7 @@ class PlayerTransactionsController < ApplicationController
     rescue SearchPlayerTransaction::NoIdNumberError => e
       flash[:error] = "transaction_history." + e.message
     rescue Search::OverRangeError => e
-      flash[:error] = "report_search." + e.message
+      flash[:error] = { key: "report_search." + e.message, replace: {day: search_range}}
     rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
     rescue ArgumentError 

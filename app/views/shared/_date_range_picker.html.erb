@@ -22,7 +22,7 @@
                     <script>
                       
                       // Date Range Picker
-                      $("#start").datepicker({
+                      $("#start, #end").datepicker({
                         changeMonth: true,
                         changeYear: true,
                         dateFormat: "yy-mm-dd",
@@ -50,42 +50,12 @@
                                 flag = true;
                             }
                           }
-                        if (flag == true)
-                          $("#end").datepicker("option", "minDate", selectedDate);
-                        }
-                      });
-
-                      $("#end").datepicker({
-                        changeMonth: true,
-                        dateFormat: "yy-mm-dd",
-                        changeYear: true,
-                        numberOfMonths: 1,
-                        prevText: '<i class="fa fa-chevron-left"></i>',
-                        nextText: '<i class="fa fa-chevron-right"></i>',
-                        onClose: function (selectedDate) {
-                          var flag = false;
-
-                          if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(selectedDate) == true){
-
-                            var parts = selectedDate.split("-");
-                            var day = parseInt(parts[2], 10);
-                            var month = parseInt(parts[1], 10);
-                            var year = parseInt(parts[0], 10);
                           
-                            if(year > 1000 && year < 3000 && month >= 1 && month <= 12)
-                            {
-                                
-                              var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-
-                              if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
-                                  monthLength[1] = 29;
-
-                              if(day > 0 && day <= monthLength[month - 1])
-                                flag = true;
-                            }
-                          }
-                          if (flag == true)
+                        if (flag == true)
+                          if (this.id == "start")
+                            $("#end").datepicker("option", "minDate", selectedDate);
+                          else
                             $("#start").datepicker("option", "maxDate", selectedDate);
                         }
-                      });      
+                      });
                     </script>

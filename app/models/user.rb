@@ -16,10 +16,10 @@ class User < ActiveRecord::Base
     user && user[:admin]
   end
 
-  def get_permission_attribute(target, action)
+  def get_permission_value(target, action)
     cache_key = "#{APP_NAME}:permissions:#{self.uid}"
     permissions = Rails.cache.fetch cache_key
-    permissions[:permissions][:attributes][target][action]
+    permissions[:permissions][:values][target][action]
   rescue => e
     nil
   end

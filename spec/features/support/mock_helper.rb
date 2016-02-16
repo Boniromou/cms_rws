@@ -86,8 +86,8 @@ module MockHelper
     allow_any_instance_of(Requester::Patron).to receive(:reset_pin).and_return(patron_response)
   end
 
-  def mock_permission_attribute(value)
-    allow_any_instance_of(User).to receive(:get_permission_attribute).and_return(value)    
+  def mock_permission_value(value)
+    allow_any_instance_of(User).to receive(:get_permission_value).and_return(value)    
   end
 end
 

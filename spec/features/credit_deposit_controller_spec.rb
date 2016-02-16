@@ -18,7 +18,7 @@ describe CreditDepositController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
-      mock_permission_attribute(999999999)
+      mock_permission_value(999999999)
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)
@@ -105,7 +105,7 @@ describe CreditDepositController do
     end
 
     it '[60.5] Add credit fail with exceed credit limited', :js => true do
-      mock_permission_attribute(50)
+      mock_permission_value(50)
       mock_wallet_transaction_success(:credit_deposit)
       mock_wallet_balance(0.00, 0.00, Time.now)
       login_as_admin
@@ -126,7 +126,7 @@ describe CreditDepositController do
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
-      mock_permission_attribute(999999999)
+      mock_permission_value(999999999)
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
 
       mock_wallet_balance(0.0)

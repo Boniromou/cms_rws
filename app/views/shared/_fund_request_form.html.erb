@@ -2,7 +2,7 @@
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
-  <% unless fund_request_path[1..-1] == 'credit_expire' %>
+  <% if fund_request_path[1..-1] != 'credit_expire' %>
     <div class="row">
       <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{fund_request_path[1..-1].split('_')[0]}_amount")%>:</strong></label></td>
       <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
@@ -12,6 +12,22 @@
             </label>
           </div>
     </div>
+    <% if fund_request_path[1..-1] == 'credit_deposit' %>
+      <div class="row" style="margin-top: 8px;">
+        <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.expire_duration")%>:</strong></label></td>
+        <label class="select col-xs-2 box">
+          <select  name="duration" id="duration">
+            <% @credit_life_time_array.each do |life_time| %>
+              <option valie=<%= life_time %>><%= life_time %></option>
+            <% end %>
+          </select>
+          <i></i>
+        </label>
+        <label class="col-xs-4 box"><%= t("credit_deposit_expire.duration_unit")%></label>
+      </div>
+<%= javascript_include_tag "date.time.helper.js" %>
+<%= javascript_include_tag "update.expiry.date.js" %>
+    <% end %>
   <% else %>
     <div>
       <%= hidden_field(:player_transaction, :amount, :value => @credit_balance) %>

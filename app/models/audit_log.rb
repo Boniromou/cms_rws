@@ -34,7 +34,7 @@ class AuditLog < ActiveRecord::Base
     private
     def compose_log(*args, &block)
       options = args.extract_options!
-      audit_target, action, action_by, session_id, ip = args
+      audit_target, action, action_by, ip, session_id = args
       content = options.merge({:audit_target => audit_target, :action => action, :action_by => action_by, :session_id => session_id, :ip => ip})
       begin
         block.call if block

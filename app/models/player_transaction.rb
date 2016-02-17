@@ -41,6 +41,12 @@ class PlayerTransaction < ActiveRecord::Base
     result
   end
 
+  def credit_expire_duration_str
+    result = ""
+    result = self.data_hash[:duration] || "" if self.transaction_type.name == CREDIT_DEPOSIT
+    result
+  end
+
   def completed!
     PlayerTransaction.transaction do
       self.status = 'completed'
@@ -98,6 +104,11 @@ class PlayerTransaction < ActiveRecord::Base
   def update_slip_number!
     TransactionSlip.assign_slip_number(self)
   end
+
+  def data_hash
+    data_hash = YAML.load(self.data ||"---\n") || {}
+  end
+    
 
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }
   scope :until, -> end_time { where("created_at <= ?", end_time) if end_time.present? }

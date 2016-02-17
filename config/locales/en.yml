@@ -136,9 +136,11 @@ en:
   lock_player:
     success: "Lock player [%{name}] successful"
     confirm_msg: "Are you sure to Lock player: %{name}?"
+    fail: "**Player [%{name}] already locked"
   unlock_player:
     success: "Unlock player [%{name}] successful"
     confirm_msg: "Are you sure to UnLock player: %{name}?"
+    fail: "**Player [%{name}] already unlocked"
   player_status:
     active: "Active"
     locked: "Locked"
@@ -210,6 +212,7 @@ en:
     remark: "Remark"
     credit_deposit: "Deposit"
     credit_expire: "Expire"
+    duration: "**expire duration"
   shift_name:
     morning: "Morning"
     swing: "Swing"
@@ -260,3 +263,6 @@ en:
     create_pin: "Create"
   credit_deposit_expire:
     remark: "Remark"
+    expire_duration: "**expire duration"
+    duration_unit: "**day(s)"
+    exceed_limit: "**credit exceed limit"

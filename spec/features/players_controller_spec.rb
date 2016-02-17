@@ -406,6 +406,59 @@ describe PlayersController do
 
       lock_or_unlock_player_and_check
     end 
+    
+    it '[15.7] Fail to lock player', js: true do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      search_player_profile
+      check_lock_unlock_page
+
+      @player.lock_account!
+
+      click_button I18n.t("button.#{@lock_or_unlock}")
+      expect(find("div#pop_up_dialog")[:style]).to_not include "none"
+
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.fail", name: @player.member_id)
+
+      click_button I18n.t("button.confirm")
+      wait_for_ajax
+
+      check_lock_unlock_page
+      check_flash_message expected_flash_message
+    end 
+    
+    it '[15.8] Fail to unlock player', js: true do
+      @player.status = "locked"
+      @player.save
+      @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      search_player_profile
+      check_lock_unlock_page
+
+      @player.unlock_account!
+
+      click_button I18n.t("button.#{@lock_or_unlock}")
+      expect(find("div#pop_up_dialog")[:style]).to_not include "none"
+
+      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.fail", name: @player.member_id)
+
+      click_button I18n.t("button.confirm")
+      wait_for_ajax
+
+      check_lock_unlock_page
+      check_flash_message expected_flash_message
+    end 
 
   end
 

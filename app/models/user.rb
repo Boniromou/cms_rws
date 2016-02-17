@@ -16,6 +16,14 @@ class User < ActiveRecord::Base
     user && user[:admin]
   end
 
+  def get_permission_value(target, action)
+    cache_key = "#{APP_NAME}:permissions:#{self.uid}"
+    permissions = Rails.cache.fetch cache_key
+    permissions[:permissions][:values][target][action]
+  rescue => e
+    nil
+  end
+
   class << self
     def get_property_ids_by_uid(uid)
       user = Rails.cache.fetch "#{uid}"

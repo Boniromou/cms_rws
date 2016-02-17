@@ -29,8 +29,8 @@ class ConfigHelper
     life_time.to_i * 60
   end
 
-  def credit_life_time
-    retrieve_config('credit_life_time').to_i * 24 * 3600
+  def credit_life_time_array
+    retrieve_config('credit_life_time_array').split(',').map{|t| t.to_f}
   end
   
   def roll_shift_time

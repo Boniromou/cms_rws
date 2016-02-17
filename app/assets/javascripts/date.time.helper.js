@@ -15,6 +15,10 @@ function getTimeStr(now) {
   return addZero(now.getHours()) + ':' + addZero(now.getMinutes()) + ':' + addZero(now.getSeconds());
 }
 
+function getTimeStrWithoutSecond(now) {
+  return addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+}
+
 function getDateTimeStr() {
   var now = new Date();
   return getDateStr(now) + ' ' + getTimeStr(now);

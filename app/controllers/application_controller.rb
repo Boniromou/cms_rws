@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
 
   def handle_unauthorize
     Rails.logger.info 'handle_unauthorize'
-    flash[:alert] = "flash_message.not_authorize"
+    flash[:fail] = "flash_message.not_authorize"
     respond_to do |format|
       format.html { render "home/index", formats: [:html] }
       format.js { render "home/unauthorized", formats: [:js] }

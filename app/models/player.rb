@@ -70,7 +70,7 @@ class Player < ActiveRecord::Base
 
   def lock_types
     result = []
-    self.players_lock_types.each do |players_lock_type|
+    self.players_lock_types(true).each do |players_lock_type|
       result << players_lock_type.lock_type.name if players_lock_type.status == 'active'
     end
     result

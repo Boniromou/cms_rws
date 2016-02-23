@@ -1,0 +1,45 @@
+<%=form_for :player_transaction, url: credit_deposit_path, remote: true, html: { id: "fund_request", autocomplete: :off  } do |f| %>
+  <div>
+    <%= hidden_field(:player, :member_id) %>
+  </div>
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
+    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
+        <div class='col-xs-4 box'>
+          <label class='invisible_error'>
+            <%= t("invalid_amt."+@action) %>
+          </label>
+        </div>
+  </div>
+  <div class="row" style="margin-top: 8px;">
+    <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.expire_duration")%>:</strong></label></td>
+    <label class="select col-xs-2 box">
+      <select  name="duration" id="duration">
+        <% @credit_life_time_array.each do |life_time| %>
+          <option valie=<%= life_time %>><%= life_time %></option>
+        <% end %>
+      </select>
+      <i></i>
+    </label>
+    <label><%= t("credit_deposit_expire.duration_unit")%></label>
+  </div>
+  <%= javascript_include_tag "date.time.helper.js" %>
+  <%= javascript_include_tag "update.expiry.date.js" %>
+
+  <div class="row">
+    <label class="col-xs-4 box"></label></td>
+    <label class="col-xs-4 box"><%= label_tag :credit_expired_at, t("balance_enquiry.expiry", expired_at: @credit_expired_at.strftime("%F %R")), :id => "credit_expired_at" %></label></td>
+  </div>
+
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.remark")%>:</strong></label></td>
+    <%= f.text_area :remark, :autofocus => true, :id => "player_transaction_remark", :class => "col-xs-7 box", :size => "7x5", :oninput => "validateMaxLength($(this), value, 256)" %>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function() {
+    $('textarea[autofocus="autofocus"]').focus();
+    $('input[autofocus="autofocus"]').focus();
+  });
+</script>

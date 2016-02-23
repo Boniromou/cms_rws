@@ -1,0 +1,29 @@
+<%=form_for :player_transaction, url: credit_expire_path, remote: true, html: { id: "fund_request", autocomplete: :off  } do |f| %>
+  <div>
+    <%= hidden_field(:player, :member_id) %>
+  </div>
+  <div>
+    <%= hidden_field(:player_transaction, :amount, :value => @credit_balance) %>
+  </div>
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("balance_enquiry.account_credit")%>:</strong></label></td>
+    <label class="col-xs-4 box"><%= label_tag :credit_balance, to_formatted_display_amount_str(@credit_balance), :id => "credit_balance" %></label></td>
+  </div>
+
+  <div class="row">
+    <label class="col-xs-4 box"></label></td>
+    <label class="col-xs-4 box"><%= label_tag :credit_expired_at, t("balance_enquiry.expiry", expired_at: @credit_expired_at.strftime("%F %R")), :id => "credit_expired_at" %></label></td>
+  </div>
+
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("credit_deposit_expire.remark")%>:</strong></label></td>
+    <%= f.text_area :remark, :autofocus => true, :id => "player_transaction_remark", :class => "col-xs-7 box", :size => "7x5", :oninput => "validateMaxLength($(this), value, 256)" %>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function() {
+    $('textarea[autofocus="autofocus"]').focus();
+    $('input[autofocus="autofocus"]').focus();
+  });
+</script>

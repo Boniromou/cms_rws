@@ -151,19 +151,19 @@ class PlayerTransaction < ActiveRecord::Base
     end
 
     def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
+      init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
+      init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id)
+      init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id)
+      init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)

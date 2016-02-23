@@ -107,6 +107,7 @@ describe DepositController do
       
     end
 
+#deposit success
     it '[6.8] Confirm dialog box Deposit', :js => true do
       login_as_admin 
       go_to_deposit_page
@@ -321,6 +322,37 @@ describe DepositController do
       do_deposit(100)
       transaction = PlayerTransaction.first
       expect(transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
+    
+    it '[6.19] Non-player deposit success', :js => true do
+      login_as_admin 
+      go_to_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+
+      expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq false
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq 'disabled'
+      
+      find("input#player_transaction_non_player_deposit").click
+      expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq true
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq nil
+      fill_in "player_transaction_deposit_reason", :with => 'abc123'
+
+      find("button#confirm_deposit").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      find("div#pop_up_dialog div button#confirm").click
+      
+      check_title("tree_panel.fund_in")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+
+      transaction = PlayerTransaction.first
+      expect(transaction.data_hash[:is_player_deposit]).to eq false
+      expect(transaction.data_hash[:deposit_reason]).to eq 'abc123'
     end
   end
 

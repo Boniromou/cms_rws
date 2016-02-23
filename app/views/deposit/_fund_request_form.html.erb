@@ -2,14 +2,22 @@
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
-    <div class="row">
+  <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
     <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
-        <div class='col-xs-4 box'>
-          <label class='invisible_error'>
-            <%= t("invalid_amt."+@action) %>
-          </label>
-        </div>
+    <div class='col-xs-4 box'>
+      <label class='invisible_error'>
+        <%= t("invalid_amt."+@action) %>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.non_player_deposit")%>:</strong></label></td>
+    <%= f.check_box :non_player_deposit, :class => "col-xs-1 box" %>
+  </div>
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.staff_id")%>:</strong></label></td>
+    <%= f.text_field :deposit_reason, pattern: '^\d+(\.\d{1,2})?$', :oninput => "", :class => "col-xs-4 box", :disabled => true %>
   </div>
 <% end %>
 
@@ -17,5 +25,13 @@
   $(document).ready(function() {
     $('textarea[autofocus="autofocus"]').focus();
     $('input[autofocus="autofocus"]').focus();
+  });
+  
+  $('input#player_transaction_non_player_deposit').change(function(){
+    if(this.checked){
+      $('input#player_transaction_deposit_reason').removeAttr('disabled');
+    }else{
+      $('input#player_transaction_deposit_reason').attr('disabled','disabled');
+    }  
   });
 </script>

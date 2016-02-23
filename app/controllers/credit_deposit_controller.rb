@@ -3,7 +3,7 @@ class CreditDepositController < FundController
   def extract_params
     super
     @duration = params[:duration].to_f
-    @data = {:remark => params[:player_transaction][:remark], :duration => @duration}
+    @data[:duration] = @duration
   end
 
   def call_wallet(member_id, amount, ref_trans_id, trans_date)

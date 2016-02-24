@@ -79,6 +79,7 @@ en:
     credit_expire_amt: "Confirm to expire all credits? Remaining credits:"
     non_player_deposit: "**Non-player deposit"
     staff_id: "** Staff ID"
+    staff_id_invalid: "**Staff ID Invalid"
   balance_enquiry:
     account_balance: "Account Balance(HKD)"
     no_balance: "--"

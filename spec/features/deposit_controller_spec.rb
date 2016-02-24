@@ -61,7 +61,7 @@ describe DepositController do
       find("button#confirm_deposit").click
 
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq  false
-      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
+      expect(find("label#amount_error").text).to eq I18n.t("invalid_amt.deposit")
     end
 
     it '[6.5] cancel Deposit', :js => true do
@@ -311,7 +311,7 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => ""
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
-      expect(find("label.invisible_error").text).to eq I18n.t("invalid_amt.deposit")
+      expect(find("label#amount_error").text).to eq I18n.t("invalid_amt.deposit")
     end
     
     it '[6.18] Update trans date', :js => true do

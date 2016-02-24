@@ -6,7 +6,7 @@
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
     <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
         <div class='col-xs-4 box'>
-          <label class='invisible_error'>
+          <label class='invisible_error' id='amount_error'>
             <%= t("invalid_amt."+@action) %>
           </label>
         </div>

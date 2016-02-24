@@ -24,20 +24,28 @@
     amt = $('#player_transaction_amount').val()
     $('#pop_up_content #fund_amt').text(formatNum(amt));
   }
-
+  
   function formValid(){
+  <% if @action == 'deposit' %>
+    return amountValid() && depositReasonValid();
+  <% else %>
+    return amountValid();
+  <% end %>
+  }
+
+  function amountValid(){
     amt = $('#player_transaction_amount').val().replace(/0+[.]?/,"");
     return amt != ""
   }
 
-  function showError(){
-    $("label.invisible_error").css('visibility', 'visible');
-    $("label.invisible_error").css('display', 'block');
+  function showAmountError(){
+    $("label#amount_error").css('visibility', 'visible');
+    $("label#amount_error").css('display', 'block');
   }
 
-  function hideError(){
-    $("label.invisible_error").css('visibility', 'hidden');
-    $("label.invisible_error").css('display', 'none');
+  function hideAmountError(){
+    $("label#amount_error").css('visibility', 'hidden');
+    $("label#amount_error").css('display', 'none');
   }
 <% if @action == 'credit_deposit' %>
   function updateLimitAlert(){
@@ -56,18 +64,17 @@
 <% end %>
 
   $('#confirm_deposit, #confirm_withdraw, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
-    if( formValid()){
-      hideError();
+    if( amountValid()){
+      hideAmountError();
             
       updateConfirmAmt();
-      <% if  @action == 'credit_deposit' %>
+    <% if  @action == 'credit_deposit' %>
       updateLimitAlert();
-      <% end %>
+    <% end %>
 
     } else {
-      showError();
+      showAmountError();
     }
-
     return false;
   });
 </script>

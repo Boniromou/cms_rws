@@ -6,7 +6,7 @@
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
     <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
     <div class='col-xs-4 box'>
-      <label class='invisible_error'>
+      <label class='invisible_error' id='amount_error'>
         <%= t("invalid_amt."+@action) %>
       </label>
     </div>
@@ -17,7 +17,12 @@
   </div>
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.staff_id")%>:</strong></label></td>
-    <%= f.text_field :deposit_reason, pattern: '^\d+(\.\d{1,2})?$', :oninput => "", :class => "col-xs-4 box", :disabled => true %>
+    <%= f.text_field :deposit_reason, :class => "col-xs-4 box", :disabled => true %>
+    <div class='col-xs-4 box'>
+      <label class='invisible_error' id='reason_error' >
+        <%= t("deposit_withdrawal.staff_id_invalid") %>
+      </label>
+    </div>
   </div>
 <% end %>
 
@@ -30,8 +35,36 @@
   $('input#player_transaction_non_player_deposit').change(function(){
     if(this.checked){
       $('input#player_transaction_deposit_reason').removeAttr('disabled');
+      $('input#player_transaction_deposit_reason').attr('required','required');
     }else{
       $('input#player_transaction_deposit_reason').attr('disabled','disabled');
+      $('input#player_transaction_deposit_reason').val('');
+      $('input#player_transaction_deposit_reason').removeAttr('required');
     }  
+  });
+  
+  function depositReasonValid(){
+    var reg_exp = /^((([A-Za-z0-9]|\.|,|-|_|\(|\))+\s*)+)$/
+    var deposit_reason = $('input#player_transaction_deposit_reason').val();
+    var non_player_deposit_checked = $('input#player_transaction_non_player_deposit').prop('checked');
+    return !non_player_deposit_checked || reg_exp.test(deposit_reason);
+  }
+
+  function hideReasonError(){
+    $("label#reason_error").css('visibility', 'hidden');
+  }
+
+  function showReasonError(){
+    $("label#reason_error").css('visibility', 'visible');
+  }
+  
+  $('#confirm_deposit').click(function() {
+    if( depositReasonValid()){
+      hideReasonError();
+    }else{
+      showReasonError();
+    }
+
+    return false;
   });
 </script>

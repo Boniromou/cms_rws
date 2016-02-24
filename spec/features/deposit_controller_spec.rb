@@ -354,6 +354,24 @@ describe DepositController do
       expect(transaction.data_hash[:is_player_deposit]).to eq false
       expect(transaction.data_hash[:deposit_reason]).to eq 'abc123'
     end
+    
+    it '[6.20] Non-player deposit fail with invaild staff ID', :js => true do
+      login_as_admin 
+      go_to_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+
+      expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq false
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq 'disabled'
+      
+      find("input#player_transaction_non_player_deposit").click
+      expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq true
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq nil
+
+      find("button#confirm_deposit").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
+      expect(find("label#reason_error")[:style].include?("visible")).to eq true
+      expect(find("label#reason_error").text).to eq I18n.t("deposit_withdrawal.staff_id_invalid")
+    end
   end
 
   describe '[28] Unauthorized permission without location (Deposit, Withdraw)' do

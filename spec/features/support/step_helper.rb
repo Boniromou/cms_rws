@@ -212,9 +212,10 @@ module StepHelper
     expect(item[5].text).to eq user.name
     expect(item[6].text).to eq player_transaction.display_status
     expect(item[7].text).to eq deposit_str
-    expect(item[8].text).to eq withdraw_str
-    expect(item[9].text).to eq void_slip_number_str
-    within item[10] do
+    expect(item[8].text).to eq player_transaction.data_hash[:deposit_reason].to_s
+    expect(item[9].text).to eq withdraw_str
+    expect(item[10].text).to eq void_slip_number_str
+    within item[11] do
       if player_transaction.status == 'completed'
         trans_type = player_transaction.transaction_type.name
         if reprint_granted
@@ -314,8 +315,9 @@ module StepHelper
     expect(item[5].text).to eq user.name
     expect(item[6].text).to eq player_transaction.status
     expect(item[7].text).to eq deposit_str
-    expect(item[8].text).to eq withdraw_str
-    expect(item[9].text).to eq to_display_amount_str(player_transaction.amount)
+    expect(item[8].text).to eq player_transaction.data_hash[:deposit_reason].to_s
+    expect(item[9].text).to eq withdraw_str
+    expect(item[10].text).to eq to_display_amount_str(player_transaction.amount)
   end
 
   def check_ch_report_result_items(history_hash)

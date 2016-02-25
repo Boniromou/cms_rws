@@ -19,6 +19,7 @@
                 <th><%= t("transaction_history.name")%></th>
                 <th><%= t("transaction_history.status")%></th>
                 <th><%= t("transaction_history.deposit")%></th>
+                <th><%= t("transaction_history.deposit_reason")%></th>
                 <th><%= t("transaction_history.withdrawal")%></th>
                 <th><%= t("transaction_history.balance")%></th>
             </thead>
@@ -38,6 +39,7 @@
                 <td><%= t.user.name %></td>
                 <td><%= t.status %></td>
                 <td><%= t.deposit_amt_str %></td>
+                <td><%= t.data_hash[:deposit_reason] %></td>
                 <td><%= t.withdraw_amt_str %></td>
                 <td><%= to_display_amount_str(t.amount) %></td>
               </tr>

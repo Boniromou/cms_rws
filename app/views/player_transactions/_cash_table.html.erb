@@ -8,6 +8,7 @@
               <th><%= t("transaction_history.name")%></th>
               <th><%= t("transaction_history.status")%></th>
               <th><%= t("transaction_history.deposit")%></th>
+              <th><%= t("transaction_history.deposit_reason")%></th>
               <th><%= t("transaction_history.withdrawal")%></th>
               <th><%= t("transaction_history.void_slip_no")%></th>
               <th><%= t("transaction_history.action")%></th>
@@ -23,6 +24,7 @@
                   <td><%= t.user.name %></td>
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
+                  <td><%= t.data_hash[:deposit_reason] %></td>
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>

@@ -216,6 +216,7 @@ en:
     credit_deposit: "Deposit"
     credit_expire: "Expire"
     duration: "Duration"
+    deposit_reason: "**staff id"
   shift_name:
     morning: "Morning"
     swing: "Swing"

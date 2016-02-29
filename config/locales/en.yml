@@ -196,7 +196,7 @@ en:
     date: "Date"
     shift: "Shift"
     location: "Location"
-    name: "Employee Name"
+    employee_name: "Employee Name"
     status: "Status"
     deposit: "Deposit"
     withdrawal: "Withdrawal"
@@ -216,7 +216,8 @@ en:
     credit_deposit: "Deposit"
     credit_expire: "Expire"
     duration: "Duration"
-    deposit_reason: "Deposit by staff"
+    deposit_reason: "Deposit handle by"
+    cage_cashier_id: "Cage Cashier ID"
   shift_name:
     morning: "Morning"
     swing: "Swing"

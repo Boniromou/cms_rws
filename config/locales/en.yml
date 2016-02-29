@@ -77,9 +77,9 @@ en:
     withdraw_amt: "Withdrawal Amount (HKD)"
     credit_deposit_amt: "Deposit Credit Amount"
     credit_expire_amt: "Confirm to expire all credits? Remaining credits:"
-    non_player_deposit: "**Non-player deposit"
-    staff_id: "** Staff ID"
-    staff_id_invalid: "**Staff ID Invalid"
+    non_player_deposit: "Non-Player Deposit"
+    staff_id: "Staff ID"
+    staff_id_invalid: "Invalid input format, please try again."
   balance_enquiry:
     account_balance: "Account Balance(HKD)"
     no_balance: "--"
@@ -216,7 +216,7 @@ en:
     credit_deposit: "Deposit"
     credit_expire: "Expire"
     duration: "Duration"
-    deposit_reason: "**staff id"
+    deposit_reason: "Deposit by staff"
   shift_name:
     morning: "Morning"
     swing: "Swing"

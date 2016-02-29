@@ -102,16 +102,27 @@
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index" style="width: 10%;">Date/Time:<br/>日期/時間:</div>
     <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <% if operation.downcase == 'withdraw' %>
+      <div class="floating-index"></div>
+      <div class="floating-content"></div>
+      <div class="floating-index">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
 
-    <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
-    <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
-    <div class="floating-index">Cage Employee ID:<br/>帳房員工號碼:</div>
-    <div class="floating-content"><%= @transaction.user.name %></div>
+      <div class="floating-index"></div>
+      <div class="floating-content"></div>
+      <div class="floating-index" style="width: 10%;">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
+    <% else %>
+      <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
+      <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
+      <div class="floating-index">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
 
-    <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
-    <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
-    <div class="floating-index" style="width: 10%;">Cage Employee ID:<br/>帳房員工號碼:</div>
-    <div class="floating-content"><%= @transaction.user.name %></div>
+      <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
+      <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
+      <div class="floating-index" style="width: 10%;">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
+    <% end %>
 
   <br/>
 
@@ -270,16 +281,27 @@
     <div class="floating-index" style="width: 10%;">Date/Time:<br/>日期/時間:</div>
     <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
 
-    <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
-    <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
-    <div class="floating-index">Cage Employee ID:<br/>帳房員工號碼:</div>
-    <div class="floating-content"><%= @transaction.user.name %></div>
+    <% if operation.downcase == 'withdraw' %>
+      <div class="floating-index"></div>
+      <div class="floating-content"></div>
+      <div class="floating-index">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
 
-    <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
-    <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
-    <div class="floating-index" style="width: 10%;">Cage Employee ID:<br/>帳房員工號碼:</div>
-    <div class="floating-content"><%= @transaction.user.name %></div>
+      <div class="floating-index"></div>
+      <div class="floating-content"></div>
+      <div class="floating-index" style="width: 10%;">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
+    <% else %>
+      <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
+      <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
+      <div class="floating-index">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
 
+      <div class="floating-index">Deposit handle by:<br/>存款協助:</div>
+      <div class="floating-content"><%= @transaction.data_hash[:deposit_reason] %></div>
+      <div class="floating-index" style="width: 10%;">Cage Employee ID:<br/>帳房員工號碼:</div>
+      <div class="floating-content"><%= @transaction.user.name %></div>
+    <% end %>
 
   <br/>
 

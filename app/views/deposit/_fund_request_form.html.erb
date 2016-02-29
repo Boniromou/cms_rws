@@ -4,7 +4,7 @@
   </div>
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
-    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
+    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box", :style => "margin-bottom: 4px" %>
     <div class='col-xs-4 box'>
       <label class='invisible_error' id='amount_error'>
         <%= t("invalid_amt."+@action) %>
@@ -13,11 +13,11 @@
   </div>
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.non_player_deposit")%>:</strong></label></td>
-    <%= f.check_box :non_player_deposit, :class => "col-xs-1 box" %>
+    <%= f.check_box :non_player_deposit, :class => "col-xs-1 box" , :style => "margin-bottom: 11px" %>
   </div>
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.staff_id")%>:</strong></label></td>
-    <%= f.text_field :deposit_reason, :class => "col-xs-4 box", :disabled => true, :maxlength => 20 %>
+    <%= f.text_field :deposit_reason, :class => "col-xs-4 box", :style => "margin-bottom: 4px" , :disabled => true, :maxlength => 20 %>
     <div class='col-xs-4 box'>
       <label class='invisible_error' id='reason_error' >
         <%= t("deposit_withdrawal.staff_id_invalid") %>

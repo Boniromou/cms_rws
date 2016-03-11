@@ -150,8 +150,7 @@ describe DepositController do
     end
 
     it '[6.10] click unauthorized action (Deposit)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       visit home_path
@@ -173,8 +172,7 @@ describe DepositController do
     end
 
     it '[6.11] click link to the unauthorized page' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_in_path + "?member_id=#{@player.member_id}"
       check_home_page
@@ -182,8 +180,7 @@ describe DepositController do
     end
 
     it '[6.12] click unauthorized action (confirm dialog box Deposit)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       go_to_deposit_page
@@ -198,8 +195,7 @@ describe DepositController do
     end
     
     it '[6.13] click unauthorized action (print slip)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,["deposit"])
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100

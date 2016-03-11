@@ -86,8 +86,7 @@ describe PlayersController do
     end
 
     it '[8.6] Transaction history unauthorized', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
       expect(page).to_not have_selector("li#nav_search_transactions")
@@ -108,8 +107,7 @@ describe PlayersController do
     end
     
     it '[8.9] Re-print slip unauthorized', js: true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,["search"])
       create_player_transaction
       visit home_path
@@ -213,8 +211,7 @@ describe PlayersController do
     end
     
     it '[16.2] unauthorized print transaction report', js: true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       visit home_path
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["search"])

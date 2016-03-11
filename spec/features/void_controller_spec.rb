@@ -169,8 +169,7 @@ describe VoidController do
     end
 
     it '[47.6] User without void permission', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,['search'])
       create_player_transaction
       visit home_path

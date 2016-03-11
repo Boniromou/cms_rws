@@ -36,6 +36,11 @@ module StepHelper
     Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true}
   end
 
+  def login_as_test_user
+    @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
+    login_as_not_admin(@test_user)
+  end
+
   def set_permission(user,role,target,permissions)
     permission_mapping = {#player
                           :balance => 'balance_enquiry',

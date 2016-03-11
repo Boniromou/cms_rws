@@ -108,8 +108,7 @@ describe PlayersController do
     end
 
     it '[5.2] click unauthorized action', :js => true do 
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       visit home_path
       set_permission(@test_user,"cashier",:player,[])
@@ -120,8 +119,7 @@ describe PlayersController do
     end     
     
     it '[5.3] click link to the unauthorized page', :js => true do 
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,[])
       visit balance_path
       wait_for_ajax
@@ -131,8 +129,7 @@ describe PlayersController do
     
     it '[5.4] authorized to search and unauthorized to create' do 
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", 123456)
@@ -170,8 +167,7 @@ describe PlayersController do
       mock_wallet_balance(99.99)
 
       @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit home_path
@@ -188,8 +184,7 @@ describe PlayersController do
     end
     
     it '[5.7] unathorized to balance enquriy ' do 
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
       expect(first("aside#left-panel ul li#nav_balance_enquiry")).to eq nil
@@ -350,8 +345,7 @@ describe PlayersController do
     end 
 
     it '[15.3] unauthorized to lock/unlock' do 
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["profile"])
       visit home_path
       click_link I18n.t("tree_panel.profile")

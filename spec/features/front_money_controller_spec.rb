@@ -37,8 +37,7 @@ describe FrontMoneyController do
     end
 
     it '[11.2] Search FM Activity Report Unauthorized' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:shift,[""])
       visit home_path
       expect(first("aside#left-panel ul li#nav_front_money")).to be_nil
@@ -97,8 +96,7 @@ describe FrontMoneyController do
     end
 
     it '[17.2] unauthorized print FM Activity report', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:shift,["search_fm"])
       create_player_transaction
       visit search_front_money_path

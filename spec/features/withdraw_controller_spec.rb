@@ -159,8 +159,7 @@ describe WithdrawController do
     end
 
     it '[7.11] click unauthorized action (Withdraw)' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       visit home_path
@@ -181,8 +180,7 @@ describe WithdrawController do
     end
 
     it '[7.12] click link to the unauthorized page' do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,[])
       visit fund_out_path + "?member_id=#{@player.member_id}"
       check_home_page
@@ -190,8 +188,7 @@ describe WithdrawController do
     end
 
     it '[7.13] click unauthorized action (confirm dialog box Withdraw)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
@@ -206,8 +203,7 @@ describe WithdrawController do
     end
     
     it '[7.14] click unauthorized action (print slip)', :js => true do
-      @test_user = User.create!(:uid => 2, :name => 'test.user', :property_id => 20000)
-      login_as_not_admin(@test_user)
+      login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,["withdraw"])
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100

@@ -29,15 +29,15 @@ describe VoidController do
     
     def create_player_transaction
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001', :property_id => 20000)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001', :casino_id => 20000)
     end
 
     it '[47.1] Display void button', :js => true do
       create_past_shift
       login_as_admin
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :property_id => 20000)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :property_id => 20000)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :casino_id => 20000)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :casino_id => 20000)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction") 
       check_player_transaction_page_js
@@ -223,7 +223,7 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
       
-      @player_transaction1.property_id = 1003
+      @player_transaction1.casino_id = 1003
       @player_transaction1.save!
       
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]

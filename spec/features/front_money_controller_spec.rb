@@ -64,13 +64,13 @@ describe FrontMoneyController do
       wait_for_ajax
       transaction_list = [@player_transaction1,@player_transaction2,@player_transaction3]
       check_fm_report_result_items(transaction_list)
-      expect(find("input#accounting_date").value).to eq AccountingDate.current(@root_user.property_id).accounting_date.strftime("%Y-%m-%d")
+      expect(find("input#accounting_date").value).to eq AccountingDate.current(@root_user.casino_id).accounting_date.strftime("%Y-%m-%d")
     end
 
-    it '[11.5] only search the property transaction', :js => true do
+    it '[11.5] only search the casino transaction', :js => true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :property_id => 1003)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 1003)
       visit search_front_money_path
       
       check_search_fm_page

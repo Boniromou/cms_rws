@@ -23,7 +23,7 @@ describe FundController do
       mock_wallet_balance(0)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
       allow_any_instance_of(RequesterHelper).to receive(:validate_pin).and_return(true)
     end
     
@@ -33,7 +33,7 @@ describe FundController do
     
     def create_player_transaction
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :property_id => 20000)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000)
     end
 
     it '[48.1] Pending Deposit Transaction', :js => true do

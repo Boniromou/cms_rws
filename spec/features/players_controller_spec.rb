@@ -20,7 +20,7 @@ describe PlayersController do
       mock_cage_info
 
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
     end
 
     after(:each) do
@@ -35,7 +35,7 @@ describe PlayersController do
     end
 
     it '[4.2] successfully search player' do
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -59,7 +59,7 @@ describe PlayersController do
     
     it '[4.4] fail to search other property player' do
       mock_player_info_result({:error_code => 'not OK'})
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 1003)
+      @player = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 1003)
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -75,7 +75,7 @@ describe PlayersController do
       mock_cage_info
 
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
     end
 
     after(:each) do
@@ -85,7 +85,7 @@ describe PlayersController do
     it '[5.1] view player balance enquiry', :js => true do
       mock_wallet_balance(99.99)
 
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       login_as_admin
 
       mock_have_active_location
@@ -146,7 +146,7 @@ describe PlayersController do
       mock_wallet_balance(99.99)
       mock_have_active_location
 
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       click_link I18n.t("tree_panel.balance")
       wait_for_ajax
       check_search_page
@@ -166,7 +166,7 @@ describe PlayersController do
     it '[5.6] unauthorized to all actions' do
       mock_wallet_balance(99.99)
 
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       set_permission(@test_user,"cashier",:player_transaction,[])
@@ -194,7 +194,7 @@ describe PlayersController do
       mock_wallet_balance(99.99)
       mock_have_active_location
       
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "locked", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player", :status => "locked")
       @player.lock_account!
       login_as_admin
 
@@ -222,7 +222,7 @@ describe PlayersController do
       mock_cage_info
 
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
     end
 
     after(:each) do
@@ -237,7 +237,7 @@ describe PlayersController do
     end
 
     it '[12.2] successfully search player' do
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
@@ -322,10 +322,10 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
 
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "test", :last_name => "player")
 
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
     end
 
     after(:each) do
@@ -462,8 +462,8 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
+      @player = create_default_player(:id => 10, :first_name => "test", :last_name => "player")
       @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       @token2 = Token.create!(:session_token => '3949245469jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
     end
@@ -536,7 +536,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
 
     end
 
@@ -547,7 +547,7 @@ describe PlayersController do
     it '[37.1] Player balance not found', :js => true do
       mock_wallet_balance('no_balance')
 
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       login_as_admin
 
       mock_have_active_location
@@ -578,8 +578,8 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       mock_have_active_location
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :property_id => 20000}})
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
     end
 
     after(:each) do
@@ -641,7 +641,7 @@ describe PlayersController do
       mock_cage_info
 
       mock_wallet_balance(0.0)
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
     end
 
     after(:each) do
@@ -649,7 +649,7 @@ describe PlayersController do
     end
 
     it '[53.1] Show PIS player info when search  Player Profile without change' do
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -663,7 +663,7 @@ describe PlayersController do
     end
 
     it '[53.2] Show PIS player info when search  Player Profile with Card ID changed' do
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("member_id", @player.member_id)
@@ -676,7 +676,7 @@ describe PlayersController do
     end
 
     it '[53.3] Show PIS player info when search  Player Profile with blacklist changed' do
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => true, :pin_status => 'created', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => true, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -691,7 +691,7 @@ describe PlayersController do
 
     it '[53.4] Show PIS player info when search  Player Profile PIN changed' do
       Token.generate(@player.id)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -708,7 +708,7 @@ describe PlayersController do
     it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do
       @player.delete
       @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active")
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=profile"
       fill_search_info("card_id", @player.card_id)
@@ -734,7 +734,7 @@ describe PlayersController do
     end
 
     it '[53.7] Show PIS player info when search balance enquiry with Card ID changed' do
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
@@ -754,7 +754,7 @@ describe PlayersController do
       mock_cage_info
 
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank', :licensee_id => 20000}})
     end
 
     after(:each) do
@@ -762,7 +762,7 @@ describe PlayersController do
     end
 
     it '[54.1] Create PIN success in player profile', js: true do
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :property_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -794,7 +794,7 @@ describe PlayersController do
     end
 
     it '[54.2] Create PIN fail with PIN is too short in player profile', js: true do
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :property_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -825,7 +825,7 @@ describe PlayersController do
     end
 
     it '[54.3] Create PIN fail with 2 different PIN in player profile', js: true do
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :property_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -855,9 +855,9 @@ describe PlayersController do
     end
 
     it '[54.4] Reset PIN success in player profile', js: true do
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :property_id => 20000}})
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset', :property_id => 20000}})
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset', :licensee_id => 20000}})
       mock_wallet_balance(0.0)
       login_as_admin
       visit home_path
@@ -890,7 +890,7 @@ describe PlayersController do
     end
 
     it '[54.5] Create PIN success in balance enquiry', js: true do
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :property_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.balance")
@@ -988,7 +988,7 @@ describe PlayersController do
     end
 
     def check_credit_balance_base
-      @player = Player.create!(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
       login_as_admin
 
       visit home_path

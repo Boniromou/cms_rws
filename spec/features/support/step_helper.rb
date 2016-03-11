@@ -590,6 +590,15 @@ module StepHelper
     expect(YAML.load(credit_transaction.data)[:remark]).to eq remark
     expect(YAML.load(credit_transaction.data)[:duration]).to eq duration if credit_transaction.transaction_type.name == 'credit_deposit'
   end
+
+  def create_default_player(*params)
+    player_data = {:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000}
+    params.extract_options!
+    params.each |k,v| do
+      player_data[k] = v
+    end
+    Player.create!(params)
+  end
 end
 
 RSpec.configure do |config|

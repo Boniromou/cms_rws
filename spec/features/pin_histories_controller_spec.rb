@@ -17,7 +17,7 @@ describe PinHistoriesController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player
       mock_wallet_balance(0.0)
     end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160311081123) do
+ActiveRecord::Schema.define(:version => 20160311081815) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -44,6 +44,18 @@ ActiveRecord::Schema.define(:version => 20160311081123) do
     t.datetime "purge_at"
     t.integer  "licensee_id"
   end
+
+  create_table "casinos_shift_types", :force => true do |t|
+    t.integer  "casino_id",     :null => false
+    t.integer  "shift_type_id", :null => false
+    t.integer  "sequence",      :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.datetime "purge_at"
+  end
+
+  add_index "casinos_shift_types", ["casino_id"], :name => "fk_properties_shift_types_casino_id"
+  add_index "casinos_shift_types", ["shift_type_id"], :name => "fk_properties_shift_types_shift_type_id"
 
   create_table "change_histories", :force => true do |t|
     t.string   "action_by",     :limit => 45, :null => false
@@ -153,18 +165,6 @@ ActiveRecord::Schema.define(:version => 20160311081123) do
     t.datetime "updated_at",               :null => false
     t.integer  "casino_id"
   end
-
-  create_table "properties_shift_types", :force => true do |t|
-    t.integer  "casino_id",     :null => false
-    t.integer  "shift_type_id", :null => false
-    t.integer  "sequence",      :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.datetime "purge_at"
-  end
-
-  add_index "properties_shift_types", ["casino_id"], :name => "fk_properties_shift_types_casino_id"
-  add_index "properties_shift_types", ["shift_type_id"], :name => "fk_properties_shift_types_shift_type_id"
 
   create_table "shift_types", :force => true do |t|
     t.string   "name"

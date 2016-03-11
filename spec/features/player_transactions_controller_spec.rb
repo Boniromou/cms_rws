@@ -18,8 +18,8 @@ describe PlayersController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player
+      @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
       mock_wallet_balance(0.0)
     end
@@ -202,8 +202,8 @@ describe PlayersController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player
+      @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
       mock_wallet_balance(0.0)
     end
@@ -239,7 +239,7 @@ describe PlayersController do
       mock_have_active_location
       mock_patron_not_change
       reset_slip_number
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player
 
       mock_wallet_balance(0.0)
       mock_wallet_transaction_success(:deposit)
@@ -309,8 +309,8 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player
+      @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
       mock_wallet_balance(0.0)
     end
@@ -361,8 +361,8 @@ describe PlayersController do
       mock_cage_info
       mock_patron_not_change
       
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :property_id => 20000)
-      @player2 = Player.create!(:first_name => "test", :last_name => "player2", :member_id => "123457", :card_id => "1234567891", :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = create_default_player
+      @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
       mock_wallet_balance(0.0)
     end

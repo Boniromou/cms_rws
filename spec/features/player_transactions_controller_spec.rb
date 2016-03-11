@@ -47,7 +47,7 @@ describe PlayersController do
     it '[8.3] successfully generate report. (search by slip ID)', js: true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :property_id => 20000)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -144,7 +144,7 @@ describe PlayersController do
       find("input#search").click
       wait_for_ajax
 
-      check_flash_message I18n.t("report_search.limit_remark",{day: ConfigHelper.new(@player.property_id).trans_history_search_range})
+      check_flash_message I18n.t("report_search.limit_remark",{day: ConfigHelper.new(@player.licensee_id).trans_history_search_range})
       expect(page).to_not have_selector("div#wid-id-2")
     end
 
@@ -175,10 +175,10 @@ describe PlayersController do
       expect(page).to_not have_selector("div#wid-id-2")
     end
     
-    it '[8.14] cannot search othoer property transactions. (search by accounting date)', js: true do
+    it '[8.14] cannot search othoer casino transactions. (search by accounting date)', js: true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :property_id => 1003)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 1003)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -317,7 +317,7 @@ describe PlayersController do
     end
 
     it '[58.1] Search transaction history with card change', :js => true do
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567893", :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567893", :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       create_player_transaction
@@ -339,7 +339,7 @@ describe PlayersController do
 
     it '[58.2] Search transaction history with player not exist in cage' do
       @player.delete
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :property_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => 1234567893, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")

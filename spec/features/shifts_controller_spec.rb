@@ -204,7 +204,7 @@ describe ShiftsController do
       @shifts = ['morning', 'swing', 'night']
 
       allow_any_instance_of(CageInfoHelper).to receive(:polling_interval).and_return(100)
-      mock_current_property_id
+      mock_current_casino_id
     end
 
     it '[10.1] Successfully update shift to other windows', js: true do

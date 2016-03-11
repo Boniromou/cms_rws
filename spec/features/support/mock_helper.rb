@@ -62,8 +62,8 @@ module MockHelper
     allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(response)
   end
 
-  def mock_current_property_id(property_id = 20000)
-    allow_any_instance_of(ApplicationController).to receive(:current_property_id).and_return(property_id)
+  def mock_current_casino_id(casino_id = 20000)
+    allow_any_instance_of(ApplicationController).to receive(:current_casino_id).and_return(casino_id)
   end
 
   def mock_wallet_transaction_success(trans_type_sym)

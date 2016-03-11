@@ -1,5 +1,6 @@
 class Property < ActiveRecord::Base
   attr_accessible :name, :secret_key
+  belongs_to :casino
 
   class << self
     def get_property_keys

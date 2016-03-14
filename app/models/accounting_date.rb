@@ -4,27 +4,27 @@ class AccountingDate < ActiveRecord::Base
   include FrontMoneyHelper
 
   class << self
-    def current(property_id)
-      self.find_by_id(Shift.current(property_id).accounting_date_id)
+    def current(casino_id)
+      self.find_by_id(Shift.current(casino_id).accounting_date_id)
     end
 
-    def next_shift_accounting_date_id(shift_name, property_id)
-      shift_names = PropertiesShiftType.shift_types(property_id)
+    def next_shift_accounting_date_id(shift_name, casino_id)
+      shift_names = CasinosShiftType.shift_types(casino_id)
       last_shift_name = shift_names[-1]
       if shift_name == last_shift_name
-        current_ac_date = current(property_id).accounting_date
+        current_ac_date = current(casino_id).accounting_date
         new_ac_date = AccountingDate.where(:accounting_date => current_ac_date + 1).first_or_initialize
         new_ac_date.created_at ||= Time.now.utc.to_formatted_s(:db)
         new_ac_date.updated_at ||= Time.now.utc.to_formatted_s(:db)
         new_ac_date.save
         new_ac_date.id
       else
-        current(property_id).id
+        current(casino_id).id
       end
     end
 
-    def next_shift_accounting_date(shift_name, current_ac_date, property_id)
-      shift_names = PropertiesShiftType.shift_types(property_id)
+    def next_shift_accounting_date(shift_name, current_ac_date, casino_id)
+      shift_names = CasinosShiftType.shift_types(casino_id)
       last_shift_name = shift_names[-1]
       if shift_name == last_shift_name
         return current_ac_date + 1

@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   devise :registerable
 
-  attr_accessible :name, :uid, :property_id
+  attr_accessible :name, :uid, :casino_id
 
   def set_have_active_location(have_active_location)
   	@have_active_location = have_active_location
@@ -29,6 +29,15 @@ class User < ActiveRecord::Base
       user = Rails.cache.fetch "#{uid}"
       if user && user[:properties]
         user[:properties]
+      else
+        []
+      end
+    end
+    
+    def get_casino_ids_by_uid(uid)
+      user = Rails.cache.fetch "#{uid}"
+      if user && user[:casinos]
+        user[:casinos]
       else
         []
       end

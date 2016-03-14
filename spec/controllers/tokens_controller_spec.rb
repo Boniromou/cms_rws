@@ -21,7 +21,7 @@ describe TokensController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
@@ -33,14 +33,14 @@ describe TokensController do
     end
 
     it '[30.1] Validation pass' do
-      get 'validate', {:login_name => "123456", :session_token => 'abm39492i9jd9wjn', :property_id => 20000}
+      get 'validate', {:login_name => "123456", :session_token => 'abm39492i9jd9wjn', :licensee_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
     end
 
     it '[30.2] Validation fail with invalid token OK' do
-      get 'validate', {:login_name => "123456", :session_token => 'a456456887676esn', :property_id => 20000}
+      get 'validate', {:login_name => "123456", :session_token => 'a456456887676esn', :licensee_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidSessionToken'
       expect(result[:error_msg]).to eq 'Session token is invalid.'
@@ -51,7 +51,7 @@ describe TokensController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now.utc + 1800)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
@@ -83,7 +83,7 @@ describe TokensController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end

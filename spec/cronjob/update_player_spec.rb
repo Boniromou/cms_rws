@@ -10,8 +10,8 @@ describe Player do
   describe '[51] Regular Update player info, Expire token when info changed' do
     before(:each) do
       clean_dbs
-      @player1 = Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => '123456', :currency_id => 2, :status => "active", :card_id => '456', :property_id => 20000)
-      @player2 = Player.create!(:first_name => "exist2", :last_name => "exist3", :member_id => '123457', :currency_id => 2, :status => "active", :card_id => '123', :property_id => 20000)
+      @player1 = Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => '123456', :currency_id => 2, :status => "active", :card_id => '456', :licensee_id => 20000)
+      @player2 = Player.create!(:first_name => "exist2", :last_name => "exist3", :member_id => '123457', :currency_id => 2, :status => "active", :card_id => '123', :licensee_id => 20000)
       @token1 = Token.generate(@player1.id)
       @token2 = Token.generate(@player1.id)
       @token3 = Token.generate(@player2.id)
@@ -21,8 +21,8 @@ describe Player do
     end
 
     it '[51.1] get player info success without player info change' do
-      @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}
-      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}
+      @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}
+      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return(Requester::PlayerInfosResponse.new({:error_code => 'OK', :players => [@player_info1,@player_info2]}))
       Cronjob::UpdatePlayerHelper.new('test', @requester_config_file).run
       
@@ -38,8 +38,8 @@ describe Player do
     end
 
     it '[51.2] get player info success with card ID change' do
-      @player_info1 = {:card_id => '123456', :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}
-      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}
+      @player_info1 = {:card_id => '123456', :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}
+      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return(Requester::PlayerInfosResponse.new({:error_code => 'OK', :players => [@player_info1,@player_info2]}))
       Cronjob::UpdatePlayerHelper.new('test', @requester_config_file).run
       
@@ -55,8 +55,8 @@ describe Player do
     end
 
     it '[51.3] get player info success with blacklist change' do
-      @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => !@player1.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}
-      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => !@player2.has_lock_type?('blacklist'), :pin_status => 'created', :property_id => 20000}
+      @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => !@player1.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}
+      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => !@player2.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return(Requester::PlayerInfosResponse.new({:error_code => 'OK', :players => [@player_info1,@player_info2]}))
       Cronjob::UpdatePlayerHelper.new('test', @requester_config_file).run
       
@@ -74,8 +74,8 @@ describe Player do
     end
 
     it '[51.4] get player info success with PIN change' do
-      @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'reset', :property_id => 20000}
-      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'reset', :property_id => 20000}
+      @player_info1 = {:card_id => @player1.card_id, :member_id => @player1.member_id, :blacklist => @player1.has_lock_type?('blacklist'), :pin_status => 'reset', :licensee_id => 20000}
+      @player_info2 = {:card_id => @player2.card_id, :member_id => @player2.member_id, :blacklist => @player2.has_lock_type?('blacklist'), :pin_status => 'reset', :licensee_id => 20000}
       allow_any_instance_of(Requester::Patron).to receive(:get_player_infos).and_return(Requester::PlayerInfosResponse.new({:error_code => 'OK', :players => [@player_info1,@player_info2]}))
       Cronjob::UpdatePlayerHelper.new('test', @requester_config_file).run
       

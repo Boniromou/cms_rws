@@ -8,5 +8,11 @@ class Property < ActiveRecord::Base
       Property.all.each {|p| r[p.id] = p.secret_key}
       r
     end
+
+    def get_casino_id_by_property_id(property_id)
+      casino = Property.find(property_id).casino
+      return nil unless casino
+      casino.id
+    end
   end
 end

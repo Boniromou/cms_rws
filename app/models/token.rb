@@ -1,6 +1,6 @@
 class Token < ActiveRecord::Base
     validates_uniqueness_of :session_token
-    attr_accessible :session_token, :player_id, :expired_at
+    attr_accessible :session_token, :player_id, :expired_at, :casino_id
     belongs_to :player
   
   def alive?
@@ -22,7 +22,7 @@ class Token < ActiveRecord::Base
   end
   
   def token_life_time
-    ConfigHelper.new(self.player.property_id).token_life_time
+    ConfigHelper.new(self.casino_id).token_life_time
   end
 
 	class << self
@@ -35,10 +35,11 @@ class Token < ActiveRecord::Base
       token
     end
 
-   	def generate(player_id)
+   	def generate(player_id, property_id)
     	token = new
     	token.player_id = player_id
 		  token.session_token = SecureRandom.uuid
+      token.casino_id = Property.get_casino_id_by_property_id(property_id)
 		  token.expired_at = Time.now.utc + token.token_life_time
 		  token.save
       token
@@ -46,6 +47,7 @@ class Token < ActiveRecord::Base
 
     def keep_alive(login_name, session_token, property_id)
       token = self.validate(login_name, session_token, property_id)
+      token.casino_id = Property.get_casino_id_by_property_id(property_id)
       token.keep_alive
       token
     end

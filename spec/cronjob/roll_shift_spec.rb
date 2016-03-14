@@ -4,7 +4,7 @@ describe Token do
   def clean_dbs
     Shift.delete_all
     AccountingDate.delete_all
-    PropertiesShiftType.delete_all
+    CasinosShiftType.delete_all
     ShiftType.delete_all
   end
 

@@ -37,15 +37,15 @@ Capybara.ignore_hidden_elements = false
   end
 
   def create_moring_swing_night_shift_sequence
-    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @moring_shift_type.id, :sequence => 1)
-    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
-    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
+    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @moring_shift_type.id, :sequence => 1)
+    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
+    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
     Shift.delete_all
-    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :property_id => 20000)
+    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :casino_id => 20000)
   end
   
   def create_day_sequence
-    PropertiesShiftType.create!(:property_id => 20000, :shift_type_id => @day_shift_type.id, :sequence => 1)
+    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @day_shift_type.id, :sequence => 1)
     Shift.delete_all
     Shift.create!(:shift_type_id => @day_shift_type.id, :accounting_date_id => @accounting_date_id)
   end

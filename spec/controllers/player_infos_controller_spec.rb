@@ -78,7 +78,7 @@ describe PlayerInfosController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :Licensee_id => 20000)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
 
@@ -106,7 +106,7 @@ describe PlayerInfosController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
 
@@ -130,7 +130,8 @@ describe PlayerInfosController do
       expect(ch.object).to eq 'player'
       expect(ch.action).to eq 'lock'
       expect(ch.change_detail).to eq "Member ID: #{@player.member_id}"
-      expect(ch.property_id).to eq @player.property_id
+      expect(ch.licensee_id).to eq @player.licensee_id
+      expect(ch.casino_id).to eq 20000
 
     end
 

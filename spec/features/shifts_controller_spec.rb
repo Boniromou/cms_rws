@@ -181,7 +181,7 @@ describe ShiftsController do
     it '[9.7] successfully roll shift to next day (day shift)', js: true do
       clean_dbs
       create_shift_data
-      PropertiesShiftType.delete_all
+      CasinosShiftType.delete_all
       create_day_sequence
       @shifts = ['day']
 

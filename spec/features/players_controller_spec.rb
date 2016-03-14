@@ -57,7 +57,7 @@ describe PlayersController do
       check_not_found
     end
     
-    it '[4.4] fail to search other property player' do
+    it '[4.4] fail to search other licensee player' do
       mock_player_info_result({:error_code => 'not OK'})
       @player = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 1003)
       login_as_admin

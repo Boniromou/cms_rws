@@ -1,5 +1,5 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :property_id
+  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :casino_id
   belongs_to :player
   belongs_to :shift
   belongs_to :user
@@ -71,7 +71,7 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def can_void?
-    can_void_date = AccountingDate.current(self.property_id).accounting_date - (ConfigHelper.new(self.property_id).transaction_void_range).day
+    can_void_date = AccountingDate.current(self.casino_id).accounting_date - (ConfigHelper.new(self.casino_id).transaction_void_range).day
     void_transaction.nil? && self.shift.accounting_date >= can_void_date
   end
 
@@ -90,7 +90,7 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def slip_type
-    self.transaction_type.transaction_types_slip_types.find_by_property_id(self.property_id).slip_type
+    self.transaction_type.transaction_types_slip_types.find_by_casino_id(self.casino_id).slip_type
   end
 
   def location
@@ -135,7 +135,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      transaction[:property_id] = player[:property_id]
+      transaction[:casino_id] = user.casino_id
       transaction[:data] = data
       PlayerTransaction.transaction do
         transaction.save

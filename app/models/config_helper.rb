@@ -1,7 +1,7 @@
 class ConfigHelper
 
-  def initialize(property_id)
-    @property_id = property_id
+  def initialize(casino_id)
+    @casino_id = casino_id
   end
 
   def trans_history_search_range
@@ -34,7 +34,7 @@ class ConfigHelper
   end
   
   def roll_shift_time
-    Configuration.find_by_key_and_property_id('roll_shift_time', @property_id).value
+    Configuration.find_by_key_and_casino_id('roll_shift_time', @casino_id).value
   end
 
   def pin_log_search_range
@@ -46,7 +46,7 @@ class ConfigHelper
   end
 
   def retrieve_config(key)
-    configuration = Configuration.find_by_key_and_property_id(key, @property_id)
+    configuration = Configuration.find_by_key_and_casino_id(key, @casino_id)
     return configuration.value if configuration
     nil
   end

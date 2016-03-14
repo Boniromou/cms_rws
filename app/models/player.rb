@@ -3,7 +3,7 @@ class Player < ActiveRecord::Base
   has_many :tokens
   has_many :players_lock_types
   include FundHelper
-  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id, :property_id
+  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id, :licensee_id
   validates_uniqueness_of :member_id, :card_id
 
   STATUS_LOCKED = 'locked'
@@ -85,7 +85,7 @@ class Player < ActiveRecord::Base
       player.member_id = params[:member_id]
       player.first_name = params[:first_name].downcase if params[:first_name]
       player.last_name = params[:last_name].downcase if params[:first_name]
-      player.property_id = params[:property_id]
+      player.licensee_id = params[:licensee_id]
       player.currency_id = Currency.find_by_name('HKD').id
       player.status = STATUS_NORMAL
       begin
@@ -126,7 +126,7 @@ class Player < ActiveRecord::Base
 
     def update_info(player_info)
       return false if player_info.nil? || player_info[:member_id].nil? || player_info[:card_id].nil? || player_info[:pin_status].nil?
-      player = Player.find_by_member_id_and_property_id(player_info[:member_id], player_info[:property_id])
+      player = Player.find_by_member_id_and_licensee_id(player_info[:member_id], player_info[:licensee_id])
       player = Player.create_by_params(player_info) if player == nil && player_info[:pin_status] != 'blank'
       is_discard_tokens = player_info[:pin_status] == 'reset'
       if player_info[:card_id] != player.card_id

@@ -1,5 +1,5 @@
 class Shift < ActiveRecord::Base
-  attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_machine_token, :accounting_date_id, :roll_shift_at, :property_id
+  attr_accessible :shift_type_id, :roll_shift_by_user_id, :roll_shift_on_machine_token, :accounting_date_id, :roll_shift_at, :casino_id
   belongs_to :shift_type
 
   def name
@@ -19,10 +19,10 @@ class Shift < ActiveRecord::Base
     self.updated_at = Time.now.utc.to_formatted_s(:db)
 
     new_shift = Shift.new
-    new_shift_name = self.class.next_shift_name_by_name(name, self.property_id)
+    new_shift_name = self.class.next_shift_name_by_name(name, self.casino_id)
     new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
-    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.property_id)
-    new_shift.property_id = self.property_id
+    new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.casino_id)
+    new_shift.casino_id = self.casino_id
     new_shift.created_at = Time.now.utc.to_formatted_s(:db)
     new_shift.updated_at = Time.now.utc.to_formatted_s(:db)
 
@@ -33,14 +33,14 @@ class Shift < ActiveRecord::Base
   end
 
   class << self
-    def current(property_id)
-      shift = Shift.find_by_roll_shift_at_and_property_id(nil, property_id)
-      raise "Current shift not found!, property_id: #{property_id}" unless shift
+    def current(casino_id)
+      shift = Shift.find_by_roll_shift_at_and_casino_id(nil, casino_id)
+      raise "Current shift not found!, casino_id: #{casino_id}" unless shift
       shift
     end
 
-    def next_shift_name_by_name(shift_name, property_id)
-      shift_names = PropertiesShiftType.shift_types(property_id)
+    def next_shift_name_by_name(shift_name, casino_id)
+      shift_names = CasinosShiftType.shift_types(casino_id)
       return shift_names[0]if shift_names.index(shift_name).nil?
       shift_names[(shift_names.index(shift_name) + 1) % shift_names.length] 
     end

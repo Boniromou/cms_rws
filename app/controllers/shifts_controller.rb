@@ -21,8 +21,8 @@ class ShiftsController < ApplicationController
     @current_shift_name = @current_shift.name
     @current_accounting_date = @current_shift.accounting_date
 
-    @next_shift_name = Shift.next_shift_name_by_name(@current_shift_name, current_property_id)
-    @next_accounting_date = AccountingDate.next_shift_accounting_date(@current_shift_name, @current_accounting_date, current_property_id)
+    @next_shift_name = Shift.next_shift_name_by_name(@current_shift_name, current_casino_id)
+    @next_accounting_date = AccountingDate.next_shift_accounting_date(@current_shift_name, @current_accounting_date, current_casino_id)
   end
 
   def create

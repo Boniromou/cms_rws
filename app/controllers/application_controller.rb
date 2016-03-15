@@ -67,38 +67,38 @@ class ApplicationController < ActionController::Base
   end
 
   def current_shift
-    Shift.current(current_property_id)
+    Shift.current(current_casino_id)
   end
 
   def current_accounting_date
-    AccountingDate.current(current_property_id)
+    AccountingDate.current(current_casino_id)
   end
 
   def current_machine_token
     session[:machine_token]
   end
 
-  def current_property_id
-    user_property_id = current_user.property_id if current_user
+  def current_casino_id
+    user_casino_id = current_user.casino_id if current_user
     machine_info = Machine.parse_machine_token(cookies[:machine_token])
-    machine_property = machine_info[:property_id] if machine_info
-    user_property_id || machine_property
+    machine_property = machine_info[:casino_id] if machine_info
+    user_casino_id || machine_property
   end
 
   def config_helper
-    @config_helper = ConfigHelper.new(current_property_id) unless @config_helper
+    @config_helper = ConfigHelper.new(current_casino_id) unless @config_helper
     @config_helper
   end
 
   def requester_factory
-    if !@requester_factory || @requester_factory.property_id != current_property_id
-      @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_property_id, Property.get_property_keys[current_property_id])
+    if !@requester_factory || @requester_factory.casino_id != current_casino_id
+      @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_casino_id, Property.get_property_keys[current_casino_id])
     end
     @requester_factory
   end
 
   def requester_helper
-    if !@requester_helper && current_property_id
+    if !@requester_helper && current_casino_id
       @requester_helper = RequesterHelper.new(requester_factory)
     end
     @requester_helper

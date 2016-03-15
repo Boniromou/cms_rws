@@ -16,10 +16,10 @@ class RequesterHelper
     @requester_factory.get_station_requester
   end
 
-  def retrieve_info(card_id, machine_type, machine_token, pin, property_id)
+  def retrieve_info(card_id, machine_type, machine_token, pin, casino_id)
     begin
-      raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id)
-      player = Player.find_by_card_id_and_property_id(card_id, property_id)
+      raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, casino_id)
+      player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
       raise Request::InvalidCardId.new unless player
       raise Request::PlayerLocked.new if player.account_locked?
       login_name = player.member_id
@@ -30,19 +30,19 @@ class RequesterHelper
       credit_balance = balance_response.credit_balance
       credit_expired_at = balance_response.credit_expired_at
       raise Request::RetrieveBalanceFail.new unless balance.class == Float
-      session_token = Token.generate(player.id, property_id).session_token
+      session_token = Token.generate(player.id, casino_id).session_token
       {:login_name => login_name, :currency => currency, :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at, :session_token => session_token}
     end
   end
 
-  def validate_machine_token(machine_type, machine_token, property_id)
-    response = validate_machine(machine_type, machine_token, property_id)
+  def validate_machine_token(machine_type, machine_token, casino_id)
+    response = validate_machine(machine_type, machine_token, casino_id)
     return true if response.success?
     false
   end
 
-  def validate_machine(machine_type, machine_token, property_id)
-    response = station_requester.validate_machine_token(machine_type, machine_token, property_id)
+  def validate_machine(machine_type, machine_token, casino_id)
+    response = station_requester.validate_machine_token(machine_type, machine_token, casino_id)
   end
 
 

@@ -27,8 +27,8 @@ class Token < ActiveRecord::Base
   end
 
 	class << self
-		def validate(login_name, session_token, property_id)
-      player = Player.find_by_member_id_and_property_id(login_name, property_id)
+    def validate(login_name, session_token, casino_id)
+      player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
       raise Request::InvalidSessionToken.new unless player
       token = player.tokens.find_by_session_token(session_token)
       raise Request::InvalidSessionToken.new unless token
@@ -36,25 +36,25 @@ class Token < ActiveRecord::Base
       token
     end
 
-   	def generate(player_id, property_id)
-    	token = new
-    	token.player_id = player_id
-		  token.session_token = SecureRandom.uuid
-      token.casino_id = Property.get_casino_id_by_property_id(property_id)
-		  token.expired_at = Time.now.utc + token.token_life_time
-		  token.save
+    def generate(player_id, casino_id)
+      token = new
+      token.player_id = player_id
+      token.session_token = SecureRandom.uuid
+      token.casino_id = casino_id
+      token.expired_at = Time.now.utc + token.token_life_time
+      token.save
       token
     end
 
-    def keep_alive(login_name, session_token, property_id)
-      token = self.validate(login_name, session_token, property_id)
-      token.casino_id = Property.get_casino_id_by_property_id(property_id)
+    def keep_alive(login_name, session_token, casino_id)
+      token = self.validate(login_name, session_token, casino_id)
+      token.casino_id = casino_id
       token.keep_alive
       token
     end
 
-    def discard(login_name, session_token, property_id)
-      token = self.validate(login_name, session_token, property_id)
+    def discard(login_name, session_token, casino_id)
+      token = self.validate(login_name, session_token, casino_id)
       token.discard
       token
     end

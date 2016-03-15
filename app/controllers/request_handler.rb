@@ -4,6 +4,7 @@ class RequestHandler
 
   def update(inbound)
     @inbound = inbound
+    @inbound[:casino_id] = Property.get_casino_id_by_property_id(property_id)
     begin
       event_name = inbound[:_event_name].to_sym
       @outbound = self.__send__("process_#{event_name}_event") || {}
@@ -37,17 +38,17 @@ class RequestHandler
     card_id = @inbound[:card_id]
     machine_token = @inbound[:machine_token]
     pin = @inbound[:pin]
-    property_id = @inbound[:property_id]
-    get_requester_helper(property_id).retrieve_info(card_id, machine_type, machine_token, pin, property_id)
+    casino_id = @inbound[:casino_id]
+    get_requester_helper(casino_id).retrieve_info(card_id, machine_type, machine_token, pin, casino_id)
   end
 
   def process_keep_alive_event
-    Token.keep_alive(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
+    Token.keep_alive(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id])
     {}
   end
 
   def process_discard_token_event
-    Token.discard(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
+    Token.discard(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id])
     {}
   end
 

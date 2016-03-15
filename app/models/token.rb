@@ -1,6 +1,7 @@
 class Token < ActiveRecord::Base
     validates_uniqueness_of :session_token
-    attr_accessible :session_token, :player_id, :expired_at, :casino_id
+    attr_accessible :session_token, :player_id, :expired_at
+    attr_accessor :casino_id
     belongs_to :player
   
   def alive?

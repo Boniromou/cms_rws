@@ -14,5 +14,11 @@ class Property < ActiveRecord::Base
       return nil unless casino
       casino.id
     end
+
+    def get_licensee_id_by_property_id(property_id)
+      casino = Property.find(property_id).casino
+      return nil unless casino
+      casino.licensee.id
+    end
   end
 end

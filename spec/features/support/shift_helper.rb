@@ -31,8 +31,8 @@ module ShiftHelper
 
   def create_moring_swing_night_shift_sequence
     CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @moring_shift_type.id, :sequence => 1)
-    CasinosShiftType.create!(:casinoy_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
-    CasinosShiftType.create!(:casinoy_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
+    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @swing_shift_type.id, :sequence => 2)
+    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @night_shift_type.id, :sequence => 3)
     Shift.delete_all
     Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :casino_id => 20000)
   end

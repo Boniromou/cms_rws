@@ -181,9 +181,7 @@ class Player < ActiveRecord::Base
     end
 
     def find_by_member_id_and_property_id(login_name, property_id)
-      property = Property.find(property_id)
-      return nil unless property
-      licensee_id = property.licensee_id
+      licensee_id = Property.get_licensee_id_by_property_id(property_id)
       find_by_member_id_and_licensee_id(login_name, licensee_id)
     end
   end

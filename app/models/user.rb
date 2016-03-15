@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   devise :registerable
+  belongs_to :casino
 
   attr_accessible :name, :uid, :casino_id
 

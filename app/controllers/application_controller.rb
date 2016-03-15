@@ -81,8 +81,8 @@ class ApplicationController < ActionController::Base
   def current_casino_id
     user_casino_id = current_user.casino_id if current_user
     machine_info = Machine.parse_machine_token(cookies[:machine_token])
-    machine_property = machine_info[:casino_id] if machine_info
-    user_casino_id || machine_property
+    machine_casino_id = machine_info[:casino_id] if machine_info
+    user_casino_id || machine_casino_id
   end
 
   def config_helper
@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
 
   def requester_factory
     if !@requester_factory || @requester_factory.casino_id != current_casino_id
-      @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_casino_id, Property.get_property_keys[current_casino_id])
+      @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_casino_id, nil)
     end
     @requester_factory
   end

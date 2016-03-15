@@ -179,15 +179,5 @@ class Player < ActiveRecord::Base
       raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
       raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)
     end
-
-    def find_by_member_id_and_property_id(login_name, property_id)
-      licensee_id = Property.get_licensee_id_by_property_id(property_id)
-      find_by_member_id_and_licensee_id(login_name, licensee_id)
-    end
-
-    def find_by_card_id_and_property_id(card_id, property_id)
-      licensee_id = Property.get_licensee_id_by_property_id(property_id)
-      find_by_card_id_and_licensee_id(card_id, licensee_id)
-    end
   end
 end

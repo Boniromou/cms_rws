@@ -4,7 +4,7 @@ class RequestHandler
 
   def update(inbound)
     @inbound = inbound
-    @inbound[:casino_id] = Property.get_casino_id_by_property_id(property_id)
+    @inbound[:casino_id] ||= Property.get_casino_id_by_property_id(property_id)
     begin
       event_name = inbound[:_event_name].to_sym
       @outbound = self.__send__("process_#{event_name}_event") || {}
@@ -21,15 +21,15 @@ class RequestHandler
     @outbound
   end
 
-  def get_requester_helper(property_id)
+  def get_requester_helper(casino_id)
     requester_config_file = "#{Rails.root}/config/requester_config.yml"
-    requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, property_id, Property.get_property_keys[property_id])
+    requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, nil)
     RequesterHelper.new(requester_facotry)
   end
     
 
   def process_validate_token_event
-    Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:property_id])
+    Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id])
     {}
   end
   
@@ -53,22 +53,22 @@ class RequestHandler
   end
 
   def process_get_player_currency_event
-    property_id = @inbound[:property_id]
+    casino_id = @inbound[:casino_id]
     login_name = @inbound[:login_name]
-    ApiHelper.get_currency(login_name, property_id)
+    ApiHelper.get_currency(login_name, casino_id)
   end
 
   def process_lock_player_event
-    property_id = @inbound[:property_id]
+    casino_id = @inbound[:casino_id]
     login_name = @inbound[:login_name]
-    ApiHelper.lock_player(login_name, property_id)
+    ApiHelper.lock_player(login_name, casino_id)
   end
 
   def process_validate_machine_token_event
     machine_type = @inbound[:machine_type]
-    property_id = @inbound[:property_id]
+    casino_id = @inbound[:casino_id]
     machine_token = @inbound[:machine_token]
-    response = get_requester_helper(property_id).validate_machine(machine_type, machine_token, property_id)
+    response = get_requester_helper(casino_id).validate_machine(machine_type, machine_token, casino_id)
     response.result_hash
   end
 end

@@ -42,7 +42,7 @@ class RequesterHelper
   end
 
   def validate_machine(machine_type, machine_token, casino_id)
-    response = station_requester.validate_machine_token(machine_type, machine_token, casino_id)
+    response = station_requester.validate_machine_token(machine_type, machine_token, nil, casino_id)
   end
 
 

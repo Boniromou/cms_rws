@@ -66,9 +66,10 @@ class RequestHandler
 
   def process_validate_machine_token_event
     machine_type = @inbound[:machine_type]
+    property_id = @inbound[:property_id]
     casino_id = @inbound[:casino_id]
     machine_token = @inbound[:machine_token]
-    response = get_requester_helper(casino_id).validate_machine(machine_type, machine_token, casino_id)
+    response = get_requester_helper(casino_id).validate_machine(machine_type, machine_token, property_id, casino_id)
     response.result_hash
   end
 end

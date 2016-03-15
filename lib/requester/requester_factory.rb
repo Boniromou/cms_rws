@@ -2,11 +2,11 @@ require File.expand_path(File.dirname(__FILE__) + "/base")
 
 module Requester
   class RequesterFactory
-    attr_reader :urls, :property_id, :secret_key
-    def initialize(config_file,env, property_id, secret_key)
+    attr_reader :urls, :casino_id, :secret_key
+    def initialize(config_file,env, casino_id, secret_key)
       request_urls = YAML.load_file(config_file)
       @urls = request_urls[env]
-      @property_id = property_id
+      @casino_id = casino_id
       @secret_key = secret_key
     end
 
@@ -25,7 +25,7 @@ module Requester
   protected
     def create_external_requester(type)
       requester_class = eval("Requester::#{type.capitalize}")
-      requester_class.new(@property_id, @secret_key, @urls[type.to_sym])
+      requester_class.new(@casino_id, @secret_key, @urls[type.to_sym])
     end
 
     def create_internal_requester(type)

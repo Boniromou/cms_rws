@@ -5,11 +5,11 @@ module Requester
   class Base
     RETRY_TIMES = 3
 
-    def initialize(property_id, secret_access_key, base_path)
-      @property_id = property_id
+    def initialize(casino_id, secret_access_key, base_path)
+      @casino_id = casino_id
       @secret_access_key = secret_access_key
       
-      @lax_requester = LaxSupport::AuthorizedRWS::Base.new(property_id, secret_access_key)
+      @lax_requester = LaxSupport::AuthorizedRWS::Base.new(casino_id, secret_access_key)
       @lax_requester.timeout = 5
       @path = base_path
     end

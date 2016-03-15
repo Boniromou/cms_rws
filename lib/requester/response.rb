@@ -111,7 +111,7 @@ module Requester
 
 # station
   class StationResponse < Response
-    define_attr :property_id, :zone_id, :zone_name, :location_id, :location_name, :machine_id, :machine_name, :uuid 
+    define_attr :property_id, :zone_id, :zone_name, :location_id, :location_name, :machine_id, :machine_name, :uuid, :casino_id 
   end
 
 # patron

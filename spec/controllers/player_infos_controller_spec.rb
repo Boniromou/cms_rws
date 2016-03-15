@@ -22,7 +22,7 @@ describe PlayerInfosController do
   describe '[29] Itegration Service Cage APIs Login' do
     before(:each) do
       clean_dbs
-      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :property_id => 20000)
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
       bypass_rescue
     end
@@ -78,7 +78,7 @@ describe PlayerInfosController do
     before(:each) do
       clean_dbs
       bypass_rescue
-      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :Licensee_id => 20000)
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
 

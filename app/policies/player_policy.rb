@@ -5,4 +5,17 @@ class PlayerPolicy < ApplicationPolicy
   map_policy :profile?, :action_name => :player_profile
   map_policy :create_pin?, :delegate_policies => [:reset_pin?]
   map_policy :do_reset_pin?, :delegate_policies => [:reset_pin?]
+  
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      scope.where(:licensee_id => user.casino.licensee_id)
+    end
+  end
 end

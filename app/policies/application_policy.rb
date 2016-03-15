@@ -67,7 +67,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      scope.where(:property_id => user.property_id)
+      scope.where(:casino_id => user.casino_id)
     end
   end
 end

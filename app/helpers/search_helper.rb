@@ -25,8 +25,8 @@ module SearchHelper
     date_gap = (to_number(end_ac_date) - to_number(start_ac_date)) / (24 * 3600)
     raise Search::OverRangeError, "limit_remark" if date_gap > search_range
 
-    first_ac_date = Shift.where(:property_id => current_property_id).order(:created_at).first.accounting_date
-    last_ac_date = Shift.where(:property_id => current_property_id).order(:created_at).last.accounting_date
+    first_ac_date = Shift.where(:casino_id => current_casino_id).order(:created_at).first.accounting_date
+    last_ac_date = Shift.where(:casino_id => current_casino_id).order(:created_at).last.accounting_date
 
     raise Search::NoResultException, "accounting date not found" if to_number(end_ac_date) < to_number(first_ac_date) || to_number(last_ac_date) < to_number(start_ac_date)
 
@@ -36,8 +36,8 @@ module SearchHelper
     start_ac_date = AccountingDate.find_by_accounting_date(first_ac_date) if start_ac_date.nil?
     end_ac_date = AccountingDate.find_by_accounting_date(last_ac_date) if end_ac_date.nil?
   
-    start_shift = Shift.where(:accounting_date_id => start_ac_date.id, :property_id => current_property_id).order(:created_at).first
-    end_shift = Shift.where(:accounting_date_id => end_ac_date.id, :property_id => current_property_id).order(:created_at).last
+    start_shift = Shift.where(:accounting_date_id => start_ac_date.id, :casino_id => current_casino_id).order(:created_at).first
+    end_shift = Shift.where(:accounting_date_id => end_ac_date.id, :casino_id => current_casino_id).order(:created_at).last
 
     [start_shift, end_shift]
   end

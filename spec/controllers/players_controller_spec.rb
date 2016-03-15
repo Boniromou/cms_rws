@@ -29,7 +29,7 @@ describe PlayersController do
 
     it 'should be able to query balance' do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(Requester::GetPlayerBalanceResponse.new({:balance => 99.99, :credit_balance => 0.0, :credit_expired_at => Time.now}))
-      allow_any_instance_of(ApplicationPolicy::Scope).to receive(:resolve).and_return(Player.where(:licensee_id => 20000))
+      allow_any_instance_of(PlayerPolicy::Scope).to receive(:resolve).and_return(Player.where(:licensee_id => 20000))
       
       expect{ get 'balance', {member_id: 123456} }.to_not raise_error
     end

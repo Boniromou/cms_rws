@@ -30,24 +30,24 @@ require File.expand_path("../../app/helpers/fund_helper", __FILE__)
 require File.expand_path("../../app/helpers/front_money_helper", __FILE__)
 require File.expand_path("../../app/models/shift", __FILE__)
 require File.expand_path("../../app/models/shift_type", __FILE__)
-require File.expand_path("../../app/models/properties_shift_type", __FILE__)
+require File.expand_path("../../app/models/casinos_shift_type", __FILE__)
 require File.expand_path("../../app/models/accounting_date", __FILE__)
 DB = connect_db(database)
 config_table = DB[:configurations]
-property_table= DB[:properties]
+casino_table= DB[:casinos]
 
-property_table.all.each do |record|
-	property_id = record[:id]
-	if config_table.where(:property_id => property_id, :key => "roll_shift_time").first
-		roll_shift_time = config_table.where(:property_id => property_id, :key => "roll_shift_time").first[:value].split(',')
+casino_table.all.each do |record|
+	casino_id = record[:id]
+	if config_table.where(:casino_id => casino_id, :key => "roll_shift_time").first
+		roll_shift_time = config_table.where(:casino_id => casino_id, :key => "roll_shift_time").first[:value].split(',')
 		current_hour = Time.now.utc.hour.to_s
 		if roll_shift_time.include?(current_hour)
-			current_shift = Shift.current(property_id)
+			current_shift = Shift.current(casino_id)
 			puts '-------------------------------------------------'
 			puts "*************** #{Time.now.utc} ****************"
-      		puts "Start rolling shift for property_id #{property_id}, current shift & accounting date: #{current_shift.shift_type.name}, #{current_shift.accounting_date}"
+      		puts "Start rolling shift for casino_id #{casino_id}, current shift & accounting date: #{current_shift.shift_type.name}, #{current_shift.accounting_date}"
 			current_shift.roll!(nil, nil)
-			puts "Rolling shift successfully! Current shift & accounting date: 		    #{Shift.current(property_id).shift_type.name}, #{Shift.current(property_id).accounting_date}"
+			puts "Rolling shift successfully! Current shift & accounting date: 		    #{Shift.current(casino_id).shift_type.name}, #{Shift.current(casino_id).accounting_date}"
      		puts "*************** #{Time.now.utc} ****************"
      		puts '-------------------------------------------------'
      		puts ''

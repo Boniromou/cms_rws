@@ -690,7 +690,7 @@ describe PlayersController do
     end
 
     it '[53.4] Show PIS player info when search  Player Profile PIN changed' do
-      Token.generate(@player.id)
+      Token.generate(@player.id, 20000)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset', :licensee_id => 20000}})
       login_as_admin
       visit players_search_path + "?operation=profile"

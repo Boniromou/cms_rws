@@ -26,7 +26,7 @@ module MockHelper
   end
 
   def mock_have_machine_token
-    allow_any_instance_of(UserSessionsController).to receive(:get_machine_token).and_return('20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
+    allow_any_instance_of(UserSessionsController).to receive(:get_machine_token).and_return('|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37|20000')
   end
 
   def mock_not_have_machine_token

@@ -11,7 +11,8 @@ module Davis
         :location_name=>a[4],
         :machine_id=>a[5],
         :machine_name=>a[6],
-        :uuid=>a[7]
+        :uuid=>a[7],
+        :casino_id=>a[8]
       }
     end
   end

@@ -5,7 +5,7 @@ class Casino < ActiveRecord::Base
   
   class << self
     def get_licensee_id_by_casino_id(casino_id)
-      casino = Casino.find(casino_id)
+      casino = Casino.find_by_id(casino_id)
       return nil unless casino
       casino.licensee.id
     end

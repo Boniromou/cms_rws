@@ -12,10 +12,10 @@ describe Player do
       clean_dbs
       @player1 = Player.create!(:first_name => "exist1", :last_name => "exist2", :member_id => '123456', :currency_id => 2, :status => "active", :card_id => '456', :licensee_id => 20000)
       @player2 = Player.create!(:first_name => "exist2", :last_name => "exist3", :member_id => '123457', :currency_id => 2, :status => "active", :card_id => '123', :licensee_id => 20000)
-      @token1 = Token.generate(@player1.id)
-      @token2 = Token.generate(@player1.id)
-      @token3 = Token.generate(@player2.id)
-      @token4 = Token.generate(@player2.id)
+      @token1 = Token.generate(@player1.id, 20000)
+      @token2 = Token.generate(@player1.id, 20000)
+      @token3 = Token.generate(@player2.id, 20000)
+      @token4 = Token.generate(@player2.id, 20000)
       @requester_config_file = "#{Rails.root}/config/requester_config.yml"
       allow(Licensee).to receive(:all).and_return(Licensee.where(:id => 20000))
     end

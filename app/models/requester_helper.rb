@@ -18,7 +18,7 @@ class RequesterHelper
 
   def retrieve_info(card_id, machine_type, machine_token, pin, casino_id)
     begin
-      raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, casino_id)
+      raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, nil, casino_id)
       player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
       raise Request::InvalidCardId.new unless player
       raise Request::PlayerLocked.new if player.account_locked?
@@ -35,14 +35,14 @@ class RequesterHelper
     end
   end
 
-  def validate_machine_token(machine_type, machine_token, casino_id)
-    response = validate_machine(machine_type, machine_token, casino_id)
+  def validate_machine_token(machine_type, machine_token, property_id, casino_id)
+    response = validate_machine(machine_type, machine_token, property_id, casino_id)
     return true if response.success?
     false
   end
 
-  def validate_machine(machine_type, machine_token, casino_id)
-    response = station_requester.validate_machine_token(machine_type, machine_token, nil, casino_id)
+  def validate_machine(machine_type, machine_token, property_id, casino_id)
+    response = station_requester.validate_machine_token(machine_type, machine_token, property_id, casino_id)
   end
 
 

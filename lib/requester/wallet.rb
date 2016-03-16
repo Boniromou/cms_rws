@@ -16,7 +16,7 @@ class Requester::Wallet < Requester::Base
   def get_player_balance(login_name, currency = nil, player_id = nil, player_currency_id = nil)
     create_player_proc = Proc.new {create_player(login_name, currency, player_id, player_currency_id)} unless player_id.nil?
     result = retry_call(RETRY_TIMES) do
-      response = remote_rws_call('get', "#{@path}/query_player_balance", :query => {:login_name => login_name
+      response = remote_rws_call('get', "#{@path}/query_player_balance", :query => {:login_name => login_name,
                                                                                     :licensee_id => @licensee_id})
       parse_get_player_balance_response(response, create_player_proc)
     end

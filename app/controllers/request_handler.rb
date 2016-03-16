@@ -4,7 +4,7 @@ class RequestHandler
 
   def update(inbound)
     @inbound = inbound
-    @inbound[:casino_id] ||= Property.get_casino_id_by_property_id(property_id)
+    @inbound[:casino_id] ||= Property.get_casino_id_by_property_id(@inbound[:property_id])
     begin
       event_name = inbound[:_event_name].to_sym
       @outbound = self.__send__("process_#{event_name}_event") || {}
@@ -23,7 +23,7 @@ class RequestHandler
 
   def get_requester_helper(casino_id)
     requester_config_file = "#{Rails.root}/config/requester_config.yml"
-    licensee_id = Casino.get_licensee_id_by_casino_id(current_casino_id)
+    licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
     requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, licensee_id, nil)
     RequesterHelper.new(requester_facotry)
   end

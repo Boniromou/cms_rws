@@ -85,6 +85,10 @@ class ApplicationController < ActionController::Base
     user_casino_id || machine_casino_id
   end
 
+  def current_licensee_id
+    Casino.get_licensee_id_by_casino_id(current_casino_id)
+  end
+
   def config_helper
     @config_helper = ConfigHelper.new(current_casino_id) unless @config_helper
     @config_helper
@@ -92,7 +96,7 @@ class ApplicationController < ActionController::Base
 
   def requester_factory
     if !@requester_factory || @requester_factory.casino_id != current_casino_id
-      @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_casino_id, nil)
+      @requester_factory = Requester::RequesterFactory.new(REQUESTER_CONFIG_FILE, Rails.env, current_casino_id, current_licensee_id, nil)
     end
     @requester_factory
   end

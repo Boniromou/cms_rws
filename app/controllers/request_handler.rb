@@ -23,7 +23,8 @@ class RequestHandler
 
   def get_requester_helper(casino_id)
     requester_config_file = "#{Rails.root}/config/requester_config.yml"
-    requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, nil)
+    licensee_id = Casino.get_licensee_id_by_casino_id(current_casino_id)
+    requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, licensee_id, nil)
     RequesterHelper.new(requester_facotry)
   end
     

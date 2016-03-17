@@ -12,14 +12,14 @@ module Devise
       def authenticate!
         result = UserManagement::authenticate(username, password)
         if result['success']
-          property_id = User.get_property_ids_by_uid(result['system_user']['id']).first
-          if Property.find_by_id(property_id).nil?
+          casino_id = User.get_casino_ids_by_uid(result['system_user']['id']).first
+          if Property.find_by_id(casino_id).nil?
             fail!('alert.inactive_account')
             return
           end
-          user = User.find_by_uid_and_property_id(result['system_user']['id'], property_id)
+          user = User.find_by_uid_and_casino_id(result['system_user']['id'], casino_id)
           if !user
-            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'], :property_id => property_id)
+            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'], :casino_id => casino_id)
           end
           success!(user)
           return

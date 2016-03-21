@@ -65,7 +65,7 @@ module Requester
         if retry_times > 0
           return retry_call(retry_times - 1, &block)
         else
-          return e.result
+          return Response.new({:error_code => "Fail: #{e.class}", :error_msg => e.result})
         end
       rescue Exception => e
         if retry_times > 0
@@ -75,8 +75,10 @@ module Requester
         end
       ensure
         if e
+          Rails.logger.error "======== raise error whe retry ============"
           Rails.logger.error "#{e.message}"
           Rails.logger.error "#{e.backtrace.inspect}"
+          Rails.logger.error "======== end ============"
           #puts e.message
           #puts e.backtrace.inspect
         end

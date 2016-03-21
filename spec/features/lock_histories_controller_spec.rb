@@ -47,4 +47,40 @@ describe LockHistoriesController do
       check_ch_report_result_items([ch1, ch2])
     end
   end
+
+  describe '[70]Show licensee lock player log with casino tool tip' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_patron_not_change
+      
+      @player = create_default_player
+      mock_wallet_balance(0.0)
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[70.1] Show licensee lock player log with casino tool tip', :js => true do
+      lock_or_unlock_player_and_check
+      lock_or_unlock_player_and_check
+      lock_or_unlock_player_and_check
+      lock_or_unlock_player_and_check
+      ch1 = ChangeHistory.all.first
+      ch2 = ChangeHistory.all[1]
+      ch3 = ChangeHistory.all[2]
+      ch4 = ChangeHistory.all[3]
+      ch3.casino_id = 1003
+      ch3.save!
+      ch4.casino_id = 1003
+      ch4.save!
+      visit search_lock_histories_path
+      check_search_ch_page
+      find("input#search").click
+      wait_for_ajax
+      check_ch_report_result_items([ch1, ch2, ch3, ch4])
+    end
+  end
 end

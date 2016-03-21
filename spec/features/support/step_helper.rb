@@ -327,6 +327,7 @@ module StepHelper
 
   def check_ch_report_result_items(history_hash)
     items = all("table#datatable_col_reorder tr")
+    expect(items.length - 1).to eq history_hash.length
     i = 1
     history_hash.each do |t|
       within items[i] do
@@ -339,6 +340,7 @@ module StepHelper
 
   def check_ch_report_result(item, change_history)
     expect(item[0].text).to eq change_history.action_by
+    expect(item[0].find("a")['data-content'.to_sym]).to eq Casino.find_by_id(change_history.casino_id).name
     expect(item[1].text).to eq change_history.action_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[2].text).to eq I18n.t("change_history.#{change_history.action}")
     expect(item[3].text).to eq 'Member ID: ' + @player.member_id.to_s

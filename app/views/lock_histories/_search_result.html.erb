@@ -19,7 +19,7 @@
             <% @lock_histories.each do |lh| %>
                 <tr id="history_<%= lh.id %>">
                   <% casino = Casino.find_by_id(lh.casino_id) %>
-                  <td><a href="javascript:void(0);" class="popover-hover" rel="popover-hover" data-placement="top" data-original-title='<%=t("change_history.casino_nam")%>' data-content="<%=casino.name%>"><%= lh.action_by %></a></td>
+                  <td><a href="javascript:void(0);" class="popover-hover" rel="popover-hover" data-placement="top" data-original-title='<%=t("change_history.casino_name")%>' data-content="<%=casino.name%>"><%= lh.action_by %></a></td>
                   <td><%= format_time(lh.action_at) %></td>
                   <td><%= t("change_history.#{lh.action}") %></td>
                   <td><%= lh.change_detail %></td>
@@ -62,5 +62,6 @@
       return false;
     });
   });
+  $(".popover-hover").popover({ trigger: "hover" });
 </script>
 <%= javascript_include_tag "pagination.js" %>

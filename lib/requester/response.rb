@@ -39,6 +39,16 @@ module Requester
     def success?
       ['OK'].include?(error_code)
     end
+
+    def add_balance_methods
+      [:balance,:credit_balance,:credit_expired_at].each do |m|
+        if !self.respond_to?(m)
+          self.define_singleton_method(m) do
+            'no_balance'
+          end
+        end
+      end
+    end
   end
 
 # wallet

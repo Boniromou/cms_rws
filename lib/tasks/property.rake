@@ -39,6 +39,16 @@ namespace :property do
     licensee = Licensee.where(:id => licensee_id, :name => licensee_name).first_or_create
     casino = Casino.where(:id => casino_id, :name => casino_name, :licensee_id => licensee.id).first_or_create
     Property.where(:id => property_id, :name => property_name, :secret_key => 'test_key', :casino_id => casino.id).first_or_create
+    
+    TransactionSlip.where(:casino_id => casino_id, :slip_type_id => 1, :next_number => 10001).first_or_create
+    TransactionSlip.where(:casino_id => casino_id, :slip_type_id => 2, :next_number => 10001).first_or_create
+    
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 1, :slip_type_id => 1).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 2, :slip_type_id => 2).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 3, :slip_type_id => 1).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 4, :slip_type_id => 2).first_or_create
+
+    ruby "#{File.expand_path("../../../script/init_scripts/sync_configs.rb", __FILE__)} test 20000"
   end
 
   def create_property_data(params)

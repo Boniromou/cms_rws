@@ -12,6 +12,10 @@ namespace :property do
     remove_data(:property_id => property_id, :casino_id => casino_id, :licensee_id => licensee_id)
   end
 
+  task :testing do
+    create_test_data
+  end
+
 
   def create_20000_data
     create_property_data(:property_id => 20000, :property_name => 'MockUp', :casino_id => 20000, :casino_name => 'MockUp', :licensee_id => 20000, :licensee_name => 'MockUp')
@@ -19,6 +23,22 @@ namespace :property do
 
   def create_40000_data
     create_property_data(:property_id => 40000, :property_name => 'MockUp', :casino_id => 40000, :casino_name => 'Mgm testing', :licensee_id => 40000, :licensee_name => 'Mgm testing')
+  end
+
+  def create_test_data
+    Licensee.where(:id => 1003, :name => 'test').first_or_create
+    Casino.where(:id => 1003, :name => 'test', :licensee_id => 1003).first_or_create
+
+    property_id = 20000
+    property_name = 'MockUp'
+    casino_id = property_id
+    casino_name = property_name
+    licensee_id = property_id
+    licensee_name = property_name
+    
+    licensee = Licensee.where(:id => licensee_id, :name => licensee_name).first_or_create
+    casino = Casino.where(:id => casino_id, :name => casino_name, :licensee_id => licensee.id).first_or_create
+    Property.where(:id => property_id, :name => property_name, :secret_key => 'test_key', :casino_id => casino.id).first_or_create
   end
 
   def create_property_data(params)

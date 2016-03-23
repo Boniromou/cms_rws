@@ -47,7 +47,7 @@ namespace :property do
 
     shift = Shift.where(:roll_shift_at => nil, :casino_id => casino.id).first
     unless shift
-      ac_date = AccountingDate.where(:accounting_date => Time.now.utc).first_or_create
+      ac_date = AccountingDate.where(:accounting_date => Time.now.utc.to_date).first_or_create
       shift = Shift.create!(:shift_type_id => 1, :accounting_date_id => ac_date.id, :casino_id => casino.id)
     end
   end

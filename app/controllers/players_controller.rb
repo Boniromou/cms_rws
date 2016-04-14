@@ -145,7 +145,7 @@ class PlayersController < ApplicationController
 
   def do_reset_pin
     begin
-      audit_log = {:user => current_user.name, :member_id => params[:player][:member_id], :action_at => Time.now.utc, :action => params[:action].split('_')[0]}
+     audit_log = {:user => current_user.name, :member_id => params[:player][:member_id], :action_at => Time.now.utc, :action => params[:action].split('_')[0], :casino_id => current_casino_id}
       response = patron_requester.reset_pin(params[:player][:member_id], params[:pin], audit_log)
       unless response.success?
         flash[:error] = "reset_pin.call_patron_fail"

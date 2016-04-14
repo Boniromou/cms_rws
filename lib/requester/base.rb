@@ -27,15 +27,15 @@ module Requester
 
     def remote_rws_call(method, path, params)
       begin
-        puts "----remote call #{path}, #{params.inspect}-------"
+        Rails.logger.info "----remote call #{path}, #{params.inspect}-------"
         response = @lax_requester.send(method.to_sym, path, params)
-        puts "--------#{self.class.name} method #{method}, got respnose------"
-        puts response
+        Rails.logger.info "--------#{self.class.name} method #{method}, got respnose------"
+        Rails.logger.info response
         return response
       rescue Exception => e
-        puts e
-        puts e.backtrace.join("\n")
-        puts "service call/third party call #{self.class.name} unavailable"
+        Rails.logger.info e
+        Rails.logger.info e.backtrace.join("\n")
+        Rails.logger.info "service call/third party call #{self.class.name} unavailable"
 	      return
       end
     end
@@ -55,7 +55,7 @@ module Requester
     
     def retry_call(retry_times, &block)
       begin
-        puts "***************retry_times: #{RETRY_TIMES - retry_times}***************"
+        Rails.logger.info "***************retry_times: #{RETRY_TIMES - retry_times}***************"
         return block.call
       rescue Remote::ReturnError => e
         return e.result
@@ -75,8 +75,8 @@ module Requester
         end
       ensure
         if e
-          Rails.logger.error "======== raise error whe retry ============"
-          Rails.logger.error "#{e.message}"
+          Rails.logger.error "======== raise error when retry ============"
+          Rails.logger.error "error message: #{e.message}"
           Rails.logger.error "#{e.backtrace.inspect}"
           Rails.logger.error "======== end ============"
           #puts e.message

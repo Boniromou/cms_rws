@@ -18,6 +18,9 @@ class UserSessionsController < Devise::SessionsController
         session[:location_info] = nil
       end
       session[:machine_token] = get_machine_token if session[:location_info]
+    else
+      session[:location_info] = nil
+      session[:machine_token] = nil
     end
   end  
 

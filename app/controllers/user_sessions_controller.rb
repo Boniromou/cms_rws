@@ -6,23 +6,18 @@ class UserSessionsController < Devise::SessionsController
   end
 
   def set_location_info
+    session[:location_info] = nil
+    session[:machine_token] = nil
     if get_machine_token
       response = station_requester.validate_machine_token(MACHINE_TYPE, get_machine_token, nil, current_casino_id)
-      if !response.success?
-        Rails.logger.error "retrieve location name fail"
-        return
+      if response.success?
+        if response.zone_name != nil && response.location_name != nil
+          session[:location_info] = response.zone_name + '/' + response.location_name
+          session[:machine_token] = get_machine_token
+        end
       end
-      if response.zone_name != nil && response.location_name != nil
-        session[:location_info] = response.zone_name + '/' + response.location_name
-      else
-        session[:location_info] = nil
-      end
-      session[:machine_token] = get_machine_token if session[:location_info]
-    else
-      session[:location_info] = nil
-      session[:machine_token] = nil
     end
-  end  
+  end
 
   def new
     @login_url = %(#{root_url}login)

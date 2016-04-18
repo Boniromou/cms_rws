@@ -360,7 +360,7 @@ module StepHelper
   def check_ph_report_result(item, change_history)
     expect(item[0].text).to eq change_history[:user]
     expect(item[0].find("a")['data-content'.to_sym]).to eq Casino.find_by_id(change_history[:casino_id]).name
-    expect(item[1].text).to eq change_history[:action_at]
+    expect(item[1].text).to eq Time.parse(change_history[:action_at] + " UTC").localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[2].text).to eq I18n.t("pin_history.#{change_history[:action]}")
     expect(item[3].text).to eq change_history[:member_id]
   end

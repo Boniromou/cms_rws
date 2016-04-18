@@ -20,7 +20,7 @@
                 <tr>
                   <% casino = Casino.find_by_id(ph[:casino_id].to_i) %>
                   <td><a href="javascript:void(0);" class="popover-hover" rel="popover-hover" data-placement="top" data-original-title='<%=t("change_history.casino_name")%>' data-content="<%=casino.name%>"><%= ph[:user] %></a></td>
-                  <td><%= format_time(ph[:action_at]) %></td>
+                  <td><%= format_time(ph[:action_at] + "UTC") %></td>
                   <td><%= t("pin_history.#{ph[:action]}") %></td>
                   <td><%= ph[:member_id] %></td>
                 </tr>

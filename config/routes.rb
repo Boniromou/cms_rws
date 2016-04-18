@@ -74,6 +74,7 @@ CmsRws::Application.routes.draw do
   post 'lock_player' => 'player_infos#lock_player'
 
   get 'validate_token' => 'tokens#validate'
+  get 'internal_validate_token' => 'internal_tokens#validate'
   post 'keep_alive' => 'tokens#keep_alive'
   get 'discard_token' => 'tokens#discard'
 

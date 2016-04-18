@@ -55,15 +55,16 @@ class RequestHandler
   end
 
   def process_get_player_currency_event
-    casino_id = @inbound[:casino_id]
+    licensee_id = @inbound[:licensee_id]
     login_name = @inbound[:login_name]
-    ApiHelper.get_currency(login_name, casino_id)
+    ApiHelper.get_currency(login_name, licensee_id)
   end
 
   def process_lock_player_event
+    licensee_id = @inbound[:licensee_id]
     casino_id = @inbound[:casino_id]
     login_name = @inbound[:login_name]
-    ApiHelper.lock_player(login_name, casino_id)
+    ApiHelper.lock_player(login_name, licensee_id, casino_id)
   end
 
   def process_validate_machine_token_event

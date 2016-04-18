@@ -12,8 +12,4 @@ class PlayerInfosController < ApplicationController
   def get_player_currency
     handle_request(:get_player_currency)
   end
-
-  def lock_player
-    handle_request(:lock_player)
-  end
 end

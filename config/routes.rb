@@ -71,10 +71,10 @@ CmsRws::Application.routes.draw do
 
   post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
   get 'get_player_currency' => 'player_infos#get_player_currency'
-  post 'lock_player' => 'player_infos#lock_player'
+  post 'lock_player' => 'internal_requests#lock_player'
 
   get 'validate_token' => 'tokens#validate'
-  get 'internal_validate_token' => 'internal_tokens#validate'
+  get 'internal_validate_token' => 'internal_requests#validate'
   post 'keep_alive' => 'tokens#keep_alive'
   get 'discard_token' => 'tokens#discard'
 

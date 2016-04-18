@@ -5,6 +5,7 @@ class RequestHandler
   def update(inbound)
     @inbound = inbound
     @inbound[:casino_id] ||= Property.get_casino_id_by_property_id(@inbound[:property_id])
+    @inbound[:licensee_id] ||= Property.get_licensee_id_by_property_id(@inbound[:property_id])
     begin
       event_name = inbound[:_event_name].to_sym
       @outbound = self.__send__("process_#{event_name}_event") || {}
@@ -30,7 +31,7 @@ class RequestHandler
     
 
   def process_validate_token_event
-    Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id])
+    Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:licensee_id])
     {}
   end
   
@@ -49,7 +50,7 @@ class RequestHandler
   end
 
   def process_discard_token_event
-    Token.discard(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id])
+    Token.discard(@inbound[:login_name], @inbound[:session_token], @inbound[:licensee_id])
     {}
   end
 

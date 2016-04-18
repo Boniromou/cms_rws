@@ -1,4 +1,4 @@
-class InternalTokensController < ApplicationController
+class InternalRequestsController < ApplicationController
   skip_before_filter :check_session_expiration, :authenticate_user!, :update_user_location
   include Hood::RWSHandler
 
@@ -7,5 +7,9 @@ class InternalTokensController < ApplicationController
 
   def validate
     handle_request(:validate_token)
+  end
+
+  def lock_player
+    handle_request(:lock_player)
   end
 end

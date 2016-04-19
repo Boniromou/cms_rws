@@ -12,6 +12,11 @@ require File.expand_path("../../lib/requester/patron", __FILE__)
 require File.expand_path("../../lib/requester/requester_factory", __FILE__)
 require File.expand_path("../../lib/errors", __FILE__)
 require File.expand_path("../lib/update_player_helper",__FILE__)
+require 'hood'
+
+service_config_file = File.expand_path("../../config/service_config.yml",__FILE__)
+Hood::CONFIG.load_service_config(service_config_file,Rails.env)
+Hood::CONFIG.property_keys = Property.get_property_keys
 
 env = $*[0] || "development"
 database = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))

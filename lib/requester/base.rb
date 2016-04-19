@@ -27,15 +27,15 @@ module Requester
 
     def remote_rws_call(method, path, params)
       begin
-        Rails.logger.info "----remote call #{path}, #{params.inspect}-------"
+        output_log "----remote call #{path}, #{params.inspect}-------"
         response = @lax_requester.send(method.to_sym, path, params)
-        Rails.logger.info "--------#{self.class.name} method #{method}, got respnose------"
-        Rails.logger.info response
+        output_log "--------#{self.class.name} method #{method}, got respnose------"
+        output_log response
         return response
       rescue Exception => e
-        Rails.logger.info e
-        Rails.logger.info e.backtrace.join("\n")
-        Rails.logger.info "service call/third party call #{self.class.name} unavailable"
+        output_log e
+        output_log e.backtrace.join("\n")
+        output_log "service call/third party call #{self.class.name} unavailable"
 	      return
       end
     end
@@ -55,7 +55,7 @@ module Requester
     
     def retry_call(retry_times, &block)
       begin
-        Rails.logger.info "***************retry_times: #{RETRY_TIMES - retry_times}***************"
+        output_log "***************retry_times: #{RETRY_TIMES - retry_times}***************"
         return block.call
       rescue Remote::ReturnError => e
         return e.result
@@ -75,13 +75,21 @@ module Requester
         end
       ensure
         if e
-          Rails.logger.error "======== raise error when retry ============"
-          Rails.logger.error "error message: #{e.message}"
-          Rails.logger.error "#{e.backtrace.inspect}"
-          Rails.logger.error "======== end ============"
+          output_log "======== raise error when retry ============"
+          output_log "error message: #{e.message}"
+          output_log "#{e.backtrace.inspect}"
+          output_log "======== end ============"
           #puts e.message
           #puts e.backtrace.inspect
         end
+      end
+    end
+
+    def output_log(*params)
+      if Rails
+        Rails.logger.error params
+      else
+        puts params
       end
     end
   end

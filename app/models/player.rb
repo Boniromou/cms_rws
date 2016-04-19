@@ -49,7 +49,7 @@ class Player < ActiveRecord::Base
   end
 
   def valid_tokens
-    self.tokens.where("expired_at > ?", Time.now)
+    self.tokens.where("expired_at > ?", Time.now.utc.to_formatted_s(:db))
   end
 
   def discard_tokens

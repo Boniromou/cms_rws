@@ -250,7 +250,7 @@ en:
     user_name: "action by"
     lock: "Lock"
     unlock: "Unlock"
-    casino_name: "Casino name:"
+    casino_name: "Casinos"
   void_transaction:
     success: "Void transaction %{slip_number} successful"
     already_void: "Transaction %{slip_number} has been void"

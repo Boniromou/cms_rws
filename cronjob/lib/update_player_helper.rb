@@ -14,7 +14,7 @@ module Cronjob
       licensees = Licensee.all
       licensees.each do |licensee|
         licensee_id = licensee.id
-        players = Token.joins(:player).select("players.member_id").where("expired_at > ? AND licensee_id = ?", Time.now, licensee_id).group("player_id")
+        players = Token.joins(:player).select("players.member_id").where("expired_at > ? AND licensee_id = ?", Time.now.utc.to_formatted_s(:db), licensee_id).group("player_id")
         if players.length == 0
           puts 'no member need to update'
           return

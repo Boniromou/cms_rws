@@ -85,11 +85,11 @@ module Requester
       end
     end
 
-    def output_log(*params)
+    def output_log(string)
       if Requester::Base.const_defined?('Rails')
-        Rails.logger.error params
+        Rails.logger.error string
       else
-        puts params
+        puts string
       end
     end
   end

@@ -13,12 +13,12 @@ class Token < ActiveRecord::Base
   end
 
   def discard
-    self.expired_at = Time.now.utc - 100
+    self.expired_at = Time.now.utc.to_formatted_s(:db) - 100
     self.save
   end
 
   def keep_alive
-    self.expired_at = Time.now.utc + self.token_life_time
+    self.expired_at = Time.now.utc.to_formatted_s(:db) + self.token_life_time
     self.save
   end
   
@@ -41,7 +41,7 @@ class Token < ActiveRecord::Base
       token.player_id = player_id
       token.session_token = SecureRandom.uuid
       token.casino_id = casino_id
-      token.expired_at = Time.now.utc + token.token_life_time
+      token.expired_at = Time.now.utc.to_formatted_s(:db) + token.token_life_time
       token.save
       token
     end

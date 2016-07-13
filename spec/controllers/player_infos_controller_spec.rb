@@ -101,4 +101,36 @@ describe PlayerInfosController do
       expect(result[:error_code]).to eq 'InvalidLoginName'
     end
   end
+
+  describe '[74] test mode player API ' do
+    before(:each) do
+      clean_dbs
+      bypass_rescue
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000, :test_mode_player => true)
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
+    end
+
+    after(:each) do
+      Token.delete_all
+      Player.delete_all
+      clean_dbs
+    end
+
+    it '[74.1] Get is test mode player success' do
+      @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
+      get 'is_test_mode_player', {:login_name => @player.member_id, :session_token => @token.session_token}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      expect(result[:test_mode_player]).to eq true
+    end
+
+    it '[74.2] Get is test mode player fail with invalid token' do
+      get 'is_test_mode_player', {:login_name => @player.member_id, :session_token => 'abc'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidSessionToken'
+      expect(result[:error_msg]).to eq 'Session token is invalid.'
+      expect(result[:test_mode_player]).to eq nil
+    end
+  end
 end

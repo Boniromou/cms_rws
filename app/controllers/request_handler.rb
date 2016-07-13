@@ -75,4 +75,11 @@ class RequestHandler
     response = get_requester_helper(casino_id).validate_machine(machine_type, machine_token, property_id, casino_id)
     response.result_hash
   end
+
+  def process_is_test_mode_player_event
+    login_name = @inbound[:login_name]
+    session_token = @inbound[:session_token]
+    licensee_id = @inbound[:licensee_id]
+    ApiHelper.is_test_mode_player(login_name, session_token, licensee_id)
+  end
 end

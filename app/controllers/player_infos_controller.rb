@@ -12,4 +12,8 @@ class PlayerInfosController < ApplicationController
   def get_player_currency
     handle_request(:get_player_currency)
   end
+
+  def is_test_mode_player
+    handle_request(:is_test_mode_player)
+  end
 end

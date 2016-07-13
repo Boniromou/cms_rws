@@ -3,7 +3,7 @@ class Player < ActiveRecord::Base
   has_many :tokens
   has_many :players_lock_types
   include FundHelper
-  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id, :licensee_id
+  attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id, :licensee_id, :test_mode_player
   validates_uniqueness_of :member_id, :card_id
 
   STATUS_LOCKED = 'locked'

@@ -32,7 +32,7 @@ class RequesterHelper
       credit_expired_at = balance_response.credit_expired_at
       raise Request::RetrieveBalanceFail.new unless balance.class == Float
       session_token = Token.generate(player.id, casino_id).session_token
-      {:login_name => login_name, :currency => currency, :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at, :session_token => session_token}
+      {:login_name => login_name, :currency => currency, :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at, :session_token => session_token, :test_mode_player => player.test_mode_player}
     end
   end
 

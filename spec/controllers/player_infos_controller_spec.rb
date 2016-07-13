@@ -53,6 +53,7 @@ describe PlayerInfosController do
       expect(result[:login_name]).to eq @player.member_id
       expect(result[:currency]).to eq Currency.find(@player.currency_id).name
       expect(result[:balance]).to eq 100.0
+      expect(result[:test_mode_player]).to eq false
     end
 
     it '[29.3] Player is locked' do

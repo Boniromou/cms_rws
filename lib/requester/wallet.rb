@@ -2,19 +2,20 @@ require File.expand_path(File.dirname(__FILE__) + "/base")
 
 class Requester::Wallet < Requester::Base
   
-  def create_player(login_name, currency, player_id, player_currency_id)
+  def create_player(login_name, currency, player_id, player_currency_id, test_mode_player)
     retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/create_internal_player", :body => {:login_name => login_name, 
                                                                                       :currency => currency, 
                                                                                       :player_id => player_id, 
                                                                                       :player_currency_id => player_currency_id,
-                                                                                      :licensee_id => @licensee_id})
+                                                                                      :licensee_id => @licensee_id,
+                                                                                      :test_mode_player => test_mode_player})
       parse_create_player_response(response)
     end
   end
 
-  def get_player_balance(login_name, currency = nil, player_id = nil, player_currency_id = nil)
-    create_player_proc = Proc.new {create_player(login_name, currency, player_id, player_currency_id)} unless player_id.nil?
+  def get_player_balance(login_name, currency = nil, player_id = nil, player_currency_id = nil, test_mode_player = false)
+    create_player_proc = Proc.new {create_player(login_name, currency, player_id, player_currency_id, test_mode_player)} unless player_id.nil?
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('get', "#{@path}/query_player_balance", :query => {:login_name => login_name,
                                                                                     :licensee_id => @licensee_id})

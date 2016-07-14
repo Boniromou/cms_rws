@@ -85,6 +85,7 @@ class PlayersController < ApplicationController
   def lock
     member_id = params[:member_id]
     player = policy_scope(Player).find_by_member_id(member_id)
+    authorize_action player, :non_test_mode?
     
     lock_status = ''
     AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
@@ -104,6 +105,7 @@ class PlayersController < ApplicationController
   def unlock
     member_id = params[:member_id]
     player = policy_scope(Player).find_by_member_id(member_id)
+    authorize_action player, :non_test_mode?
 
     lock_status = ''
     AuditLog.player_log("unlock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
@@ -136,6 +138,7 @@ class PlayersController < ApplicationController
 
   def set_pin
     @operation = params[:operation]
+    authorize_action @player, :non_test_mode?
     
     respond_to do |format|
       format.html { render "players/set_pin", formats: [:html] }
@@ -144,6 +147,9 @@ class PlayersController < ApplicationController
   end
 
   def do_reset_pin
+    member_id = params[:player][:member_id]
+    player = Player.find_by_member_id(member_id)
+    authorize_action player, :non_test_mode?
     begin
      audit_log = {:user => current_user.name, :member_id => params[:player][:member_id], :action_at => Time.now.utc, :action => params[:action].split('_')[0], :casino_id => current_casino_id}
       response = patron_requester.reset_pin(params[:player][:member_id], params[:pin], audit_log)

@@ -453,7 +453,6 @@ describe PlayersController do
       check_lock_unlock_page
       check_flash_message expected_flash_message
     end 
-
   end
 
   describe '[36] Expire token' do
@@ -762,6 +761,7 @@ describe PlayersController do
     end
 
     it '[54.1] Create PIN success in player profile', js: true do
+      @player = create_default_player
       mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
@@ -890,6 +890,7 @@ describe PlayersController do
     end
 
     it '[54.5] Create PIN success in balance enquiry', js: true do
+      @player = create_default_player
       mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
@@ -922,6 +923,7 @@ describe PlayersController do
     end
 
     it '[54.6] Create PIN fail in balance enquiry', js: true do
+      @player = create_default_player
       mock_reset_pin_result('connection fail')
       login_as_admin
       visit home_path
@@ -1108,6 +1110,87 @@ describe PlayersController do
       expect(page.source).to_not have_selector("a#credit_deposit")
       expect(page.source).to_not have_selector("a#credit_expire")
 
+    end
+  end
+  
+  describe '[75] Do not allow test mode player to reset PIN or Lock', :js => true do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_close_after_print
+      mock_patron_not_change
+      mock_have_active_location
+      @player = create_default_player
+
+      mock_wallet_balance(0.0)
+      mock_wallet_transaction_success(:deposit)
+    end
+    
+    after(:each) do
+      clean_dbs
+    end
+    
+    it '[75.1] Reset PIN fail due to test mode player', js: true do
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset', :licensee_id => 20000}})
+      mock_wallet_balance(0.0)
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      fill_search_info_js("member_id", "123456")
+      find("#button_find").click
+      wait_for_ajax
+
+      check_title("tree_panel.profile")
+      expect(find("label#player_balance").text).to eq '0.00'
+      expect(find("label#player_member_id").text).to eq '123456'
+      expect(find("label#player_card_id").text).to eq '1234567890'.gsub(/(\d{4})(?=\d)/, '\\1-')
+      expect(find("label#player_status").text).to eq I18n.t("player_status.active")
+
+      find("#reset_pin").click
+      
+      wait_for_ajax
+      check_title("tree_panel.reset_pin")
+      fill_in "new_pin", :with => '1111'
+      fill_in "confirm_pin", :with => '1111'
+      content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
+
+      @player.test_mode_player = true
+      @player.save!
+      click_pop_up_confirm("confirm_set_pin", content_list)
+      
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+      
+    
+    it '[75.2] Lock player fail due to test mode player', js: true do
+      login_as_admin
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+
+      check_search_page("profile")
+
+      search_player_profile
+      check_lock_unlock_page
+
+      click_button I18n.t("button.#{@lock_or_unlock}")
+      expect(find("div#pop_up_dialog")[:style]).to_not include "none"
+
+      @player.test_mode_player = true
+      @player.save!
+
+      click_button I18n.t("button.confirm")
+      wait_for_ajax
+      
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
     end
   end
 end

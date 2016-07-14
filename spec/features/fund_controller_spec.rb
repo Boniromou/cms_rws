@@ -117,4 +117,98 @@ describe FundController do
       expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
     end
   end
+
+  describe '[73] Do not allow test mode player to do fund transaction', :js => true do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+      mock_close_after_print
+      mock_patron_not_change
+      mock_have_active_location
+      @player = create_default_player
+
+      mock_wallet_balance(0.0)
+      mock_wallet_transaction_success(:deposit)
+    end
+    
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[73.1] Deposit fail due to test mode player', :js => true do
+      login_as_admin 
+      go_to_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+      find("button#confirm_deposit").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      @player.test_mode_player = true
+      @player.save!
+      find("div#pop_up_dialog div button#confirm").click
+      
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+
+    it '[73.2] Withdraw fail due to test mode player', :js => true do
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
+      login_as_admin 
+      go_to_withdraw_page
+      fill_in "player_transaction_amount", :with => 100
+      find("button#confirm_withdraw").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
+      expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
+      expect(page).to have_selector("div#pop_up_dialog div input#player_transaction_pin")
+      fill_in "player_transaction_pin", :with => 1111
+      @player.test_mode_player = true
+      @player.save!
+      find("div#pop_up_dialog div button#confirm").click
+      
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+
+    it '[73.3] Add credit fail due to test mode player', :js => true do
+      mock_permission_value(999999999)
+      mock_wallet_transaction_success(:credit_deposit)
+      mock_wallet_balance(0.00, 0.00, Time.now)
+      login_as_admin
+      go_to_credit_deposit_page
+      fill_in "player_transaction_amount", :with => 100
+      fill_in "player_transaction_remark", :with => 'test'
+      content_list = [I18n.t("deposit_withdrawal.credit_deposit_amt")]
+      @player.test_mode_player = true
+      @player.save!
+      click_pop_up_confirm("confirm_credit_deposit", content_list)
+      wait_for_ajax
+      
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+    
+    it '[73.4] expire credit fail due to test mode player', :js => true do
+      mock_wallet_transaction_success(:credit_expire)
+      mock_wallet_balance(0.00, 50.00, Time.now)
+      login_as_admin 
+      go_to_credit_expire_page
+      fill_in "player_transaction_remark", :with => 'test'
+      content_list = [I18n.t("deposit_withdrawal.credit_expire_amt")]
+      @player.test_mode_player = true
+      @player.save!
+      click_pop_up_confirm("confirm_credit_expire", content_list)
+      wait_for_ajax
+      
+      check_home_page
+      check_flash_message I18n.t("flash_message.not_authorize")
+    end
+  end
 end

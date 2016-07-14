@@ -2,6 +2,7 @@ class FundController < ApplicationController
   include FundHelper
 
   layout 'cage'
+
   before_filter :only => [:new, :create] do |controller|
     authorize_action :PlayerTransaction, operation_sym
   end
@@ -27,6 +28,7 @@ class FundController < ApplicationController
     @member_id = params[:member_id]
     @action = action_str
     @player = Player.find_by_member_id(@member_id)
+    authorize_action @player, :non_test_mode?
   end
 
   def create
@@ -49,6 +51,7 @@ class FundController < ApplicationController
   end
 
   def check_transaction_acceptable
+    authorize_action @player, :non_test_mode?
     raise FundInOut::PlayerLocked if @player.account_locked?
   end
 

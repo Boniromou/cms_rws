@@ -86,6 +86,7 @@ class Player < ActiveRecord::Base
       player.first_name = params[:first_name].downcase if params[:first_name]
       player.last_name = params[:last_name].downcase if params[:first_name]
       player.licensee_id = params[:licensee_id]
+      player.test_mode_player = params[:test_mode_player]
       player.currency_id = Currency.find_by_name('HKD').id
       player.status = STATUS_NORMAL
       begin

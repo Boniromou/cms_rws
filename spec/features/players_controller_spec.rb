@@ -1032,6 +1032,82 @@ describe PlayersController do
       
       check_footer_btn(true,true,false,false)
     end
+  end
+  
+  describe '[71] Test mode player - player profile' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
 
+      mock_wallet_balance(0.0)
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+    
+    it '[71.1] Show test mode player info, disappear reset PIN and lock button', :js => true do
+      mock_wallet_balance(99.99)
+
+      @player = create_default_player(:first_name => "exist", :last_name => "player", :test_mode_player => true)
+      login_as_admin
+
+      mock_have_active_location
+
+      visit home_path
+      click_link I18n.t("tree_panel.profile")
+      wait_for_ajax
+      check_search_page('profile')
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_profile_page(9999)
+      
+      expect(page.source).to_not have_selector("a#reset_pin")
+      expect(page.source).to_not have_selector("div#button_set button#lock_player")
+    end
+  end
+  
+  describe '[72] Test mode player - Balance enquiry' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+      mock_wallet_balance(0.0)
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[72.1] Show test mode player info, disappear deposit and withdraw, add credit and expire credit button', :js => true do
+      mock_wallet_balance(99.99)
+
+      @player = create_default_player(:first_name => "exist", :last_name => "player", :test_mode_player => true)
+      login_as_admin
+
+      mock_have_active_location
+
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      check_search_page
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      check_player_info
+      check_balance_page(9999)
+
+      expect(page.source).to_not have_selector("a#balance_deposit")
+      expect(page.source).to_not have_selector("a#balance_withdraw")
+      expect(page.source).to_not have_selector("a#credit_deposit")
+      expect(page.source).to_not have_selector("a#credit_expire")
+
+    end
   end
 end

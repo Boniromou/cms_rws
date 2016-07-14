@@ -152,6 +152,7 @@ en:
     blacklist: "Blacklist"
     pending: "Pending Transaction"
     not_activate: "Inactive"
+    test_mode: "Test Mode"
   shift:
     name: "Shift"
     confirm_roll_msg: "Roll system to next shift"

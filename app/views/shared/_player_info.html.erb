@@ -22,21 +22,25 @@
         </div>
         <div class="row">
           <div><label class="col-xs-4 box"><strong><%= t("general.status")%>:</strong></label></div>
-          <% if !@player.account_locked? %>
             <div><label class="col-xs-5 box">
+            <% if !@player.account_locked? %>
               <span class="badge bg-color-greenLight">
                 <%= label_tag :player_status, t("player_status.#{@player.status}"), :id => "player_status" %>
               </span>
-            </label></div>
-          <% else %>
-            <div><label class="col-xs-5 box">
+            <% else %>
               <% @player.lock_types.each do |lock_type| %>
                 <span class="badge bg-color-red" style="margin-bottom: 5px;">
                   <%= label_tag :player_status, t("player_status.#{lock_type}"), :id => "player_#{lock_type}" %>
                 </span><br/>
               <% end %>
+            <% end %>
+            <% if @player.test_mode_player %>
+              <span class="badge bg-color-greenLight" style="margin-bottom: 5px;">
+                <%= label_tag :player_status, t("player_status.test_mode"), :id => "player_test_mode" %>
+              </span><br/>
+            <% end %>
             </label></div>
-          <% end %>
+          </div>
         </div>
         <% end %>
         <%= content %>

@@ -153,6 +153,11 @@ module StepHelper
     else
       check_player_lock_types
     end
+    if @player.test_mode_player
+      expect(find("label#player_test_mode").text).to eq I18n.t("player_status.test_mode")
+    else
+      expect(page.source).to_not have_selector("label#player_test_mode")
+    end
   end
 
   def check_player_lock_types

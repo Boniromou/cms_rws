@@ -5,6 +5,10 @@ class PlayerPolicy < ApplicationPolicy
   map_policy :profile?, :action_name => :player_profile
   map_policy :create_pin?, :delegate_policies => [:reset_pin?]
   map_policy :do_reset_pin?, :delegate_policies => [:reset_pin?]
+
+  def non_test_mode?
+    !@record.test_mode_player
+  end
   
   class Scope
     attr_reader :user, :scope

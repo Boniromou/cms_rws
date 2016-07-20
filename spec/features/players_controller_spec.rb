@@ -890,7 +890,6 @@ describe PlayersController do
     end
 
     it '[54.5] Create PIN success in balance enquiry', js: true do
-      @player = create_default_player
       mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
@@ -923,7 +922,6 @@ describe PlayersController do
     end
 
     it '[54.6] Create PIN fail in balance enquiry', js: true do
-      @player = create_default_player
       mock_reset_pin_result('connection fail')
       login_as_admin
       visit home_path

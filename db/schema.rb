@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160719031241) do
+ActiveRecord::Schema.define(:version => 20160726065129) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -138,7 +138,7 @@ ActiveRecord::Schema.define(:version => 20160719031241) do
     t.string   "last_name"
     t.datetime "purge_at"
     t.integer  "licensee_id",                         :null => false
-    t.boolean  "test_mode_player", :default => false
+    t.boolean  "test_mode_player", :default => false, :null => false
   end
 
   add_index "players", ["card_id", "licensee_id"], :name => "index_players_on_card_id_and_property_id", :unique => true

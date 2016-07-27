@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160726065129) do
+ActiveRecord::Schema.define(:version => 20160727080712) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -88,6 +88,26 @@ ActiveRecord::Schema.define(:version => 20160726065129) do
     t.datetime "updated_at", :null => false
     t.datetime "purge_at"
   end
+
+  create_table "kiosk_transactions", :force => true do |t|
+    t.integer  "shift_id"
+    t.integer  "player_id"
+    t.integer  "transaction_type_id"
+    t.string   "ref_trans_id",        :limit => 45
+    t.integer  "amount",              :limit => 8
+    t.string   "status",              :limit => 45
+    t.datetime "trans_date"
+    t.integer  "casino_id"
+    t.string   "kiosk_id",            :limit => 45
+    t.string   "source_type",         :limit => 45
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "kiosk_transactions", ["casino_id"], :name => "fk_kiosk_casino_id"
+  add_index "kiosk_transactions", ["player_id"], :name => "fk_kiosk_player_id"
+  add_index "kiosk_transactions", ["shift_id"], :name => "fk_kiosk_shift_id"
+  add_index "kiosk_transactions", ["transaction_type_id"], :name => "fk_kiosk_transaction_type_id"
 
   create_table "licensees", :force => true do |t|
     t.string   "name"

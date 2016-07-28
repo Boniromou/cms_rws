@@ -90,14 +90,14 @@ ActiveRecord::Schema.define(:version => 20160727080712) do
   end
 
   create_table "kiosk_transactions", :force => true do |t|
-    t.integer  "shift_id"
-    t.integer  "player_id"
-    t.integer  "transaction_type_id"
+    t.integer  "shift_id",                          :null => false
+    t.integer  "player_id",                         :null => false
+    t.integer  "transaction_type_id",               :null => false
     t.string   "ref_trans_id",        :limit => 45
     t.integer  "amount",              :limit => 8
     t.string   "status",              :limit => 45
     t.datetime "trans_date"
-    t.integer  "casino_id"
+    t.integer  "casino_id",                         :null => false
     t.string   "kiosk_id",            :limit => 45
     t.string   "source_type",         :limit => 45
     t.datetime "created_at",                        :null => false

@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(:version => 20160727080712) do
     t.string   "status",              :limit => 45
     t.datetime "trans_date"
     t.integer  "casino_id",                         :null => false
-    t.string   "kiosk_id",            :limit => 45
+    t.string   "kiosk_name",          :limit => 45
     t.string   "source_type",         :limit => 45
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false

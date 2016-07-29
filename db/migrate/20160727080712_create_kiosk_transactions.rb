@@ -9,7 +9,7 @@ class CreateKioskTransactions < ActiveRecord::Migration
       t.string :status, :limit => 45
       t.datetime :trans_date
       t.integer :casino_id, :null => false
-      t.string :kiosk_id, :limit => 45
+      t.string :kiosk_name, :limit => 45
       t.string :source_type, :limit => 45
 
       t.timestamps

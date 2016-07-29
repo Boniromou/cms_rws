@@ -82,4 +82,43 @@ class RequestHandler
     licensee_id = @inbound[:licensee_id]
     ApiHelper.is_test_mode_player(login_name, session_token, licensee_id)
   end
+
+  def process_kiosk_login_event
+    card_id = @inbound[:card_id]
+    pin = @inbound[:pin]
+    kiosk_id = @inbound[:kiosk_id]
+    casino_id = @inbound[:casino_id]
+    get_requester_helper(casino_id).kiosk_login(card_id, pin, kiosk_id, casino_id)
+  end
+
+  def process_validate_deposit_event
+    login_name = @inbound[:login_name]
+    ref_trans_id = @inbound[:ref_trans_id]
+    amount = @inbound[:amt]
+    kiosk_id = @inbound[:kiosk_id]
+    session_token = @inbound[:session_token]
+    source_type = @inbound[:source_type]
+    casino_id = @inbound[:casino_id]
+    get_requester_helper(casino_id).validate_deposit(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
+  end
+
+  def process_deposit_event
+    login_name = @inbound[:login_name]
+    ref_trans_id = @inbound[:ref_trans_id]
+    kiosk_id = @inbound[:kiosk_id]
+    session_token = @inbound[:session_token]
+    casino_id = @inbound[:casino_id]
+    get_requester_helper(casino_id).deposit(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
+  end
+
+  def process_withdraw_event
+    login_name = @inbound[:login_name]
+    ref_trans_id = @inbound[:ref_trans_id]
+    amount = @inbound[:amt]
+    kiosk_id = @inbound[:kiosk_id]
+    session_token = @inbound[:session_token]
+    source_type = @inbound[:source_type]
+    casino_id = @inbound[:casino_id]
+    get_requester_helper(casino_id).withdraw(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
+  end
 end

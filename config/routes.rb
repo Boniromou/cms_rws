@@ -87,6 +87,11 @@ CmsRws::Application.routes.draw do
   get 'search_pin_histories' => 'pin_histories#search'
   post 'search_pin_histories' => 'pin_histories#do_search'
 
+  post 'kiosk_login' => 'kiosk#kiosk_login'
+  post 'validate_deposit' => 'kiosk#validate_deposit'
+  post 'deposit' => 'kiosk#deposit'
+  post 'withdraw' => 'kiosk#withdraw'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

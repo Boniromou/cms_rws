@@ -86,9 +86,8 @@ class RequestHandler
   def process_kiosk_login_event
     card_id = @inbound[:card_id]
     pin = @inbound[:pin]
-    kiosk_id = @inbound[:kiosk_id]
     casino_id = @inbound[:casino_id]
-    get_requester_helper(casino_id).kiosk_login(card_id, pin, kiosk_id, casino_id)
+    get_requester_helper(casino_id).kiosk_login(card_id, pin, casino_id)
   end
 
   def process_validate_deposit_event

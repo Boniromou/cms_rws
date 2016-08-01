@@ -82,4 +82,20 @@ class RequesterHelper
       return 'PlayerNotActivated'
     end
   end
+
+  def kiosk_login(card_id, pin, casino_id)
+    begin
+      player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
+      raise Request::InvalidCardId.new unless player
+      raise Request::PlayerLocked.new if player.account_locked?
+      login_name = player.member_id
+      raise Request::InvalidPin.new unless validate_pin(login_name, pin)
+      currency = player.currency.name
+      balance_response = wallet_requester.get_player_balance(player.member_id)
+      balance = balance_response.balance
+      raise Request::RetrieveBalanceFail.new unless balance.class == Float
+      session_token = Token.generate(player.id, casino_id).session_token
+      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
+    end
+  end
 end

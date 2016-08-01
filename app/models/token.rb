@@ -29,10 +29,10 @@ class Token < ActiveRecord::Base
 	class << self
     def validate(login_name, session_token, licensee_id)
       player = Player.find_by_member_id_and_licensee_id(login_name, licensee_id)
-      raise Request::InvalidSessionToken.new unless player
+      raise Request::InvalidLoginName unless player
       token = player.tokens.find_by_session_token(session_token)
-      raise Request::InvalidSessionToken.new unless token
-      raise Request::InvalidSessionToken.new unless token.belong_to?(login_name) && token.alive? && !token.player.account_locked?
+      raise Request::InvalidSessionToken unless token
+      raise Request::InvalidSessionToken unless token.belong_to?(login_name) && token.alive? && !token.player.account_locked?
       token
     end
 

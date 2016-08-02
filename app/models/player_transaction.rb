@@ -125,7 +125,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   class << self
   include FundHelper
-    def init_player_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
+    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       player = Player.find_by_member_id(member_id)
       player_id = player[:id]
       transaction = new
@@ -152,35 +152,27 @@ class PlayerTransaction < ActiveRecord::Base
     end
 
     def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
+      init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data)
+      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
+      init_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data)
+      init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
+      init_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
-      init_player_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data)
-    end
-
-    def get_player_by_card_member_id(type, id)
-      if type == "member_id"
-        Player.find_by_member_id(id)
-      else
-        Player.find_by_card_id(id)
-      end
+      init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data)
     end
 
     def only_deposit_withdraw
@@ -196,7 +188,7 @@ class PlayerTransaction < ActiveRecord::Base
         player_id = nil
       else
         player_id = 0
-        player = get_player_by_card_member_id(id_type, id_number)
+        player = Player.find_by_id_type_and_id_number(id_type.to_sym, id_number)
         player_id = player.id unless player.nil?
       end
       if operation == 'cash'
@@ -208,22 +200,6 @@ class PlayerTransaction < ActiveRecord::Base
 
     def search_query_by_slip_number(slip_number)
       by_slip_number(slip_number).only_deposit_withdraw
-    end
-
-    def search_query(*args)
-      search_type = args[5].to_i
-      if search_type == 0
-        id_type = args[0]
-        id_number = args[1]
-        start_shift_id = args[2]
-        end_shift_id = args[3]
-        operation = args[6]
-        search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation)
-      else
-        slip_number = args[4].to_i
-
-        search_query_by_slip_number(slip_number)
-      end
     end
 
     def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)

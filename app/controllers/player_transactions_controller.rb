@@ -25,9 +25,9 @@ class PlayerTransactionsController < ApplicationController
     if selected_tab_index == '0'
       shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range)
       requester_helper.update_player(id_type,id_number) unless id_number.blank?
-      @player_transactions = policy_scope(PlayerTransaction).search_query(id_type, id_number, shifts[0].id, shifts[1].id, nil, selected_tab_index, @operation)
+      @player_transactions = policy_scope(PlayerTransaction).search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation)
     else
-      @player_transactions = policy_scope(PlayerTransaction).search_query(nil, nil, nil, nil, slip_number, selected_tab_index)
+      @player_transactions = policy_scope(PlayerTransaction).search_query_by_slip_number(slip_number)
     end
     rescue Remote::PlayerNotFound => e
       @player_transactions = []

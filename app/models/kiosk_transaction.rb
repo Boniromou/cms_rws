@@ -88,42 +88,6 @@ class KioskTransaction < ActiveRecord::Base
       init_transaction(member_id, amount, WITHDRAW, shift_id, kiosk_name, ref_trans_id, source_type, casino_id)
     end
 
-#TODO move to player model
-    def get_player_by_card_member_id(type, id)
-      if type == "member_id"
-        Player.find_by_member_id(id)
-      else
-        Player.find_by_card_id(id)
-      end
-    end
-
-    def only_deposit_withdraw
-      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit], TRANSACTION_TYPE_ID_LIST[:withdraw]]).by_status(['completed', 'pending'])
-    end
-
-    def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id)
-      player_id = 0
-      player = get_player_by_card_member_id(id_type, id_number)
-      player_id = player.id unless player.nil?
-      by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
-    end
-
-    def search_query(*args)
-      search_type = args[5].to_i
-      if search_type == 0
-        id_type = args[0]
-        id_number = args[1]
-        start_shift_id = args[2]
-        end_shift_id = args[3]
-        operation = args[6]
-        search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation)
-      else
-        slip_number = args[4].to_i
-
-        search_query_by_slip_number(slip_number)
-      end
-    end
-    
     def daily_transaction_amount_by_player(player, accounting_date, trans_type, casino_id)
       start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
       end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id

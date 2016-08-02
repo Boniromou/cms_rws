@@ -199,5 +199,13 @@ class Player < ActiveRecord::Base
       licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
       find_by_card_id_and_licensee_id(card_id, licensee_id)
     end
+    
+    def find_by_id_type_and_id_number(id_type, id_number)
+      if id_type == :member_id
+        Player.find_by_member_id(id_number)
+      else
+        Player.find_by_card_id(id_number)
+      end
+    end
   end
 end

@@ -84,18 +84,35 @@ class RequesterHelper
   end
 
   def kiosk_login(card_id, pin, casino_id)
-    begin
-      player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
-      raise Request::InvalidCardId.new unless player
-      raise Request::PlayerLocked.new if player.account_locked?
-      login_name = player.member_id
-      raise Request::InvalidPin.new unless validate_pin(login_name, pin)
-      currency = player.currency.name
-      balance_response = wallet_requester.get_player_balance(player.member_id)
-      balance = balance_response.balance
-      raise Request::RetrieveBalanceFail.new unless balance.class == Float
-      session_token = Token.generate(player.id, casino_id).session_token
-      {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
+    player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
+    raise Request::InvalidCardId unless player
+    raise Request::PlayerLocked if player.account_locked?
+    login_name = player.member_id
+    raise Request::InvalidPin unless validate_pin(login_name, pin)
+    currency = player.currency.name
+    balance_response = wallet_requester.get_player_balance(player.member_id)
+    balance = balance_response.balance
+    raise Request::RetrieveBalanceFail unless balance.class == Float
+    session_token = Token.generate(player.id, casino_id).session_token
+    {:login_name => login_name, :currency => currency, :balance => balance, :session_token => session_token}
+  end
+
+  def validate_deposit(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
+    licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
+    Token.validate(login_name, session_token, licensee_id)
+    player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
+    kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
+    balance_response = wallet_requester.get_player_balance(player.member_id)
+    balance = balance_response.balance
+    raise Request::RetrieveBalanceFail unless balance.class == Float
+    raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
+    server_amount = PlayerTransaction.to_server_amount(amount)
+    if !kiosk_transaction.nil?
+      raise Request::AlreadyProcessed if kiosk_transaction.player.member_id == login_name && kiosk_transaction.amount == server_amount
+      raise Request::DuplicateTrans
     end
+    raise Request::OutOfDailyLimit if player.out_of_daily_limit?(server_amount, :deposit)
+    kiosk_transaction = KioskTransaction.save_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, kiosk_id, ref_trans_id, source_type, casino_id)
+    {:amt => amount, :trans_date => kiosk_transaction.trans_date}
   end
 end

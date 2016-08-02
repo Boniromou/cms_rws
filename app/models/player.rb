@@ -76,6 +76,10 @@ class Player < ActiveRecord::Base
     result
   end
 
+  def out_of_daily_limit?(amount, trans_type)
+    false
+  end
+
   class << self
     def create_by_params(params)
       verify_player_info(params)

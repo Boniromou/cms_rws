@@ -54,4 +54,5 @@ end
 
 RSpec.configure do |config|
   config.include ShiftHelper, type: :feature
+  config.include ShiftHelper, type: :controller
 end

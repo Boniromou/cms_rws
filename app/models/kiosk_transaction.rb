@@ -58,6 +58,7 @@ class KioskTransaction < ActiveRecord::Base
   scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
   scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
   scope :by_status, -> status { where( :status => status) if status.present? }
+  scope :by_casino_id, -> casino_id { where("casino_id = ?", casino_id) if casino_id.present? }
 
   class << self
   include FundHelper
@@ -121,6 +122,12 @@ class KioskTransaction < ActiveRecord::Base
 
         search_query_by_slip_number(slip_number)
       end
+    end
+    
+    def daily_transaction_amount_by_player(player, accounting_date, trans_type, casino_id)
+      start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
+      end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id
+      select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0
     end
   end
 end

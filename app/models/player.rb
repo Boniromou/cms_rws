@@ -82,7 +82,7 @@ class Player < ActiveRecord::Base
     player_transaction_daily_amount = PlayerTransaction.daily_transaction_amount_by_player(self, accounting_date, trans_type, casino_id)
     kiosk_transaction_daily_amount = KioskTransaction.daily_transaction_amount_by_player(self, accounting_date, trans_type, casino_id)
     total = kiosk_transaction_daily_amount + player_transaction_daily_amount + amount
-    tobal > limit
+    total > limit
   end
 
   class << self

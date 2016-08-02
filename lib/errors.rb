@@ -211,7 +211,31 @@ module Request
 
   class RetrieveBalanceFail < RequestError
     def initialize(data=nil)
-      super(500, 'Retrieve balance from wallet fail', data)
+      super(500, 'Retrieve balance from wallet fail.', data)
+    end
+  end
+
+  class AlreadyProcessed < RequestError
+    def initialize(data=nil)
+      super(400, 'The transaction has been already processed.', data)
+    end
+  end
+
+  class DuplicateTrans < RequestError
+    def initialize(data=nil)
+      super(400, 'Ref_trans_id is duplicated.', data)
+    end
+  end
+
+  class InvalidAmount < RequestError
+    def initialize(data=nil)
+      super(400, 'Amount is invalid.', data)
+    end
+  end
+
+  class OutOfDailyLimit < RequestError
+    def initialize(data=nil)
+      super(400, 'Exceed the daily fund limit.', data)
     end
   end
 end

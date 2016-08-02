@@ -4,6 +4,12 @@ class ConfigHelper
     @casino_id = casino_id
   end
 
+  def retrieve_config(key)
+    configuration = Configuration.find_by_key_and_casino_id(key, @casino_id)
+    return configuration.value if configuration
+    nil
+  end
+
   def trans_history_search_range
     retrieve_config('trans_history_search_range').to_i
   end
@@ -45,9 +51,11 @@ class ConfigHelper
     retrieve_config('transaction_void_range').to_i
   end
 
-  def retrieve_config(key)
-    configuration = Configuration.find_by_key_and_casino_id(key, @casino_id)
-    return configuration.value if configuration
-    nil
+  def daily_deposit_limit
+    retrieve_config('daily_deposit_limit').to_i
+  end
+
+  def daily_withdraw_limit
+    retrieve_config('daily_withdraw_limit').to_i
   end
 end

@@ -111,7 +111,7 @@ class RequesterHelper
       raise Request::AlreadyProcessed if kiosk_transaction.player.member_id == login_name && kiosk_transaction.amount == server_amount
       raise Request::DuplicateTrans
     end
-    raise Request::OutOfDailyLimit if player.out_of_daily_limit?(server_amount, :deposit)
+    raise Request::OutOfDailyLimit if player.out_of_daily_limit?(server_amount, :deposit, casino_id)
     kiosk_transaction = KioskTransaction.save_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, kiosk_id, ref_trans_id, source_type, casino_id)
     {:amt => amount, :trans_date => kiosk_transaction.trans_date}
   end

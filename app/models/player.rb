@@ -76,8 +76,13 @@ class Player < ActiveRecord::Base
     result
   end
 
-  def out_of_daily_limit?(amount, trans_type)
-    false
+  def out_of_daily_limit?(amount, trans_type, casino_id)
+    accounting_date = AccountingDate.current(casino_id)
+    limit = ConfigHelper.new(casino_id).send "daily_#{trans_type}_limit"
+    player_transaction_daily_amount = PlayerTransaction.daily_transaction_amount_by_player(self, accounting_date, trans_type, casino_id)
+    kiosk_transaction_daily_amount = KioskTransaction.daily_transaction_amount_by_player(self, accounting_date, trans_type, casino_id)
+    total = kiosk_transaction_daily_amount + player_transaction_daily_amount + amount
+    tobal > limit
   end
 
   class << self

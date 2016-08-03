@@ -116,6 +116,7 @@ module Requester
 
     def balance
       @result_hash[:balance].to_f if @result_hash[:balance]
+      @result_hash[:after_balance].to_f if  @result_hash[:after_balance]
     end
   end
 

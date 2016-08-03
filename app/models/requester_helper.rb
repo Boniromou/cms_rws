@@ -101,9 +101,9 @@ class RequesterHelper
     licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
     Token.validate(login_name, session_token, licensee_id)
     player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
-    kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
     balance_response = wallet_requester.get_player_balance(player.member_id)
     balance = balance_response.balance
+    kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
     raise Request::RetrieveBalanceFail unless balance.class == Float
     raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
     server_amount = PlayerTransaction.to_server_amount(amount)
@@ -122,14 +122,14 @@ class RequesterHelper
     kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
     raise Request::AlreadyCancelled if !kiosk_transaction.nil? && kiosk_transaction.cancelled?
     raise Request::InvalidDeposit if kiosk_transaction.nil? || !kiosk_transaction.validated?
-    deposit_kiosk_transaction(kiosk_transaction)
+    submit_kiosk_transaction(kiosk_transaction, :deposit)
     {}
   end
 
-  def deposit_kiosk_transaction(kiosk_transaction)
+  def submit_kiosk_transaction(kiosk_transaction, trans_type)
     kiosk_transaction.pending!
     begin
-      response = wallet_requester.deposit(kiosk_transaction.player.member_id, kiosk_transaction.amount, kiosk_transaction.ref_trans_id, kiosk_transaction.created_at.localtime)
+      response = wallet_requester.send trans_type,kiosk_transaction.player.member_id, kiosk_transaction.amount, kiosk_transaction.ref_trans_id, kiosk_transaction.created_at.localtime
       raise Request::RetrieveBalanceFail unless response.success?
     rescue => e
       Rails.logger.error e.message
@@ -140,5 +140,23 @@ class RequesterHelper
       kiosk_transaction.trans_date = response.trans_date
       kiosk_transaction.completed!
     end
+    response
+  end
+
+  def withdraw(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
+    licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
+    Token.validate(login_name, session_token, licensee_id)
+    player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
+    raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
+    server_amount = PlayerTransaction.to_server_amount(amount)
+    kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
+    if !kiosk_transaction.nil?
+      raise Request::AlreadyProcessed if kiosk_transaction.player.member_id == login_name && kiosk_transaction.amount == server_amount
+      raise Request::DuplicateTrans
+    end
+    raise Request::OutOfDailyLimit if player.out_of_daily_limit?(server_amount, :withdraw, casino_id)
+    kiosk_transaction = KioskTransaction.save_withdraw_transaction(login_name, server_amount, Shift.current(casino_id).id, kiosk_id, ref_trans_id, source_type, casino_id)
+    response = submit_kiosk_transaction(kiosk_transaction, :withdraw)
+    {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => response.balance}
   end
 end

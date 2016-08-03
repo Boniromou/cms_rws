@@ -174,4 +174,69 @@ describe KioskController do
       expect(result[:error_msg]).to eq 'Session token is invalid.'
     end
   end
+  
+  describe '[78] Deposit API' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
+      @token = Token.generate(@player.id, 20000)
+      @source_type = 'everi_kiosk'
+      @kiosk_id = "1234567891"
+      @ref_trans_id = 'EK00000001'
+      @kiosk_transaction = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 1, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'validated', :trans_date => Time.now, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type)
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
+      wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => Time.now.strftime("%Y-%m-%d %H:%M:%S"), :before_balance => 100, :after_balance => 200})
+      allow_any_instance_of(Requester::Wallet).to receive(:deposit).and_return(wallet_response)
+      bypass_rescue
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+    it '[78.1] Success' do
+      post 'deposit', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :kiosk_id => @kiosk_id, :session_token => @token.session_token, :casino_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+      kiosk_transaction = KioskTransaction.first
+      expect(kiosk_transaction.player_id).to eq @player.id
+      expect(kiosk_transaction.amount).to eq 10000
+      expect(kiosk_transaction.transaction_type.name).to eq 'deposit'
+      expect(kiosk_transaction.ref_trans_id).to eq @ref_trans_id
+      expect(kiosk_transaction.source_type).to eq @source_type
+      expect(kiosk_transaction.kiosk_name).to eq @kiosk_id
+      expect(kiosk_transaction.status).to eq 'completed'
+      expect(kiosk_transaction.casino_id).to eq 20000
+
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+    end
+
+    it '[78.2] InvalidDeposit' do
+      @kiosk_transaction.delete
+      post 'deposit', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :kiosk_id => @kiosk_id, :session_token => @token.session_token, :casino_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+
+      expect(result[:error_code]).to eq 'InvalidDeposit'
+      expect(result[:error_msg]).to eq 'The transaction is invalid.'
+    end
+
+    it '[78.3] AlreadyCancelled' do
+      @kiosk_transaction.status = 'cancelled'
+      @kiosk_transaction.save!
+      post 'deposit', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :kiosk_id => @kiosk_id, :session_token => @token.session_token, :casino_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+
+      expect(result[:error_code]).to eq 'AlreadyCancelled'
+      expect(result[:error_msg]).to eq 'The transaction has been already cancelled.'
+    end
+
+    it '[78.4] InvalidSessionToken' do
+      post 'deposit', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :kiosk_id => @kiosk_id, :session_token => 'abc', :casino_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+
+      expect(result[:error_code]).to eq 'InvalidSessionToken'
+      expect(result[:error_msg]).to eq 'Session token is invalid.'
+    end
+  end
 end

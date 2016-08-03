@@ -115,4 +115,30 @@ class RequesterHelper
     kiosk_transaction = KioskTransaction.save_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, kiosk_id, ref_trans_id, source_type, casino_id)
     {:amt => amount, :trans_date => kiosk_transaction.trans_date}
   end
+
+  def deposit(login_name, ref_trans_id, session_token, casino_id)
+    licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
+    Token.validate(login_name, session_token, licensee_id)
+    kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
+    raise Request::AlreadyCancelled if !kiosk_transaction.nil? && kiosk_transaction.cancelled?
+    raise Request::InvalidDeposit if kiosk_transaction.nil? || !kiosk_transaction.validated?
+    deposit_kiosk_transaction(kiosk_transaction)
+    {}
+  end
+
+  def deposit_kiosk_transaction(kiosk_transaction)
+    kiosk_transaction.pending!
+    begin
+      response = wallet_requester.deposit(kiosk_transaction.player.member_id, kiosk_transaction.amount, kiosk_transaction.ref_trans_id, kiosk_transaction.created_at.localtime)
+      raise Request::RetrieveBalanceFail unless response.success?
+    rescue => e
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.inspect
+      raise Request::RetrieveBalanceFail
+    end
+    KioskTransaction.transaction do
+      kiosk_transaction.trans_date = response.trans_date
+      kiosk_transaction.completed!
+    end
+  end
 end

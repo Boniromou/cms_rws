@@ -25,11 +25,14 @@ class KioskTransaction < ActiveRecord::Base
     result
   end
 
+  def pending!
+    self.status = 'pending'
+    self.save!
+  end
+
   def completed!
-    KioskTransaction.transaction do
       self.status = 'completed'
       self.save!
-    end
   end
 
   def rejected!
@@ -47,6 +50,14 @@ class KioskTransaction < ActiveRecord::Base
 
   def can_void?
     false
+  end
+
+  def cancelled?
+    display_status == 'cancelled'
+  end
+  
+  def validated?
+    display_status == 'validated'
   end
   
   scope :since, -> start_time { where("created_at >= ?", start_time) if start_time.present? }

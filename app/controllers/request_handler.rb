@@ -107,7 +107,7 @@ class RequestHandler
     kiosk_id = @inbound[:kiosk_id]
     session_token = @inbound[:session_token]
     casino_id = @inbound[:casino_id]
-    get_requester_helper(casino_id).deposit(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
+    get_requester_helper(casino_id).deposit(login_name, ref_trans_id, session_token, casino_id)
   end
 
   def process_withdraw_event

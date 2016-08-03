@@ -238,4 +238,16 @@ module Request
       super(400, 'Exceed the daily fund limit.', data)
     end
   end
+
+  class AlreadyCancelled < RequestError
+    def initialize(data=nil)
+      super(400, 'The transaction has been already cancelled.', data)
+    end
+  end
+
+  class InvalidDeposit < RequestError
+    def initialize(data=nil)
+      super(400, 'The transaction is invalid.', data)
+    end
+  end
 end

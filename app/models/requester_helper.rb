@@ -127,9 +127,10 @@ class RequesterHelper
   end
 
   def submit_kiosk_transaction(kiosk_transaction, trans_type)
-    kiosk_transaction.pending!
+    kt = kiosk_transaction
+    kt.pending! if kt.validated?
     begin
-      response = wallet_requester.send trans_type,kiosk_transaction.player.member_id, kiosk_transaction.amount, kiosk_transaction.ref_trans_id, kiosk_transaction.created_at.localtime
+      response = wallet_requester.send trans_type,kt.player.member_id, kt.amount, kt.ref_trans_id, kt.created_at.localtime, kt.source_type
       raise Request::RetrieveBalanceFail unless response.success?
     rescue => e
       Rails.logger.error e.message
@@ -137,8 +138,8 @@ class RequesterHelper
       raise Request::RetrieveBalanceFail
     end
     KioskTransaction.transaction do
-      kiosk_transaction.trans_date = response.trans_date
-      kiosk_transaction.completed!
+      kt.trans_date = response.trans_date
+      kt.completed!
     end
     response
   end

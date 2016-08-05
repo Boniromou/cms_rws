@@ -284,7 +284,7 @@ describe KioskController do
     end
     
     it '[79.2] AlreadyProcessed' do
-      kiosk_transaction = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'validated', :trans_date => Time.now, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type)
+      kiosk_transaction = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type)
       post 'withdraw', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :amt => 100.00, :kiosk_id => @kiosk_id, :session_token => @token.session_token, :source_type => @source_type, :casino_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       

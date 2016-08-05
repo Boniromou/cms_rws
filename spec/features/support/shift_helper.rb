@@ -2,6 +2,7 @@ module ShiftHelper
   def clean_dbs
     ChangeHistory.delete_all
     PlayerTransaction.delete_all
+    KioskTransaction.delete_all
     Shift.delete_all
     AccountingDate.delete_all
     CasinosShiftType.delete_all

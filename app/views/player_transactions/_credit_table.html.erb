@@ -13,7 +13,7 @@
               <th><%= t("transaction_history.remark")%></th>
             </thead>
             <tbody>
-              <% @player_transactions.each do |t| %>
+              <% @transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
                   <td><%= t.player.member_id %></td>
                   <td><%= t.shift.accounting_date%></td>

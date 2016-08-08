@@ -14,7 +14,7 @@
               <th><%= t("transaction_history.action")%></th>
             </thead>
             <tbody>
-              <% @player_transactions.each do |t| %>
+              <% @transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
                   <td><%= t.slip_number %></td>
                   <td><%= t.player.member_id %></td>

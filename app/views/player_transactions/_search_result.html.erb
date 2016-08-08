@@ -1,4 +1,4 @@
-<% if @player_transactions %>
+<% if @transactions %>
 <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
   <header>
     <span class="widget-icon"> <i class="fa fa-table"></i> </span>
@@ -6,7 +6,7 @@
   </header>
   <div>
     <div class="widget-body no-padding">
-      <% if @player_transactions.length > 0 %>
+      <% if @transactions.length > 0 %>
         <div id="player_trnasaction_result">
           <%= render "player_transactions/#{@operation}_table" %>
         </div>

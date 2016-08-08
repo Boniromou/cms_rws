@@ -192,17 +192,19 @@ describe PlayersController do
       check_player_transaction_result_items([@player_transaction2])
     end
     
-    it '[8.3] successfully generate report with kiosk transactions.', js: true do
+    it '[8.15] successfully generate report with kiosk transactions.', js: true do
       login_as_admin
       create_player_transaction
-      @kiosk_transaction1 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 70*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type)
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now + 80*60, :slip_number => 1, :casino_id => 20000)
-      @kiosk_transaction2 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type)
+      @kiosk_id = '123456789'
+      @source_type = 'everi_kiosk'
+      @kiosk_transaction1 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 70*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 70*60)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now + 80*60, :slip_number => 1, :casino_id => 20000, :created_at => Time.now + 80*60)
+      @kiosk_transaction2 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
-      
-      fill_search_info_js("member_id", @player2.member_id)
+
+      fill_search_info_js("member_id", @player.member_id)
       fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
       fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
       find("input#search").click

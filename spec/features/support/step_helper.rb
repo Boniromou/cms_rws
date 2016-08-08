@@ -201,7 +201,7 @@ module StepHelper
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
     location = player_transaction.location
-    user = User.find(player_transaction.user_id)
+    user = player_transaction.user
     if player_transaction.transaction_type_id == 1
       deposit_str = to_display_amount_str(player_transaction.amount)
       withdraw_str = ""

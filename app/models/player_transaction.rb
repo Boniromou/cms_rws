@@ -108,8 +108,12 @@ class PlayerTransaction < ActiveRecord::Base
     data_hash = YAML.load(self.data ||"---\n") || {}
   end
 
+  def source_type
+    'cage_transaction'
+  end
+
   class << self
-  include FundHelper
+    include FundHelper
     def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
       player = Player.find_by_member_id(member_id)
       player_id = player[:id]

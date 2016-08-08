@@ -214,18 +214,32 @@ module StepHelper
     else
       void_slip_number_str = ""
     end
-    expect(item[0].text).to eq player_transaction.slip_number.to_s
-    expect(item[1].text).to eq player.member_id
-    expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
-    expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[4].text).to eq location
-    expect(item[5].text).to eq user.name
-    expect(item[6].text).to eq player_transaction.display_status
-    expect(item[7].text).to eq deposit_str
-    expect(item[8].text).to eq player_transaction.data_hash[:deposit_reason].to_s
-    expect(item[9].text).to eq withdraw_str
-    expect(item[10].text).to eq void_slip_number_str
-    within item[11] do
+    i = 0
+    expect(item[i].text).to eq player_transaction.source_type
+    i +=1
+    expect(item[i].text).to eq player_transaction.slip_number.to_s
+    i +=1
+    expect(item[i].text).to eq player.member_id
+    i +=1
+    expect(item[i].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    i +=1
+    expect(item[i].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    i +=1
+    expect(item[i].text).to eq location
+    i +=1
+    expect(item[i].text).to eq user.name
+    i +=1
+    expect(item[i].text).to eq player_transaction.display_status
+    i +=1
+    expect(item[i].text).to eq deposit_str
+    i +=1
+    expect(item[i].text).to eq player_transaction.data_hash[:deposit_reason].to_s
+    i +=1
+    expect(item[i].text).to eq withdraw_str
+    i +=1
+    expect(item[i].text).to eq void_slip_number_str
+    i +=1
+    within item[i] do
       if player_transaction.status == 'completed'
         trans_type = player_transaction.transaction_type.name
         if reprint_granted

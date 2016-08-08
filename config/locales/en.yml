@@ -219,6 +219,7 @@ en:
     duration: "Duration"
     deposit_reason: "Deposit handle by"
     cage_cashier_id: "Cage Cashier ID"
+    source_type: "*Source Type"
   shift_name:
     morning: "Morning"
     swing: "Swing"

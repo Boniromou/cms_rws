@@ -5,7 +5,7 @@ $('input#datetimepicker_start_time').val("<%= format_time(@start_time) %>");
 $('input#datetimepicker_end_time').val("<%= format_time(@end_time) %>");
 
 <% if @operation == 'cash' %>
-	$('tr th:nth-child(4)').click();
+	$('tr th:nth-child(5)').click();
 <% else %>
 	$('tr th:nth-child(3)').click();
 <% end %>

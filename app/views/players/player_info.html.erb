@@ -9,5 +9,5 @@
   <% footer = render "players/#{@operation}_footer" %>
 <% end %>
 <% content = render "players/balance_amt" %>
-<%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content, :footer => footer} %>
+<%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content, :footer => footer, :show_remain => {:deposit => true, :withdraw => true}} %>
 </div>

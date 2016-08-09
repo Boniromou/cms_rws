@@ -3,7 +3,7 @@
 <% back_button = close_to_balance %>
 <% content = render partial: "withdraw/fund_request_form"%>
 <% footer = render "shared/confirm_fund_panel" %>
-<%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :back_button => back_button, :content => content, :footer => footer} %>
+<%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :back_button => back_button, :content => content, :footer => footer, :show_remain => {:withdraw => true}} %>
 <%= render partial: "shared/pop_up_panel" %>
 
 <%= javascript_include_tag "validate.input.js" %>

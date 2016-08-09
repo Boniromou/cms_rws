@@ -9,11 +9,7 @@ module MockHelper
     @accounting_date = Time.now.strftime("%Y-%m-%d")
     @shift = "morning"
 
-    ac = AccountingDate.new
-    ac.accounting_date = @accounting_date
-
     allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location_str).and_return(@location)
-    allow(AccountingDate).to receive(:current).and_return(ac)
     allow_any_instance_of(Shift).to receive(:name).and_return(@shift)
   end
 

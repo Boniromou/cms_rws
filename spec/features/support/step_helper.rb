@@ -119,6 +119,7 @@ module StepHelper
   def check_balance_page(balance = 0, credit_balance = nil, expired_at = nil)
     check_title("tree_panel.balance")
     check_balance_amount(balance,credit_balance, expired_at)
+    check_remain_amount(:deposit, :withdraw)
   end
 
   def check_balance_page_without_balance
@@ -129,12 +130,19 @@ module StepHelper
   def check_profile_page(balance = 0, credit_balance = nil, expired_at = nil)
     check_title("tree_panel.profile")
     check_balance_amount(balance,credit_balance,expired_at)
+    check_remain_amount(:deposit, :withdraw)
   end
 
   def check_balance_amount(balance,credit_balance,expired_at)
     expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
     expect(find("label#credit_balance").text).to eq to_display_amount_str(credit_balance) unless credit_balance.nil?
     expect(find("label#credit_expired_at").text).to eq expired_at unless expired_at.blank?
+  end
+
+  def check_remain_amount(*params)
+    params.each do |trans_type|  
+      expect(find("label#player_remain_#{trans_type}").text).to eq to_display_amount_str(@player.remain_trans_amount(trans_type, 20000)).to_s
+    end
   end
 
   def check_edit_page

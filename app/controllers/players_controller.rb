@@ -42,6 +42,7 @@ class PlayersController < ApplicationController
     @inactivate = true
     @player = e.player
     @operation = params[:operation]
+    @casino_id = current_casino_id
 
     respond_to do |format|
       format.html { render "players/player_info", formats: [:html] }

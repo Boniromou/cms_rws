@@ -42,6 +42,14 @@
             </label></div>
           </div>
         </div>
+        <div class="row">
+          <div><label class="col-xs-4 box"><strong><%= t("player.remain_deposit")%>:</strong></label></div>
+          <div><label class="col-xs-5 box"><%= label_tag :player_remain_deposit, @player.remain_trans_amount(:deposit, @casino_id), :id => "player_remain_deposit" %></label></div>
+        </div>
+        <div class="row">
+          <div><label class="col-xs-4 box"><strong><%= t("player.remain_withdraw")%>:</strong></label></div>
+          <div><label class="col-xs-5 box"><%= label_tag :player_remain_withdraw, @player.remain_trans_amount(:withdraw, @casino_id), :id => "player_remain_withdraw" %></label></div>
+        </div>
         <% end %>
         <%= content %>
         </br>

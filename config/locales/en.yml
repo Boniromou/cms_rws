@@ -125,6 +125,8 @@ en:
     void_withdraw: "Void Withdraw"
     credit_deposit: "Credit Deposit"
     credit_expire: "Credit Expire"
+    remain_deposit: "*Remain deposit amount"
+    remain_withdraw: "*Remain withdraw amount"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."

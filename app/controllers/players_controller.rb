@@ -19,6 +19,7 @@ class PlayersController < ApplicationController
     @operation = params[:action]
     member_id = params[:member_id]
     @player = policy_scope(Player).find_by_member_id(member_id)
+    @casino_id = current_casino_id
     unless @player
       raise PlayerProfile::PlayerNotFound
     end

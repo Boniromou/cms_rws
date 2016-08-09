@@ -85,6 +85,10 @@ class Player < ActiveRecord::Base
     total > limit
   end
 
+  def remain_trans_amount(trans_type, casino_id)
+    100
+  end
+
   class << self
     def create_by_params(params)
       verify_player_info(params)

@@ -240,19 +240,25 @@ module StepHelper
     expect(item[i].text).to eq void_slip_number_str
     i +=1
     within item[i] do
-      if player_transaction.status == 'completed'
-        trans_type = player_transaction.transaction_type.name
-        if reprint_granted
-          expect(page.source).to have_selector("a#reprint")
-        else
-          expect(page.source).to_not have_selector("a#reprint")
+      if player_transaction.source_type == 'cage_transaction'
+        if player_transaction.status == 'completed'
+          trans_type = player_transaction.transaction_type.name
+          if reprint_granted
+            expect(item[i]).to have_selector("a#reprint")
+          else
+            expect(item[i]).to_not have_selector("a#reprint")
+          end
+          if player_transaction.can_void?
+            expect(item[i]).to have_selector("button#void_#{trans_type}_#{player_transaction.id}") if void_granted
+          else
+            expect(item[i]).to_not have_selector("button#void_#{trans_type}_#{player_transaction.id}")
+            expect(item[i]).to have_selector("a#reprint_void") if reprint_void_granted && player_transaction.voided?
+          end
         end
-        if player_transaction.can_void?
-          expect(page.source).to have_selector("button#void_#{trans_type}_#{player_transaction.id}") if void_granted
-        else
-          expect(page.source).to_not have_selector("button#void_#{trans_type}_#{player_transaction.id}")
-          expect(page.source).to have_selector("a#reprint_void") if reprint_void_granted && player_transaction.voided?
-        end
+      else
+        expect(item[i]).to_not have_selector("a#reprint")
+        expect(item[i]).to_not have_selector("button#void_#{trans_type}_#{player_transaction.id}")
+        expect(item[i]).to_not have_selector("a#reprint_void")
       end
     end
   end

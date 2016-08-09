@@ -15,7 +15,7 @@ module ShiftHelper
   end
 
   def create_shift_data
-    @accounting_date = "2015-04-15"
+    @accounting_date = Time.now.strftime("%Y-%m-%d")
     @today = Date.parse(@accounting_date)
 
     @moring_shift_type = ShiftType.create!(:name => 'morning')
@@ -46,7 +46,7 @@ module ShiftHelper
 
   def create_past_shift
     Shift.delete_all
-    @past_accounting_date_id = AccountingDate.create!(:accounting_date => "2015-04-10").id
+    @past_accounting_date_id = AccountingDate.create!(:accounting_date => (Time.now - 5.day).strftime("%Y-%m-%d")).id
     @past_shift = Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @past_accounting_date_id, :casino_id => 20000)
     Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :casino_id => 20000)
   end

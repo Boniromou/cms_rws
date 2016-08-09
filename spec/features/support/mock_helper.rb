@@ -6,7 +6,7 @@ module MockHelper
 
   def mock_cage_info
     @location = "N/A"
-    @accounting_date = "2015-04-15"
+    @accounting_date = Time.now.strftime("%Y-%m-%d")
     @shift = "morning"
 
     ac = AccountingDate.new

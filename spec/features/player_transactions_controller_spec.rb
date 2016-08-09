@@ -139,7 +139,7 @@ describe PlayersController do
       check_player_transaction_page_js
 
       fill_in "start", :with => (@accounting_date)
-      fill_in "end", :with => ("2015-08-15")
+      fill_in "end", :with => ((Time.now + 4.month).strftime("%Y-%m-%d"))
       fill_search_info_js("member_id", @player2.member_id)
       find("input#search").click
       wait_for_ajax
@@ -154,10 +154,10 @@ describe PlayersController do
       click_link I18n.t("tree_panel.player_transaction")
       create_player_transaction
       check_player_transaction_page_js
-      fill_in "start", :with => ("2015-09-01")
-      fill_in "end", :with => ("2015-08-15")
+      fill_in "start", :with => ((Time.now + 14.day).strftime("%Y-%m-%d"))
+      fill_in "end", :with => (Time.now.strftime("%Y-%m-%d"))
       find("input#search").click
-      expect(find("input#start").value).to eq "2015-08-15"
+      expect(find("input#start").value).to eq Time.now.strftime("%Y-%m-%d")
     end
 
     it '[8.13] show error message when empty card ID/membership ID', js: true do
@@ -166,8 +166,8 @@ describe PlayersController do
       click_link I18n.t("tree_panel.player_transaction")
       create_player_transaction
       check_player_transaction_page_js
-      fill_in "start", :with => ("2015-09-01")
-      fill_in "end", :with => ("2015-09-30")
+      fill_in "start", :with => (Time.now.strftime("%Y-%m-%d"))
+      fill_in "end", :with => ((Time.now + 30.day).strftime("%Y-%m-%d"))
       find("input#search").click
       wait_for_ajax
 

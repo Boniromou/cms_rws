@@ -80,6 +80,7 @@ en:
     non_player_deposit: "Non-Player Deposit"
     staff_id: "Staff ID"
     staff_id_invalid: "Invalid input format, please try again."
+    exceed_remain_limit: "*exceed remain limit"
   balance_enquiry:
     account_balance: "Account Balance(HKD)"
     no_balance: "--"

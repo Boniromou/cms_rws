@@ -3,6 +3,9 @@
   <% pop_up_btn :id => "confirm_#{@action}", :str => t("button.confirm"), :form_id => "fund_request", :style => "confirm_fund_btn", :form_valid_function => "formValid()" do %>
     <p><%= t("deposit_withdrawal."+@action+"_amt") %></p>
     <p style="font-size: 18px;" id="fund_amt"></p>
+    <% if ['deposit','withdraw'].include?(@action) %>
+      <label id="remain_limit_alert" class="invisible_error"><%= t("deposit_withdrawal.exceed_remain_limit") %></label>
+    <% end %>
     <% if @action == 'withdraw' %>
       <form class="form-horizontal">
         <div class="form-group">
@@ -61,6 +64,18 @@
       $("button#confirm").removeAttr('disabled');
     }
   }
+<% elsif ['deposit','withdraw'].include?(@action) %>
+  function updateRemainAlert(){
+    var limit = <%= cents_to_dollar(@remain_limit) %>;
+    var amt = $('#player_transaction_amount').val();
+    if(amt > limit){
+      $("label#remain_limit_alert").css('visibility', 'visible');
+      $("label#remain_limit_alert").css('display', 'block');
+    }else{
+      $("label#remain_limit_alert").css('visibility', 'hidden');
+      $("label#remain_limit_alert").css('display', 'none');
+    }
+  }
 <% end %>
 
   $('#confirm_deposit, #confirm_withdraw, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
@@ -70,6 +85,8 @@
       updateConfirmAmt();
     <% if  @action == 'credit_deposit' %>
       updateLimitAlert();
+    <% elsif ['deposit','withdraw'].include?(@action) %>
+      updateRemainAlert();
     <% end %>
 
     } else {

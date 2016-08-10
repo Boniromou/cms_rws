@@ -30,6 +30,14 @@ module FundHelper
     number_to_currency(amount).sub("$","")
   end
 
+  def to_display_remain_str(remain_amt)
+    if remain_amt >= 0
+      to_display_amount_str(remain_amt)
+    else
+      I18n.t('deposit_withdrawal.exceed_remain_limit')
+    end
+  end
+
   def make_trans_id(id)
     str = ("0x%08x" % (id))
     str = str[2, str.length - 2] if str.start_with?('0x')

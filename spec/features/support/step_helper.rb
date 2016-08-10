@@ -140,8 +140,12 @@ module StepHelper
   end
 
   def check_remain_amount(*params)
-    params.each do |trans_type|  
-      expect(find("label#player_remain_#{trans_type}").text).to eq to_display_amount_str(@player.remain_trans_amount(trans_type, 20000)).to_s
+    [:deposit, :withdraw].each do |trans_type|
+      if params.include?(trans_type)
+        expect(find("label#player_remain_#{trans_type}").text).to eq to_display_amount_str(@player.remain_trans_amount(trans_type, 20000)).to_s
+      else
+        expect(page.source).to_not have_selector "label#player_remain_#{trans_type}"
+      end
     end
   end
 
@@ -400,12 +404,13 @@ module StepHelper
 
 
   def click_pop_up_confirm(btn_id, content_list)
-    find("div#button_set button##{btn_id}").click
+    find("div#button_set button##{btn_id}").trigger('click')
     within ("div#pop_up_content") do
       content_list.each do |str|
         expect(page).to have_content str
       end
     end
+    yield if block_given?
     find("div#pop_up_dialog div#pop_up_confirm_btn button#confirm").trigger('click')
   end
 

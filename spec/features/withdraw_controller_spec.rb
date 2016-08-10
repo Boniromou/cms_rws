@@ -104,6 +104,8 @@ describe WithdrawController do
     it '[7.8] Cancel dialog box Withdraw', :js => true do
       login_as_admin 
       go_to_withdraw_page
+      wait_for_ajax
+      check_remain_amount(:withdraw)
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -325,6 +327,28 @@ describe WithdrawController do
       transaction = PlayerTransaction.first
       expect(transaction.trans_date).to eq trans_date.to_time(:local).utc
     end
+    
+    it '[7.20] Withdraw  success with over limit', :js => true do
+      login_as_admin 
+      go_to_withdraw_page
+      fill_in "player_transaction_amount", :with => 1000000
+      find("button#confirm_withdraw").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
+      expect(find("#fund_amt").text).to eq to_display_amount_str(100000000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      content_list = [I18n.t("deposit_withdrawal.exceed_remain_limit")]
+      click_pop_up_confirm("confirm_withdraw", content_list) do
+        expect(find('label#remain_limit_alert')[:style]).to have_content 'visible'
+      end
+
+      check_title("tree_panel.fund_out")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
+    end
+    
   end
 
   describe '[52] Enter PIN withdraw success ' do

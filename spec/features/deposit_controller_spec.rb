@@ -111,6 +111,8 @@ describe DepositController do
     it '[6.8] Confirm dialog box Deposit', :js => true do
       login_as_admin 
       go_to_deposit_page
+      wait_for_ajax
+      check_remain_amount(:deposit)
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -118,6 +120,7 @@ describe DepositController do
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      expect(find('label#remain_limit_alert')[:style]).to_not have_content 'visible'
       find("div#pop_up_dialog div button#confirm").click
       
       check_title("tree_panel.fund_in")
@@ -367,6 +370,29 @@ describe DepositController do
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false
       expect(find("label#reason_error")[:style].include?("visible")).to eq true
       expect(find("label#reason_error").text).to eq I18n.t("deposit_withdrawal.staff_id_invalid")
+    end
+    
+    it '[6.21] Deposit success with over limit', :js => true do
+      login_as_admin 
+      go_to_deposit_page
+      wait_for_ajax
+      check_remain_amount(:deposit)
+      fill_in "player_transaction_amount", :with => 1000000
+      find("button#confirm_deposit").click
+      expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
+      
+      expect(find("#fund_amt").text).to eq to_display_amount_str(100000000)
+      expect(page).to have_selector("div#pop_up_dialog div button#confirm")
+      expect(page).to have_selector("div#pop_up_dialog div button#cancel")
+      content_list = [I18n.t("deposit_withdrawal.exceed_remain_limit")]
+      click_pop_up_confirm("confirm_deposit", content_list) do
+        expect(find('label#remain_limit_alert')[:style]).to have_content 'visible'
+      end
+      
+      check_title("tree_panel.fund_in")
+      expect(page).to have_selector("table")
+      expect(page).to have_selector("button#print_slip")
+      expect(page).to have_selector("a#close_link")
     end
   end
 

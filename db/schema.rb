@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160812091450) do
+ActiveRecord::Schema.define(:version => 20160812095036) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(:version => 20160812091450) do
   add_index "kiosk_transactions", ["casino_id"], :name => "fk_kiosk_casino_id"
   add_index "kiosk_transactions", ["player_id"], :name => "fk_kiosk_player_id"
   add_index "kiosk_transactions", ["purge_at"], :name => "index_kiosk_transactions_on_purge_at"
+  add_index "kiosk_transactions", ["ref_trans_id"], :name => "index_kiosk_transactions_on_ref_trans_id"
   add_index "kiosk_transactions", ["shift_id"], :name => "fk_kiosk_shift_id"
   add_index "kiosk_transactions", ["transaction_type_id"], :name => "fk_kiosk_transaction_type_id"
 
@@ -157,6 +158,7 @@ ActiveRecord::Schema.define(:version => 20160812091450) do
   add_index "player_transactions", ["player_id"], :name => "fk_player_id"
   add_index "player_transactions", ["purge_at"], :name => "index_player_transactions_on_purge_at"
   add_index "player_transactions", ["shift_id"], :name => "fk_shift_id"
+  add_index "player_transactions", ["slip_number"], :name => "index_player_transactions_on_slip_number"
   add_index "player_transactions", ["transaction_type_id"], :name => "fk_transaction_type_id"
   add_index "player_transactions", ["user_id"], :name => "fk_playerTransaction_user_id"
 

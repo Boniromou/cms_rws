@@ -80,7 +80,7 @@ en:
     non_player_deposit: "Non-Player Deposit"
     staff_id: "Staff ID"
     staff_id_invalid: "Invalid input format, please try again."
-    exceed_remain_limit: "*exceed remain limit"
+    exceed_remain_limit: Transaction exceeded daily transaction limit. Please follow SOP to check patron identity before "Confirm" transaction.
   balance_enquiry:
     account_balance: "Account Balance(HKD)"
     no_balance: "--"
@@ -126,8 +126,8 @@ en:
     void_withdraw: "Void Withdraw"
     credit_deposit: "Credit Deposit"
     credit_expire: "Credit Expire"
-    remain_deposit: "*Remain deposit amount"
-    remain_withdraw: "*Remain withdraw amount"
+    remain_deposit: "Amount to reach Daily Deposit Limit"
+    remain_withdraw: "Amount to reach Daily Withdraw Limit"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
@@ -222,7 +222,7 @@ en:
     duration: "Duration"
     deposit_reason: "Deposit handle by"
     cage_cashier_id: "Cage Cashier ID"
-    source_type: "*Source Type"
+    source_type: "Source of Fund"
   shift_name:
     morning: "Morning"
     swing: "Swing"

@@ -753,7 +753,7 @@ describe PlayersController do
       mock_cage_info
 
       mock_wallet_balance(0.0)
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank', :licensee_id => 20000}})
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'blank', :licensee_id => 20000, :test_mode_player => false}})
     end
 
     after(:each) do
@@ -761,8 +761,7 @@ describe PlayersController do
     end
 
     it '[54.1] Create PIN success in player profile', js: true do
-      @player = create_default_player
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
+      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000, :test_mode_player => false}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")
@@ -794,7 +793,6 @@ describe PlayersController do
     end
 
     it '[54.2] Create PIN fail with PIN is too short in player profile', js: true do
-      mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
       visit home_path
       click_link I18n.t("tree_panel.profile")

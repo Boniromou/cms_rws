@@ -34,7 +34,7 @@ module FundHelper
     if remain_amt >= 0
       to_display_amount_str(remain_amt)
     else
-      I18n.t('deposit_withdrawal.exceed_remain_limit')
+      I18n.t('player.exceed_remain_limit')
     end
   end
 

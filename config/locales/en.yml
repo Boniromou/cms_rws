@@ -129,6 +129,7 @@ en:
     credit_expire: "Credit Expire"
     remain_deposit: "Amount to reach Daily Deposit Limit"
     remain_withdraw: "Amount to reach Daily Withdraw Limit"
+    exceed_remain_limit: "exceed limit"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
@@ -278,3 +279,6 @@ en:
     expire_duration: "Duration"
     duration_unit: "day(s)"
     exceed_limit: "The amount you've entered has reach the maximum credit limit, please re-try with a smaller amount."
+  source_type:
+    cage_transaction: "Cage"
+    evri_kiosk: "Everi Kiosk"

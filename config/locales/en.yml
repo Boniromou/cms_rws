@@ -57,6 +57,7 @@ en:
     active: "Active"
     inactive: "Inactive"
     zone_and_location: "Zone/Location"
+    currency: "Currency"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -82,7 +83,7 @@ en:
     staff_id_invalid: "Invalid input format, please try again."
     exceed_remain_limit: Transaction exceeded daily transaction limit. Please follow SOP to check patron identity before "Confirm" transaction.
   balance_enquiry:
-    account_balance: "Account Balance(HKD)"
+    account_balance: "Account Balance"
     no_balance: "--"
     query_balance_fail: "Enquiry Balance failed, please contact customer service for more details."
     expiry: "Expiry: %{expired_at}"

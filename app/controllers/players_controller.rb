@@ -171,11 +171,6 @@ class PlayersController < ApplicationController
     end
   end
 
-  def player_not_activated
-    player = Player.new(:member_id => params[:member_id], :card_id => params[:card_id], :status => params[:status])
-    raise PlayerProfile::PlayerNotActivated.new(player)
-  end
-
   protected
   def redirect_to_set_pin_path(member_id, card_id, status, inactivate, operation)
     @player = policy_scope(Player).find_by_member_id(member_id)

@@ -42,6 +42,10 @@
               </label></div>
             </div>
           </div>
+          <div class="row">
+            <div><label class="col-xs-5 box"><strong><%= t("general.currency")%>:</strong></label></div>
+            <div><label class="col-xs-5 box"><%= label_tag :player_member_id, @player.currency.name, :id => "player_currency" %></label></div>
+          </div>
           <% if show_remain[:deposit] %>
             <div class="row">
               <div><label class="col-xs-5 box"><strong><%= t("player.remain_deposit")%>:</strong></label></div>

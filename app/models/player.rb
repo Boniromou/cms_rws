@@ -134,7 +134,7 @@ class Player < ActiveRecord::Base
     end
 
     def create_inactivate(player_info)
-      player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activate')
+      player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activate', :currency_id => Currency.first.id)
     end
 
     def update_info(player_info)

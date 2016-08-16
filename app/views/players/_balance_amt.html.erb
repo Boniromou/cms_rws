@@ -1,12 +1,12 @@
 <div class="row">
-  <label class="col-xs-4 box"><strong><%= t("balance_enquiry.account_balance")%>:</strong></label></td>
+  <label class="col-xs-5 box"><strong><%= t("balance_enquiry.account_balance")%>:</strong></label></td>
   <label class="col-xs-5 box"><%= label_tag :player_balance, to_formatted_display_amount_str(@player_balance), :id => "player_balance" %></label></td>
 </div>
 <div class="row">
-  <label class="col-xs-4 box"><strong><%= t("balance_enquiry.account_credit")%>:</strong></label></td>
+  <label class="col-xs-5 box"><strong><%= t("balance_enquiry.account_credit")%>:</strong></label></td>
   <label class="col-xs-3 box"><%= label_tag :credit_balance, to_formatted_display_amount_str(@credit_balance), :id => "credit_balance" %></label></td>
 </div>
 <div class="row">
-  <label class="col-xs-4 box"></label></td>
+  <label class="col-xs-5 box"></label></td>
   <label class="col-xs-5 box"><%= label_tag :credit_expired_at, (@credit_expired_at == 'no_balance' || @credit_expired_at.nil?)? "":t("balance_enquiry.expiry",expired_at: @credit_expired_at.strftime("%F %R")), :id => "credit_expired_at" %></label></td>
 </div>

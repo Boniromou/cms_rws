@@ -50,7 +50,7 @@
             <div class="row">
               <div><label class="col-xs-5 box"><strong><%= t("player.remain_deposit")%>:</strong></label></div>
               <% remain_amt = @player.remain_trans_amount(:deposit, @casino_id) %>
-              <div><label class="col-xs-5 box" <%= 'style="color: red;"' if  remain_amt < 0 %>><%= label_tag :player_remain_deposit, to_display_remain_str(@player.remain_trans_amount(:deposit, @casino_id)), :id => "player_remain_deposit" %></label></div>
+              <div><label class="col-xs-5 box" <%= "style='color: red;'" if  remain_amt < 0 %>><%= label_tag :player_remain_deposit, to_display_remain_str(@player.remain_trans_amount(:deposit, @casino_id)), :id => "player_remain_deposit" %></label></div>
             </div>
           <% end %>
           <% if show_remain[:withdraw] %>

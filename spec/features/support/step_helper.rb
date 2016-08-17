@@ -227,7 +227,7 @@ module StepHelper
       void_slip_number_str = ""
     end
     i = 0
-    expect(item[i].text).to eq player_transaction.source_type
+    expect(item[i].text).to eq player_transaction.source_type.gsub('_transaction','').titleize
     i +=1
     expect(item[i].text).to eq player_transaction.slip_number.to_s
     i +=1

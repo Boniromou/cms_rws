@@ -279,6 +279,3 @@ en:
     expire_duration: "Duration"
     duration_unit: "day(s)"
     exceed_limit: "The amount you've entered has reach the maximum credit limit, please re-try with a smaller amount."
-  source_type:
-    cage_transaction: "Cage"
-    evri_kiosk: "Everi Kiosk"

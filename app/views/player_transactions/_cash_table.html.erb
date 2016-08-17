@@ -17,7 +17,7 @@
             <tbody>
               <% @transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
-                  <td><%= t.source_type %></td>
+                  <td><%= t.source_type.gsub('_transaction','').titleize %></td>
                   <td><%= t.slip_number %></td>
                   <td><%= t.player.member_id %></td>
                   <td><%= t.shift.accounting_date%></td>

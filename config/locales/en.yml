@@ -129,7 +129,7 @@ en:
     credit_expire: "Credit Expire"
     remain_deposit: "Amount to reach Daily Deposit Limit"
     remain_withdraw: "Amount to reach Daily Withdraw Limit"
-    exceed_remain_limit: "exceed limit"
+    exceed_remain_limit: "Exceeded Daily Limit"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."

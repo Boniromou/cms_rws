@@ -55,7 +55,7 @@ sandbox3:
   database: rothorn_cms_sandbox
   username: rothorn
   password: rothorn.pa$$w0rd123
-  host: mo-snd-cms-vdb01.laxigames.local
+  host: mo-snd-cms-vdb01.lb.laxigames.local
   port: 6034
 
 production3:
@@ -65,5 +65,5 @@ production3:
   database: rothorn_cms_production
   username: rothorn
   password: rothorn.pa$$w0rd123
-  host: mo-prd-cms-vdb01.laxigames.local
+  host: mo-prd-cms-vdb01.lb.laxigames.local
   port: 6033

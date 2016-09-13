@@ -24,11 +24,11 @@ staging0:
   :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
 
 sandbox3:
-  :wallet: http://mo-snd-cwms-vapp01.laxigames.local:80/cwms
-  :patron: http://mo-snd-pis-vapp01.laxigames.local:80
-  :station: http://mo-snd-sm-vapp01.laxigames.local:80
+  :wallet: http://mo-snd-cwms-vapp01.lb.laxigames.local:80/cwms
+  :patron: http://mo-snd-pis-vapp01.lb.laxigames.local:80
+  :station: http://mo-snd-sm-vapp01.lb.laxigames.local:80
 
 production3:
-  :wallet: http://mo-prd-cwms-vapp01.laxigames.local:80/cwms
-  :patron: http://mo-prd-pis-vapp01.laxigames.local:80
-  :station: http://mo-prd-sm-vapp01.laxigames.local:80
+  :wallet: http://mo-prd-cwms-vapp01.lb.laxigames.local:80/cwms
+  :patron: http://mo-prd-pis-vapp01.lb.laxigames.local:80
+  :station: http://mo-prd-sm-vapp01.lb.laxigames.local:80

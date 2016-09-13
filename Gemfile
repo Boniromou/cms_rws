@@ -9,6 +9,7 @@ gem 'mysql2'
 gem 'lax-support', '0.6.32', :path => "vendor/gems/lax-support-0.6.32"
 gem 'sequel'
 gem 'httparty'
+gem 'rake', '10.4.2'
 
 # Gems used only for assets and not required
 # in production environments by default.

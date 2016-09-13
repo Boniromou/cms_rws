@@ -36,7 +36,7 @@ CmsRws::Application.configure do
   config.assets.debug = true
 
   config.cache_store = :dalli_store,
-                        'mo-snd-s3-vapp01.laxigames.local:11211', 'mo-snd-s3-vapp01.laxigames.local:11212',
+                        'mo-snd-s3-vapp01.lb.laxigames.local:11211', 'mo-snd-s3-vapp01.lb.laxigames.local:11212',
                         {:namespace => 'cirrus_snd',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
@@ -45,5 +45,5 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-SSO_URL = 'http://mo-snd-sso-vapp01.laxigames.local:80'
+SSO_URL = 'http://mo-snd-sso-vapp01.lb.laxigames.local:80'
 REGISTRATION_PATH = '/register'

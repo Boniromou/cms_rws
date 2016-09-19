@@ -37,6 +37,10 @@ namespace :property do
     create_property_data(:property_id => 20003, :property_name => 'property3', :casino_id => 20002, :casino_name => 'casino2', :licensee_id => 20001, :licensee_name => 'Licensee1')
   end
 
+  def create_10000_data
+    create_property_data(:property_id => 10000, :property_name => 'Testing', :casino_id => 10000, :casino_name => 'Testing', :licensee_id => 10000, :licensee_name => 'Testing')
+  end
+
   def create_test_data
     Licensee.where(:id => 1003, :name => 'test').first_or_create
     Casino.where(:id => 1003, :name => 'test', :licensee_id => 1003).first_or_create

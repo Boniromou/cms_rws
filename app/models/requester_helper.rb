@@ -130,7 +130,7 @@ class RequesterHelper
     kt = kiosk_transaction
     kt.pending! if kt.validated?
     begin
-      response = wallet_requester.send trans_type,kt.player.member_id, kt.amount, kt.ref_trans_id, kt.created_at.localtime, kt.source_type
+      response = wallet_requester.send trans_type,kt.player.member_id, PlayerTransaction.cents_to_dollar(kt.amount), kt.ref_trans_id, kt.created_at.localtime, kt.source_type
       raise Request::RetrieveBalanceFail unless response.success?
     rescue => e
       Rails.logger.error e.message

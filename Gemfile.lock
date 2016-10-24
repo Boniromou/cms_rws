@@ -9,7 +9,7 @@ PATH
     lax-support (0.6.32)
 
 GEM
-  remote: https://rubygems.org/
+  remote: http://gems:8808/
   specs:
     actionmailer (3.2.19)
       actionpack (= 3.2.19)

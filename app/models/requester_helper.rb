@@ -113,7 +113,8 @@ class RequesterHelper
     end
     raise Request::OutOfDailyLimit if player.out_of_daily_limit?(server_amount, :deposit, casino_id)
     kiosk_transaction = KioskTransaction.save_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, kiosk_id, ref_trans_id, source_type, casino_id)
-    {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => balance}
+    after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
+    {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => after_balance}
   end
 
   def deposit(login_name, ref_trans_id, session_token, casino_id)

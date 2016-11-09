@@ -113,7 +113,7 @@ describe KioskController do
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
       expect(result[:amt].to_f).to eq 100
-      expect(result[:balance].to_f).to eq 100.00
+      expect(result[:balance].to_f).to eq 200.00
       expect(result[:trans_date]).to eq kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S")
     end
     

@@ -76,6 +76,14 @@ describe KioskController do
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'RetrieveBalanceFail'
     end
+
+    it '[76.6] Test mode player card id' do
+      @player.test_mode_player = true
+      @player.save!
+      post 'kiosk_login', {:card_id => "1234567890", :kiosk_id => "1234567891", :pin => "1234", :casino_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidCardId'
+    end
   end
 
   describe '[77] Validate Deposit API' do

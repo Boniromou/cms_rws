@@ -85,7 +85,7 @@ class RequesterHelper
 
   def kiosk_login(card_id, pin, casino_id)
     player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
-    raise Request::InvalidCardId unless player
+    raise Request::InvalidCardId unless player && !player.test_mode_player
     raise Request::PlayerLocked if player.account_locked?
     login_name = player.member_id
     raise Request::InvalidPin unless validate_pin(login_name, pin)

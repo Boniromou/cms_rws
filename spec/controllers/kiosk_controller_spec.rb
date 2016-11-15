@@ -309,6 +309,14 @@ describe KioskController do
       expect(result[:error_msg]).to eq 'Ref_trans_id is duplicated.'
     end
     
+    it '[79.4] AmountNotEnough' do
+      allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough.new("200.0"))
+      post 'withdraw', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :amt => 100.00, :kiosk_id => @kiosk_id, :session_token => @token.session_token, :source_type => @source_type, :casino_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'AmountNotEnough'
+      expect(result[:error_msg]).to eq 'Amount is invalid.'
+    end
+    
     it '[79.5] InvalidAmount' do
       post 'withdraw', {:login_name => @player.member_id, :ref_trans_id => @ref_trans_id, :amt => -100.00, :kiosk_id => @kiosk_id, :session_token => @token.session_token, :source_type => @source_type, :casino_id => 20000}
       result = JSON.parse(response.body).symbolize_keys

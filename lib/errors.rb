@@ -250,4 +250,10 @@ module Request
       super(400, 'The transaction is invalid.', data)
     end
   end
+
+  class AmountNotEnough < RequestError
+    def initialize(data=nil)
+      super(400, 'Amount is invalid.', data)
+    end
+  end
 end

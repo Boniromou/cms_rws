@@ -133,6 +133,8 @@ class RequesterHelper
     begin
       response = wallet_requester.send trans_type,kt.player.member_id, PlayerTransaction.cents_to_dollar(kt.amount), kt.ref_trans_id, kt.created_at.localtime, kt.source_type
       raise Request::RetrieveBalanceFail unless response.success?
+    rescue Remote::AmountNotEnough => e
+      raise Request::AmountNotEnough
     rescue => e
       Rails.logger.error e.message
       Rails.logger.error e.backtrace.inspect

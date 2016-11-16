@@ -20,8 +20,8 @@ default: &default
     <<: *20000
   20002:
     <<: *20000
-  10000: 
-	<<: *20000
+  10000:
+    <<: *20000
     daily_deposit_limit: [8000, 'limit amount of daily deposit (cent)']
     daily_withdraw_limit: [7000, 'limit amount of daily withdraw (cent)']
 

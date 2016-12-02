@@ -26,3 +26,6 @@ set :nginx_worker_processes, 2
 set :cluster_port, 10065
 set :virtual_server_name, 'mo-mock-cms-vapp01.rnd.laxino.com'
 set :num_of_servers, 2
+
+set :keep_releases, 2
+after 'deploy', 'deploy:cleanup'

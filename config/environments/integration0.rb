@@ -36,7 +36,7 @@ CmsRws::Application.configure do
   config.assets.debug = true
 
   config.cache_store = :dalli_store,
-                        'int-cons-vapp01.rnd.laxino.com:11211', 'int-cons-vapp01.rnd.laxino.com:11212',
+                        'hq-int-s3-app01.laxino.local:11211', 'hq-int-s3-app01.laxino.local:11212',
                         {:namespace => 'cirrus_int',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
@@ -45,5 +45,5 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-SSO_URL = 'http://mo-int-sso-vapp01.rnd.laxino.com:80'
+SSO_URL = 'http://hq-int-sso-vapp01.laxino.local'
 REGISTRATION_PATH = '/register'

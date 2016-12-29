@@ -5,7 +5,7 @@ development:
   database: rothorn_cms_development
   username: rothorn
   password: rothorn
-  host: mo-int-cms-vdb01.rnd.laxino.com
+  host: hq-int-cms-vdb01.laxino.local
   port: 3306
 
 test:
@@ -15,7 +15,7 @@ test:
   database: rothorn_cms_test
   username: rothorn
   password: rothorn
-  host: mo-int-cms-vdb01.rnd.laxino.com
+  host: hq-int-cms-vdb01.laxino.local
   port: 3306
 
 integration0:
@@ -25,7 +25,7 @@ integration0:
   database: rothorn_cms_integration
   username: rothorn
   password: rothorn
-  host: mo-int-cms-vdb01.rnd.laxino.com
+  host: hq-int-cms-vdb01.laxino.local
   port: 3306
 
 staging0:

@@ -14,9 +14,9 @@ mockup0:
   :station: http://mo-mock-sm-vapp01.rnd.laxino.com:80
   
 integration0:
-  :wallet: http://mo-int-cwms-vapp01.rnd.laxino.com:80/cwms
-  :patron: http://mo-int-pis-vapp01.rnd.laxino.com:80
-  :station: http://mo-int-sm-vapp01.rnd.laxino.com:80
+  :wallet: http://hq-int-cwms-vapp01.laxino.local:80/cwms
+  :patron: http://hq-int-pis-vapp01.laxino.local:80
+  :station: http://hq-int-sm-vapp01.laxino.local:80
 
 staging0:
   :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms

@@ -38,9 +38,23 @@ namespace :property do
   end
 
   def create_10000_data
-    create_property_data(:property_id => 10000, :property_name => 'Testing', :casino_id => 10000, :casino_name => 'Testing', :licensee_id => 10000, :licensee_name => 'Testing')
+    create_property_data(:property_id => 10000, :property_name => 'RUBY_VIP01', :casino_id => 10000, :casino_name => 'Casino Ruby', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
   end
 
+  def create_10001_data
+    create_property_data(:property_id => 10001, :property_name => 'RUBY_TOUR', :casino_id => 10000, :casino_name => 'Casino Ruby', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
+  end
+
+  def create_10002_data
+    create_property_data(:property_id => 10002, :property_name => 'DIAMOND_MASS01', :casino_id => 10001, :casino_name => 'Casino Diamond', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
+  end
+  
+  
+  
+  
+  
+  
+  
   def create_test_data
     Licensee.where(:id => 1003, :name => 'test').first_or_create
     Casino.where(:id => 1003, :name => 'test', :licensee_id => 1003).first_or_create
@@ -77,7 +91,7 @@ namespace :property do
 
     licensee = Licensee.where(:id => licensee_id, :name => licensee_name).first_or_create
     casino = Casino.where(:id => casino_id, :name => casino_name, :licensee_id => licensee.id).first_or_create
-    Property.where(:id => property_id, :name => property_name, :secret_key => 'test_key', :casino_id => casino.id).first_or_create
+    Property.where(:id => property_id, :name => property_name, :casino_id => casino.id).first_or_create
 
     CasinosShiftType.where(:casino_id => casino_id, :shift_type_id => 1, :sequence => 1).first_or_create
     CasinosShiftType.where(:casino_id => casino_id, :shift_type_id => 2, :sequence => 2).first_or_create

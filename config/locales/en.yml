@@ -65,7 +65,7 @@ en:
     action_yes: "Yes"
     action_no: "No"
   title:
-    system: "Cirrus"
+    system: "GameSource"
     title: "Cage"
     login_title: "Login"
   user:
@@ -87,7 +87,7 @@ en:
     no_balance: "--"
     query_balance_fail: "Enquiry Balance failed, please contact customer service for more details."
     expiry: "Expiry: %{expired_at}"
-    account_credit: "Credit Balance"
+    account_credit: "Promo. Credit Balance"
   button:
     add: "Add"
     cancel: "Cancel"
@@ -111,8 +111,8 @@ en:
     print_void: "Print Void"
     create_pin: "Set PIN"
     reset_pin: "Reset PIN"
-    credit_deposit: "Add Credit"
-    credit_expire: "Expire Credit"
+    credit_deposit: "Add Promo. Credit"
+    credit_expire: "Expire Promo. Credit"
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"

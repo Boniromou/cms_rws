@@ -142,7 +142,9 @@ module StepHelper
   def check_remain_amount(*params)
     [:deposit, :withdraw].each do |trans_type|
       if params.include?(trans_type)
-        expect(find("label#player_remain_#{trans_type}").text).to eq to_display_amount_str(@player.remain_trans_amount(trans_type, 20000)).to_s
+        str = to_display_amount_str(@player.trans_amount(trans_type, 20000))
+        str += " #{to_display_amount_str(@player.remain_trans_amount(trans_type, 20000)).to_s}" if @player.remain_trans_amount(trans_type, 20000) <= 0
+        expect(find("label#player_remain_#{trans_type}").text).to eq str
       else
         expect(page.source).to_not have_selector "label#player_remain_#{trans_type}"
       end

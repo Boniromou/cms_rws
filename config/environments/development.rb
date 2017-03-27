@@ -46,6 +46,7 @@ end
 
 SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
 REGISTRATION_PATH = '/register'
+RESET_PASSWORD_PATH = '/passwords'
 WALLET_URL = 'http://mingwong01.rnd.laxino.com:5555'
 WALLET_PATH = '/cwms'
 PATRON_URL = 'http://mingwong01.rnd.laxino.com:6666'

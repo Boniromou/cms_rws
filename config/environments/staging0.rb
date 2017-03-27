@@ -47,3 +47,4 @@ end
 
 SSO_URL = 'http://mo-stg-sso-vapp01.rnd.laxino.com:80'
 REGISTRATION_PATH = '/register'
+RESET_PASSWORD_PATH = '/passwords'

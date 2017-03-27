@@ -1,5 +1,6 @@
 <% content_for :header do %>
   <%= link_to(t("general.signup"), "#{SSO_URL}#{REGISTRATION_PATH}?app=#{@login_url}", :class => "btn btn-danger") %>
+  <%= link_to(t("general.change_pw"), "#{SSO_URL}#{RESET_PASSWORD_PATH}?app=#{@login_url}&app_name=cage", :class => "btn btn-danger") %>
 <% end %>
 
 <!-- ap_login_panel -->

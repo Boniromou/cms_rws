@@ -38,3 +38,4 @@ end
 
 SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
 REGISTRATION_PATH = '/register'
+RESET_PASSWORD_PATH = '/passwords'

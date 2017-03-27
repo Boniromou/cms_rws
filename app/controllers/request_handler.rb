@@ -45,7 +45,7 @@ class RequestHandler
   end
 
   def process_keep_alive_event
-    Token.keep_alive(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id])
+    Token.keep_alive(@inbound[:login_name], @inbound[:session_token], @inbound[:casino_id], @inbound[:licensee_id])
     {}
   end
 

@@ -46,8 +46,8 @@ class Token < ActiveRecord::Base
       token
     end
 
-    def keep_alive(login_name, session_token, casino_id)
-      token = self.validate(login_name, session_token, casino_id)
+    def keep_alive(login_name, session_token, casino_id, licensee_id)
+      token = self.validate(login_name, session_token, licensee_id)
       token.casino_id = casino_id
       token.keep_alive
       token

@@ -207,7 +207,7 @@ describe PlayersController do
       fill_search_info_js("member_id", @player.member_id)
       fill_in "start", :with => (Shift.last.accounting_date.strftime("%F"))
       fill_in "end", :with => (Shift.last.accounting_date.strftime("%F"))
-      find("input#search").click
+      find("input#search").trigger('click')
       wait_for_ajax
 
       check_player_transaction_result_items([@player_transaction1,@player_transaction3,@kiosk_transaction1,@player_transaction4,@kiosk_transaction2])

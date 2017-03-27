@@ -43,6 +43,7 @@ en:
     lock: "Lock"
     unlock: "Unlock"
     signup: "Sign Up"
+    change_pw: "Change Password"
     member_id: "Membership ID"
     first name: "First Name"
     last name: "Last Name"

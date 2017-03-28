@@ -17,9 +17,9 @@ module Devise
             fail!('alert.inactive_account')
             return
           end
-          user = User.find_by_uid_and_casino_id(result['system_user']['id'], casino_id)
+          user = User.find_by_uid(result['system_user']['id'])
           if !user
-            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'], :casino_id => casino_id)
+            user = User.create!(:uid => result['system_user']['id'], :name => result['system_user']['username'])
           end
           success!(user)
           return

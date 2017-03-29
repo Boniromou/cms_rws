@@ -5,8 +5,9 @@ module MockHelper
   end
 
   def mock_cage_info
-    @location = "N/A"
+    @location = "---"
     @accounting_date = Time.now.strftime("%Y-%m-%d")
+    @casino_name = "---"
     @shift = "morning"
 
     allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location_str).and_return(@location)
@@ -34,7 +35,7 @@ module MockHelper
   end
 
   def mock_receive_location_name
-    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK', :error_msg => 'Request is carried out successfully.', :location_name => '0102', :zone_name => '01'}))
+    allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK', :error_msg => 'Request is carried out successfully.', :location_name => '0102', :zone_name => '01', :casino_id => 20000}))
   end
 
   def mock_not_receive_location_name

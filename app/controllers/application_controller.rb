@@ -132,6 +132,10 @@ class ApplicationController < ActionController::Base
 
   def get_location_info
     return session[:location_info] if session[:location_info]
-    'N/A'
+    '---'
+  end
+  def get_casino_info
+    return session[:casino_info] if session[:casino_info]
+    '---'
   end
 end

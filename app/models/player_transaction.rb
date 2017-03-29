@@ -97,7 +97,7 @@ class PlayerTransaction < ActiveRecord::Base
       machine_token_array = self.machine_token.split('|') 
       return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
     end
-    'N/A'
+    '---'
   end
 
   def update_slip_number!

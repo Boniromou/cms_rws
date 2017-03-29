@@ -10,7 +10,8 @@ development:
 
 test:
   servers:
-    - hq-int-s3-vapp01.laxino.local:80
+#    - hq-int-s3-vapp01.laxino.local:80
+    - dev-cons-app01.rnd.laxino.com:11211
   expires: 3600
   namespace: s3_tst
   no_block: true

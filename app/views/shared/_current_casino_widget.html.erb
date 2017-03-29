@@ -1,0 +1,24 @@
+<div id="casino_name" class="casino_widget"><%= default_casino_widget_message %></div>
+
+<%= javascript_include_tag "custom.effect.js" %>
+
+<script>
+  function updateLocation() {
+    $.ajax({
+      url: '/machines/current_casino/',
+      type: 'get',
+      success: function(data) {
+        $('.casino_widget').each(function(index, element) {
+          var widget = $(element);
+          var pre = widget.html();
+          if ( pre == "<%= default_casino_widget_message %>" )
+            widget.html(data)
+          else if ( pre != data && !widget.hasClass("animating") )
+            animateUpdate(element, data);
+        });
+      }
+    });
+  };
+  
+    updateLocation();
+</script>

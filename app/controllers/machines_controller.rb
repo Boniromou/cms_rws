@@ -14,4 +14,10 @@ class MachinesController < ApplicationController
       format.html { render :text => get_location_info , :layout => false }
     end
   end
+
+  def current_casino
+    respond_to do |format|
+      format.html { render :text => get_casino_info , :layout => false }
+    end
+  end
 end

@@ -91,7 +91,43 @@ describe UserSessionsController do
         expect(page).to have_content @accounting_date
         # expect(page).to have_content @shift.capitalize
         expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+        expect(page).to have_content @casino_name
       end
     end
   end
+
+  describe '[80] Show Casino Name in Login Page' do
+    before(:each) do
+      mock_cage_info
+      mock_current_casino_id
+    end
+
+    it '[80.1] show casino name in login page', js: true do
+      mock_have_machine_token
+      mock_receive_location_name
+      visit login_path
+      wait_for_ajax
+
+      within '#cage_info' do
+        expect(page).to have_content @location
+        expect(page).to have_content @accounting_date
+        # expect(page).to have_content @shift.capitalize
+        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+        expect(page).to have_content Casino.find_by_id(20000).name
+      end
+    end
+
+    it '[80.2] Show casino name in login page without machine token', js: true do
+      visit login_path
+
+      within '#cage_info' do
+        expect(page).to have_content @location
+        expect(page).to have_content @accounting_date
+        # expect(page).to have_content @shift.capitalize
+        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+        expect(page).to have_content @casino_name
+      end
+    end
+  end
+
 end

@@ -68,6 +68,7 @@ CmsRws::Application.routes.draw do
   post 'search_audit_logs' => 'audit_logs#do_search'
   
   get 'machines/current_location' => 'machines#current_location'
+  get 'machines/current_casino' => 'machines#current_casino'
 
   post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
   get 'get_player_currency' => 'player_infos#get_player_currency'

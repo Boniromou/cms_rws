@@ -57,6 +57,7 @@ en:
     end_time: "End Time"
     active: "Active"
     inactive: "Inactive"
+    casino: "Casino"
     zone_and_location: "Zone/Location"
     currency: "Currency"
   login_page:

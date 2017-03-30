@@ -19,7 +19,9 @@ class PlayersController < ApplicationController
     @operation = params[:action]
     member_id = params[:member_id]
     @player = policy_scope(Player).find_by_member_id(member_id)
-    @casino_id = current_casino_id
+    @current_user = current_user
+    @casino_id = params[:select_casino_id] || current_casino_id
+
     unless @player
       raise PlayerProfile::PlayerNotFound
     end
@@ -42,7 +44,7 @@ class PlayersController < ApplicationController
     @inactivate = true
     @player = e.player
     @operation = params[:operation]
-    @casino_id = current_casino_id
+    @casino_id = params[:select_casino_id] || current_casino_id
 
     respond_to do |format|
       format.html { render "players/player_info", formats: [:html] }

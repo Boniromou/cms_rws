@@ -9,7 +9,8 @@
       <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
       <div role="content">
         <div class="jarviswidget-editbox">
-        </div>
+      </div>
+
       <div class="widget-body">
         <% if show_info %>
           <div class="row">
@@ -46,6 +47,21 @@
             <div><label class="col-xs-5 box"><strong><%= t("general.currency")%>:</strong></label></div>
             <div><label class="col-xs-5 box"><%= label_tag :player_member_id, @player.currency.name, :id => "player_currency" %></label></div>
           </div>
+ 
+          <div class="row" style="margin-top: 8px;">
+            <% if !(@operation == '' || @operation.nil?) %>
+              <label class="col-xs-5 box"><strong><%= t("general.casino")%>:</strong></label></td>
+              <label class="select col-xs-5 box">
+                <select  name="select_casino" id="select_casino">
+                  <% @current_user.casino_ids.each do |casino_id| %>
+                    <option value=<%= casino_id %>  <%= "selected='selected'" if (casino_id.to_i == @casino_id.to_i ) %>><%= Casino.find_by_id(casino_id).name %></option>
+                  <% end %>
+                </select>
+                <i></i>
+              </label>
+            <% end %>
+          </div>
+  
           <% if show_remain[:deposit] %>
             <div class="row">
               <div><label class="col-xs-5 box"><strong><%= t("player.remain_deposit")%>:</strong></label></div>
@@ -55,6 +71,7 @@
               <div><label class="col-xs-5 box" <%= 'style=color:red;' if  remain_amt <= 0 %>><%= label_tag :player_remain_deposit, "#{to_display_amount_str(trans_amt)} #{to_display_remain_str(remain_amt)}", :id => "player_remain_deposit" %></label></div>
             </div>
           <% end %>
+
           <% if show_remain[:withdraw] %>
             <div class="row">
               <div><label class="col-xs-5 box"><strong><%= t("player.remain_withdraw")%>:</strong></label></div>
@@ -65,6 +82,7 @@
             </div>
           <% end %>
         <% end %>
+
         <%= content %>
         </br>
         <div class="widget-footer text-left">
@@ -75,3 +93,25 @@
   </div>
 </article>
 </div>
+
+
+<script>
+$("#select_casino").change(function(){
+  var e = document.getElementById("select_casino");
+  var select_casino_id = e.options[e.selectedIndex].value;
+
+  $.ajax({
+    url: "/<%= @operation %>.js",
+    data: {
+      select_casino_id: select_casino_id, member_id: <%= @player.member_id %>
+    },
+    type: 'get',
+    success: function(data) {
+//      alert(data);
+    }
+  });
+});
+</script>
+
+
+

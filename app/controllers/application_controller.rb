@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
     user_casino_id = current_user.casino_id if current_user
     machine_info = Machine.parse_machine_token(cookies[:machine_token])
     machine_casino_id = machine_info[:casino_id] if machine_info
-    user_casino_id || machine_casino_id
+    machine_casino_id || user_casino_id
   end
 
   def current_licensee_id

@@ -12,7 +12,6 @@ class UserSessionsController < Devise::SessionsController
 
     if get_machine_token
       response = station_requester.validate_machine_token(MACHINE_TYPE, get_machine_token, nil, current_casino_id)
-      p 'response: ', response
       if response.success?
         if response.zone_name != nil && response.location_name != nil
           session[:location_info] = response.zone_name + '/' + response.location_name

@@ -5,9 +5,9 @@ $('input#datetimepicker_start_time').val("<%= format_time(@start_time) %>");
 $('input#datetimepicker_end_time').val("<%= format_time(@end_time) %>");
 
 <% if @operation == 'cash' %>
-	$('tr th:nth-child(5)').click();
+	$('tr th:nth-child(6)').click();
 <% else %>
-	$('tr th:nth-child(3)').click();
+	$('tr th:nth-child(4)').click();
 <% end %>
 
 <%= render :partial => "shared/flash_message", :formats => [ :js ] %>

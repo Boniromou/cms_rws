@@ -1,3 +1,5 @@
+#require 'spec_helper'
+
 module StepHelper
   include ActionView::Helpers
   def check_flash_message(msg)
@@ -27,6 +29,10 @@ module StepHelper
 
   def login_as_not_admin(user)
     login_as user
+
+    #page.set_rack_session( :casino_info => Casino.find_by_id(20000).name)
+    #page.set_rack_session( :machine_token => '20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
+
     Rails.cache.write user.uid.to_s, {:status => true, :admin => false,  :casinos => [20000]}
   end
 
@@ -232,6 +238,8 @@ module StepHelper
     i = 0
     expect(item[i].text).to eq player_transaction.source_type.gsub('_transaction','').titleize
     i +=1
+    expect(item[i].text).to eq "MockUp"
+    i +=1
     expect(item[i].text).to eq player_transaction.slip_number.to_s
     i +=1
     expect(item[i].text).to eq player.member_id
@@ -294,16 +302,17 @@ module StepHelper
       credit_expire_duration_str = ""
     end
     expect(item[0].text).to eq player.member_id
-    expect(item[1].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
-    expect(item[2].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    expect(item[3].text).to eq location
-    expect(item[4].text).to eq user.name
-    expect(item[5].text).to eq player_transaction.display_status
-    expect(item[6].text).to eq I18n.t("transaction_history.#{player_transaction.transaction_type.name}")
-    expect(item[7].text).to eq credit_deposit_str
-    expect(item[8].text).to eq credit_expire_str
-    expect(item[9].text).to eq credit_expire_duration_str
-    expect(item[10].text).to eq YAML.load(player_transaction.data)[:remark]
+    expect(item[1].text).to eq "MockUp"
+    expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
+    expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    expect(item[4].text).to eq location
+    expect(item[5].text).to eq user.name
+    expect(item[6].text).to eq player_transaction.display_status
+    expect(item[7].text).to eq I18n.t("transaction_history.#{player_transaction.transaction_type.name}")
+    expect(item[8].text).to eq credit_deposit_str
+    expect(item[9].text).to eq credit_expire_str
+    expect(item[10].text).to eq credit_expire_duration_str
+    expect(item[11].text).to eq YAML.load(player_transaction.data)[:remark]
   end
 
   def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
@@ -320,6 +329,7 @@ module StepHelper
   def check_credit_transaction_result_items(transaction_list)
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
+
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
@@ -331,6 +341,7 @@ module StepHelper
   def check_fm_report_result_items(transaction_list)
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
+
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
@@ -509,6 +520,7 @@ module StepHelper
     expect(page).to have_selector("div#pop_up_dialog div button#cancel")
     find("div#pop_up_dialog div button#confirm").click
     wait_for_ajax
+
     PlayerTransaction.last
   end
 

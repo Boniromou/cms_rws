@@ -74,6 +74,10 @@ class ApplicationController < ActionController::Base
     AccountingDate.current(current_casino_id)
   end
 
+  def current_accounting_date_by_casino_id(casino_id)
+    AccountingDate.current(casino_id)
+  end
+
   def current_machine_token
     session[:machine_token]
   end

@@ -170,6 +170,10 @@ class PlayerTransaction < ActiveRecord::Base
 
     def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
       by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
-    end
+    end 
+
+    def search_transactions_by_user_and_shift_and_casino_id(user_id, start_shift_id, end_shift_id, casino_id)
+      search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id).by_casino_id(casino_id)
+    end 
   end
 end

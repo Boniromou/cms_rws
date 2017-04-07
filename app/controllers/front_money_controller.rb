@@ -6,7 +6,16 @@ class FrontMoneyController < ApplicationController
     authorize_action :Shift, :search_fm?
   end
 
+  def search_current_accounting_date_by_casino_id
+    result = current_accounting_date_by_casino_id(params[:casino_id]).accounting_date
+
+    respond_to do |format|
+      format.json { render :text => result.to_json }
+    end
+  end
+
   def search
+    @casino_id = current_casino_id
     @accounting_date = params[:accounting_date] || current_accounting_date.accounting_date
   end
 
@@ -17,8 +26,9 @@ class FrontMoneyController < ApplicationController
       start_shift = @accounting_date.shifts.first
       end_shift = @accounting_date.shifts.last
       raise FrontMoneyHelper::NoResultException.new "shift not found" if start_shift.nil? || end_shift.nil?
-      @player_transactions = PlayerTransaction.search_transactions_by_user_and_shift(current_user.id, start_shift.id, end_shift.id)
-      @player_transactions = policy_scope(@player_transactions)
+
+      @player_transactions = params[:select_casino] ? PlayerTransaction.search_transactions_by_user_and_shift_and_casino_id(current_user.id, start_shift.id, end_shift.id, params[:select_casino]) :  PlayerTransaction.search_transactions_by_user_and_shift(current_user.id, start_shift.id, end_shift.id)
+      #@player_transactions = policy_scope(@player_transactions)
     rescue FrontMoneyHelper::NoResultException => e
       @player_transactions = []
     end

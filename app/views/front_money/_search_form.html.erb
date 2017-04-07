@@ -1,27 +1,54 @@
-          <div class="row">
-                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3">
-          <%= form_tag(search_front_money_path, :remote => true, :id => "search_form") do %>
-            <fieldset>
-           
-                  <%= render "shared/date_picker" %>
-        
+<div class="row">
+  <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3">
+    <%= form_tag(search_front_money_path, :remote => true, :id => "search_form") do %>
+      <fieldset>
+        <label><%= t("general.casino")%></label>
+        <br/>
+        <label>
+          <select  name="select_casino" id="select_casino">
+            <% @current_user.casino_ids.each do |casino_id| %>
+              <option value=<%= casino_id %>  <%= "selected='selected'" if (casino_id.to_i == @casino_id.to_i ) %>><%= Casino.find_by_id(casino_id).name %></option>
+            <% end %>
+          </select>
+          <i></i>
+        </label>
+        <br/><br/>
+
+        <%= render "shared/date_picker" %>
+  
+        <div class="form-actions">  
+          <%= submit_tag t("button.search"),:id => "search", :class => "btn btn-primary", :remote => true  %>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+</div>
+
+<br/>
 
 
-                <div class="form-actions">
-           
-                
-                  <%= submit_tag t("button.search"),:id => "search", :class => "btn btn-primary", :remote => true  %>
-                </div>
-            </fieldset>
-          <% end %>
-          </div>
-            </div>
 
-          <br/>
+<script type="text/javascript">
+  $("#search").click(function(){
+    document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-3';
+    document.getElementById('flash_message').style.marginLeft = '0px';
+  });
 
-          <script type="text/javascript">
-            $("#search").click(function(){
-              document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-3';
-              document.getElementById('flash_message').style.marginLeft = '0px';
-            });    
-          </script>
+
+  $("#select_casino").change(function(){
+    var e = document.getElementById("select_casino");
+    var select_casino_id = e.options[e.selectedIndex].value;
+
+    $.ajax({
+      url: "/search_current_ac_date_by_casino",
+      data: {
+        casino_id: select_casino_id
+      },
+      type: 'get',
+      success: function(data) {
+        //alert(data);
+        $('#accounting_date').datepicker('setDate', data);
+      }
+    });
+  });
+</script>

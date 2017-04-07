@@ -125,8 +125,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      transaction[:casino_id] = User.find_by_id(user_id).casino_id
-      #transaction[:casino_id] = Machine.parse_machine_token(machine_token)[:casino_id]
+      transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
       transaction[:data] = data
       PlayerTransaction.transaction do
         transaction.save

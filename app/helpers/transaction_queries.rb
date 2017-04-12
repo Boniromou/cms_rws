@@ -10,6 +10,7 @@ module TransactionQueries
       scope :by_transaction_type_id, -> trans_types { where(:transaction_type_id => trans_types) if trans_types.present?}
       scope :from_shift_id, -> shift_id { where( "shift_id >= ? ", shift_id) if shift_id.present? }
       scope :to_shift_id, -> shift_id { where( "shift_id <= ? ", shift_id) if shift_id.present? }
+      scope :in_shift_id, -> shift_id { where( "shift_id in (?) ", shift_id) if shift_id.present? }
       scope :by_slip_number, -> slip_number { where("slip_number = ?", slip_number) if slip_number.present? }
       scope :by_status, -> status { where( :status => status) if status.present? }
       scope :by_casino_id, -> casino_id { where("casino_id = ?", casino_id) if casino_id.present? }

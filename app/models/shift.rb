@@ -32,7 +32,12 @@ class Shift < ActiveRecord::Base
     end
   end
 
+
   class << self
+    def get_shift_by_date_and_casino(accounting_date_id, casino_id)
+      self.select(:id).find_all_by_accounting_date_id_and_casino_id(accounting_date_id, casino_id)
+    end
+
     def current(casino_id)
       shift = Shift.find_by_roll_shift_at_and_casino_id(nil, casino_id)
       raise "Current shift not found!, casino_id: #{casino_id}" unless shift

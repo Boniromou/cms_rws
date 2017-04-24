@@ -29,11 +29,14 @@
 
 
 <script type="text/javascript">
+  $(document).ready(function(){
+    $("#accounting_date").datepicker("option", "maxDate", new Date("<%= @accounting_date %>"));
+  });
+
   $("#search").click(function(){
     document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-3';
     document.getElementById('flash_message').style.marginLeft = '0px';
   });
-
 
   $("#select_casino").change(function(){
     var e = document.getElementById("select_casino");
@@ -47,6 +50,7 @@
       type: 'get',
       success: function(data) {
         //alert(data);
+        $("#accounting_date").datepicker("option", "maxDate", new Date(data));
         $('#accounting_date').datepicker('setDate', data);
       }
     });

@@ -36,7 +36,7 @@ CmsRws::Application.configure do
   config.assets.debug = true
 
   config.cache_store = :dalli_store,
-                        'hq-stg-s3-app01.laxino.local:11211', 'hq-stg-s3-app01.laxino.local:11212',
+                        'hq-stg-s3-vapp01.laxino.local:11211', 'hq-stg-s3-vapp01.laxino.local:11212',
                         {:namespace => 'cirrus_stg',
                          :expires_in => 1.day,
                          :socket_timeout => 3,

@@ -37,7 +37,7 @@ CmsRws::Application.configure do
 
   #SITE_DOMAIN = 'laxino.com'
   config.cache_store = :dalli_store,
-                       'hq-int-s3-app01.laxino.local:11211', 'hq-int-s3-app01.laxino.local:11212',
+                       'hq-int-s3-vapp01.laxino.local:11211', 'hq-int-s3-vapp01.laxino.local:11212',
                         {:namespace => 'cirrus_dev',
                          :expires_in => 1.day,
                          :socket_timeout => 3,

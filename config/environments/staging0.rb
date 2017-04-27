@@ -36,13 +36,13 @@ CmsRws::Application.configure do
   config.assets.debug = true
 
   config.cache_store = :dalli_store,
-                        'hq-stg-s3-app01.laxino.local:11211', 'hq-stg-s3-app01.laxino.local:11212',
+                        'hq-stg-s3-vapp01.laxino.local:11211', 'hq-stg-s3-vapp01.laxino.local:11212',
                         {:namespace => 'cirrus_stg',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
                          :compress => true }
 
-  SITE_DOMAIN = 'laxino.local'
+  SITE_DOMAIN = 'laxino.com'
 end
 
 SSO_URL = 'http://hq-stg-sso-vapp01.laxino.local'

@@ -43,6 +43,12 @@ module StepHelper
     Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true, :properties => [20000], :casinos => [20000]}
   end
 
+  def login_as_admin_multi_casino(casino_id = 20000)
+  #not finish
+    login_as_admin
+    Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true, :properties => [20000], :casinos => [20000, 1003]}
+  end
+
   def login_as_test_user
     @test_user = User.create!(:uid => 2, :name => 'test.user')
     login_as_not_admin(@test_user)

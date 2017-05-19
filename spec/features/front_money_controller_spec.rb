@@ -70,7 +70,7 @@ describe FrontMoneyController do
     it '[11.5] only search the casino transaction', :js => true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 1003)
+      #@player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 40000, :machine_token => '1003|1|LOCATION2|2|STATION1|2|machine2|6e80a295eeff4554bf025098cca6eb38', :created_at => Time.now, :slip_number => 1, :casino_id => 1003)
       visit search_front_money_path
       
       check_search_fm_page

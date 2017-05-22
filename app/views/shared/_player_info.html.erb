@@ -47,7 +47,9 @@
             <div><label class="col-xs-5 box"><strong><%= t("general.currency")%>:</strong></label></div>
             <div><label class="col-xs-5 box"><%= label_tag :player_member_id, @player.currency.name, :id => "player_currency" %></label></div>
           </div>
- 
+
+
+          <% if policy(:PlayerTransaction).usermatchtoken(@casino_id) %>
           <div class="row" style="margin-top: 8px;">
             <% if !(@operation == '' || @operation.nil?) %>
               <label class="col-xs-5 box"><strong><%= t("general.casino")%>:</strong></label></td>
@@ -61,6 +63,7 @@
               </label>
             <% end %>
           </div>
+          <% end %>
   
           <% if show_remain[:deposit] %>
             <div class="row">

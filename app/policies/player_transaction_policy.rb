@@ -21,4 +21,9 @@ class PlayerTransactionPolicy < ApplicationPolicy
   def withdraw?
     have_active_location? && can_withdraw?
   end
+
+
+  def usermatchtoken( current_casino_id )
+    user.casino_id.to_s == current_casino_id.to_s
+  end
 end

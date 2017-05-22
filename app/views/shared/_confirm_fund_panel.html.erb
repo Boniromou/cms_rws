@@ -68,7 +68,7 @@
   function updateRemainAlert(){
     var limit = <%= cents_to_dollar(@remain_limit) %>;
     var amt = $('#player_transaction_amount').val();
-    if(amt > limit){
+    if(amt >= limit){
       $("label#remain_limit_alert").css('visibility', 'visible');
       $("label#remain_limit_alert").css('display', 'block');
     }else{

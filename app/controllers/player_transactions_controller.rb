@@ -32,7 +32,7 @@ class PlayerTransactionsController < ApplicationController
       kiosk_transactions = KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation).where(:casino_id => current_casino_id)
       @transactions = player_transactions + kiosk_transactions
     else
-      @transactions = policy_scope(PlayerTransaction).search_query_by_slip_number(slip_number)
+      @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_casino_id)
     end
     rescue Remote::PlayerNotFound => e
       @transactions = []

@@ -14,7 +14,7 @@ class VoidController < FundController
   def extract_params
     player_transaction_id = params[:transaction_id]
     raise FundInOut::VoidTransactionNotExist unless player_transaction_id
-    @target_transaction = policy_scope(PlayerTransaction).find_by_id(player_transaction_id)
+    @target_transaction = PlayerTransaction.find_by_id_and_casino_id(player_transaction_id, current_casino_id)
     raise FundInOut::VoidTransactionNotExist unless @target_transaction
     @player = @target_transaction.player
     @server_amount = @target_transaction.amount

@@ -46,6 +46,9 @@ module TransactionQueries
     end
 
     def daily_transaction_amount_by_player(player, accounting_date, trans_type, casino_id)
+	  if player.status == 'not_activate'
+	    return 0
+	  end
       start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
       end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id
       trans_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0

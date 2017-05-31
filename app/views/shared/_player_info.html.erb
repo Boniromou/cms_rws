@@ -49,7 +49,7 @@
           </div>
 
 
-          <% if policy(:PlayerTransaction).usermatchtoken(@casino_id) %>
+          <% if policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
           <div class="row" style="margin-top: 8px;">
             <% if !(@operation == '' || @operation.nil?) %>
               <label class="col-xs-5 box"><strong><%= t("general.casino")%>:</strong></label></td>

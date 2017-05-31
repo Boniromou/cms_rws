@@ -32,7 +32,8 @@ class Token < ActiveRecord::Base
       raise Request::InvalidLoginName unless player
       token = player.tokens.find_by_session_token(session_token)
       raise Request::InvalidSessionToken unless token
-      raise Request::InvalidSessionToken unless token.belong_to?(login_name) && token.alive? && !token.player.account_locked?
+      raise Request::PlayerLocked unless !token.player.account_locked?
+      raise Request::InvalidSessionToken unless token.belong_to?(login_name) && token.alive?
       token
     end
 

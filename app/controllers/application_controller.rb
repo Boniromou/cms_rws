@@ -74,6 +74,10 @@ class ApplicationController < ActionController::Base
     AccountingDate.current(current_casino_id)
   end
 
+  def current_accounting_date_by_casino_id(casino_id)
+    AccountingDate.current(casino_id)
+  end
+
   def current_machine_token
     session[:machine_token]
   end
@@ -82,7 +86,7 @@ class ApplicationController < ActionController::Base
     user_casino_id = current_user.casino_id if current_user
     machine_info = Machine.parse_machine_token(cookies[:machine_token])
     machine_casino_id = machine_info[:casino_id] if machine_info
-    user_casino_id || machine_casino_id
+    machine_casino_id || user_casino_id
   end
 
   def current_licensee_id
@@ -132,6 +136,10 @@ class ApplicationController < ActionController::Base
 
   def get_location_info
     return session[:location_info] if session[:location_info]
-    'N/A'
+    '---'
+  end
+  def get_casino_info
+    return session[:casino_info] if session[:casino_info]
+    '---'
   end
 end

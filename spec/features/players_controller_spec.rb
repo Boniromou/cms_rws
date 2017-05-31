@@ -42,6 +42,7 @@ describe PlayersController do
       find("#button_find").click
       check_balance_page
       check_player_info
+      expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
     end
     
     it '[4.3] fail to search player' do
@@ -105,6 +106,7 @@ describe PlayersController do
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
 
+      expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
     end
 
     it '[5.2] click unauthorized action', :js => true do 
@@ -212,6 +214,49 @@ describe PlayersController do
       expect(page).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq 'disabled'
       expect(find("div a#balance_withdraw")[:disabled]).to eq 'disabled'
+    end
+
+    it '[5.10] View player balance enquiry based on casino selected', :js => true do
+    #not finish
+      mock_close_after_print
+      mock_patron_not_change
+      mock_have_active_location
+      @player = create_default_player
+
+      mock_wallet_balance(0.0)
+      mock_wallet_transaction_success(:deposit)
+
+      login_as_admin_multi_casino
+
+      #test = Rails.cache.fetch "#{@root_user.uid}"
+      #p 'test...', test[:casinos]
+
+      go_to_deposit_page
+      wait_for_ajax
+      check_remain_amount(:deposit)
+      fill_in "player_transaction_amount", :with => 10000
+
+      find("button#confirm_deposit").click
+      expect(find("#fund_amt").text).to eq to_display_amount_str(1000000)
+      find("div#pop_up_dialog div button#confirm").click
+
+      visit home_path
+      click_link I18n.t("tree_panel.balance")
+      wait_for_ajax
+      check_search_page
+      fill_search_info_js("member_id", @player.member_id)
+      find("#button_find").click
+      
+      expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
+      expect(find("label#player_remain_deposit").text).to eq to_display_amount_str(1000000)
+      clean_dbs
+      #create_shift_data_multi
+      #select('test', :from => 'select_casino')
+      #expect(find("select#select_casino").value).to eq '1003'
+      #Rails.logger.info '-----------------------'
+      #wait_for_ajax
+      #Rails.logger.info '========================'
+      #expect(find("label#player_remain_deposit").text).to eq to_display_amount_str(1000000)
     end
   end
   

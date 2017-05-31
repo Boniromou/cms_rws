@@ -47,3 +47,4 @@ end
 
 SSO_URL = 'http://mo-prd-sso-vapp01.lb.laxigames.local:80'
 REGISTRATION_PATH = '/register'
+RESET_PASSWORD_PATH = '/passwords'

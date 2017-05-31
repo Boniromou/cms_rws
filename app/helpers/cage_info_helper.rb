@@ -16,10 +16,14 @@ module CageInfoHelper
   end
 
   def default_location_widget_message
-    "N/A"
+    "---"
   end
 
-  protected
+  def default_casino_widget_message
+    "---"
+  end
+
+protected
 
   def polling_interval
     #milliseconds

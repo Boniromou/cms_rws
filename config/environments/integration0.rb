@@ -47,3 +47,4 @@ end
 
 SSO_URL = 'http://hq-int-sso-vapp01.laxino.local'
 REGISTRATION_PATH = '/register'
+RESET_PASSWORD_PATH = '/passwords'

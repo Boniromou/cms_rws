@@ -5,13 +5,37 @@
   }
 </style>
 
-<table width='300' style='font-weight: bold;'>
+<table width='500' style='font-weight: bold;'>
   <tr>
-    <td width='35%' class='header_info_padding'><%= t("general.zone_and_location") %>:</td>
-    <td width='65%' class='header_info_padding'><%= render 'shared/current_location_widget' %></td>
+    <td width='40%'>
+      <table width='100%'>
+        <tr>
+          <td width='35%' class='header_info_padding'><%= t("general.casino") %>:</td>
+          <td width='65%' class='header_info_padding'><%= render 'shared/current_casino_widget' %></td>
+        </tr>
+      </table>
+    </td>
+    <td width='60%'>
+      <table width='100%'>
+        <tr>
+          <td width='35%' class='header_info_padding'><%= t("general.zone_and_location") %>:</td>
+          <td width='65%' class='header_info_padding'><%= render 'shared/current_location_widget' %></td>
+        </tr>
+      </table>
+    </td>
   </tr>
+
   <tr>
-    <td width='35%' class='header_info_padding'><%= render 'shared/current_accounting_date_widget' %></td>
-    <td width='65%' class='header_info_padding'><%= render 'shared/current_shift_widget' %></td>
+    <td width='40%'>
+      <table  width='100%'>
+        <tr>
+          <td width='35%' class='header_info_padding'><%= render 'shared/current_accounting_date_widget' %></td>
+          <td width='65%' class='header_info_padding'><%= render 'shared/current_shift_widget' %></td>
+        </tr>
+      </table>
+    </td>
+    
+    <td width='60%'>
+    </td>
   </tr>
 </table>

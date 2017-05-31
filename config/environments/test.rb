@@ -36,5 +36,6 @@ CmsRws::Application.configure do
   config.active_support.deprecation = :stderr
 end
 
-SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
+SSO_URL = 'http://hq-int-sso-vapp01.laxino.local'
 REGISTRATION_PATH = '/register'
+RESET_PASSWORD_PATH = '/passwords'

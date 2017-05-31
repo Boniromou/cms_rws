@@ -1,4 +1,5 @@
 require "feature_spec_helper"
+require "spec_helper"
 
 describe UserSessionsController do
   before(:all) do
@@ -91,7 +92,91 @@ describe UserSessionsController do
         expect(page).to have_content @accounting_date
         # expect(page).to have_content @shift.capitalize
         expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+        expect(page).to have_content @casino_name
       end
     end
   end
+
+
+=begin
+  describe '[80] Show Casino Name in Login Page' do
+    before(:each) do
+      clean_dbs
+      create_shift_data
+      mock_cage_info
+
+      mock_wallet_balance(0.0)
+      mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
+      mock_current_casino_id
+    end
+
+    after(:each) do
+      clean_dbs
+    end
+
+
+    it '[80.1] show casino name in login page', js: true do
+      mock_have_machine_token
+      mock_receive_location_name
+      visit login_path
+      wait_for_ajax
+
+      within '#cage_info' do
+        expect(page).to have_content @location
+        expect(page).to have_content @accounting_date
+        # expect(page).to have_content @shift.capitalize
+        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+        expect(page).to have_content Casino.find_by_id(20000).name
+      end
+    end
+
+    it '[80.2] Show casino name in login page without machine token', js: true do
+      visit login_path
+
+      within '#cage_info' do
+        expect(page).to have_content @location
+        expect(page).to have_content @accounting_date
+        # expect(page).to have_content @shift.capitalize
+        expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
+        expect(page).to have_content @casino_name
+      end
+    end
+
+
+    it '[80.3] Show casino name in header and home page after login', js: true do
+      login_as_admin
+
+      page.set_rack_session( :casino_info => Casino.find_by_id(20000).name)
+      page.set_rack_session( :machine_token => '20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
+
+      mock_have_machine_token
+      mock_receive_location_name
+      visit home_path
+      wait_for_ajax
+
+      #within 'header#header' do
+      #  expect(page).to have_content Casino.find_by_id(20000).name
+      #end
+
+      within 'div#content' do
+        expect(page).to have_content Casino.find_by_id(20000).name
+      end
+    end
+
+    it '[80.4] Show casino name in header and home page after login without machine token', js: true do
+      login_as_admin
+      visit home_path
+      wait_for_ajax
+
+      within 'header#header' do
+        expect(page).to have_content '---'
+      end
+
+      within 'div#content' do
+        expect(page).to have_content '---'
+      end
+    end
+  end
+=end
+
 end

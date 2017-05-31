@@ -31,8 +31,8 @@ module FundHelper
   end
 
   def to_display_remain_str(remain_amt)
-    if remain_amt >= 0
-      to_display_amount_str(remain_amt)
+    if remain_amt > 0
+      ""
     else
       I18n.t('player.exceed_remain_limit')
     end

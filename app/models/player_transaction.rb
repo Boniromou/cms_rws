@@ -97,7 +97,7 @@ class PlayerTransaction < ActiveRecord::Base
       machine_token_array = self.machine_token.split('|') 
       return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
     end
-    'N/A'
+    '---'
   end
 
   def update_slip_number!
@@ -125,7 +125,7 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      transaction[:casino_id] = User.find_by_id(user_id).casino_id
+      transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
       transaction[:data] = data
       PlayerTransaction.transaction do
         transaction.save
@@ -170,6 +170,10 @@ class PlayerTransaction < ActiveRecord::Base
 
     def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
       by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
-    end
+    end 
+
+    def search_transactions_by_shift_id(user_id, in_shift_id)
+      by_user_id(user_id).in_shift_id(in_shift_id).only_deposit_withdraw
+    end 
   end
 end

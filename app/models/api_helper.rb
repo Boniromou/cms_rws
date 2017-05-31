@@ -13,7 +13,8 @@ class ApiHelper
       player = Player.find_by_member_id_and_licensee_id(login_name, licensee_id)
       raise Request::InvalidLoginName.new unless player
       player.lock_account!
-      ChangeHistory.create(User.new(:name => 'system', :casino_id => casino_id), player, 'lock')
+      user = MockUser.new(:name => 'system', :casino_id => casino_id)
+      ChangeHistory.create(user, player, 'lock')
       {}
     end
 

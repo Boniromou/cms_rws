@@ -48,6 +48,7 @@ CmsRws::Application.routes.draw do
   post 'search_transactions' => 'player_transactions#do_search'
   get 'index' => 'player_transactions#index'
 
+  get 'search_current_ac_date_by_casino' => 'front_money#search_current_accounting_date_by_casino_id'
   get 'search_front_money' => 'front_money#search'
   post 'search_front_money' => 'front_money#do_search'
   resources :shifts, only: [:index] do
@@ -68,6 +69,7 @@ CmsRws::Application.routes.draw do
   post 'search_audit_logs' => 'audit_logs#do_search'
   
   get 'machines/current_location' => 'machines#current_location'
+  get 'machines/current_casino' => 'machines#current_casino'
 
   post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
   get 'get_player_currency' => 'player_infos#get_player_currency'

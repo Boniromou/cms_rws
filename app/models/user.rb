@@ -1,8 +1,7 @@
 class User < ActiveRecord::Base
   devise :registerable
-  belongs_to :casino
 
-  attr_accessible :name, :uid, :casino_id
+  attr_accessible :name, :uid
 
   def set_have_active_location(have_active_location)
   	@have_active_location = have_active_location
@@ -25,6 +24,18 @@ class User < ActiveRecord::Base
     nil
   end
 
+  def casino
+    Casino.find_by_id(casino_id)
+  end
+
+  def casino_id
+    casino_ids.first
+  end
+
+  def casino_ids
+    User.get_casino_ids_by_uid(self.uid)
+  end
+
   class << self
     def get_property_ids_by_uid(uid)
       user = Rails.cache.fetch "#{uid}"
@@ -43,5 +54,13 @@ class User < ActiveRecord::Base
         []
       end
     end
+  end
+end
+
+class MockUser < User
+  attr_reader :name, :casino_id
+  def initialize(hash)
+    @name = hash[:name]
+    @casino_id = hash[:casino_id]
   end
 end

@@ -1,6 +1,16 @@
 ENV["RAILS_ENV"] ||= 'test'
+
 require File.expand_path("../../config/environment",__FILE__)
 require 'rspec/rails'
+
+=begin
+require 'capybara/rspec'
+require 'rack_session_access/capybara'
+
+Rails.application.config do
+  config.middleware.use RackSessionAccess::Middleware
+  end
+=end
 
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

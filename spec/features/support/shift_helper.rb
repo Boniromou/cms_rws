@@ -14,6 +14,28 @@ module ShiftHelper
     Player.delete_all
   end
 
+  def create_shift_data_multi
+    #not work
+    @accounting_date = Time.now.strftime("%Y-%m-%d")
+    @today = Date.parse(@accounting_date)
+
+    @moring_shift_type = ShiftType.create!(:name => 'morning1')
+    @swing_shift_type = ShiftType.create!(:name => 'swing2')
+    @night_shift_type = ShiftType.create!(:name => 'night3')
+    @day_shift_type = ShiftType.create!(:name => 'day4')
+
+    @accounting_date_id = AccountingDate.create!(:accounting_date => @accounting_date).id
+    create_moring_swing_night_shift_sequence_multi
+  end
+
+  def create_moring_swing_night_shift_sequence_multi
+    CasinosShiftType.create!(:casino_id => 1003, :shift_type_id => @moring_shift_type.id, :sequence => 1)
+    CasinosShiftType.create!(:casino_id => 1003, :shift_type_id => @swing_shift_type.id, :sequence => 2)
+    CasinosShiftType.create!(:casino_id => 1003, :shift_type_id => @night_shift_type.id, :sequence => 3)
+    Shift.delete_all
+    Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :casino_id => 1003)
+  end
+
   def create_shift_data
     @accounting_date = Time.now.strftime("%Y-%m-%d")
     @today = Date.parse(@accounting_date)

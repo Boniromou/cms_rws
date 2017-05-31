@@ -1,6 +1,7 @@
           <table id="datatable_col_reorder" class="table table-striped table-bordered table-hover" width="100%" height="100%">
             <thead>
               <th><%= t("transaction_history.member_id")%></th>
+              <th><%= t("general.casino")%></th>
               <th><%= t("transaction_history.accounting_date")%></th>
               <th><%= t("transaction_history.date")%></th>
               <th><%= t("transaction_history.location")%></th>
@@ -16,6 +17,7 @@
               <% @transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
                   <td><%= t.player.member_id %></td>
+                  <td><%= Casino.find_by_id(t.casino_id).name %></td>
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
                   <td><%= t.location %></td>

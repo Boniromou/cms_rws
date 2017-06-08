@@ -102,3 +102,13 @@ production3:
   namespace: s3_prd
   no_block: true
   timeout: 30
+
+sandbox3:
+  servers:
+    - mo-snd-s3-vapp01.platform.gamesource.local:11211
+    - mo-snd-s3-vapp01.platform.gamesource.local:11212
+  expires: 3600
+  namespace: s3_snd
+  no_block: true
+  timeout: 30
+  

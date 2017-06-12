@@ -21,10 +21,6 @@ namespace :property do
     create_property_data(:property_id => 20000, :property_name => 'MockUp', :casino_id => 20000, :casino_name => 'MockUp', :licensee_id => 20000, :licensee_name => 'MockUp')
   end
 
-  def create_40000_data
-    create_property_data(:property_id => 40000, :property_name => 'MockUp', :casino_id => 40000, :casino_name => 'Mgm testing', :licensee_id => 40000, :licensee_name => 'Mgm testing')
-  end
-
   def create_20001_data
     create_property_data(:property_id => 20001, :property_name => 'property1', :casino_id => 20000, :casino_name => 'MockUp', :licensee_id => 20000, :licensee_name => 'MockUp')
   end
@@ -36,7 +32,15 @@ namespace :property do
   def create_20003_data
     create_property_data(:property_id => 20003, :property_name => 'property3', :casino_id => 20002, :casino_name => 'casino2', :licensee_id => 20001, :licensee_name => 'Licensee1')
   end
+  
+  def create_40000_data
+    create_property_data(:property_id => 40000, :property_name => 'MockUp', :casino_id => 40000, :casino_name => 'Mgm testing', :licensee_id => 40000, :licensee_name => 'Mgm testing')
+  end
 
+
+  
+  
+  
   def create_10000_data
     create_property_data(:property_id => 10000, :property_name => 'RUBY_VIP01', :casino_id => 10000, :casino_name => 'Casino Ruby', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
   end
@@ -50,6 +54,14 @@ namespace :property do
   end
   
   
+  
+  
+  
+  
+  
+  def create_9000_data
+    create_property_data(:property_id => 9000, :property_name => 'DS1-Config1', :casino_id => 9000, :casino_name => 'DemoSite1', :licensee_id => 9000, :licensee_name => 'Demo')
+  end
   
   
   

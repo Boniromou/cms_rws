@@ -45,3 +45,20 @@ sandbox3:
   
 production3:
   <<: *default
+
+sandbox:
+  9000:
+    trans_history_search_range: [30, 'search range of transaction history(day)']
+    polling_time: [1, 'interval of refreshing header(minute)']
+    card_id_length: [20]
+    member_id_length: [8]
+    audit_log_search_range: [7, 'search range of audit log(day)']
+    change_log_search_range: [30, 'search range of player lock log(day)']
+    pin_log_search_range: [30, 'search range of pin log(day)']
+    token_life_time: [30]
+    transaction_void_range: [1, 'void range of transaction(day)']
+    session_life_time: [60]
+    roll_shift_time: ['6,14,22', 'utc time of rolling shift(hour)']
+    credit_life_time_array: ['0.5,1,3,5,7', 'array of credit life time options (day)']
+    daily_deposit_limit: [25000000, 'limit amount of daily deposit (cent)']
+    daily_withdraw_limit: [25000000, 'limit amount of daily withdraw (cent)']

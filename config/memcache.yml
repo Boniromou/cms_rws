@@ -28,10 +28,10 @@ integration0:
 
 staging0:
   servers:
-    - hq-stg-s3-vapp01.laxino.local:11211
-    - hq-stg-s3-vapp01.laxino.local:11212
-#    - stg-cons-vapp01.rnd.laxino.com:11211
-#    - stg-cons-vapp01.rnd.laxino.com:11212
+    # - hq-stg-s3-vapp01.laxino.local:11211
+    # - hq-stg-s3-vapp01.laxino.local:11212
+   - stg-cons-vapp01.rnd.laxino.com:11211
+   - stg-cons-vapp01.rnd.laxino.com:11212
   expires: 3600
   namespace: s3_stg
   no_block: false

@@ -1,6 +1,6 @@
 # Define your release to be deployed to integration environment here.
 # Release number for integration environment is supposed to be odd numbers.
-set :branch, 'CBG_1_10_2_1'
+set :branch, 'CBG_1_10_2_2'
 
 # Define your repository server for integration environment here.
 #   production SVN - svn.prod.laxigames.com
@@ -11,9 +11,9 @@ set :repo_host, 'svn.mo.laxino.com'
 #   int - Integration
 #   stg - Staging
 #   prd - Production
-role :app, 'hq-stg-cms-app01.laxino.local'
+role :app, 'mo-stg-cms-app01.rnd.laxino.com'
 
-role :cronjob_app, 'hq-stg-cms-app01.laxino.local'
+role :cronjob_app, 'mo-stg-cms-app01.rnd.laxino.com'
 
 #role :cronjob_app, 'int-cons-vapp03.rnd.laxino.com'
 
@@ -24,7 +24,7 @@ role :cronjob_app, 'hq-stg-cms-app01.laxino.local'
 # These variables will be used in generating Nginx/Thin config files
 set :nginx_worker_processes, 2
 set :cluster_port, 10062
-set :virtual_server_name, 'hq-stg-cms-vapp01.laxino.local'
+set :virtual_server_name, 'mo-stg-cms-vapp01.rnd.laxino.com'
 set :num_of_servers, 2
 
 set :keep_releases, 2

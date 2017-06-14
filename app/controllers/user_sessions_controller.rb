@@ -23,8 +23,9 @@ class UserSessionsController < Devise::SessionsController
   end
 
   def new
-    @login_url = %(#{root_url}login)
+    login_url = %(#{SSO_URL}#{LOGIN_PATH}?app_name=#{APP_NAME})
     set_location_info
+    redirect_to login_url
   end
 
   def create

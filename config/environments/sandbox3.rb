@@ -48,3 +48,4 @@ end
 SSO_URL = 'http://mo-snd-sso-vapp01.lb.laxigames.local:80'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
+LOGIN_PATH = '/app_login'

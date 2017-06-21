@@ -5,7 +5,7 @@ set :branch, 'CBG_1_10_2_5'
 # Define your repository server for integration environment here.
 #   production SVN - svn.prod.laxigames.com
 #   development SVN - svn.mo.laxino.com
-set :repo_host, 'mo-prd-cbms-app01.gb.laxigames.local'
+set :repo_host, 'git.lb.laxigames.local'
 
 # Define your application servers for integration environment here.
 #   int - Integration

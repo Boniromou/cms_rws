@@ -45,6 +45,7 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-SSO_URL = 'http://mo-prd-sso-vapp01.lb.laxigames.local:80'
+SSO_URL = 'https://sso.pia.com.mo'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
+LOGIN_PATH = '/app_login'

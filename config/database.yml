@@ -35,7 +35,7 @@ staging0:
   database: rothorn_cms_staging
   username: rothorn
   password: rothorn
-  host: hq-stg-cms-vdb01.laxino.local
+  host: mo-stg-cms-vdb01.rnd.laxino.com
   port: 3306
 
 mockup0:

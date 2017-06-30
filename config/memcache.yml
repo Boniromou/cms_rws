@@ -2,7 +2,8 @@
 
 development:
   servers:
-    - hq-int-s3-vapp01.laxino.local:11211
+    - int-cons-vapp01.rnd.laxino.com:11211
+    - int-cons-vapp01.rnd.laxino.com:11212
   expires: 3600
   namespace: s3_dev
   no_block: false
@@ -10,8 +11,8 @@ development:
 
 test:
   servers:
-    - hq-int-s3-vapp01.laxino.local:11211
-#    - dev-cons-app01.rnd.laxino.com:11211
+    # - hq-int-s3-vapp01.laxino.local:11211
+   - dev-cons-app01.rnd.laxino.com:11211
   expires: 3600
   namespace: s3_tst
   no_block: true
@@ -27,10 +28,10 @@ integration0:
 
 staging0:
   servers:
-    - hq-stg-s3-vapp01.laxino.local:11211
-    - hq-stg-s3-vapp01.laxino.local:11212
-#    - stg-cons-vapp01.rnd.laxino.com:11211
-#    - stg-cons-vapp01.rnd.laxino.com:11212
+    # - hq-stg-s3-vapp01.laxino.local:11211
+    # - hq-stg-s3-vapp01.laxino.local:11212
+   - stg-cons-vapp01.rnd.laxino.com:11211
+   - stg-cons-vapp01.rnd.laxino.com:11212
   expires: 3600
   namespace: s3_stg
   no_block: false

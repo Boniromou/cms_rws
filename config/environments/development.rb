@@ -37,7 +37,7 @@ CmsRws::Application.configure do
 
   #SITE_DOMAIN = 'laxino.com'
   config.cache_store = :dalli_store,
-                       'hq-int-s3-vapp01.laxino.local:11211', 'hq-int-s3-vapp01.laxino.local:11212',
+                       'int-cons-vapp01.rnd.laxino.com:11211', 'int-cons-vapp01.rnd.laxino.com:11212',
                         {:namespace => 'cirrus_dev',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
@@ -47,6 +47,7 @@ end
 SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
+LOGIN_PATH = '/app_login'
 WALLET_URL = 'http://mingwong01.rnd.laxino.com:5555'
 WALLET_PATH = '/cwms'
 PATRON_URL = 'http://mingwong01.rnd.laxino.com:6666'

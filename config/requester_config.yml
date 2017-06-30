@@ -19,9 +19,9 @@ integration0:
   :station: http://hq-int-sm-vapp01.laxino.local:80
 
 staging0:
-  :wallet: http://hq-stg-cwms-vapp01.laxino.local:80/cwms
-  :patron: http://hq-stg-pis-vapp01.laxino.local:80
-  :station: http://hq-stg-sm-vapp01.laxino.local:80
+  :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
+  :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
+  :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
 
 sandbox3:
   :wallet: http://mo-snd-cwms-vapp01.lb.laxigames.local:80/cwms

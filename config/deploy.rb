@@ -40,7 +40,7 @@ set :use_sudo, false
 # Define deployment destination and source,
 # using lazy evaluation of variables
 set(:deploy_to) { "#{env_path}/app_#{stage}" }
-set(:repository) { "ssh://#{repo_host}/opt/laxino/git_repos/#{project.sub('.', '/')}/#{application}.git" }
+set(:repository) { "ssh://#{repo_host}/opt/laxino/stash_repos/#{project.sub('.', '/')}/#{application}.git" }
 
 # Define your cron jobs here
 set(:cronjobs) {

@@ -163,4 +163,61 @@ class RequesterHelper
     response = submit_kiosk_transaction(kiosk_transaction, :withdraw)
     {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => response.balance}
   end
+
+
+  def internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by)
+    p "=======Start to internal_deposit"
+    player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
+    raise Request::InvalidLoginName if player.nil?
+    p "=======Call wallet #{player.member_id}--#{player.test_mode_player}"
+    balance_response = wallet_requester.get_player_balance(player.member_id, 'HKD', player.id, Currency.find_by_name('HKD').id, player.test_mode_player)
+    balance = balance_response.balance
+    player_transaction = PlayerTransaction.find_by_ref_trans_id(ref_trans_id)
+    p "=======Call End--------------------"
+
+    raise Request::RetrieveBalanceFail unless balance.class == Float
+    raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
+    handle_processed_trans( player_transaction ) unless player_transaction.nil?
+    server_amount = PlayerTransaction.to_server_amount(amount)
+    
+    if !promotion_code.nil?
+      promotion_record = PlayerTransaction.where(:promotion_code => promotion_code, :player_id => player.id).first
+      handle_processed_promotion( promotion_record ) unless promotion_record.nil?
+
+      player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by)
+      response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date, source_type, promotion_code)
+    else
+      player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id)
+      response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date, source_type)
+    end
+
+    after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
+    handle_wallet_result(player_transaction, response)
+    {:amt => amount, :trans_date => player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => after_balance}
+  end
+
+
+  def handle_processed_trans( player_transaction )
+    raise Request::AlreadyProcessed if player_transaction.player.member_id == login_name && player_transaction.amount == server_amount
+    raise Request::DuplicateTrans
+  end
+
+  def handle_processed_promotion( promotion_record )
+    if promotion_record[:status] == 'completed'
+      raise Request::AlreadyProcessed
+    else
+      raise Request::DepositNotCompleted
+    end
+  end
+
+  def handle_wallet_result(player_transaction, response)
+    if !response.success?
+      raise FundInOut::CallWalletFail
+    else
+      PlayerTransaction.transaction do
+        player_transaction.trans_date = response.trans_date
+        player_transaction.completed!
+      end
+    end
+  end
 end

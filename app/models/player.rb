@@ -1,3 +1,6 @@
+SELF_ROOT = File.expand_path('.')
+require SELF_ROOT + "/lib/promotion_helper"
+
 class Player < ActiveRecord::Base
   belongs_to :currency
   has_many :tokens
@@ -111,7 +114,23 @@ class Player < ActiveRecord::Base
         duplicated_filed = ex.record.errors.keys.first.to_s
         raise CreatePlayer::DuplicatedFieldError, "CreatePlayer::DuplicatedFieldError, duplicated_filed : #{duplicated_filed} (#{player[duplicated_filed.to_sym]})"
       end
+      new_player_deposit(player) if params[:test_mode_player] == 0 || params[:test_mode_player] == false
       player
+    end
+
+    def new_player_deposit(player)
+      deposit = InsertPromotion.new(Rails.env)
+      amt = YAML.load_file("#{SELF_ROOT}/config/initial_balance.yml")[Rails.env][player.licensee_id]
+      record = Casino.where(:licensee_id => player.licensee_id).first
+      raise Remote::CasinoNotFound if record.nil?
+      data = {}
+      data[:login_name] = player.member_id
+      data[:casino_id] = record.id
+      data[:amt] = amt[:initial_balance]
+      data[:promotion_code] = 'INITPRO'
+      data[:source_type] = 'promotion_deposit'
+      data[:executed_by] = 'system'
+      deposit.run(data)  
     end
 
     def update_by_params(params)

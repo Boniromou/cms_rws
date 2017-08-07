@@ -32,7 +32,7 @@ module Hood
 
       def handle_request(event_name,accept_format=nil)
         @inbound = params.symbolize_keys
-        if self.class.rws_parser
+        if self.class.rws_parser && event_name != :internal_deposit
           parser_result = self.class.rws_parser.verify(request.method, request.path, request.headers)
           @inbound[:property_id] = parser_result[0].to_i
         end

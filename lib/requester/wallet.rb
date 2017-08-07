@@ -25,14 +25,15 @@ class Requester::Wallet < Requester::Base
     result
   end
 
-  def deposit(login_name, amount, ref_trans_id, trans_date, source_type)
+  def deposit(login_name, amount, ref_trans_id, trans_date, source_type, promotion_code = nil)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/deposit", :body => {:login_name => login_name, 
                                                                        :amt => amount,
                                                                        :ref_trans_id => ref_trans_id, 
                                                                        :trans_date => trans_date,
                                                                        :casino_id => @casino_id,
-                                                                       :source_type => source_type})
+                                                                       :source_type => source_type,
+                                                                       :promotion_code => promotion_code})
       parse_deposit_response(response)
     end
     result.add_balance_methods

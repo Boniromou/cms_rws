@@ -120,4 +120,15 @@ class RequestHandler
     casino_id = @inbound[:casino_id]
     get_requester_helper(casino_id).withdraw(login_name, ref_trans_id, amount, kiosk_id, session_token, source_type, casino_id)
   end
+
+  def process_internal_deposit_event
+    login_name = @inbound[:login_name]
+    amount = @inbound[:amt]
+    ref_trans_id = @inbound[:ref_trans_id]
+    source_type = @inbound[:source_type]
+    casino_id = @inbound[:casino_id]
+    promotion_code = @inbound[:promotion_code]
+    executed_by = @inbound[:executed_by]
+    get_requester_helper(casino_id).internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by)
+  end
 end

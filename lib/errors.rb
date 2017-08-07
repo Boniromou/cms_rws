@@ -221,6 +221,12 @@ module Request
     end
   end
 
+  class DepositNotCompleted < RequestError
+    def initialize(data=nil)
+      super(400, 'The transaction has not been completed.', data)
+    end
+  end
+
   class DuplicateTrans < RequestError
     def initialize(data=nil)
       super(400, 'Ref_trans_id is duplicated.', data)

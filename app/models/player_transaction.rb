@@ -114,7 +114,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   class << self
     include FundHelper
-    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)
+    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil)
       player = Player.find_by_member_id(member_id)
       player_id = player[:id]
       transaction = new
@@ -125,7 +125,14 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
+      if casino_id.nil?
+        transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
+      else
+        transaction[:casino_id] = casino_id
+      end
+      transaction[:promotion_code] = promotion_code
+      data ||= {}
+      data[:executed_by] = executed_by unless executed_by.nil?
       transaction[:data] = data
       PlayerTransaction.transaction do
         transaction.save
@@ -138,6 +145,10 @@ class PlayerTransaction < ActiveRecord::Base
         transaction.save
       end
       transaction
+    end
+
+    def save_internal_deposit_transaction(member_id, amount, shift_id, ref_trans_id, casino_id, promotion_code = nil, executed_by = nil)
+      init_transaction(member_id, amount, DEPOSIT, shift_id, '', nil, ref_trans_id, nil, casino_id, promotion_code, executed_by)
     end
 
     def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)

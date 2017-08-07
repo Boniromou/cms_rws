@@ -20,4 +20,8 @@ class KioskController < ApplicationController
   def withdraw
     handle_request(:withdraw)
   end
+
+  def internal_deposit
+    handle_request(:internal_deposit)
+  end
 end

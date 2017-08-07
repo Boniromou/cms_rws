@@ -94,6 +94,7 @@ CmsRws::Application.routes.draw do
   post 'deposit' => 'kiosk#deposit'
   post 'withdraw' => 'kiosk#withdraw'
 
+  post 'internal_deposit' => 'kiosk#internal_deposit'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

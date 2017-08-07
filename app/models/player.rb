@@ -119,19 +119,19 @@ class Player < ActiveRecord::Base
     end
 
     def new_player_deposit(player)
-      deposit = InsertPromotion.new(Rails.env)
       amt = YAML.load_file("#{SELF_ROOT}/config/initial_balance.yml")[Rails.env][player.licensee_id]
-      record = Casino.where(:licensee_id => player.licensee_id).first
-      raise Remote::CasinoNotFound if record.nil?
-      data = {}
-      data[:login_name] = player.member_id
-      data[:casino_id] = record.id
-      data[:amt] = amt[:initial_balance]
-      data[:promotion_code] = 'INITPRO'
-      data[:source_type] = 'promotion_deposit'
-      data[:executed_by] = 'system'
-      deposit.run(data)  
+      casino = Casino.where(:licensee_id => player.licensee_id).first
+      raise Remote::CasinoNotFound if casino.nil?
+
+      get_requester_helper(casino.id).internal_deposit(player.member_id, amt[:initial_balance].to_s, nil, 'promotion_deposit', casino.id, 'INITPRO', 'system')
     end
+
+    def get_requester_helper(casino_id)
+      requester_config_file = "#{Rails.root}/config/requester_config.yml"
+      licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
+      requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, licensee_id, nil)
+      RequesterHelper.new(requester_facotry)
+    end 
 
     def update_by_params(params)
       verify_player_params(params)

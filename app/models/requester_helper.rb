@@ -164,6 +164,9 @@ class RequesterHelper
     {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => response.balance}
   end
 
+  def asdf
+    Rails.logger.info "===1122==="
+  end
 
   def internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by)
     p "=======Start to internal_deposit"

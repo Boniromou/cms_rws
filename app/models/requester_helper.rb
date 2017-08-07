@@ -178,18 +178,11 @@ class RequesterHelper
     raise Request::RetrieveBalanceFail unless balance.class == Float
     raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
     handle_processed_trans( player_transaction ) unless player_transaction.nil?
+    check_promotion_code( promotion_code, player ) unless promotion_code.nil?
     server_amount = PlayerTransaction.to_server_amount(amount)
     
-    if !promotion_code.nil?
-      promotion_record = PlayerTransaction.where(:promotion_code => promotion_code, :player_id => player.id).first
-      handle_processed_promotion( promotion_record ) unless promotion_record.nil?
-
-      player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by)
-      response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date, source_type, promotion_code)
-    else
-      player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id)
-      response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date, source_type)
-    end
+    player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by)
+    response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date, source_type, promotion_code)
 
     after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
     handle_wallet_result(player_transaction, response)
@@ -202,11 +195,14 @@ class RequesterHelper
     raise Request::DuplicateTrans
   end
 
-  def handle_processed_promotion( promotion_record )
-    if promotion_record[:status] == 'completed'
-      raise Request::AlreadyProcessed
-    else
-      raise Request::DepositNotCompleted
+  def check_promotion_code( promotion_code, player )
+    promotion_record = PlayerTransaction.where(:promotion_code => promotion_code, :player_id => player.id).first
+    unless promotion_record.nil?
+      if promotion_record[:status] == 'completed'
+        raise Request::AlreadyProcessed
+      else
+        raise Request::DepositNotCompleted
+      end
     end
   end
 

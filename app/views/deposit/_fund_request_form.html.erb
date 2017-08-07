@@ -2,6 +2,12 @@
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
+
+  <div class="row" style="margin-bottom: 8px;">
+    <div><label class="col-xs-5 box"><strong><%= t("player.deposit_casino")%>:</strong></label></div>
+    <div><label class="col-xs-5 box"><%= render 'shared/current_casino_widget' %></label></div>
+  </div>
+
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
     <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box", :style => "margin-bottom: 4px" %>

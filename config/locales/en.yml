@@ -134,6 +134,7 @@ en:
     remain_deposit: "Daily Accumulative Deposit Amount"
     remain_withdraw: "Daily Accumulative Withdraw Amount"
     exceed_remain_limit: "Exceeded Daily Limit"
+    deposit_casino: "Deposit Casino"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."

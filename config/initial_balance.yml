@@ -1,0 +1,20 @@
+#licensee
+test: &default
+  10000:
+    :initial_balance: 500
+  20000:
+    :initial_balance: 500
+  20001:
+    :initial_balance: 500
+  20002:
+    :initial_balance: 500
+development:
+  <<: *default
+integration0:
+  <<: *default
+staging0:
+  <<: *default
+sandbox3: 
+  <<: *default
+production3:
+  <<: *default

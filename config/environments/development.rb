@@ -35,21 +35,17 @@ CmsRws::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+
   #SITE_DOMAIN = 'laxino.com'
   config.cache_store = :dalli_store,
-                       'int-cons-vapp01.rnd.laxino.com:11211', 'int-cons-vapp01.rnd.laxino.com:11212',
+                       'hq-int-s3-vapp01.laxino.local:11211', 'hq-int-s3-vapp01.laxino.local:11212',
                         {:namespace => 'cirrus_dev',
                          :expires_in => 1.day,
                          :socket_timeout => 3,
                          :compress => true }
 end
 
-SSO_URL = 'http://mingwong01.rnd.laxino.com:3333'
+SSO_URL = 'http://yunxiaopan01.rnd.laxino.com:3000'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
 LOGIN_PATH = '/app_login'
-WALLET_URL = 'http://mingwong01.rnd.laxino.com:5555'
-WALLET_PATH = '/cwms'
-PATRON_URL = 'http://mingwong01.rnd.laxino.com:6666'
-PATRON_PATH = '/pis'
-STATION_URL = 'http://marcusao01.rnd.laxino.com:5000'

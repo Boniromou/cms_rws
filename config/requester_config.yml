@@ -1,12 +1,12 @@
 development:
-  :wallet: http://mingwong01.rnd.laxino.com:5555/cwms
-  :patron: http://mingwong01.rnd.laxino.com:6666
-  :station: http://mingwong01.rnd.laxino.com:5000
+  :wallet: http://dennis01.rnd.laxino.com:3002/cwms
+  :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
+  :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
 
 test:
-  :wallet: http://mingwong01.rnd.laxino.com:5555/cwms
-  :patron: http://mingwong01.rnd.laxino.com:6666
-  :station: http://mingwong01.rnd.laxino.com:5000
+  :wallet: http://dennis01.rnd.laxino.com:3002/cwms
+  :patron: http://dennis01.rnd.laxino.com:6666
+  :station: http://dennis01.rnd.laxino.com:5000
 
 mockup0:
   :wallet: http://mo-mock-cwms-vapp01.rnd.laxino.com:80/cwms

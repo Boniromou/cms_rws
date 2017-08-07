@@ -1,0 +1,7 @@
+test: http://mo-stg-cms-vapp01.rnd.laxino.com/
+development: http://dennis01.rnd.laxino.com:3001
+integration0: http://hq-int-cms-app01.laxino.local:10064/
+staging0: http://mo-stg-cms-app01.rnd.laxino.com:10062/
+#staging0: http://hq-stg-cms-app01.laxino.local:10062/
+sandbox3: http://mo-snd-cms-vapp01.lb.laxigames.local/
+production3: http://mo-prd-cms-vapp01.lb.laxigames.local/

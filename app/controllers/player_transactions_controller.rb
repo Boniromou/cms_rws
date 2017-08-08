@@ -22,17 +22,21 @@ class PlayerTransactionsController < ApplicationController
     selected_tab_index = params[:selected_tab_index]
     slip_number = params[:slip_number]
     search_range = config_helper.trans_history_search_range
+
+    player_transactions = []
+    kiosk_transactions = []
+
     if selected_tab_index == '0'
-      shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range)
-      requester_helper.update_player(id_type,id_number) unless id_number.blank?
-      #old single casino group
-      #player_transactions = policy_scope(PlayerTransaction).search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation)
-      #kiosk_transactions = policy_scope(KioskTransaction).search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation)
-      player_transactions = PlayerTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation).where(:casino_id => current_casino_id)
-      kiosk_transactions = KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation).where(:casino_id => current_casino_id)
+      current_user.casino_ids.each do | casino_id |
+        shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range, casino_id)
+        requester_helper.update_player(id_type,id_number) unless id_number.blank?
+
+        player_transactions += PlayerTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation).where(:casino_id => casino_id)
+        kiosk_transactions += KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation).where(:casino_id => casino_id)
+      end
       @transactions = player_transactions + kiosk_transactions
     else
-      @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_casino_id)
+      @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_user.casino_ids)
     end
     rescue Remote::PlayerNotFound => e
       @transactions = []

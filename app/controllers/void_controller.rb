@@ -1,6 +1,7 @@
 class VoidController < FundController
   rescue_from FundInOut::AlreadyVoided, :with => :handle_already_voided
   rescue_from FundInOut::VoidTransactionNotExist, :with => :handle_transaction_not_exist
+  rescue_from FundInOut::InvalidMachineToken, :with => :handle_invalid_machine_token
 
   def create
     super
@@ -15,7 +16,7 @@ class VoidController < FundController
     player_transaction_id = params[:transaction_id]
     raise FundInOut::VoidTransactionNotExist unless player_transaction_id
     @target_transaction = PlayerTransaction.find_by_id_and_casino_id(player_transaction_id, current_casino_id)
-    raise FundInOut::VoidTransactionNotExist unless @target_transaction
+    raise FundInOut::InvalidMachineToken unless @target_transaction
     @player = @target_transaction.player
     @server_amount = @target_transaction.amount
     @amount = cents_to_dollar(@server_amount)
@@ -39,6 +40,10 @@ class VoidController < FundController
 
   def handle_transaction_not_exist(e)
     handle_fund_error('void_transaction.not_exist')
+  end
+
+  def handle_invalid_machine_token(e)
+    handle_fund_error('void_transaction.invalid_machine_token')
   end
 
   def handle_already_voided(e)

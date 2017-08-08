@@ -21,6 +21,11 @@ class RequesterHelper
       property_id = Machine.parse_machine_token(machine_token)[:property_id]
       raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id, casino_id)
       player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
+      unless player
+        update_player!('card_id', card_id)
+        player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
+      end
+
       raise Request::InvalidCardId.new unless player
       raise Request::PlayerLocked.new if player.account_locked?
       login_name = player.member_id

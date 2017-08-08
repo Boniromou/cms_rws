@@ -41,6 +41,7 @@ class Requester::Patron < Requester::Base
     #return {:member_id => 123, :card_id => 102130320923, :blacklist => true, :pin_status => 'null'}
     result_hash = remote_response_checking(result, :error_code)
     response = Requester::PlayerInfoResponse.new(result_hash)
+    raise Request::InvalidCardId.new unless response.success?
     raise Remote::PlayerNotFound, response.exception_msg unless response.success?
     return response
   end

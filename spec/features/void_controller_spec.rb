@@ -229,7 +229,7 @@ describe VoidController do
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list)
 
-      check_flash_message I18n.t("void_transaction.not_exist")
+      check_flash_message I18n.t("void_transaction.invalid_machine_token")
     end
     
     it '[47.9] Update trans date', :js => true do

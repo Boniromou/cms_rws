@@ -1,7 +1,6 @@
 <!-- Left panel : Navigation area -->
 <!-- Note: This width of the aside area can be adjusted through LESS variables -->
 <aside id="left-panel">
-  <% is_marketing = 1 %>
   <!-- NAVIGATION : This navigation is also responsive
 
   To make this navigation dynamic please make sure to link the node
@@ -21,7 +20,7 @@
           <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
       </li> 
-      <% if (policy(:Player).create? || policy(:Player).profile?) && is_marketing == 0 %>
+      <% if (policy(:Player).create? || policy(:Player).profile?) && IS_MARKETING == 0 %>
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
           <ul style="display:block;"> 
@@ -59,7 +58,7 @@
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
                 <% end %>
               </li>
-              <% if is_marketing == 0 %>
+              <% if IS_MARKETING == 0 %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path + "?operation=credit", :title => t("tree_panel.promotional_credit"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.promotional_credit") %></span>
@@ -102,14 +101,14 @@
                 <% end %>
               </li>
             <% end %>
-            <% if (policy(:ChangeHistory).lock_player_log?) && is_marketing == 0 %>
+            <% if (policy(:ChangeHistory).lock_player_log?) && IS_MARKETING == 0 %>
               <li id="nav_audit_log">
                 <%= link_to search_lock_histories_path, :title => t("tree_panel.lock_history"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.lock_history") %></span>
                 <% end %>
               </li>
             <% end %>
-            <% if (policy(:ChangeHistory).pin_change_log?) && is_marketing == 0 %>
+            <% if (policy(:ChangeHistory).pin_change_log?) && IS_MARKETING == 0 %>
               <li id="nav_audit_log">
                 <%= link_to search_pin_histories_path, :title => t("tree_panel.pin_history"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.pin_history") %></span>

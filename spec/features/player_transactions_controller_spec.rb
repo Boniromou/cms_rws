@@ -396,6 +396,7 @@ describe PlayersController do
     end
   end
 
+=begin
   describe '[62] Promotion Credit History' do
     before(:each) do
       clean_dbs
@@ -477,4 +478,5 @@ describe PlayersController do
       expect(page).to_not have_selector("div#wid-id-2")
     end
   end
+=end
 end

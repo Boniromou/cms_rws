@@ -177,6 +177,7 @@ describe FundController do
       check_flash_message I18n.t("flash_message.not_authorize")
     end
 
+=begin
     it '[73.3] Add credit fail due to test mode player', :js => true do
       mock_permission_value(999999999)
       mock_wallet_transaction_success(:credit_deposit)
@@ -210,5 +211,6 @@ describe FundController do
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
+=end
   end
 end

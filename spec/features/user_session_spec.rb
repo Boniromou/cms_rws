@@ -93,9 +93,9 @@ describe UserSessionsController do
       #   # expect(page).to have_content @shift.capitalize
       #   expect(page).to have_content /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/
       #   expect(page).to have_content @casino_name
-      end
     end
   end
+end
 
 
 =begin
@@ -179,4 +179,3 @@ describe UserSessionsController do
   end
 =end
 
-end

@@ -305,7 +305,8 @@ describe PlayersController do
       check_not_found
     end
   end
-  
+
+=begin
   describe '[15] Lock/Unlock Player' do
     def update_lock_or_unlock
       if @player.status == 'active'
@@ -499,7 +500,9 @@ describe PlayersController do
       check_flash_message expected_flash_message
     end 
   end
+=end
 
+=begin
   describe '[36] Expire token' do
      before(:each) do
       clean_dbs
@@ -574,7 +577,8 @@ describe PlayersController do
       expect(token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
   end
-  
+=end
+
   describe '[37] Show balance not found' do
     before(:each) do
       clean_dbs
@@ -791,6 +795,7 @@ describe PlayersController do
     end
   end
 
+=begin
   describe '[54] Reset/Create PIN (PIS)' do
     before(:each) do
       clean_dbs
@@ -996,7 +1001,9 @@ describe PlayersController do
       check_flash_message I18n.t("reset_pin.call_patron_fail")
     end
   end
-  
+=end
+
+=begin
   describe '[59] Show Promotional Credit' do
     before(:each) do
       clean_dbs
@@ -1044,7 +1051,6 @@ describe PlayersController do
       check_player_info
     end
 
-
     it '[59.1] seach player profile with credit balance=0', :js => true do
       mock_wallet_balance(99.99,0.0)
       
@@ -1076,7 +1082,9 @@ describe PlayersController do
       check_footer_btn(true,true,false,false)
     end
   end
+=end
   
+=begin
   describe '[71] Test mode player - player profile' do
     before(:each) do
       clean_dbs
@@ -1090,7 +1098,7 @@ describe PlayersController do
     after(:each) do
       clean_dbs
     end
-    
+   
     it '[71.1] Show test mode player info, disappear reset PIN and lock button', :js => true do
       mock_wallet_balance(99.99)
 
@@ -1113,6 +1121,7 @@ describe PlayersController do
       expect(page.source).to_not have_selector("div#button_set button#lock_player")
     end
   end
+=end
   
   describe '[72] Test mode player - Balance enquiry' do
     before(:each) do
@@ -1154,6 +1163,7 @@ describe PlayersController do
     end
   end
   
+=begin
   describe '[75] Do not allow test mode player to reset PIN or Lock', :js => true do
     before(:each) do
       clean_dbs
@@ -1234,4 +1244,5 @@ describe PlayersController do
       check_flash_message I18n.t("flash_message.not_authorize")
     end
   end
+=end
 end

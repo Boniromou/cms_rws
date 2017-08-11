@@ -25,10 +25,10 @@
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
                   <td><%= t.location %></td>
-                  <td><%= t.user.name %></td>
+                  <td><%= t.user.name if !t.user.nil? %></td>
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <td><%= t.data_hash[:deposit_reason] %></td>
+                  <td><%= !t.user.nil? ? t.data_hash[:deposit_reason] : t.promotion_code %></td>
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>

@@ -17,7 +17,7 @@ CmsRws::Application.routes.draw do
   get "balance" => 'players#balance'
   get "search" => 'players#search' ,:as => :players_search
   post "search" => "players#do_search"
-  get "profile" => "players#profile"
+  #get "profile" => "players#profile"
   get "reset_pin" => "players#reset_pin"
   get "create_pin" => "players#create_pin"
   post "reset_pin" => "players#do_reset_pin"
@@ -35,11 +35,11 @@ CmsRws::Application.routes.draw do
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'
 
-  get 'credit_deposit' => 'credit_deposit#new'
-  post 'credit_deposit' => 'credit_deposit#create'
+  #get 'credit_deposit' => 'credit_deposit#new'
+  #post 'credit_deposit' => 'credit_deposit#create'
 
-  get 'credit_expire' => 'credit_expire#new'
-  post 'credit_expire' => 'credit_expire#create'
+  #get 'credit_expire' => 'credit_expire#new'
+  #post 'credit_expire' => 'credit_expire#create'
 
   get 'print'=> 'player_transactions#print'
   get 'reprint'=> 'player_transactions#reprint'
@@ -83,11 +83,11 @@ CmsRws::Application.routes.draw do
 
   get 'validate_machine_token' => 'machines#validate'
 
-  get 'search_lock_histories' => 'lock_histories#search'
-  post 'search_lock_histories' => 'lock_histories#do_search'
+  #get 'search_lock_histories' => 'lock_histories#search'
+  #post 'search_lock_histories' => 'lock_histories#do_search'
 
-  get 'search_pin_histories' => 'pin_histories#search'
-  post 'search_pin_histories' => 'pin_histories#do_search'
+  #get 'search_pin_histories' => 'pin_histories#search'
+  #post 'search_pin_histories' => 'pin_histories#do_search'
 
   post 'kiosk_login' => 'kiosk#kiosk_login'
   post 'validate_deposit' => 'kiosk#validate_deposit'

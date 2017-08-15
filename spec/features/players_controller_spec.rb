@@ -699,10 +699,11 @@ describe PlayersController do
     it '[53.1] Show PIS player info when search  Player Profile without change' do
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
-      visit players_search_path + "?operation=profile"
+      visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      check_profile_page
+      #check_profile_page
+      check_balance_page
       check_player_info
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
@@ -713,10 +714,11 @@ describe PlayersController do
     it '[53.2] Show PIS player info when search  Player Profile with Card ID changed' do
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567891', :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
-      visit players_search_path + "?operation=profile"
+      visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
-      check_profile_page
+      #check_profile_page
+      check_balance_page
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
       expect(p.card_id).to eq '1234567891'
@@ -726,10 +728,11 @@ describe PlayersController do
     it '[53.3] Show PIS player info when search  Player Profile with blacklist changed' do
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => true, :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin
-      visit players_search_path + "?operation=profile"
+      visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      check_profile_page
+      #check_profile_page
+      check_balance_page
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
       expect(p.card_id).to eq @player.card_id
@@ -741,10 +744,11 @@ describe PlayersController do
       Token.generate(@player.id, 20000)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'reset', :licensee_id => 20000}})
       login_as_admin
-      visit players_search_path + "?operation=profile"
+      visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      check_profile_page
+      #check_profile_page
+      check_balance_page
       check_player_info
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
@@ -758,10 +762,11 @@ describe PlayersController do
       @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active")
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :licensee_id => 20000}})
       login_as_admin
-      visit players_search_path + "?operation=profile"
+      visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      check_profile_page('no_balance')
+      #check_profile_page('no_balance')
+      check_balance_page('no_balance')
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       expect(find("label#player_card_id").text).to eq @player.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
@@ -771,10 +776,11 @@ describe PlayersController do
     it '[53.6] Card ID not found in PIS' do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       login_as_admin
-      visit players_search_path + "?operation=profile"
+      visit players_search_path + "?operation=balance"
       fill_search_info("card_id", @player.card_id)
       find("#button_find").click
-      check_profile_page
+      #check_profile_page
+      check_balance_page
       p = Player.find(@player.id)
       expect(p.member_id).to eq @player.member_id
       expect(p.card_id).to eq @player.card_id

@@ -25,6 +25,7 @@ class RequesterHelper
     else
       player = Player.find_by_member_id_and_licensee_id(id_value, licensee_id)
     end
+    balance_response = wallet_requester.get_player_balance(player.member_id)
     response[:id] = player.id
     {:player => response}
   end

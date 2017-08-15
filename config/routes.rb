@@ -71,6 +71,8 @@ CmsRws::Application.routes.draw do
   get 'machines/current_location' => 'machines#current_location'
   get 'machines/current_casino' => 'machines#current_casino'
 
+  
+  post 'get_player_info' => 'player_infos#get_player_info'
   post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
   get 'get_player_currency' => 'player_infos#get_player_currency'
   get 'is_test_mode_player' => 'player_infos#is_test_mode_player'

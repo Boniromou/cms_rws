@@ -188,6 +188,12 @@ module Request
     end
   end
 
+  class PinIsBlank < RequestError
+    def initialize(data=nil)
+      super(400, 'Pin is Blank with this user', data)
+    end
+  end
+
   class InvalidPin < RequestError
     def initialize(data=nil)
       super(400, 'Pin is wrong with card id', data)

@@ -22,6 +22,6 @@ class KioskController < ApplicationController
   end
 
   def internal_deposit
-    handle_request(:internal_deposit)
+    handle_request(:internal_deposit, nil, false)
   end
 end

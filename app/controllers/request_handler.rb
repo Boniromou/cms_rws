@@ -35,6 +35,14 @@ class RequestHandler
     {}
   end
   
+  def process_get_player_info_event
+    id_type = @inbound[:id_type]
+    id_value = @inbound[:id_value]
+    licensee_id = @inbound[:licensee_id]
+    casino_id = Casino.get_find_first_casino_id_by_licensee_id(licensee_id) 
+    get_requester_helper(casino_id).get_player_info(id_type, id_value, licensee_id)
+  end
+
   def process_retrieve_player_info_event
     machine_type = @inbound[:machine_type]
     card_id = @inbound[:card_id]

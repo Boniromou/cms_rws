@@ -9,5 +9,11 @@ class Casino < ActiveRecord::Base
       return nil unless casino
       casino.licensee.id
     end
+
+    def get_find_first_casino_id_by_licensee_id(licensee_id)
+      casino = Casino.find_by_licensee_id(licensee_id)
+      return nil unless casino
+      casino.id
+    end
   end
 end

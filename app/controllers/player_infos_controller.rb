@@ -16,4 +16,9 @@ class PlayerInfosController < ApplicationController
   def is_test_mode_player
     handle_request(:is_test_mode_player)
   end
+
+  def get_player_info
+    # For marketing portal to get player info but no header
+    handle_request(:get_player_info, nil, false)
+  end
 end

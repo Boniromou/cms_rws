@@ -16,6 +16,19 @@ class RequesterHelper
     @requester_factory.get_station_requester
   end
 
+  def get_player_info(id_type, id_value, licensee_id)
+    response = patron_requester.get_player_info(id_type, id_value).result_hash[:player]
+    raise Request::PinIsBlank.new if response[:pin_status] == 'blank'
+    update_player!(id_type, id_value)
+    if id_type == 'card_id'
+      player = Player.find_by_card_id_and_licensee_id(id_value, licensee_id)
+    else
+      player = Player.find_by_member_id_and_licensee_id(id_value, licensee_id)
+    end
+    response[:id] = player.id
+    {:player => response}
+  end
+
   def retrieve_info(card_id, machine_type, machine_token, pin, casino_id)
     begin
       property_id = Machine.parse_machine_token(machine_token)[:property_id]
@@ -167,10 +180,6 @@ class RequesterHelper
     kiosk_transaction = KioskTransaction.save_withdraw_transaction(login_name, server_amount, Shift.current(casino_id).id, kiosk_id, ref_trans_id, source_type, casino_id)
     response = submit_kiosk_transaction(kiosk_transaction, :withdraw)
     {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => response.balance}
-  end
-
-  def asdf
-    Rails.logger.info "===1122==="
   end
 
   def internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by)

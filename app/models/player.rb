@@ -114,7 +114,7 @@ class Player < ActiveRecord::Base
         duplicated_filed = ex.record.errors.keys.first.to_s
         raise CreatePlayer::DuplicatedFieldError, "CreatePlayer::DuplicatedFieldError, duplicated_filed : #{duplicated_filed} (#{player[duplicated_filed.to_sym]})"
       end
-      new_player_deposit(player) if params[:test_mode_player] == 0 || params[:test_mode_player] == false
+      #new_player_deposit(player) if params[:test_mode_player] == 0 || params[:test_mode_player] == false
       player
     end
 

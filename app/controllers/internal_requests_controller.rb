@@ -12,4 +12,12 @@ class InternalRequestsController < ApplicationController
   def lock_player
     handle_request(:lock_player)
   end
+
+  def internal_lock_player
+    handle_request(:internal_lock_player, nil, false)
+  end
+
+  def internal_unlock_player
+    handle_request(:internal_unlock_player, nil, false)
+  end
 end

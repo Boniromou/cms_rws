@@ -77,6 +77,8 @@ CmsRws::Application.routes.draw do
   get 'get_player_currency' => 'player_infos#get_player_currency'
   get 'is_test_mode_player' => 'player_infos#is_test_mode_player'
   post 'lock_player' => 'internal_requests#lock_player'
+  post 'internal_lock_player' => 'internal_requests#internal_lock_player'
+  post 'internal_unlock_player' => 'internal_requests#internal_unlock_player'
 
   get 'validate_token' => 'tokens#validate'
   get 'internal_validate_token' => 'internal_requests#validate'

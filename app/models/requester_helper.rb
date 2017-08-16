@@ -18,7 +18,7 @@ class RequesterHelper
 
   def get_player_info(id_type, id_value, licensee_id)
     response = patron_requester.get_player_info(id_type, id_value).result_hash[:player]
-    raise Request::PinIsBlank.new if response[:pin_status] == 'blank'
+    return {:player => response} if response[:pin_status] == 'blank'
     update_player!(id_type, id_value)
     if id_type == 'card_id'
       player = Player.find_by_card_id_and_licensee_id(id_value, licensee_id)
@@ -27,6 +27,8 @@ class RequesterHelper
     end
     balance_response = wallet_requester.get_player_balance(player.member_id, 'HKD', player.id, Currency.find_by_name('HKD').id, player.test_mode_player)
     response[:id] = player.id
+    response[:lock_status] = player.status
+    response[:lock_type] = LockType.find_by_id(PlayersLockType.find_by_player_id_and_status(player.id, 'active').lock_type_id).name if player.status == 'locked'
     {:player => response}
   end
 

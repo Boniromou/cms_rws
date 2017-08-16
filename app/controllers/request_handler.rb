@@ -75,6 +75,20 @@ class RequestHandler
     ApiHelper.lock_player(login_name, licensee_id, casino_id)
   end
 
+  def process_internal_lock_player_event
+    licensee_id = @inbound[:licensee_id]
+    login_name = @inbound[:login_name]
+    lock_type = @inbound[:lock_type]
+    ApiHelper.internal_lock_player(login_name, licensee_id, lock_type)
+  end
+
+  def process_internal_unlock_player_event
+    licensee_id = @inbound[:licensee_id]
+    login_name = @inbound[:login_name]
+    lock_type = @inbound[:lock_type]
+    ApiHelper.internal_unlock_player(login_name, licensee_id, lock_type)
+  end
+
   def process_validate_machine_token_event
     machine_type = @inbound[:machine_type]
     property_id = @inbound[:property_id]

@@ -107,4 +107,76 @@ describe InternalRequestsController do
       expect(@player.has_lock_type?('cage_lock')).to eq false
     end
   end
+
+
+  describe '[100] Internal Lock Player API' do
+    before(:each) do
+      clean_dbs
+      bypass_rescue
+      @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
+      allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
+    end
+
+    after(:each) do
+      PlayersLockType.delete_all
+      Player.delete_all
+      clean_dbs
+    end
+
+    it '[100.1] Lock player success' do
+      post 'internal_lock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => 'manual_lock'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      @player.reload
+      expect(@player.status).to eq 'locked'
+      expect(@player.has_lock_type?('manual_lock')).to eq true
+    end
+
+    it '[100.2] Lock Player not found' do
+      post 'internal_lock_player', {:login_name => 'not_exist', :licensee_id => 20000, :lock_type => 'manual_lock'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidLoginName'
+      expect(result[:error_msg]).to eq 'Login name is invalid.'
+      @player.reload
+      expect(@player.status).to eq 'active'
+      expect(@player.has_lock_type?('manual_lock')).to eq false
+    end
+
+    it '[100.3] UnLock player success' do
+      post 'internal_lock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => 'manual_lock'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      @player.reload
+      expect(@player.status).to eq 'locked'
+      expect(@player.has_lock_type?('manual_lock')).to eq true
+
+      post 'internal_unlock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => 'manual_lock'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      @player.reload
+      expect(@player.status).to eq 'active'
+      expect(@player.has_lock_type?('manual_lock')).to eq false
+    end
+
+    it '[100.4] UnLock player not found' do
+      post 'internal_lock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => 'manual_lock'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      @player.reload
+      expect(@player.status).to eq 'locked'
+      expect(@player.has_lock_type?('manual_lock')).to eq true
+
+      post 'internal_unlock_player', {:login_name => 'integrationteam', :licensee_id => 20000, :lock_type => 'manual_lock'}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'InvalidLoginName'
+      expect(result[:error_msg]).to eq 'Login name is invalid.'
+      @player.reload
+      expect(@player.status).to eq 'locked'
+      expect(@player.has_lock_type?('manual_lock')).to eq true
+    end
+  end
 end

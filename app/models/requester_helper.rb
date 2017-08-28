@@ -206,7 +206,7 @@ class RequesterHelper
 
     after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
     handle_wallet_result(player_transaction, response)
-    {:amt => amount, :trans_date => player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => after_balance}
+    {:amt => amount, :trans_date => player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => after_balance, :ref_trans_id => player_transaction.ref_trans_id}
   end
 
 

@@ -47,7 +47,8 @@ class RequesterHelper
       login_name = player.member_id
       raise Request::InvalidPin.new unless validate_pin(login_name, pin)
       currency = player.currency.name
-      balance_response = wallet_requester.get_player_balance(player.member_id)
+      balance_response = wallet_requester.get_player_balance(player.member_id, 'HKD', player.id, Currency.find_by_name('HKD').id, player.test_mode_player)
+      #balance_response = wallet_requester.get_player_balance(player.member_id)
       balance = balance_response.balance
       credit_balance = balance_response.credit_balance
       credit_expired_at = balance_response.credit_expired_at

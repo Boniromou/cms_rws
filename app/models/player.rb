@@ -96,7 +96,7 @@ class Player < ActiveRecord::Base
   end
 
   class << self
-    def create_by_params(params)
+    def create_by_params(params, mp_create)
       verify_player_info(params)
 
       player = new
@@ -113,6 +113,11 @@ class Player < ActiveRecord::Base
       rescue ActiveRecord::RecordInvalid => ex
         duplicated_filed = ex.record.errors.keys.first.to_s
         raise CreatePlayer::DuplicatedFieldError, "CreatePlayer::DuplicatedFieldError, duplicated_filed : #{duplicated_filed} (#{player[duplicated_filed.to_sym]})"
+      end
+
+      if !mp_create
+        player_status = params[:blacklist] ? STATUS_LOCKED : STATUS_NORMAL
+        mp_response = marketing_requester.create_mp_player(player.id, player.member_id, player.card_id, player_status, player.test_mode_player, player.licensee_id, player.currency_id, params[:blacklist])
       end
       #new_player_deposit(player) if params[:test_mode_player] == 0 || params[:test_mode_player] == false
       player
@@ -160,10 +165,10 @@ class Player < ActiveRecord::Base
       player = Player.new(:member_id => player_info[:member_id], :card_id => player_info[:card_id], :status => 'not_activate', :currency_id => Currency.first.id)
     end
 
-    def update_info(player_info)
+    def update_info(player_info, mp_create)
       return false if player_info.nil? || player_info[:member_id].nil? || player_info[:card_id].nil? || player_info[:pin_status].nil?
       player = Player.find_by_member_id_and_licensee_id(player_info[:member_id], player_info[:licensee_id])
-      player = Player.create_by_params(player_info) if player == nil && player_info[:pin_status] != 'blank'
+      player = Player.create_by_params(player_info, mp_create) if player == nil && player_info[:pin_status] != 'blank'
       is_discard_tokens = player_info[:pin_status] == 'reset'
       if player_info[:card_id] != player.card_id
         player.card_id = player_info[:card_id]

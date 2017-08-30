@@ -2,41 +2,50 @@ development:
   :wallet: http://dennis01.rnd.laxino.com:3002/cwms
   :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
   :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
+  :marketing: http://yunxiaopan01.rnd.laxino.com:3001
 
 test:
   :wallet: http://dennis01.rnd.laxino.com:3002/cwms
   :patron: http://dennis01.rnd.laxino.com:6666
   :station: http://dennis01.rnd.laxino.com:5000
+  :marketing: http://yunxiaopan01.rnd.laxino.com:3001
 
 mockup0:
   :wallet: http://mo-mock-cwms-vapp01.rnd.laxino.com:80/cwms
   :patron: http://mo-mock-pis-vapp01.rnd.laxino.com:80
   :station: http://mo-mock-sm-vapp01.rnd.laxino.com:80
+  :marketing: http://mo-mock-mp-vapp01.rnd.laxino.com:80
   
 integration0:
   :wallet: http://hq-int-cwms-vapp01.laxino.local:80/cwms
   :patron: http://hq-int-pis-vapp01.laxino.local:80
   :station: http://hq-int-sm-vapp01.laxino.local:80
+  :marketing: http://hq-int-mp-vapp01.laxino.local:80
 
 staging0:
   :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
   :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
   :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
+  :marketing: http://mo-stg-mp-vapp01.rnd.laxino.com:80
 #  :wallet: http://hq-stg-cwms-vapp01.laxino.local:80/cwms
 #  :patron: http://hq-stg-pis-vapp01.laxino.local:80
 #  :station: http://hq-stg-sm-vapp01.laxino.local:80
+#  :marketing: http://hq-stg-mp-vapp01.laxino.local:80
 
 sandbox3:
   :wallet: http://mo-snd-cwms-vapp01.lb.laxigames.local:80/cwms
   :patron: http://mo-snd-pis-vapp01.lb.laxigames.local:80
   :station: http://mo-snd-sm-vapp01.lb.laxigames.local:80
+  :marketing: http://mo-snd-mp-vapp01.lb.laxigames.local:80
 
 production3:
   :wallet: http://mo-prd-cwms-vapp01.lb.laxigames.local:80/cwms
   :patron: http://mo-prd-pis-vapp01.lb.laxigames.local:80
   :station: http://mo-prd-sm-vapp01.lb.laxigames.local:80
-  
+  :marketing: http://mo-prd-mp-vapp01.lb.laxigames.local:80
+   
 sandbox:
   :wallet: http://mo-snd-cwms-vapp01.platform.gamesource.local:80/cwms
   :patron: http://mo-snd-pis-vapp01.platform.gamesource.local:80
   :station: http://mo-snd-sm-vapp01.platform.gamesource.local:80
+  :marketing: http://mo-snd-mp-vapp01.platform.gamesource.local:80

@@ -19,7 +19,7 @@ class RequesterHelper
   def get_player_info(id_type, id_value, licensee_id)
     response = patron_requester.get_player_info(id_type, id_value).result_hash[:player]
     return {:player => response} if response[:pin_status] == 'blank'
-    update_player!(id_type, id_value)
+    update_player!(id_type, id_value, true)
     if id_type == 'card_id'
       player = Player.find_by_card_id_and_licensee_id(id_value, licensee_id)
     else
@@ -83,7 +83,7 @@ class RequesterHelper
     end
   end
   
-  def update_player!(id_type, id_value)
+  def update_player!(id_type, id_value, mp_create = false)
     response = patron_requester.get_player_info(id_type, id_value)
     unless response.success?
       Rails.logger.error "update player info fail"
@@ -94,7 +94,7 @@ class RequesterHelper
       player = Player.create_inactivate(player_info)
       raise PlayerProfile::PlayerNotActivated.new(player)
     end
-    Player.update_info(player_info)
+    Player.update_info(player_info, mp_create)
   end
 
   def update_player(id_type, id_value)

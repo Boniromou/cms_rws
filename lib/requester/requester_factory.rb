@@ -23,6 +23,10 @@ module Requester
       create_internal_requester('station')
     end
 
+    def get_marketing_requester
+      create_internal_requester('marketing')
+    end
+
   protected
     def create_external_requester(type)
       requester_class = eval("Requester::#{type.capitalize}")

@@ -38,6 +38,10 @@ class ApplicationController < ActionController::Base
     requester_factory.get_station_requester
   end
 
+  def marketing_requester
+    requester_factory.get_marketing_requester
+  end
+
   protected
 
   def check_session_expiration

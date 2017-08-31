@@ -117,7 +117,8 @@ class Player < ActiveRecord::Base
 
       if !mp_create
         player_status = params[:blacklist] ? STATUS_LOCKED : STATUS_NORMAL
-        mp_response = marketing_requester.create_mp_player(player.id, player.member_id, player.card_id, player_status, player.test_mode_player, player.licensee_id, player.currency_id, params[:blacklist])
+        casino = Casino.where(:licensee_id => player.licensee_id).first
+        get_requester_helper(casino.id).create_mp_player(player.id, player.member_id, player.card_id, player_status, player.test_mode_player, player.licensee_id, player.currency_id, params[:blacklist])
       end
       #new_player_deposit(player) if params[:test_mode_player] == 0 || params[:test_mode_player] == false
       player

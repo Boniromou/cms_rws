@@ -16,6 +16,14 @@ class RequesterHelper
     @requester_factory.get_station_requester
   end
 
+  def marketing_requester
+    @requester_factory.get_marketing_requester
+  end
+
+  def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
+    marketing_requester.create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
+  end
+
   def get_player_info(id_type, id_value, licensee_id)
     response = patron_requester.get_player_info(id_type, id_value).result_hash[:player]
     return {:player => response} if response[:pin_status] == 'blank'

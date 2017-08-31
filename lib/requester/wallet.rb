@@ -14,20 +14,6 @@ class Requester::Wallet < Requester::Base
     end
   end
 
-  def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
-    retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/internal/create_player", :body => {:id => player_id, 
-                                                                                      :member_id => member_id, 
-                                                                                      :card_id => card_id,
-                                                                                      :status => status, 
-                                                                                      :test_mode_player => test_mode_player,
-                                                                                      :licensee_id => licensee_id, 
-                                                                                      :currency_id => currency_id,
-                                                                                      :blacklist => blacklist})
-      parse_create_player_response(response)
-    end
-  end
-
   def get_player_balance(login_name, currency = nil, player_id = nil, player_currency_id = nil, test_mode_player = false)
     create_player_proc = Proc.new {create_player(login_name, currency, player_id, player_currency_id, test_mode_player)} unless player_id.nil?
     result = retry_call(RETRY_TIMES) do

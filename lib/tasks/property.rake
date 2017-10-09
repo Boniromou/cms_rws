@@ -53,7 +53,9 @@ namespace :property do
     create_property_data(:property_id => 10002, :property_name => 'DIAMOND_MASS01', :casino_id => 10001, :casino_name => 'Casino Diamond', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
   end
   
-  
+  def create_10010_data
+    create_property_data(:property_id => 10010, :property_name => 'MGM_Trial01', :casino_id => 10010, :casino_name => 'MGM Trial', :licensee_id => 10010, :licensee_name => 'MGM Paradise')
+  end
   
   
   

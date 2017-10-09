@@ -24,6 +24,8 @@ default: &default
     <<: *20000
   10001:
     <<: *20000
+  10010:
+    <<: *20000
 
 development:
   <<: *default

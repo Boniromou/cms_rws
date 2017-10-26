@@ -136,7 +136,7 @@ class PlayersController < ApplicationController
     @action = 'reset_pin'
     @inactivate = false
     member_id = params[:member_id]
-    @player = Player.find_by_member_id(member_id)
+    @player = policy_scope(Player).find_by_member_id(member_id)
     set_pin
   end
 
@@ -152,7 +152,7 @@ class PlayersController < ApplicationController
 
   def do_reset_pin
     member_id = params[:player][:member_id]
-    player = Player.find_by_member_id(member_id)
+    player = policy_scope(Player).find_by_member_id(member_id)
     authorize_action player, :non_test_mode? if player
     begin
      audit_log = {:user => current_user.name, :member_id => params[:player][:member_id], :action_at => Time.now.utc, :action => params[:action].split('_')[0], :casino_id => current_casino_id}

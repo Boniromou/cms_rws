@@ -26,6 +26,10 @@ default: &default
     <<: *20000
   10010:
     <<: *20000
+    trans_history_search_range: [40, 'search range of transaction history(day)']
+    change_log_search_range: [40, 'search range of player lock log(day)']
+    pin_log_search_range: [40, 'search range of pin log(day)']
+    session_life_time: [30]
 
 development:
   <<: *default

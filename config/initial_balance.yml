@@ -2,6 +2,8 @@
 test: &default
   10000:
     :initial_balance: 500
+  10010:
+    :initial_balance: 1000
   20000:
     :initial_balance: 500
   20001:

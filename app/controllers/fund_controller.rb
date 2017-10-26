@@ -27,7 +27,7 @@ class FundController < ApplicationController
   def new
     @member_id = params[:member_id]
     @action = action_str
-    @player = Player.find_by_member_id(@member_id)
+    @player = policy_scope(Player).find_by_member_id(@member_id)
     @casino_id = current_casino_id
     authorize_action @player, :non_test_mode?
   end

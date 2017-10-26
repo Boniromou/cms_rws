@@ -115,9 +115,14 @@ class PlayerTransaction < ActiveRecord::Base
   class << self
     include FundHelper
     def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil)
-      player = Player.find_by_member_id(member_id)
-      player_id = player[:id]
       transaction = new
+      if casino_id.nil?
+        transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
+      else
+        transaction[:casino_id] = casino_id
+      end
+      player = Player.find_by_member_id_and_licensee_id(member_id, Casino.find_by_id(transaction[:casino_id]).licensee_id)
+      player_id = player[:id]
       transaction[:player_id] = player_id
       transaction[:amount] = amount
       transaction[:transaction_type_id] = TransactionType.find_by_name(trans_type).id
@@ -125,11 +130,6 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:machine_token] = machine_token
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
-      if casino_id.nil?
-        transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
-      else
-        transaction[:casino_id] = casino_id
-      end
       transaction[:promotion_code] = promotion_code
       data ||= {}
       data[:executed_by] = executed_by unless executed_by.nil?

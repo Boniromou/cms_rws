@@ -43,7 +43,7 @@ class KioskTransaction < ActiveRecord::Base
   class << self
   include FundHelper
     def init_transaction(member_id, amount, trans_type, shift_id, kiosk_name, ref_trans_id, source_type, casino_id)
-      player = Player.find_by_member_id(member_id)
+      player = Player.find_by_member_id_and_licensee_id(member_id, Casino.find_by_id(casino_id).licensee_id)
       player_id = player[:id]
       transaction = new
       transaction[:player_id] = player_id

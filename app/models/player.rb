@@ -233,11 +233,11 @@ class Player < ActiveRecord::Base
       find_by_card_id_and_licensee_id(card_id, licensee_id)
     end
     
-    def find_by_id_type_and_id_number(id_type, id_number)
+    def find_by_id_type_and_id_number(id_type, id_number, licensee_id)
       if id_type == :member_id
-        Player.find_by_member_id(id_number)
+        Player.find_by_member_id_and_licensee_id(id_number, licensee_id)
       else
-        Player.find_by_card_id(id_number)
+        Player.find_by_card_id_and_licensee_id(id_number, licensee_id)
       end
     end
   end

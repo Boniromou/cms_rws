@@ -30,12 +30,12 @@ module TransactionQueries
       by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:credit_deposit], TRANSACTION_TYPE_ID_LIST[:credit_expire]]).by_status(['completed', 'pending'])
     end
 
-    def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation)      
+    def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation, licensee_id)
       if id_number.empty?
         player_id = nil
       else
         player_id = 0
-        player = Player.find_by_id_type_and_id_number(id_type.to_sym, id_number)
+        player = Player.find_by_id_type_and_id_number(id_type.to_sym, id_number, licensee_id)
         player_id = player.id unless player.nil?
       end
       if operation == 'cash'

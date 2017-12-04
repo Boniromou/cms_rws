@@ -29,19 +29,21 @@ module StepHelper
 
   def login_as_not_admin(user)
     login_as user
-
     #page.set_rack_session( :casino_info => Casino.find_by_id(20000).name)
     #page.set_rack_session( :machine_token => '20000|1|01|4|0102|2|abc1234|6e80a295eeff4554bf025098cca6eb37')
-
     Rails.cache.write user.uid.to_s, {:status => true, :admin => false,  :casinos => [20000]}
   end
 
   def login_as_admin(casino_id = 20000)
-#    @root_user = User.create!(:uid => 1, :name => 'portal.admin', :casino_id => casino_id)
     @root_user = User.create!(:uid => 1, :name => 'portal.admin')
     login_as_not_admin(@root_user)
     Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true, :properties => [20000], :casinos => [20000]}
-    
+  end
+
+  def login_as_10010
+    @root_user = User.create!(:uid => 2, :name => 'portal.admin.10010')
+    login_as_not_admin(@root_user)
+    Rails.cache.write @root_user.uid.to_s, {:status => true, :admin => true, :properties => [10010], :casinos => [10010]}
   end
 
   def login_as_admin_multi_casino(casino_id = 20000)
@@ -188,6 +190,24 @@ module StepHelper
     end
   end
 
+  def check_player_info_10010
+    expect(find("label#player_full_name").text).to eq @player_10010.full_name.upcase
+    expect(find("label#player_member_id").text).to eq @player_10010.member_id.to_s
+    expect(find("label#player_card_id").text).to eq @player_10010.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
+    if @player_10010.status == 'active'
+      expect(find("label#player_status").text).to eq I18n.t("player_status.#{@player_10010.status}")
+    else
+      @player_10010.lock_types.each do |lock_type|
+        expect(find("label#player_#{lock_type}").text).to eq I18n.t("player_status.#{lock_type}")
+      end
+    end
+    if @player_10010.test_mode_player
+      expect(find("label#player_test_mode").text).to eq I18n.t("player_status.test_mode")
+    else
+      expect(page.source).to_not have_selector("label#player_test_mode")
+    end
+  end
+
   def check_player_lock_types
     @player.lock_types.each do |lock_type|
       expect(find("label#player_#{lock_type}").text).to eq I18n.t("player_status.#{lock_type}")
@@ -224,7 +244,7 @@ module StepHelper
     expect(find("input#end").value).to eq @accounting_date
   end
 
-  def check_player_transaction_result_contents(item, player_transaction, reprint_granted, void_granted, reprint_void_granted)
+  def check_player_transaction_result_contents(item, player_transaction, reprint_granted, void_granted, reprint_void_granted, casino)
     player = Player.find(player_transaction.player_id)
     shift = Shift.find(player_transaction.shift_id)
     accounting_date = AccountingDate.find(shift.accounting_date_id)
@@ -245,7 +265,7 @@ module StepHelper
     i = 0
     expect(item[i].text).to eq player_transaction.source_type.gsub('_transaction','').titleize
     i +=1
-    expect(item[i].text).to eq "MockUp"
+    expect(item[i].text).to eq casino
     i +=1
     expect(item[i].text).to eq player_transaction.slip_number.to_s
     i +=1
@@ -322,13 +342,13 @@ module StepHelper
     expect(item[11].text).to eq YAML.load(player_transaction.data)[:remark]
   end
 
-  def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true)
+  def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true, casino='MockUp')
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
       expect(items[i][:id]).to eq "transaction_#{transaction_list[i].id}"
       within items[i] do
-        check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted, void_granted, reprint_void_granted)
+        check_player_transaction_result_contents(all("td"),transaction_list[i], reprint_granted, void_granted, reprint_void_granted, casino)
       end
     end
   end
@@ -577,45 +597,65 @@ module StepHelper
     end
   end
 
-  def lock_or_unlock_player_and_check
-      login_as_admin
+  def lock_or_unlock_player_and_check( casino = 20000 )
+      if casino == 10010
+        login_as_10010
+      else
+        login_as_admin
+      end
       visit home_path
       click_link I18n.t("tree_panel.profile")
       wait_for_ajax
 
       check_search_page("profile")
 
-      search_player_profile
-      toggle_player_lock_status_and_check
+      search_player_profile(casino)
+      toggle_player_lock_status_and_check(casino)
   end
 
-  def search_player_profile
-      fill_search_info_js("card_id", @player.card_id)
+  def search_player_profile(casino = 20000)
+      if casino == 10010
+        fill_search_info_js("card_id", @player_10010.card_id)
+      else
+        fill_search_info_js("card_id", @player.card_id)
+      end
       find("#button_find").click
       wait_for_ajax
   end
 
-  def toggle_player_lock_status_and_check
-      check_lock_unlock_page
+  def toggle_player_lock_status_and_check( casino=20000 )
+      check_lock_unlock_page(casino)
 
       click_button I18n.t("button.#{@lock_or_unlock}")
       expect(find("div#pop_up_dialog")[:style]).to_not include "none"
 
-      expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.member_id)
+      if casino == 10010
+        expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player_10010.member_id)
+      else
+        expected_flash_message = I18n.t("#{@lock_or_unlock}_player.success", name: @player.member_id)
+      end
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
 
-      check_lock_unlock_page
+      check_lock_unlock_page(casino)
       check_flash_message expected_flash_message
   end
 
-  def check_lock_unlock_page
-      @player.reload
+  def check_lock_unlock_page(casino=20000)
+      if casino == 10010
+        @player_10010.reload
+      else
+        @player.reload
+      end
       update_lock_or_unlock
 
       check_profile_page
-      check_player_info
+      if casino == 10010
+        check_player_info_10010
+      else
+        check_player_info
+      end
       check_lock_unlock_components
   end
 
@@ -639,6 +679,12 @@ module StepHelper
     @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000)
     @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 20000)
     @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3, :casino_id => 20000)
+  end
+
+  def create_10010_player_transaction
+    @machine_token_lic_10010 = '10010|10|LOCATION10|10|STATION10|10|machine10|6e80a295eeff4554bf025098cca6eb100'
+
+    @player_transaction_lic_10010 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token_lic_10010, :created_at => Time.now, :slip_number => 1, :casino_id => 10010)
   end
 
   def create_credit_transaction

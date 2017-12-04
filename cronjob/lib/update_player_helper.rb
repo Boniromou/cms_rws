@@ -27,7 +27,7 @@ module Cronjob
         response = patron_requester(licensee_id).get_player_infos(member_ids)
         player_info_array = response.players
         player_info_array.each do |player_info|
-          Player.update_info(player_info)
+          Player.update_info(player_info, false)
         end
       end
     end

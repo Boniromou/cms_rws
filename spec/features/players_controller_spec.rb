@@ -36,12 +36,26 @@ describe PlayersController do
 
     it '[4.2] successfully search player' do
       @player = create_default_player(:first_name => "exist", :last_name => "player")
+      @player_10010 = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 10010)
       login_as_admin
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
       check_balance_page
       check_player_info
+      expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
+    end
+
+    it '[4.5] successfully search player - Licensee 10010' do
+      create_shift_data
+      @player = create_default_player(:first_name => "exist", :last_name => "player")
+      @player_10010 = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 10010)
+      login_as_10010
+      visit players_search_path + "?operation=balance"
+      fill_search_info("member_id", @player_10010.member_id)
+      find("#button_find").click
+      check_balance_page
+      check_player_info_10010
       expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
     end
     
@@ -513,6 +527,8 @@ describe PlayersController do
       @player = create_default_player(:id => 10, :first_name => "test", :last_name => "player")
       @token1 = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
       @token2 = Token.create!(:session_token => '3949245469jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
+      @player_10010 = create_default_player(:id => 10010, :first_name => "test", :last_name => "player", :licensee_id => 10010)
+      @token3 = Token.create!(:session_token => 'asd39492i9jd9wjn', :player_id => 10010, :expired_at => Time.now + 1800)
     end
 
      after(:each) do
@@ -571,10 +587,12 @@ describe PlayersController do
       check_flash_message expected_flash_message
       token_test1 = Token.find_by_session_token('abm39492i9jd9wjn')
       token_test2 = Token.find_by_session_token('3949245469jd9wjn')
+      token_test3 = Token.find_by_session_token('asd39492i9jd9wjn')
       expect(token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
       expect(token_test1.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
       expect(token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be >= (Time.now.utc - 200).strftime("%Y-%m-%d %H:%M:%S UTC")
       expect(token_test2.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be <= (Time.now.utc + 200).strftime("%Y-%m-%d %H:%M:%S UTC")
+      expect(token_test3.expired_at.strftime("%Y-%m-%d %H:%M:%S UTC")).to be > (Time.now.utc + 1000).strftime("%Y-%m-%d %H:%M:%S UTC")
     end
   end
 =end
@@ -770,7 +788,7 @@ describe PlayersController do
       expect(find("label#player_member_id").text).to eq @player.member_id.to_s
       expect(find("label#player_card_id").text).to eq @player.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
-      expect(page.source).to have_selector("a#create_pin")
+      #expect(page.source).to have_selector("a#create_pin")
     end
     
     it '[53.6] Card ID not found in PIS' do

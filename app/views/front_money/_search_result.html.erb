@@ -36,7 +36,7 @@
                 <td><%= format_time(t.created_at) %></td>
                 <!-- <td><%= t.shift.name %></td> -->
                 <td><%= t.location %></td>
-                <td><%= t.user.name %></td>
+                <td><%= !t.user.nil? ? t.user.name : 'System' %></td>
                 <td><%= t.status %></td>
                 <td><%= t.deposit_amt_str %></td>
                 <td><%= t.data_hash[:deposit_reason] %></td>

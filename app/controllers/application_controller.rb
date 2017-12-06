@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Rigi::PunditHelper::Controller
   include CageInfoHelper
+  include HomeHelper
 
   rescue_from Exception, :with => :handle_fatal_error
   rescue_from Pundit::NotAuthorizedError, :with => :handle_unauthorize

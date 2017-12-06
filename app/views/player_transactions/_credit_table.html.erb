@@ -21,7 +21,7 @@
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
                   <td><%= t.location %></td>
-                  <td><%= t.user.name %></td>
+                  <td><%= !t.user.nil? ? t.user.name : 'System' %></td>
                   <td><%= t.display_status %></td>
                   <td><%= t("transaction_history.#{t.transaction_type.name}") %></td>
                   <td><%= t.credit_deposit_amt_str %></td>

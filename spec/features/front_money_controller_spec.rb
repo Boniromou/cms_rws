@@ -57,7 +57,7 @@ describe FrontMoneyController do
       login_as_admin
       create_player_transaction
       visit search_front_money_path
-      fill_in "accounting_date", :with => 1
+      #fill_in "accounting_date", :with => 1
       check_search_fm_page
       
       find("input#search").trigger('click')

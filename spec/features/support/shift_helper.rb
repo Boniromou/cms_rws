@@ -80,6 +80,7 @@ module ShiftHelper
     Shift.delete_all
     @past_accounting_date_id = AccountingDate.create!(:accounting_date => (Time.now - 5.day).strftime("%Y-%m-%d")).id
     @past_shift = Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @past_accounting_date_id, :casino_id => 20000)
+    sleep 1
     Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :casino_id => 20000)
   end
 

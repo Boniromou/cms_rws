@@ -104,7 +104,7 @@ production3:
   no_block: true
   timeout: 30
 
-sandbox3:
+sandbox:
   servers:
     - mo-snd-s3-vapp01.platform.gamesource.local:11211
     - mo-snd-s3-vapp01.platform.gamesource.local:11212

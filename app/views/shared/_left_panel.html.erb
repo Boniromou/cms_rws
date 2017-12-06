@@ -90,7 +90,7 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(:AuditLog).search_audit_log? %>
+      <% if policy(:AuditLog).search_audit_log? || (policy(:ChangeHistory).lock_player_log? && IS_MARKETING == 0) || (policy(:ChangeHistory).pin_change_log? && IS_MARKETING == 0) %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-folder-close"></i> <span class="menu-item-parent"><%= t("tree_panel.audit")%></span></a>
           <ul style="display:block;">

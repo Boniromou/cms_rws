@@ -116,14 +116,14 @@
     <div class="floating-content1"><%= format_time_slip(@transaction.created_at) %></div>
     <div class="separated"></div>
     <div class="floating-index1">Clerk:</div>
-    <div class="floating-content1"><%= @transaction.user.name %></div>
+    <div class="floating-content1"><%= !@transaction.user.nil? ? @transaction.user.name : 'System' %></div>
 
     <div class="floating-index1" style="width: 5%;"></div>
     <div class="floating-index2">Date:</div>
     <div class="floating-content1"><%= format_time_slip(@transaction.created_at) %></div>
     <div class="separated"></div>
     <div class="floating-index1">Clerk:</div>
-    <div class="floating-content1"><%= @transaction.user.name %></div>
+    <div class="floating-content1"><%= !@transaction.user.nil? ? @transaction.user.name : 'System' %></div>
 
 <!--  -->
     <div class="floating-index1" style="width: 5%;"></div>

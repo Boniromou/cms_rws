@@ -9,5 +9,4 @@ $.loading_selector = $('div#front_money_result');
 
 $('div#front_money_result').css({ opacity: "0.0" }).html("<%= escape_javascript(render :partial => "front_money/search_result", :formats => [ :html ] , :layout => nil) %>").delay(50).animate({ opacity: "1.0" }, 300);
 
-$('input#accounting_date').val("<%= format_date(@accounting_date.accounting_date) %>");
 $('tr th:nth-child(4)').click();

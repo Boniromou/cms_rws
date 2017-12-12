@@ -25,6 +25,9 @@ module FundInOut
   class VoidTransactionNotExist < FundError
   end
 
+  class VoidRemarksRequired < FundError
+  end
+
   class InvalidMachineToken < FundError
   end
 

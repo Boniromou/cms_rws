@@ -27,7 +27,7 @@ describe KioskController do
     create_shift_data
     @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
     @promotion_code = "PRO000021"
-    @executed_by = "queenie"
+    @executed_by = "system"
     @ref_trans_id = nil
     @sourse_type = "promotion_deposit" 
 
@@ -64,7 +64,7 @@ describe KioskController do
       expect(player_transaction_data[:promotion_detail][:promotion_type]).to eq "Mass Top Up"
       expect(player_transaction_data[:promotion_detail][:award_condition]).to eq "Top Up Amount = 200.0"
       expect(player_transaction_data[:promotion_detail][:occurrences]).to eq 1        
-      expect(player_transaction_data[:executed_by]).to eq 'queenie'
+      expect(player_transaction_data[:executed_by]).to eq 'system'
       expect(player_transaction.status).to eq 'completed'
       expect(player_transaction.casino_id).to eq 20000
     

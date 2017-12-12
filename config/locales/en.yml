@@ -267,6 +267,7 @@ en:
     already_void: "Transaction %{slip_number} has been void"
     not_exist: "Transaction not exist"
     invalid_machine_token: "Invalid Machine Token"
+    remark_required: "Remark is required"
   reset_pin:
 #    new_pin: "New PIN"
 #    confirm_pin: "Confirm PIN"

@@ -14,3 +14,14 @@
 </div>
 </div>
 <%= javascript_include_tag "popup.panel.js" %>
+
+<script>
+  $(window).keyup(function(e) {
+    var void_remarks = document.getElementById('void_remarks').value;
+    if( !void_remarks ){
+      $("#confirm").attr('disabled','true');
+    }else{
+      $("#confirm").removeAttr("disabled");
+    }
+  });
+</script>

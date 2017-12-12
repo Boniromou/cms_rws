@@ -6,6 +6,9 @@
  $('#<%= btn_id %>').click(function() {
   if (<%= form_valid_function %>){
     registerPopUpPanel('#<%= form_id %>','<%= content %>');
+    if( $('#void_remarks').length > 0 ){
+      $("#confirm").attr('disabled','true');
+    }
     }
     return false;
   });

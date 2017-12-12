@@ -38,6 +38,14 @@
                           <% trans_type = t.transaction_type.name %>
                           <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
                               <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
+                              <form class="form-horizontal" id="popupform">
+                                <div class="form-group">
+                                  <label for="inputRemarks" class="col-sm-5 control-label" id="remark_label"><strong>Remarks:</strong></label>
+                                  <div class="col-sm-3">
+                                    <%= text_area_tag 'remarks', nil, size: "35x10", :required => true, :id => "void_remarks", :form => "void_#{trans_type}", :oninput => "validateMaxLength($(this), value, 200)"%>
+                                  </div>
+                                </div>
+                              </form>
                           <% end %>
                         <% else %>
                           <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
@@ -54,3 +62,12 @@
               <% end %>
             </tbody>
           </table>
+
+<script>
+  function validateMaxLength(element, value, length) {
+    if ( length >= 0 ) {
+      $(element).val($(element).val().substring(0, length));
+    }
+    return false;
+  }
+</script>

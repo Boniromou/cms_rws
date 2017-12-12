@@ -2,6 +2,7 @@ class VoidController < FundController
   rescue_from FundInOut::AlreadyVoided, :with => :handle_already_voided
   rescue_from FundInOut::VoidTransactionNotExist, :with => :handle_transaction_not_exist
   rescue_from FundInOut::InvalidMachineToken, :with => :handle_invalid_machine_token
+  rescue_from FundInOut::VoidRemarksRequired, :with => :handle_void_remarks_required
 
   def create
     super
@@ -13,6 +14,7 @@ class VoidController < FundController
   end
 
   def extract_params
+    raise FundInOut::VoidRemarksRequired if params[:remarks].nil? || params[:remarks] == ''
     player_transaction_id = params[:transaction_id]
     raise FundInOut::VoidTransactionNotExist unless player_transaction_id
     @target_transaction = PlayerTransaction.find_by_id_and_casino_id(player_transaction_id, current_casino_id)
@@ -21,7 +23,7 @@ class VoidController < FundController
     @server_amount = @target_transaction.amount
     @amount = cents_to_dollar(@server_amount)
     @ref_trans_id = @target_transaction.ref_trans_id
-    @data = nil
+    @data = {:remark => "#{params[:remarks]}"}
   end
 
   def check_transaction_acceptable
@@ -55,5 +57,9 @@ class VoidController < FundController
     respond_to do |format|
       format.js { render partial: "player_transactions/refresh_result", formats: [:js] }
     end
+  end
+
+  def handle_void_remarks_required(e)
+    handle_fund_error('void_transaction.remark_required')
   end
 end

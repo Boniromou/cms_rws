@@ -444,7 +444,7 @@ module StepHelper
   end
 
 
-  def click_pop_up_confirm(btn_id, content_list)
+  def click_pop_up_confirm(btn_id, content_list, remarks = 0)
     find("div#button_set button##{btn_id}").trigger('click')
     within ("div#pop_up_content") do
       content_list.each do |str|
@@ -452,6 +452,9 @@ module StepHelper
       end
     end
     yield if block_given?
+    if remarks == 1
+      fill_in "void_remarks", :with => "Test-remarks"
+    end
     find("div#pop_up_dialog div#pop_up_confirm_btn button#confirm").trigger('click')
   end
 
@@ -578,7 +581,7 @@ module StepHelper
     find("input#search").click
     wait_for_ajax
     content_list = [I18n.t("confirm_box.void_transaction", slip_number: player_transaction.slip_number.to_s)]
-    click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list)
+    click_pop_up_confirm("void_#{player_transaction.transaction_type.name}_" + player_transaction.id.to_s, content_list, 1)
     wait_for_ajax
 
     check_flash_message I18n.t("void_transaction.success", slip_number: player_transaction.slip_number.to_s)

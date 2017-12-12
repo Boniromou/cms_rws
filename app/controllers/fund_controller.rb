@@ -48,7 +48,7 @@ class FundController < ApplicationController
     validate_amount_str(@amount)
     @server_amount = to_server_amount(@amount)
     @ref_trans_id = nil
-    @data = {:remark => params[:player_transaction][:remark]}
+    @data = {:remark => "#{params[:player_transaction][:remark]}"}
   end
 
   def check_transaction_acceptable

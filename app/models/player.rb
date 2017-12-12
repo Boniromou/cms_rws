@@ -129,8 +129,14 @@ class Player < ActiveRecord::Base
       amt = YAML.load_file("#{SELF_ROOT}/config/initial_balance.yml")[Rails.env][player.licensee_id]
       casino = Casino.where(:licensee_id => player.licensee_id).first
       raise Remote::CasinoNotFound if casino.nil?
-
-      get_requester_helper(casino.id).internal_deposit(player.member_id, amt[:initial_balance].to_s, nil, 'promotion_deposit', casino.id, 'INITPRO', 'system')
+      # TODO: Need to refactor
+      get_requester_helper(casino.id).internal_deposit(player.member_id, amt[:initial_balance].to_s, nil, 'promotion_deposit', casino.id, 'INITPRO', 'system', 
+                                                    {:promotion_detail => 
+                                                                            {:promotion_type => "initial_amount",
+                                                                             :award_condition => "Top Up Amount = #{amt[:initial_balance]}",
+                                                                             :occurrences => 1
+                                                                            }
+                                                    })
     end
 
     def get_requester_helper(casino_id)

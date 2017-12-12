@@ -194,7 +194,7 @@ class RequesterHelper
     {:amt => amount, :trans_date => kiosk_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => response.balance}
   end
 
-  def internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by)
+  def internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by, promotion_info)
     p "=======Start to internal_deposit"
     player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
     raise Request::InvalidLoginName if player.nil?
@@ -210,7 +210,7 @@ class RequesterHelper
     check_promotion_code( promotion_code, player ) unless promotion_code.nil?
     server_amount = PlayerTransaction.to_server_amount(amount)
     
-    player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by)
+    player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by, {:promotion_detail => promotion_info})
     response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), source_type, promotion_code)
 
     after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)

@@ -147,8 +147,8 @@ class PlayerTransaction < ActiveRecord::Base
       transaction
     end
 
-    def save_internal_deposit_transaction(member_id, amount, shift_id, ref_trans_id, casino_id, promotion_code = nil, executed_by = nil)
-      init_transaction(member_id, amount, DEPOSIT, shift_id, '', nil, ref_trans_id, nil, casino_id, promotion_code, executed_by)
+    def save_internal_deposit_transaction(member_id, amount, shift_id, ref_trans_id, casino_id, promotion_code = nil, executed_by = nil, data = nil)
+      init_transaction(member_id, amount, DEPOSIT, shift_id, '', nil, ref_trans_id, data, casino_id, promotion_code, executed_by)
     end
 
     def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil)

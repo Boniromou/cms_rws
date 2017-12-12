@@ -151,6 +151,44 @@ class RequestHandler
     casino_id = @inbound[:casino_id]
     promotion_code = @inbound[:promotion_code]
     executed_by = @inbound[:executed_by]
-    get_requester_helper(casino_id).internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by)
+    promotion_info = handle_promotion_info(@inbound)
+    get_requester_helper(casino_id).internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by, promotion_info)
+  end
+
+  def handle_promotion_info(ib)
+    Hood::ParamUtil.ensure_params_given(ib, :promotion_type, :amt)
+    promotion_info = {}
+    ib[:amt] = ib[:amt].to_f
+
+    case ib[:promotion_type]
+    when "mass_top_up"
+      promotion_info[:award_condition] = "Top Up Amount = #{ib[:amt]}"
+      promotion_info[:occurrences] = 1
+    when "initial_amount"
+      promotion_info[:award_condition] = "First Login"
+      promotion_info[:occurrences] = 1
+    when "daily_rounds_award"
+      Hood::ParamUtil.ensure_params_given(ib, :threshold, :max, :each_award, :count)
+      Hood::ParamUtil.to_i(ib, :threshold, :max, :count)
+      ib[:each_award] = ib[:each_award].to_f
+      promotion_info[:award_condition] = "Threshold = #{ib[:threshold]} round#{(ib[:threshold] > 1 )? 's' : '' }, Max = #{ib[:max]}, Each Award = #{ib[:each_award]}"
+      promotion_info[:occurrences] = ib[:count]
+    when "daily_login_award"
+      Hood::ParamUtil.ensure_params_given(ib, :threshold, :max, :each_award, :count)
+      Hood::ParamUtil.to_i(ib, :threshold, :max, :count)
+      ib[:each_award] = ib[:each_award].to_f
+      promotion_info[:award_condition] = "Threshold = #{ib[:threshold]} login#{(ib[:threshold] > 1 )? 's' : '' }, Max = #{ib[:max]}, Each Award = #{ib[:each_award]}"
+      promotion_info[:occurrences] = ib[:count]
+    when "daily_top_off"
+      Hood::ParamUtil.ensure_params_given(ib, :top_off_amt)
+      ib[:top_off_amt] = ib[:top_off_amt].to_f
+      promotion_info[:award_condition] = "if Account Balance < #{ib[:top_off_amt]}, top off to #{ib[:top_off_amt]}"
+      promotion_info[:occurrences] = ib[:top_off_amt] - ib[:amt]
+    else
+      raise BadRequest("Promotion Type Not Exist")
+    end
+
+    promotion_info[:promotion_type] = ib[:promotion_type].split('_').map{|w| w.camelize}.join(' ')
+    promotion_info
   end
 end

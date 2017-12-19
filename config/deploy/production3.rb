@@ -1,6 +1,6 @@
 # Define your release to be deployed to integration environment here.
 # Release number for integration environment is supposed to be odd numbers.
-set :branch, 'CBG_1_10_2_5'
+set :branch, 'REL_1_1_0'
 
 # Define your repository server for integration environment here.
 #   production SVN - svn.prod.laxigames.com
@@ -25,4 +25,4 @@ role :cronjob_app, 'mo-prd-cms-app01.lb.laxigames.local'
 set :nginx_worker_processes, 2
 set :cluster_port, 10060
 set :virtual_server_name, 'mo-prd-cms-vapp01.lb.laxigames.local'
-set :num_of_servers, 2
+set :num_of_servers, 12

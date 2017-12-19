@@ -23,7 +23,8 @@ class VoidController < FundController
     @server_amount = @target_transaction.amount
     @amount = cents_to_dollar(@server_amount)
     @ref_trans_id = @target_transaction.ref_trans_id
-    @data = {:remark => "#{params[:remarks]}"}
+    @data = {:remark => ""}
+    @data[:void_reason] = "#{params[:remarks]}"
   end
 
   def check_transaction_acceptable

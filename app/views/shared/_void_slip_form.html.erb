@@ -186,9 +186,9 @@
 
 <!--  -->
     <div class="floating-index1" style="width: 5%;"></div>
-    <div class="floating-index2" style="width: 40%; word-wrap: break-word" ><%= YAML.load(@transaction.data).nil? ? "" : YAML.load(@transaction.data)[:remark] %></div>
+    <div class="floating-index2" style="width: 40%; word-wrap: break-word" ><%= YAML.load(@transaction.data).nil? ? "" : YAML.load(@transaction.data)[:void_reason] %></div>
     <div class="floating-index1" style="width: 10%;"></div>
-    <div class="floating-index2" style="width: 40%; word-wrap: break-word" ><%= YAML.load(@transaction.data).nil? ? "" : YAML.load(@transaction.data)[:remark] %></div>
+    <div class="floating-index2" style="width: 40%; word-wrap: break-word" ><%= YAML.load(@transaction.data).nil? ? "" : YAML.load(@transaction.data)[:void_reason] %></div>
 
     <div class="floating-index1" style="width: 100%;"></div>
 

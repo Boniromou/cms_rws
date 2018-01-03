@@ -41,7 +41,7 @@
           </ul>
         </li>
       <% end %>
-      <% if policy(:Player).balance? || policy(:PlayerTransaction).search? %>
+      <% if policy(:Player).balance? || policy(:PlayerTransaction).search? || policy(:account_activity).list? %>
         <li>
           <a href="#" class="unlink"><i class="fa fa-bank"></i> <span class="menu-item-parent"><%= t("tree_panel.fund_management")%></span></a>
           <ul style="display:block;">
@@ -65,6 +65,14 @@
                 <% end %>
               </li>
               <% end %>
+            <% end %>
+            
+            <% if policy(:account_activity).list? %>
+              <li id="nav_account_activity">
+                <%= link_to search_account_activities_path, :title => t("tree_panel.account_activity"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.account_activity") %></span>
+                <% end %>
+              </li>
             <% end %>
           </ul>
         </li>

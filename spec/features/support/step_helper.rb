@@ -149,6 +149,13 @@ module StepHelper
     check_remain_amount(:deposit, :withdraw)
   end
 
+  def check_account_activity_page
+    within('#account_activity_search_info') {
+      expect(find('#search_member_id').text).to eq @player.member_id
+      expect(find('#search_licensee').text).to eq @player.licensee.name
+    }
+  end
+
   def check_balance_amount(balance,credit_balance,expired_at)
     expect(find("label#player_balance").text).to eq to_display_amount_str(balance)
     expect(find("label#credit_balance").text).to eq to_display_amount_str(credit_balance) unless credit_balance.nil?
@@ -536,6 +543,19 @@ module StepHelper
     within "div#content" do
         click_link I18n.t("button.withdrawal")
     end
+  end
+
+  def go_to_account_activity_page
+    begin
+      find_link(I18n.t("tree_panel.account_activity"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
+    click_link I18n.t("tree_panel.account_activity")
+    fill_search_info_js("member_id", @player.member_id)
+    click_button I18n.t("button.search")
+    wait_for_ajax
+    check_account_activity_page
   end
 
   def do_deposit(amount)

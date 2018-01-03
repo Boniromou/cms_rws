@@ -43,6 +43,10 @@ class ApplicationController < ActionController::Base
     requester_factory.get_marketing_requester
   end
 
+  def marketing_wallet_requester
+    requester_factory.get_marketing_wallet_requester
+  end
+
   protected
 
   def check_session_expiration

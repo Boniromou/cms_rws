@@ -3,6 +3,7 @@ require SELF_ROOT + "/lib/promotion_helper"
 
 class Player < ActiveRecord::Base
   belongs_to :currency
+  belongs_to :licensee
   has_many :tokens
   has_many :players_lock_types
   include FundHelper

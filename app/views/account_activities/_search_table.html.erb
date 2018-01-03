@@ -1,0 +1,57 @@
+<table id="account_activities_table" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+  <thead>
+    <tr>
+      <th colspan="10"></th>
+      <th class="info" colspan="3"><%= t("account_activity.begin_balance") %></th>
+      <th class="danger" colspan="3"><%= t("account_activity.trans_amount") %></th>
+      <th class="success" colspan="3"><%= t("account_activity.end_balance") %></th>
+    </tr>
+    <tr>
+      <th><%= t("general.date_time") %></th>
+      <th><%= t("account_activity.transaction_type") %></th>
+      <th><%= t("general.casino") %></th>
+      <th><%= t("account_activity.ref_trans_id") %></th>
+      <th><%= t("account_activity.round_id") %></th>
+      <th><%= t("account_activity.slip_id") %></th>
+      <th><%= t("account_activity.property") %></th>
+      <th><%= t("account_activity.zone_location") %></th>
+      <th><%= t("account_activity.employee_name") %></th>
+      <th><%= t("general.status") %></th>
+      <th class="info"><%= t("account_activity.cash") %></th>
+      <th class="info"><%= t("account_activity.credit") %></th>
+      <th class="info"><%= t("account_activity.point") %></th>
+      <th class="danger"><%= t("account_activity.cash") %></th>
+      <th class="danger"><%= t("account_activity.credit") %></th>
+      <th class="danger"><%= t("account_activity.point") %></th>
+      <th class="success"><%= t("account_activity.cash") %></th>
+      <th class="success"><%= t("account_activity.credit") %></th>
+      <th class="success"><%= t("account_activity.point") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |trans| %>
+      <% trans = trans.symbolize_keys %>
+      <tr>
+        <td><%= format_time(trans[:trans_date]) %></td>
+        <td><%= trans[:trans_type] %></td>
+        <td><%= trans[:casino_name] %></td>
+        <td><%= trans[:ref_trans_id] %></td>
+        <td><%= trans[:round_id] %></td>
+        <td><%= trans[:slip_number] %></td>
+        <td><%= trans[:property_name] %></td>
+        <td><%= "#{trans[:zone_name]}/#{trans[:location_name]}" if trans[:zone_name] || trans[:location_name] %></td>
+        <td><%= trans[:employee_name] %></td>
+        <td><%= trans[:status] %></td>
+        <td class="info"><%= display_balance(trans[:cash_before_balance]) %></td>
+        <td class="info"><%= display_balance(trans[:credit_before_balance]) %></td>
+        <td class="info"><%= display_point(trans[:point_before_balance]) %></td>
+        <td class="danger"><%= display_balance(trans[:cash_amt]) %></td>
+        <td class="danger"><%= display_balance(trans[:credit_amt]) %></td>
+        <td class="danger"><%= display_point(trans[:point_amt]) %></td>
+        <td class="success"><%= display_balance(trans[:cash_after_balance]) %></td>
+        <td class="success"><%= display_balance(trans[:credit_after_balance]) %></td>
+        <td class="success"><%= display_point(trans[:point_after_balance]) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -87,6 +87,22 @@ module Requester
     end
   end
 
+  class GetAccountActivityResponse < WalletResponse
+    def transactions
+      @result_hash[:transactions] || []
+    end
+  end
+
+  class NoAccountActivityResponse < GetAccountActivityResponse
+    def initialize
+      @result_hash = {:error_code => 'NoRecord'}
+    end
+
+    def transactions
+      []
+    end
+  end
+
   class NoBalanceResponse < GetPlayerBalanceResponse
     def initialize
       @result_hash = {:error_code => 'NoBalance'}

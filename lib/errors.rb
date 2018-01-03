@@ -95,6 +95,9 @@ module Remote
   class NoBalanceError < GetBalanceError
   end
 
+  class GetAccountActivityError < ReturnError
+  end
+
   class UnexpectedResponseFormat < RetryError
   end
 

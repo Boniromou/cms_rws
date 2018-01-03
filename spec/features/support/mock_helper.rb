@@ -59,6 +59,18 @@ module MockHelper
     allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(response)
   end
 
+  def mock_account_activities(transactions = [], type = 'cage')
+    response = Requester::GetAccountActivityResponse.new({:error_code => 'OK', :transactions => transactions})
+    type = type == 'cage' ? 'Wallet' : 'MarketingWallet'
+    allow_any_instance_of("Requester::#{type}".constantize).to receive(:get_account_activity).and_return(response)
+  end
+
+  def mock_account_activities_failed(type = 'cage')
+    response = Requester::NoAccountActivityResponse.new
+    type = type == 'cage' ? 'Wallet' : 'MarketingWallet'
+    allow_any_instance_of("Requester::#{type}".constantize).to receive(:get_account_activity).and_return(response)
+  end
+
   def mock_current_casino_id(casino_id = 20000)
     allow_any_instance_of(ApplicationController).to receive(:current_casino_id).and_return(casino_id)
   end

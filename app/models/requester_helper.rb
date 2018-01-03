@@ -20,6 +20,10 @@ class RequesterHelper
     @requester_factory.get_marketing_requester
   end
 
+  def marketing_wallet_requester
+    @requester_factory.get_marketing_wallet_requester
+  end
+
   def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
     marketing_requester.create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
   end
@@ -211,7 +215,7 @@ class RequesterHelper
     server_amount = PlayerTransaction.to_server_amount(amount)
     
     player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by, {:promotion_detail => promotion_info})
-    response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), source_type, promotion_code)
+    response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), source_type, promotion_code, nil, 'system')
 
     after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
     handle_wallet_result(player_transaction, response)

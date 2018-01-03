@@ -27,15 +27,19 @@ module Requester
       create_internal_requester('marketing')
     end
 
+    def get_marketing_wallet_requester
+      create_internal_requester('marketing_wallet')
+    end
+
   protected
     def create_external_requester(type)
-      requester_class = eval("Requester::#{type.capitalize}")
+      requester_class = eval("Requester::#{type.classify}")
       requester_class.new(@casino_id, @licensee_id, @secret_key, @urls[type.to_sym])
     end
 
     def create_internal_requester(type)
       config = Hood::CONFIG
-      requester_class = eval("Requester::#{type.capitalize}")
+      requester_class = eval("Requester::#{type.classify}")
       requester_class.new(config.internal_property_id, config.service_key, @urls[type.to_sym], config.service_id, @casino_id, @licensee_id)
     end
   end

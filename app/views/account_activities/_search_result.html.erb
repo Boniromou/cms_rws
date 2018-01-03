@@ -1,0 +1,23 @@
+<% if @transactions %>
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2><%= t("tree_panel.account_activity") %></h2>
+    </header>
+    <div>
+      <div class="widget-body no-padding">
+        <% if @transactions.length > 0 %>
+          <div id="account_activity_result">
+            <%= render "account_activities/search_table" %>
+          </div>
+        <% else %>
+          <br/>
+          <br/>
+          <label style="margin-left: 10px"> <%= t("report_search.no_transaction_found")%> </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= javascript_include_tag "pagination" %>

@@ -30,6 +30,14 @@ module FundHelper
     number_to_currency(amount).sub("$","")
   end
 
+  def display_balance(amount)
+    number_to_currency(amount).sub("$","") if amount
+  end
+
+  def display_point(amount)
+    number_to_currency(amount, precision: 6).sub("$","") if amount
+  end
+
   def to_display_remain_str(remain_amt)
     if remain_amt > 0
       ""

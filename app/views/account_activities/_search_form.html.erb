@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-5">
+    <%= form_tag(search_account_activities_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
+      <div id="search-tabs">
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
+          <li>
+            <a id="byMemberTab" class="tab-link" href="#tabs-a"><%= t("transaction_history.by_member") %></a>
+          </li>
+        </ul>
+
+        <div id="tabs-a">
+          <br/>
+          <div class="row">
+            <div class="col-md-5">
+              <section class="smart-form">
+                <div class="inline-group">
+                  <label class="radio">
+                    <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
+                    <i></i>
+                    <%= t("general.card_id") %>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" id="member_id" name="id_type" value="member_id">
+                    <i></i>
+                    <%= t("general.member_id") %>
+                  </label>
+                </div>
+              </section>
+            </div>
+            
+            <div class="col-md-7">
+              <section class="smart-form">
+                <label class="input">
+                  <%= text_field_tag(:"id_number", @card_id, autofocus: true) %>
+                </label>
+              </section>
+            </div>
+          </div>
+          <br/>
+
+          <div id="account_activity_search_info" class="row" style="display: none;">
+            <div class="col-md-12">
+              <p><%= t("general.member_id") %>: <span id="search_member_id"></span></p>
+              <p><%= t("general.licensee") %>: <span id="search_licensee"></span></p>
+              <p><%= t("general.date_range") %>: <span id="search_date_range"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+              
+      <div class="form-actions">
+        <div class="row">
+          <div class="col-md-12">
+            <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+</br>
+
+<script>
+  $(document).ready(function() {
+    $("#search").click(function(){
+      document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-8 col-lg-5';
+    });
+
+    $('div#search-tabs').tabs({
+      activate: function(event, ui) {
+        $('input[autofocus="autofocus"]', ui.newPanel).focus();
+        $('#selected_tab_index').val(ui.newTab.index());
+      },
+      create: function(event, ui) {
+        $('input[autofocus="autofocus"]', ui.panel).focus();
+        $('#selected_tab_index').val(ui.tab.index());
+      }
+    });
+
+    $('input:radio[name="id_type"]').click(function() {
+      $('input[autofocus="autofocus"]').focus();
+    });
+  });
+</script>
+
+<style type="text/css">
+  .lower{
+    padding-top: 7px;
+  }
+</style>

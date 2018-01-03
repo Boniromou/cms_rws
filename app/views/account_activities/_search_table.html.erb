@@ -33,7 +33,7 @@
       <% trans = trans.symbolize_keys %>
       <tr>
         <td><%= format_time(trans[:trans_date]) %></td>
-        <td><%= trans[:trans_type] %></td>
+        <td><%= trans[:trans_type].titleize if trans[:trans_type] %></td>
         <td><%= trans[:casino_name] %></td>
         <td><%= trans[:ref_trans_id] %></td>
         <td><%= trans[:round_id] %></td>

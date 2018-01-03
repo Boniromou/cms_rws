@@ -31,11 +31,11 @@ module FundHelper
   end
 
   def display_balance(amount)
-    number_to_currency(amount.to_f.round_down(2)).sub("$","") if amount
+    number_to_currency(amount.to_f.round_down(2), negative_format: "(%u%n)").sub("$","")
   end
 
   def display_point(amount)
-    number_to_currency(amount.to_f.round_down(6), precision: 6).sub("$","") if amount
+    number_to_currency(amount.to_f.round_down(6), precision: 6, negative_format: "(%u%n)").sub("$","") if amount
   end
 
   def to_display_remain_str(remain_amt)

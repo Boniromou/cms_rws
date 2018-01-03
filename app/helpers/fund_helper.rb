@@ -9,7 +9,7 @@ module FundHelper
   end
 
   def to_server_amount( amount )
-    (amount.to_f.round(2) * 100).to_i
+    (amount.to_f * 100).round(2).to_i
   end
 
   def cents_to_dollar(cent_amount)
@@ -22,20 +22,20 @@ module FundHelper
 
   def to_display_amount_str( amount )
     return I18n.t("balance_enquiry.#{amount}") if amount.class == String
-    number_to_currency(amount.to_f / 100).sub("$","")
+    number_to_currency((amount.to_f / 100).round_down(2)).sub("$","")
   end
 
   def to_formatted_display_amount_str( amount )
     return I18n.t("balance_enquiry.#{amount}") if amount.class == String
-    number_to_currency(amount).sub("$","")
+    number_to_currency(amount.to_f.round_down(2)).sub("$","")
   end
 
   def display_balance(amount)
-    number_to_currency(amount).sub("$","") if amount
+    number_to_currency(amount.to_f.round_down(2)).sub("$","") if amount
   end
 
   def display_point(amount)
-    number_to_currency(amount, precision: 6).sub("$","") if amount
+    number_to_currency(amount.to_f.round_down(6), precision: 6).sub("$","") if amount
   end
 
   def to_display_remain_str(remain_amt)

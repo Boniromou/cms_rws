@@ -39,12 +39,12 @@ class AccountActivitiesController < ApplicationController
 
   protected
   def get_cage_transactions_detail(transactions)
-    ref_trans_ids = transactions.map {|trans| trans[:ref_trans_id]}
+    ref_trans_ids = transactions.map {|trans| trans['ref_trans_id']}
     player_transactions = PlayerTransaction.where(ref_trans_id: ref_trans_ids).group_by(&:ref_trans_id)
     transactions.each do |trans|
-      player_trans = player_transactions[trans[:ref_trans_id]] || []
-      trans[:slip_number] = player_trans[0].try(:slip_number)
-      trans[:zone_name], trans[:location_name] = get_zone_location(player_trans[0].try(:machine_token))
+      player_trans = player_transactions[trans['ref_trans_id']] || []
+      trans['slip_number'] = player_trans[0].try('slip_number')
+      trans['zone_name'], trans['location_name'] = get_zone_location(player_trans[0].try(:machine_token))
     end
   end
 

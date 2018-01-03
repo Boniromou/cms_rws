@@ -44,7 +44,7 @@ class AccountActivitiesController < ApplicationController
     transactions.each do |trans|
       player_trans = player_transactions[trans['ref_trans_id']] || []
       trans['slip_number'] = player_trans[0].try('slip_number')
-      trans['zone_name'], trans['location_name'] = get_zone_location(player_trans[0].try(:machine_token))
+      trans['zone_name'], trans['location_name'] = get_zone_location(trans['machine_token'] || player_trans[0].try(:machine_token))
     end
   end
 

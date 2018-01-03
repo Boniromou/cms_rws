@@ -31,7 +31,7 @@ module FundHelper
   end
 
   def display_balance(amount)
-    number_to_currency(amount.to_f.round_down(2), negative_format: "(%u%n)").sub("$","")
+    number_to_currency(amount.to_f.round_down(2), negative_format: "(%u%n)").sub("$","") if amount
   end
 
   def display_point(amount)

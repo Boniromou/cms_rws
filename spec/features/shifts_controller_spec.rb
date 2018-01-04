@@ -178,23 +178,6 @@ describe ShiftsController do
       check_redirected_to_fm('swing', @today)
     end
 
-    it '[9.7] successfully roll shift to next day (day shift)', js: true do
-      clean_dbs
-      create_shift_data
-      CasinosShiftType.delete_all
-      create_day_sequence
-      @shifts = ['day']
-
-      @now = Time.now
-      allow(Time).to receive(:now).and_return(@now)
-
-      login_as_admin
-
-      roll_shift_and_check('day', @today)
-      check_flash_message(I18n.t("shift.roll_success", timestamp: format_time(@now)))
-
-      check_redirected_to_fm('day', @today)
-    end
   end
 
   describe '[10] Update shift and account date to other windows' do

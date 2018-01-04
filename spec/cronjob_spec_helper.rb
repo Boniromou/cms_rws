@@ -27,7 +27,6 @@ Capybara.ignore_hidden_elements = false
     @moring_shift_type = ShiftType.create!(:name => 'morning')
     @swing_shift_type = ShiftType.create!(:name => 'swing')
     @night_shift_type = ShiftType.create!(:name => 'night')
-    @day_shift_type = ShiftType.create!(:name => 'day')
 
     @accounting_date_id = AccountingDate.create!(:accounting_date => @accounting_date).id
     create_moring_swing_night_shift_sequence
@@ -44,12 +43,6 @@ Capybara.ignore_hidden_elements = false
     Shift.create!(:shift_type_id => @moring_shift_type.id, :accounting_date_id => @accounting_date_id, :casino_id => 20000)
   end
   
-  def create_day_sequence
-    CasinosShiftType.create!(:casino_id => 20000, :shift_type_id => @day_shift_type.id, :sequence => 1)
-    Shift.delete_all
-    Shift.create!(:shift_type_id => @day_shift_type.id, :accounting_date_id => @accounting_date_id)
-  end
-
   def create_past_shift
     Shift.delete_all
     @past_accounting_date_id = AccountingDate.create!(:accounting_date => (Time.now - 5.day).strftime("%Y-%m-%d")).id

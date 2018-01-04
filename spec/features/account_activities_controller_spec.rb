@@ -36,7 +36,7 @@ describe DepositController do
     def check_account_activity_data(trans, player_trans = nil)
       trans = trans.symbolize_keys
       zone_location = 'LOCATION1/STATION1' if player_trans
-      values = [trans[:trans_date].strftime("%Y-%m-%d %H:%M:%S"), trans[:trans_type].titleize, trans[:casino_name], trans[:ref_trans_id], trans[:round_id], player_trans.try(:slip_number), trans[:property_name], zone_location, trans[:employee_name], trans[:status], display_balance(trans[:cash_before_balance]), display_balance(trans[:credit_before_balance]), display_point(trans[:point_before_balance]), display_balance(trans[:cash_amt]), display_balance(trans[:credit_amt]), display_point(trans[:point_amt]), display_balance(trans[:cash_after_balance]), display_balance(trans[:credit_after_balance]), display_point(trans[:point_after_balance])]
+      values = [trans[:trans_date].strftime("%Y-%m-%d %H:%M:%S"), trans[:trans_type].titleize, trans[:casino_name], trans[:property_name], zone_location, trans[:ref_trans_id], trans[:round_id], player_trans.try(:slip_number), trans[:employee_name], trans[:status], display_balance(trans[:cash_before_balance]), display_balance(trans[:credit_before_balance]), display_point(trans[:point_before_balance]), display_balance(trans[:cash_amt]), display_balance(trans[:credit_amt]), display_point(trans[:point_amt]), display_balance(trans[:cash_after_balance]), display_balance(trans[:credit_after_balance]), display_point(trans[:point_after_balance])]
       within('div#content table#account_activities_table tbody tr:nth-child(1)') do
         values.each_with_index do |td, td_index|
           expect(find("td:nth-child(#{td_index+1})").text).to eq td.to_s

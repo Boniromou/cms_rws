@@ -11,7 +11,7 @@ class AccountActivitiesController < ApplicationController
     begin
       raise SearchPlayerTransaction::NoIdNumberError if params[:id_number].blank?
       @end_time = Time.now.utc
-      @start_time = @end_time - 1.day
+      @start_time = @end_time - config_helper.account_activity_search_range.hours
       requester_helper.update_player(params[:id_type], params[:id_number])
       @player = policy_scope(Player).find_by_id_type_and_number(params[:id_type], params[:id_number])
       raise Remote::PlayerNotFound unless @player

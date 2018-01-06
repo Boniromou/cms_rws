@@ -26,6 +26,10 @@ class ConfigHelper
     retrieve_config('change_log_search_range').to_i
   end
 
+  def account_activity_search_range
+    retrieve_config('account_activity_search_range').to_i
+  end
+
   def token_life_time
     retrieve_config('token_life_time').to_i * 60
   end

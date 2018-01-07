@@ -18,12 +18,13 @@ class AccountActivitiesController < ApplicationController
 
       cage_response = wallet_requester.get_account_activity(@player.member_id, @start_time, @end_time)
       raise Remote::GetAccountActivityError unless cage_response.success?
+      
+      # Dont call mwms to get point now
+      # marketing_response = marketing_wallet_requester.get_account_activity(@player.member_id, @start_time, @end_time)
+      # raise Remote::GetAccountActivityError unless marketing_response.success?
 
-      marketing_response = marketing_wallet_requester.get_account_activity(@player.member_id, @start_time, @end_time)
-      raise Remote::GetAccountActivityError unless marketing_response.success?
-
-      cage_transactions = get_cage_transactions_detail(cage_response.transactions)
-      @transactions = marketing_response.transactions + cage_transactions
+      @transactions = get_cage_transactions_detail(cage_response.transactions)
+      #@transactions = marketing_response.transactions + cage_transactions
     rescue SearchPlayerTransaction::NoIdNumberError
       flash[:error] = "transaction_history.no_id"
     rescue Remote::PlayerNotFound

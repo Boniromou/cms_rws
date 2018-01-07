@@ -2,9 +2,9 @@
   <thead>
     <tr>
       <th colspan="10"></th>
-      <th class="info" colspan="3"><%= t("account_activity.begin_balance") %></th>
-      <th class="danger" colspan="3"><%= t("account_activity.trans_amount") %></th>
-      <th class="success" colspan="3"><%= t("account_activity.end_balance") %></th>
+      <th class="info" colspan="2"><%= t("account_activity.begin_balance") %></th>
+      <th class="danger" colspan="2"><%= t("account_activity.trans_amount") %></th>
+      <th class="success" colspan="2"><%= t("account_activity.end_balance") %></th>
     </tr>
     <tr>
       <th><%= t("general.date_time") %></th>
@@ -19,13 +19,10 @@
       <th><%= t("transaction_history.status") %></th>
       <th class="info"><%= t("account_activity.cash") %></th>
       <th class="info"><%= t("account_activity.credit") %></th>
-      <th class="info"><%= t("account_activity.point") %></th>
       <th class="danger"><%= t("account_activity.cash") %></th>
       <th class="danger"><%= t("account_activity.credit") %></th>
-      <th class="danger"><%= t("account_activity.point") %></th>
       <th class="success"><%= t("account_activity.cash") %></th>
       <th class="success"><%= t("account_activity.credit") %></th>
-      <th class="success"><%= t("account_activity.point") %></th>
     </tr>
   </thead>
   <tbody>
@@ -44,13 +41,10 @@
         <td><%= trans[:status] %></td>
         <td class="info"><%= display_balance(trans[:cash_before_balance]) %></td>
         <td class="info"><%= display_balance(trans[:credit_before_balance]) %></td>
-        <td class="info"><%= display_point(trans[:point_before_balance]) %></td>
         <td class="danger"><%= display_balance(trans[:cash_amt]) %></td>
         <td class="danger"><%= display_balance(trans[:credit_amt]) %></td>
-        <td class="danger"><%= display_point(trans[:point_amt]) %></td>
         <td class="success"><%= display_balance(trans[:cash_after_balance]) %></td>
         <td class="success"><%= display_balance(trans[:credit_after_balance]) %></td>
-        <td class="success"><%= display_point(trans[:point_after_balance]) %></td>
       </tr>
     <% end %>
   </tbody>

@@ -30,13 +30,13 @@ describe DepositController do
     end
 
     def mock_transactions(trans_type = 'deposit', ref_trans_id = 'C000000EE')
-      [{'player_id' => @player.id, 'cash_before_balance' => 190000.12, 'cash_after_balance' => 185000.12, 'cash_amt' => -5000.12, 'credit_before_balance' => 100.00, 'credit_after_balance' => 50.00, 'credit_amt' => 50.00, 'point_before_balance' => 194.123456, 'point_after_balance' => 190.012345, 'point_amt' => '', 'ref_trans_id' => ref_trans_id, 'trans_type' => trans_type, 'trans_date' => Time.parse('2017-12-12 10:15:27'), 'round_id' => '123', 'property_id' => 20000, 'property_name' => 'MockUp', 'status' => 'completed', 'casino_id' => 20000, 'casino_name' => 'MockUp', 'employ_name' => 'portal.admin'}]
+      [{'player_id' => @player.id, 'cash_before_balance' => 190000.12, 'cash_after_balance' => 185000.12, 'cash_amt' => -5000.12, 'credit_before_balance' => 100.00, 'credit_after_balance' => 50.00, 'credit_amt' => 50.00, 'ref_trans_id' => ref_trans_id, 'trans_type' => trans_type, 'trans_date' => Time.parse('2017-12-12 10:15:27'), 'round_id' => '123', 'property_id' => 20000, 'property_name' => 'MockUp', 'status' => 'completed', 'casino_id' => 20000, 'casino_name' => 'MockUp', 'employ_name' => 'portal.admin'}]
     end
 
     def check_account_activity_data(trans, player_trans = nil)
       trans = trans.symbolize_keys
       zone_location = 'LOCATION1/STATION1' if player_trans
-      values = [trans[:trans_date].strftime("%Y-%m-%d %H:%M:%S"), trans[:trans_type].titleize, trans[:casino_name], trans[:property_name], zone_location, trans[:ref_trans_id], trans[:round_id], player_trans.try(:slip_number), trans[:employee_name], trans[:status], display_balance(trans[:cash_before_balance]), display_balance(trans[:credit_before_balance]), display_point(trans[:point_before_balance]), display_balance(trans[:cash_amt]), display_balance(trans[:credit_amt]), display_point(trans[:point_amt]), display_balance(trans[:cash_after_balance]), display_balance(trans[:credit_after_balance]), display_point(trans[:point_after_balance])]
+      values = [trans[:trans_date].strftime("%Y-%m-%d %H:%M:%S"), trans[:trans_type].titleize, trans[:casino_name], trans[:property_name], zone_location, trans[:ref_trans_id], trans[:round_id], player_trans.try(:slip_number), trans[:employee_name], trans[:status], display_balance(trans[:cash_before_balance]), display_balance(trans[:credit_before_balance]), display_balance(trans[:cash_amt]), display_balance(trans[:credit_amt]),display_balance(trans[:cash_after_balance]), display_balance(trans[:credit_after_balance])]
       within('div#content table#account_activities_table tbody tr:nth-child(1)') do
         values.each_with_index do |td, td_index|
           expect(find("td:nth-child(#{td_index+1})").text).to eq td.to_s
@@ -46,7 +46,6 @@ describe DepositController do
 
     it 'show account activity page' do
       mock_account_activities
-      mock_account_activities([], 'marketing')
       login_as_admin
       go_to_account_activity_page
       expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
@@ -56,12 +55,12 @@ describe DepositController do
       player_trans = create_player_transaction
       transactions = mock_transactions('deposit', player_trans.ref_trans_id)
       mock_account_activities(transactions)
-      mock_account_activities([], 'marketing')
       login_as_admin
       go_to_account_activity_page
       check_account_activity_data(transactions[0], player_trans)
     end
 
+=begin
     it 'show marketing account activity data' do
       transactions = mock_transactions('deposit_point')
       mock_account_activities([])
@@ -70,16 +69,17 @@ describe DepositController do
       go_to_account_activity_page
       check_account_activity_data(transactions[0])
     end
+=end
 
     it 'show cage account activity failed' do
       mock_account_activities_failed
-      mock_account_activities([], 'marketing')
       login_as_admin
       go_to_account_activity_page
       expect(all('div#content table#account_activities_table tbody tr').size).to eq 0
       check_flash_message I18n.t("account_activity.search_error")
     end
 
+=begin
     it 'show marketing account activity failed' do
       mock_account_activities_failed('marketing')
       mock_account_activities([])
@@ -88,6 +88,7 @@ describe DepositController do
       expect(all('div#content table#account_activities_table tbody tr').size).to eq 0
       check_flash_message I18n.t("account_activity.search_error")
     end
+=end
 
     it 'unauthorized account activity' do
       login_as_test_user

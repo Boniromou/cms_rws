@@ -1,5 +1,7 @@
 $.loading_selector = $('div#account_activities_result');
 
+$('div#account_activities_result').css({ opacity: "0.0" }).html("<%= escape_javascript(render :partial => "account_activities/search_result", :formats => [ :html ] , :layout => nil) %>").delay(50).animate({ opacity: "1.0" }, 300);
+
 $("#account_activity_search_info").css("display", "none");
 $("#account_activity_search_info").find("span").html("");
 <% if @player %>
@@ -8,7 +10,5 @@ $("#account_activity_search_info").find("span").html("");
   $("#search_date_range").html("<%= format_time(@start_time) %> ~ <%= format_time(@end_time) %>");
   $("#account_activity_search_info").css("display", "block");
 <% end %>
-
-$('div#account_activities_result').css({ opacity: "0.0" }).html("<%= escape_javascript(render :partial => "account_activities/search_result", :formats => [ :html ] , :layout => nil) %>").delay(50).animate({ opacity: "1.0" }, 300);
 
 <%= render :partial => "shared/flash_message", :formats => [ :js ] %>

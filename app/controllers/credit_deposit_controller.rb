@@ -6,9 +6,9 @@ class CreditDepositController < FundController
     @data[:duration] = @duration
   end
 
-  def call_wallet(member_id, amount, ref_trans_id, trans_date, source_type)
+  def call_wallet(member_id, amount, ref_trans_id, trans_date, source_type, machine_token)
   	credit_expired_at = Time.now.localtime + @duration.day
-    wallet_requester.credit_deposit(member_id, amount, ref_trans_id, trans_date, credit_expired_at, source_type, current_user.id, current_user.name)
+    wallet_requester.credit_deposit(member_id, amount, ref_trans_id, trans_date, credit_expired_at, source_type, current_user.id, current_user.name, machine_token)
   end
 
   def new

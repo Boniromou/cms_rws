@@ -1,4 +1,4 @@
-<table id="account_activities_table" class="table table-striped table-bordered table-hover" width="100%" height="100%">
+<table id="account_activity_datatable" data-source="<%= do_search_account_activities_path(start_time: @start_time, end_time: @end_time, member_id: @player.member_id, round_id: @round_id, format: :json) %>"  class="table table-striped table-bordered table-hover" width="100%" height="100%">
   <thead>
     <tr>
       <th colspan="10"></th>
@@ -26,26 +26,6 @@
     </tr>
   </thead>
   <tbody>
-    <% @transactions.each do |trans| %>
-      <% trans = trans.symbolize_keys %>
-      <tr>
-        <td><%= format_time(trans[:trans_date]) %></td>
-        <td><%= trans[:trans_type].titleize if trans[:trans_type] %></td>
-        <td><%= trans[:casino_name] %></td>
-        <td><%= trans[:property_name] %></td>
-        <td><%= "#{trans[:zone_name]}/#{trans[:location_name]}" if trans[:zone_name] || trans[:location_name] %></td>
-        <td><%= trans[:ref_trans_id] %></td>
-        <td><%= trans[:round_id] %></td>
-        <td><%= trans[:slip_number] %></td>
-        <td><%= trans[:employee_name] %></td>
-        <td><%= trans[:status] %></td>
-        <td class="info"><%= display_balance(trans[:cash_before_balance]) %></td>
-        <td class="info"><%= display_balance(trans[:credit_before_balance]) %></td>
-        <td class="danger"><%= display_balance(trans[:cash_amt]) %></td>
-        <td class="danger"><%= display_balance(trans[:credit_amt]) %></td>
-        <td class="success"><%= display_balance(trans[:cash_after_balance]) %></td>
-        <td class="success"><%= display_balance(trans[:credit_after_balance]) %></td>
-      </tr>
-    <% end %>
+
   </tbody>
 </table>

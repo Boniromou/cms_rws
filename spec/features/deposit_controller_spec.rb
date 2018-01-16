@@ -329,11 +329,11 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
 
       expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq false
-      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq 'disabled'
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq true
       
       find("input#player_transaction_non_player_deposit").click
       expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq true
-      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq nil
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq false
       fill_in "player_transaction_deposit_reason", :with => 'abc123'
 
       find("button#confirm_deposit").click
@@ -360,11 +360,11 @@ describe DepositController do
       fill_in "player_transaction_amount", :with => 100
 
       expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq false
-      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq 'disabled'
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq true
       
       find("input#player_transaction_non_player_deposit").click
       expect(find("input#player_transaction_non_player_deposit")[:checked]).to eq true
-      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq nil
+      expect(find("input#player_transaction_deposit_reason")[:disabled]).to eq false
 
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq false

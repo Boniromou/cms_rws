@@ -1,4 +1,4 @@
-#source 'https://rubygems.org'
+# source 'https://rubygems.org'
 source 'http://gems:8808'
 
 gem 'rails', '3.2.19'
@@ -25,6 +25,8 @@ gem 'therubyracer', :platforms => :ruby
 end
 
 gem 'jquery-rails'
+gem 'ajax-datatables-rails', '0.2.1'
+gem 'kaminari', '0.17.0'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

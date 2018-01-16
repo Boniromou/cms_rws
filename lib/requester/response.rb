@@ -88,6 +88,10 @@ module Requester
   end
 
   class GetAccountActivityResponse < WalletResponse
+    def total_count
+      @result_hash[:total_count] || 0
+    end
+
     def transactions
       @result_hash[:transactions] || []
     end
@@ -96,6 +100,10 @@ module Requester
   class NoAccountActivityResponse < GetAccountActivityResponse
     def initialize
       @result_hash = {:error_code => 'NoRecord'}
+    end
+
+    def total_count
+      0
     end
 
     def transactions

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12 col-sm-8 col-md-8 col-lg-5">
-    <%= form_tag(search_account_activities_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
+    <%= form_tag(search_account_activities_path, :remote => true, :id => "search_form", :autocomplete => "off", :method => "GET") do %>
       <div id="search-tabs">
         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
           <li>
@@ -38,13 +38,21 @@
           </div>
           <br/>
 
-          <div id="account_activity_search_info" class="row" style="display: none;">
-            <div class="col-md-12">
-              <p><%= t("general.member_id") %>: <span id="search_member_id"></span></p>
-              <p><%= t("general.licensee") %>: <span id="search_licensee"></span></p>
-              <p><%= t("general.date_range") %>: <span id="search_date_range"></span></p>
+          <div class="row">
+            <div class="col-md-5">
+              <section class="smart-form">
+                <label class="label lower"><%= t("account_activity.round_id") %>:</label>
+              </section>
+            </div>
+            <div class="col-md-7">
+              <section class="smart-form">
+                <label class="input">
+                  <%= text_field_tag(:"round_id", nil) %>
+                </label>
+              </section>
             </div>
           </div>
+          <br/>
         </div>
       </div>
               

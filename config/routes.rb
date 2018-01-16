@@ -101,7 +101,7 @@ CmsRws::Application.routes.draw do
   post 'internal_deposit' => 'kiosk#internal_deposit'
 
   get 'search_account_activities' => 'account_activities#search'
-  post 'search_account_activities' => 'account_activities#do_search'
+  get 'do_search_account_activities' => 'account_activities#do_search'
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

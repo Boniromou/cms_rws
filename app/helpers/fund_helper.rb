@@ -50,7 +50,7 @@ module FundHelper
   end
 
   def format_zone_location(machine_token)
-    return '' unless machine_token
+    return '' if machine_token.blank?
     infos = machine_token.split('|')
     return "#{infos[2]}/#{infos[4]}"
   end

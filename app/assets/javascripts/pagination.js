@@ -37,6 +37,13 @@ $(document).ready(function() {
             var result = $.parseJSON(jqXHR.responseText);
             if(result.error_msg){
               $('.dataTables_empty').text(result.error_msg);
+            }else{
+              if(result.player_id && result.member_id){
+                $("#search_member_id").html(result.member_id);
+                $("#search_licensee").html(result.licensee_name);
+                $("#search_date_range").html(result.start_time + " ~ " + result.end_time);
+                $("#account_activity_search_info").css("display", "block");
+              }
             }
           }
         }

@@ -14,7 +14,8 @@ class AccountActivityDatatable
       :draw => @params[:draw].to_i,
       :recordsTotal => response.total_count,
       :recordsFiltered => response.total_count,
-      :data => format_data(response)
+      :data => format_data(response),
+      :player_id => get_round_trans_player(response)
     }
   end
 
@@ -64,6 +65,10 @@ class AccountActivityDatatable
       player_trans = player_transactions["#{trans['ref_trans_id']}_#{trans['trans_type']}"] || {}
       trans['slip_number'] = player_trans['slip_number']
     end
+  end
+
+  def get_round_trans_player(response)
+    response.transactions[0]['player_id'] if @params[:round_id].present? && response.transactions.present?
   end
 
   def fail_response

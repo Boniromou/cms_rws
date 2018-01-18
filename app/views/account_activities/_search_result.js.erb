@@ -11,4 +11,5 @@ $("#account_activity_search_info").find("span").html("");
   $("#account_activity_search_info").css("display", "block");
 <% end %>
 
+document.getElementById('flash_message').style.display = 'block';
 <%= render :partial => "shared/flash_message", :formats => [ :js ] %>

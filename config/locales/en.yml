@@ -221,7 +221,7 @@ en:
     print: "Print"
     by_member: "by Member"
     by_transaction_id: "by Transaction ID"
-    no_id: "Member ID or Card ID can not be blank"
+    no_id: "Member ID or Card ID cannot be blank"
     range_error: "The start date must be earlier than the end date"
     datetime_format_not_valid: "Datetime format is not correct!"
     by_slip_number: "by Slip no."
@@ -290,6 +290,7 @@ en:
 #    duration_unit: "day(s)"
 #    exceed_limit: "Your entered amount had exceed the approved maximum limit, please re-try with a smaller amount."
   account_activity:
+    by_round_id: "by Round ID"
     begin_balance: "Beginning Balance"
     trans_amount: "Transaction Amount"
     end_balance: "Ending Balance"
@@ -303,4 +304,5 @@ en:
     cash: "Cash"
     credit: "Promo. Credit"
     Point: "Point"
+    no_round_id: "Round ID cannot be blank"
     search_error: "Enquire Account Activity failed, please contact technical support."

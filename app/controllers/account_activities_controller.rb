@@ -1,4 +1,5 @@
 class AccountActivitiesController < ApplicationController
+  include FormattedTimeHelper
   layout 'cage'
   before_filter do |controller|
     authorize_action :account_activity, :list?
@@ -27,7 +28,7 @@ class AccountActivitiesController < ApplicationController
     result = AccountActivityDatatable.new(requester_factory, params).as_json
     if result[:player_id]
       player = policy_scope(Player).find_by_id(result[:player_id])
-      result.merge!({member_id: player.member_id, licensee_name: player.licensee.name, start_time: params[:start_time], end_time: params[:end_time]}) if player
+      result.merge!({member_id: player.member_id, licensee_name: player.licensee.name, start_time: format_time(params[:start_time]), end_time: format_time(params[:end_time])}) if player
     end
     respond_to do |format|
       format.json { render json: result }

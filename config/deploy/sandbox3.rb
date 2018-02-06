@@ -1,6 +1,6 @@
 # Define your release to be deployed to integration environment here.
 # Release number for integration environment is supposed to be odd numbers.
-set :branch, 'REL_1_1_5'
+set :branch, 'REL_1_1_6'
 
 # Define your repository server for integration environment here.
 #   production SVN - svn.prod.laxigames.com

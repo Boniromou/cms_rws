@@ -149,7 +149,11 @@ module StepHelper
     check_remain_amount(:deposit, :withdraw)
   end
 
-  def check_account_activity_page
+  def check_account_activity_page(is_check)
+    unless is_check
+      expect(page).to have_css('#account_activity_search_info', :visible => false)
+      return
+    end
     within('#account_activity_search_info') {
       expect(find('#search_member_id').text).to eq @player.member_id
       expect(find('#search_licensee').text).to eq @player.licensee.name
@@ -545,17 +549,22 @@ module StepHelper
     end
   end
 
-  def go_to_account_activity_page
+  def go_to_account_activity_page(member_id = @player.member_id, is_check = true, round_id = nil, selected_tab_index = 0)
     begin
       find_link(I18n.t("tree_panel.account_activity"))
     rescue Capybara::ElementNotFound
       visit home_path
     end
     click_link I18n.t("tree_panel.account_activity")
-    fill_search_info_js("member_id", @player.member_id)
+    if selected_tab_index == 1
+      fill_in "round_id", :with => round_id if round_id
+      find("input#selected_tab_index").set "1"
+    else
+      fill_search_info_js("member_id", member_id) if member_id
+    end
     click_button I18n.t("button.search")
     wait_for_ajax
-    check_account_activity_page
+    check_account_activity_page(is_check)
   end
 
   def do_deposit(amount)

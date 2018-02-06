@@ -25,18 +25,23 @@ class Requester::Wallet < Requester::Base
     result
   end
 
-  def get_account_activity(login_name, start_time, end_time)
+  def get_account_activity(login_name, start_time, end_time, round_id, limit, offset, order_by)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('get', "#{@path}/get_account_activity", :query => {:login_name => login_name,
                                                                                     :licensee_id => @licensee_id,
                                                                                     :start_time => start_time,
-                                                                                    :end_time => end_time})
+                                                                                    :end_time => end_time,
+                                                                                    :round_id => round_id,
+                                                                                    :limit => limit,
+                                                                                    :offset => offset,
+                                                                                    :order_by => order_by
+                                                                                    })
       parse_get_account_activity_response(response)
     end
     result
   end
 
-  def deposit(login_name, amount, ref_trans_id, trans_date, source_type, promotion_code = nil, user_id, user_name)
+  def deposit(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name, machine_token, promotion_code = nil)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/deposit", :body => {:login_name => login_name, 
                                                                        :amt => amount,
@@ -46,14 +51,15 @@ class Requester::Wallet < Requester::Base
                                                                        :source_type => source_type,
                                                                        :promotion_code => promotion_code,
                                                                        :user_id => user_id,
-                                                                       :user_name => user_name})
+                                                                       :user_name => user_name,
+                                                                       :machine_token => machine_token})
       parse_deposit_response(response)
     end
     result.add_balance_methods
     result
   end
 
-  def withdraw(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name)
+  def withdraw(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name, machine_token)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/withdraw", :body => {:login_name => login_name, 
                                                                         :amt => amount,
@@ -62,14 +68,15 @@ class Requester::Wallet < Requester::Base
                                                                         :casino_id => @casino_id,
                                                                         :source_type => source_type,
                                                                         :user_id => user_id,
-                                                                        :user_name => user_name})
+                                                                        :user_name => user_name,
+                                                                        :machine_token => machine_token})
       parse_withdraw_response(response)
     end
     result.add_balance_methods
     result
   end
 
-  def void_deposit(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name)
+  def void_deposit(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name, machine_token)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/void_deposit", :body => {:login_name => login_name, 
                                                                             :amt => amount,
@@ -78,14 +85,15 @@ class Requester::Wallet < Requester::Base
                                                                             :casino_id => @casino_id,
                                                                             :source_type => source_type,
                                                                             :user_id => user_id,
-                                                                            :user_name => user_name})
+                                                                            :user_name => user_name,
+                                                                            :machine_token => machine_token})
       parse_void_deposit_response(response)
     end
     result.add_balance_methods
     result
   end
 
-  def void_withdraw(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name)
+  def void_withdraw(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name, machine_token)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/void_withdraw", :body => {:login_name => login_name, 
                                                                              :amt => amount,
@@ -94,14 +102,15 @@ class Requester::Wallet < Requester::Base
                                                                              :casino_id => @casino_id,
                                                                              :source_type => source_type,
                                                                              :user_id => user_id,
-                                                                             :user_name => user_name})
+                                                                             :user_name => user_name,
+                                                                             :machine_token => machine_token})
       parse_void_withdraw_response(response)
     end
     result.add_balance_methods
     result
   end
 
-  def credit_deposit(login_name, amount, ref_trans_id, trans_date, credit_expired_at, source_type, user_id, user_name)
+  def credit_deposit(login_name, amount, ref_trans_id, trans_date, credit_expired_at, source_type, user_id, user_name, machine_token)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/credit_deposit", :body => {:login_name => login_name, 
                                                                               :credit_amt => amount,
@@ -111,14 +120,15 @@ class Requester::Wallet < Requester::Base
                                                                               :casino_id => @casino_id,
                                                                               :source_type => source_type,
                                                                               :user_id => user_id,
-                                                                              :user_name => user_name})
+                                                                              :user_name => user_name,
+                                                                              :machine_token => machine_token})
       parse_credit_deposit_response(response)
     end
     result.add_balance_methods
     result
   end
 
-  def credit_expire(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name)
+  def credit_expire(login_name, amount, ref_trans_id, trans_date, source_type, user_id, user_name, machine_token)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/credit_expire", :body => {:login_name => login_name, 
                                                                         :credit_amt => amount,
@@ -127,7 +137,8 @@ class Requester::Wallet < Requester::Base
                                                                         :casino_id => @casino_id,
                                                                         :source_type => source_type,
                                                                         :user_id => user_id,
-                                                                        :user_name => user_name})
+                                                                        :user_name => user_name,
+                                                                        :machine_token => machine_token})
       parse_credit_expire_response(response)
     end
     result.add_balance_methods

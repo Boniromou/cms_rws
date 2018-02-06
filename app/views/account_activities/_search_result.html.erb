@@ -1,3 +1,13 @@
+<div id="account_activity_search_info" class="row" style="display: none;">
+  <div class="col-md-12">
+    <p style="font-size: 16px;">
+      <text><b><%= t("general.member_id") %>:</b> <span id="search_member_id"></span></text>
+      <text style='padding-left: 60px;'><b><%= t("general.licensee") %>:</b> <span id="search_licensee"></span></text>
+      <text style='padding-left: 60px;'><b><%= t("general.date_range") %>:</b> <span id="search_date_range"></span></text>
+    </p>
+  </div>
+</div>
+
 <% if @transactions %>
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
     <header>
@@ -6,15 +16,9 @@
     </header>
     <div>
       <div class="widget-body no-padding">
-        <% if @transactions.length > 0 %>
-          <div id="account_activity_result">
-            <%= render "account_activities/search_table" %>
-          </div>
-        <% else %>
-          <br/>
-          <br/>
-          <label style="margin-left: 10px"> <%= t("report_search.no_transaction_found")%> </label>
-        <% end %>
+        <div id="account_activity_result">
+          <%= render "account_activities/search_table" %>
+        </div>
       </div>
     </div>
   </div>

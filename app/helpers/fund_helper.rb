@@ -49,6 +49,12 @@ module FundHelper
     end
   end
 
+  def format_zone_location(machine_token)
+    return '' if machine_token.blank?
+    infos = machine_token.split('|')
+    return "#{infos[2]}/#{infos[4]}"
+  end
+
   def make_trans_id(id)
     str = ("0x%08x" % (id))
     str = str[2, str.length - 2] if str.start_with?('0x')

@@ -23,7 +23,7 @@ class Shift < ActiveRecord::Base
     new_shift.shift_type_id = ShiftType.get_id_by_name(new_shift_name)
     new_shift.accounting_date_id = AccountingDate.next_shift_accounting_date_id(name, self.casino_id)
     new_shift.casino_id = self.casino_id
-    new_shift.created_at = Time.now.utc.to_formatted_s(:db)
+    new_shift.created_at = self.roll_shift_at
     new_shift.updated_at = Time.now.utc.to_formatted_s(:db)
 
     Shift.transaction do

@@ -11,6 +11,7 @@ LockType.where(:id => 1, :name => 'cage_lock').first_or_create
 LockType.where(:id => 2, :name => 'blacklist').first_or_create
 LockType.where(:id => 3, :name => 'pending').first_or_create
 LockType.where(:id => 4, :name => 'manual_lock').first_or_create
+LockType.where(:id => 5, :name => 'deactivated').first_or_create
 
 ShiftType.where(:id =>1, :name => 'morning').first_or_create
 ShiftType.where(:id =>2, :name => 'swing').first_or_create

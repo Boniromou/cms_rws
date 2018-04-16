@@ -28,7 +28,10 @@ class ApiHelper
     def internal_unlock_player(login_name, licensee_id, lock_type)
       player = Player.find_by_member_id_and_licensee_id(login_name, licensee_id)
       raise Request::InvalidLoginName.new unless player
-      player.unlock_account!(lock_type)
+      lock_type = [lock_type] if lock_type.is_a? String
+      lock_type.each do |type|
+        player.unlock_account!(type)
+      end
       {}
     end
 

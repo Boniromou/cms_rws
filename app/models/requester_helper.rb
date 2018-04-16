@@ -40,7 +40,7 @@ class RequesterHelper
     balance_response = wallet_requester.get_player_balance(player.member_id, 'HKD', player.id, Currency.find_by_name('HKD').id, player.test_mode_player)
     response[:id] = player.id
     response[:lock_status] = player.status
-    response[:lock_type] = LockType.find_by_id(PlayersLockType.find_by_player_id_and_status(player.id, 'active').lock_type_id).name if player.status == 'locked'
+    response[:lock_type] = PlayersLockType.includes(:lock_type).where(player_id: player.id, status: 'active').map{|player| player.lock_type.name}
     {:player => response}
   end
 

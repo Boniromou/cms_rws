@@ -144,7 +144,7 @@ describe InternalRequestsController do
     end
 
     it '[100.3] UnLock player success' do
-      post 'internal_lock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => 'manual_lock'}
+      post 'internal_lock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => ['manual_lock']}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -152,7 +152,7 @@ describe InternalRequestsController do
       expect(@player.status).to eq 'locked'
       expect(@player.has_lock_type?('manual_lock')).to eq true
 
-      post 'internal_unlock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => 'manual_lock'}
+      post 'internal_unlock_player', {:login_name => @player.member_id, :licensee_id => 20000, :lock_type => ['manual_lock']}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'

@@ -38,7 +38,7 @@ class VoidController < FundController
 
   def handle_balance_not_enough(e)
     @transaction.rejected!
-    handle_fund_error({ key: "invalid_amt.no_enough_to_void_deposit", replace: { balance: to_formatted_display_amount_str(e.message.to_f)} })
+    handle_fund_error({ key: "invalid_amt.no_enough_to_void_deposit", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} })
   end
 
   def handle_transaction_not_exist(e)

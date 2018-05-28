@@ -14,7 +14,7 @@ module Devise
         result = user_cache
         Rails.logger.info "SSO responds: {#{result.inspect}}"        
           casino_id = User.get_casino_ids_by_uid(result[:system_user][:id]).first
-          if Property.find_by_id(casino_id).nil?
+          if Casino.find_by_id(casino_id).nil?
             clear_cookie_and_cache
             fail!('alert.inactive_account')
             return

@@ -1,6 +1,8 @@
 //=require plugin/datatables/jquery.dataTables.min
 //=require plugin/datatables/dataTables.bootstrap.min
 $(document).ready(function() {
+  // $.fn.dataTable.ext.errMode = 'throw';
+
   $('#datatable_col_reorder').dataTable({
   	"pageLength": 50
   	});
@@ -32,6 +34,9 @@ $(document).ready(function() {
       ],
       "ajax": {
         "url": $('#account_activity_datatable').data('source'),
+        error: function (error) {
+          $('#account_activity_datatable').find('tbody').append("<tr class='odd'><td valign='top' colspan='16' class='dataTables_empty'><%=I18n.t('account_activity.search_error')%></td></tr>");
+        },
         "complete": function(jqXHR,status){
           if(status == 'success' || status=='notmodified'){
             var result = $.parseJSON(jqXHR.responseText);

@@ -45,7 +45,7 @@ CmsRws::Application.configure do
   SITE_DOMAIN = 'laxino.com'
 end
 
-SSO_URL = 'https://sso.pia.com.mo'
+SSO_URL = 'https://sso.gogamesource.com'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
 LOGIN_PATH = '/app_login'

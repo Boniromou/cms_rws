@@ -54,7 +54,7 @@ namespace :property do
   end
   
   def create_10010_data
-    create_property_data(:property_id => 10010, :property_name => 'MGM_Trial01', :casino_id => 10010, :casino_name => 'MGM Trial', :licensee_id => 10010, :licensee_name => 'MGM Paradise')
+    create_day_shift_property_data(:property_id => 10010, :property_name => 'MGM Macau Config.Grp.1', :casino_id => 10010, :casino_name => 'MGM Macau', :licensee_id => 10010, :licensee_name => 'MGM Grand Paradise Limited')
   end
   
   
@@ -123,6 +123,35 @@ namespace :property do
     unless shift
       ac_date = AccountingDate.where(:accounting_date => Time.now.utc.to_date).first_or_create
       shift = Shift.create!(:shift_type_id => 1, :accounting_date_id => ac_date.id, :casino_id => casino.id)
+    end
+  end
+  
+  def create_day_shift_property_data(params)
+    property_id = params[:property_id]
+    property_name = params[:property_name]
+    casino_id = params[:casino_id]
+    casino_name = params[:casino_name]
+    licensee_id = params[:licensee_id]
+    licensee_name = params[:licensee_name]
+
+    licensee = Licensee.where(:id => licensee_id, :name => licensee_name).first_or_create
+    casino = Casino.where(:id => casino_id, :name => casino_name, :licensee_id => licensee.id).first_or_create
+    Property.where(:id => property_id, :name => property_name, :casino_id => casino.id).first_or_create
+
+    CasinosShiftType.where(:casino_id => casino_id, :shift_type_id => 4, :sequence => 1).first_or_create
+
+    TransactionSlip.where(:casino_id => casino_id, :slip_type_id => 1, :next_number => 10001).first_or_create
+    TransactionSlip.where(:casino_id => casino_id, :slip_type_id => 2, :next_number => 10001).first_or_create
+
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 1, :slip_type_id => 1).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 2, :slip_type_id => 2).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 3, :slip_type_id => 1).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 4, :slip_type_id => 2).first_or_create
+
+    shift = Shift.where(:roll_shift_at => nil, :casino_id => casino.id).first
+    unless shift
+      ac_date = AccountingDate.where(:accounting_date => Time.now.utc.to_date).first_or_create
+      shift = Shift.create!(:shift_type_id => 4, :accounting_date_id => ac_date.id, :casino_id => casino.id)
     end
   end
 

@@ -16,6 +16,7 @@ LockType.where(:id => 5, :name => 'deactivated').first_or_create
 ShiftType.where(:id =>1, :name => 'morning').first_or_create
 ShiftType.where(:id =>2, :name => 'swing').first_or_create
 ShiftType.where(:id =>3, :name => 'night').first_or_create
+ShiftType.where(:id =>4, :name => 'day').first_or_create
 
 SlipType.where(:id => 1, :name => 'deposit').first_or_create
 SlipType.where(:id => 2, :name => 'withdraw').first_or_create

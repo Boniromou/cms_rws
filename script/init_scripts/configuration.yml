@@ -30,7 +30,8 @@ default: &default
     trans_history_search_range: [40, 'search range of transaction history(day)']
     change_log_search_range: [40, 'search range of player lock log(day)']
     pin_log_search_range: [40, 'search range of pin log(day)']
-    session_life_time: [30]
+    session_life_time: [10]
+    roll_shift_time: ['22', 'utc time of rolling shift(hour)']
 
 development:
   <<: *default

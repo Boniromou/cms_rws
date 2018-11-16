@@ -45,7 +45,9 @@ CmsRws::Application.configure do
                          :compress => true }
 end
 
-SSO_URL = 'http://yunxiaopan01.laxino.local:3000'
+SSO_URL = 'http://dennis01.rnd.laxino.com:3001'
+#SSO_URL = 'http://hq-int-sso-vapp01.laxino.local:80'
+#SSO_URL = 'https://int-sso.laxino.com'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
 LOGIN_PATH = '/app_login'

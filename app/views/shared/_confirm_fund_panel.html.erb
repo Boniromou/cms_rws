@@ -12,7 +12,7 @@
             <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
             <div class="col-sm-3">
               <%= text_field_tag 'player_transaction[pin]', nil, :form => "fund_request", :type => "password" ,:autocomplete => "off"%>
-            </div>
+            </div> 
         </div>
       </form>
     <% elsif @action == 'credit_deposit' %>

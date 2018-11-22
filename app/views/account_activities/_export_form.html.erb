@@ -1,0 +1,12 @@
+<div class="pull-right row" style="padding-bottom: 10px; margin-top: 10px; padding-right: 15px">
+  <%= form_tag(excels_account_activities_path, :remote => false, :id => "export_form", :autocomplete => "off", :method => "GET") do %>
+    <%= hidden_field_tag(:start_time, @start_time, :form => "export_form") %>
+    <%= hidden_field_tag(:end_time, @end_time, :form => "export_form") %>
+    <%= hidden_field_tag(:member_id, @member_id, :form => "export_form") %>
+    <%= hidden_field_tag(:round_id, @round_id, :form => "export_form") %>
+    <%= hidden_field_tag(:licensee_name, @player.licensee.name, :form => "export_form") %>
+    <%= hidden_field_tag(:start, 0,:form => "export_form") %>
+    <%= hidden_field_tag(:length, 50,:form => "export_form") %>
+    <%= submit_tag t("button.export"), :id => "export", :class => "btn btn-primary", :form => "export_form" %>
+  <% end %>
+</div>

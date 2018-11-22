@@ -30,6 +30,7 @@ class AccountActivitiesController < ApplicationController
       player = policy_scope(Player).find_by_id(result[:player_id])
       result.merge!({member_id: player.member_id, licensee_name: player.licensee.name, start_time: format_time(params[:start_time]), end_time: format_time(params[:end_time])}) if player
     end
+    result.merge!(start: params[:start], length: params[:length])
     respond_to do |format|
       format.json { render json: result }
     end

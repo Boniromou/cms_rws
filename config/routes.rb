@@ -102,6 +102,9 @@ CmsRws::Application.routes.draw do
 
   get 'search_account_activities' => 'account_activities#search'
   get 'do_search_account_activities' => 'account_activities#do_search'
+  namespace :excels do
+    get 'account_activities'
+  end
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -66,6 +66,7 @@ en:
     licensee: "Licensee"
     date_range: "Time Range"
     date_time: "Date/Time"
+    export: Export
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -117,6 +118,7 @@ en:
     unregister: "Unregister"
     void: "Void"
     print_void: "Print Void"
+    export: Export
 #    create_pin: "Set PIN"
 #    reset_pin: "Reset PIN"
 #    credit_deposit: "Add Promo. Credit"
@@ -308,3 +310,7 @@ en:
     Point: "Point"
     no_round_id: "Round ID cannot be blank"
     search_error: "Enquire Account Activity failed, please contact technical support."
+  export:
+    account_activity_file_name: Cage_AccountActivity.xls
+    account_activity: Account Activity
+    last_updated_at: Last updated at

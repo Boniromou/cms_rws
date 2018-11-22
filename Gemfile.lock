@@ -152,6 +152,7 @@ GEM
       rspec-mocks (~> 3.0.0)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.3)
+    ruby-ole (1.2.12)
     sass (3.4.13)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -163,6 +164,8 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
+    spreadsheet (1.1.2)
+      ruby-ole (>= 1.0)
     sprockets (2.2.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -219,9 +222,10 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   sequel
   simplecov
+  spreadsheet (= 1.1.2)
   therubyracer
   thin (= 1.6.2)
   uglifier (>= 1.0.3)
 
 BUNDLED WITH
-   1.15.0
+   1.16.1

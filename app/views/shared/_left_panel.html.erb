@@ -52,6 +52,7 @@
                 <% end %>
               </li>
             <% end %>
+
             <% if policy(:PlayerTransaction).search? %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path + "?operation=cash", :title => t("tree_panel.player_transaction"), :remote => true do %>

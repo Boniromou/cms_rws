@@ -4,7 +4,6 @@
     <%= hidden_field_tag(:end_time, @end_time, :form => "export_form") %>
     <%= hidden_field_tag(:member_id, @member_id, :form => "export_form") %>
     <%= hidden_field_tag(:round_id, @round_id, :form => "export_form") %>
-    <%= hidden_field_tag(:licensee_name, @player.licensee.name, :form => "export_form") %>
     <%= hidden_field_tag(:start, 0,:form => "export_form") %>
     <%= hidden_field_tag(:length, 50,:form => "export_form") %>
     <%= submit_tag t("button.export"), :id => "export", :class => "btn btn-primary", :form => "export_form" %>

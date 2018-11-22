@@ -6,9 +6,8 @@ class ExcelsController < ApplicationController
     transactions = response.success? ? response.transactions : []
     player_id = transactions.first['player_id'] if transactions.present?
     data = { transactions: transactions }
-    data.merge!({member_id: params[:member_id], licensee_name: params[:licensee_name], start_time: params[:start_time], end_time: params[:end_time]}) if params[:licensee_name]
     player_id = transactions[0]['player_id'] if params[:round_id].present? && transactions.present?
-    if player_id 
+    if player_id
       player = policy_scope(Player).find_by_id(player_id)
       data.merge!({member_id: player.member_id, licensee_name: player.licensee.name, start_time: params[:start_time], end_time: params[:end_time]}) if player
     end

@@ -26,7 +26,7 @@ module Excel
         @sheet.row(3).push( I18n.t("general.member_id"), data[:member_id])
         @sheet.row(4).push( I18n.t("general.licensee"), data[:licensee_name])
         @sheet.row(5).push( I18n.t("general.date_range"), "#{format_time(data[:start_time])} ~ #{format_time(data[:end_time])} ")
-        (3...5).map{|x| sheet.row(x).default_format = @tip_format }
+        (3...6).map{|x| sheet.row(x).default_format = @tip_format }
         @current_row_number = 5
       end
       @current_row_number = @current_row_number + 3

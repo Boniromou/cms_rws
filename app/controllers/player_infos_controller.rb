@@ -9,6 +9,10 @@ class PlayerInfosController < ApplicationController
     handle_request(:retrieve_player_info)
   end
 
+  def retrieve_player_info_ppms
+    handle_request(:retrieve_player_info, nil, false)
+  end
+
   def get_player_currency
     handle_request(:get_player_currency)
   end

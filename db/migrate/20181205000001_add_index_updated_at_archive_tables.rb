@@ -1,4 +1,4 @@
-class AddIndexUpdatedAtArchiveLogs < ActiveRecord::Migration
+class AddIndexUpdatedAtArchiveTables < ActiveRecord::Migration
   def self.up
     add_index :audit_logs, :updated_at, :name => 'idx_updated_at'
 	add_index :change_histories, :updated_at, :name => 'idx_updated_at'

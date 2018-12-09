@@ -16,4 +16,12 @@ class TokensController < ApplicationController
   def discard
     handle_request(:discard_token)
   end
+
+  def keep_alive_ppms
+    handle_request(:keep_alive, nil, false)
+  end
+
+  def discard_ppms
+    handle_request(:discard_token, nil, false)
+  end
 end

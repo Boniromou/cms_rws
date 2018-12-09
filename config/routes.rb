@@ -74,6 +74,7 @@ CmsRws::Application.routes.draw do
 
   post 'get_player_info' => 'player_infos#get_player_info'
   post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
+  post 'retrieve_player_info_ppms' => 'player_infos#retrieve_player_info_ppms'
   get 'get_player_currency' => 'player_infos#get_player_currency'
   get 'is_test_mode_player' => 'player_infos#is_test_mode_player'
   post 'lock_player' => 'internal_requests#lock_player'
@@ -84,6 +85,8 @@ CmsRws::Application.routes.draw do
   get 'internal_validate_token' => 'internal_requests#validate'
   post 'keep_alive' => 'tokens#keep_alive'
   get 'discard_token' => 'tokens#discard'
+  post 'keep_alive_ppms' => 'tokens#keep_alive_ppms'
+  get 'discard_token_ppms' => 'tokens#discard_ppms'
 
   get 'validate_machine_token' => 'machines#validate'
 

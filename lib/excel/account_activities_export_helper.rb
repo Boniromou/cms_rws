@@ -9,7 +9,7 @@ module Excel
     private
 
     def write_sheet(data)
-      merge_title = [ I18n.t("general.date_time"), I18n.t("account_activity.transaction_type"), I18n.t("general.casino"), 
+      merge_title = [ I18n.t("general.date_time"), I18n.t("account_activity.transaction_type"), I18n.t("general.casino"),
         I18n.t("account_activity.property"), I18n.t("account_activity.zone_location"), I18n.t("account_activity.ref_trans_id"),
         I18n.t("account_activity.round_id"), I18n.t("account_activity.slip_id"), I18n.t("account_activity.employee_name"),
         I18n.t("transaction_history.status"),I18n.t("account_activity.begin_balance"), "", I18n.t("account_activity.trans_amount"), "", I18n.t("account_activity.end_balance"), ""
@@ -86,5 +86,5 @@ module Excel
       end
     end
 
-  end  
+  end
 end

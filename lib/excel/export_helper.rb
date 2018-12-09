@@ -8,7 +8,7 @@ module Excel
     def initialize
       @workbook = Spreadsheet::Workbook.new
       @head_format = Spreadsheet::Format.new :weight => :bold, :size => 14, :horizontal_align => :left, :vertical_align => :middle
-      @tip_format = Spreadsheet::Format.new :size => 11, :horizontal_align => :left, :vertical_align => :middle        
+      @tip_format = Spreadsheet::Format.new :size => 11, :horizontal_align => :left, :vertical_align => :middle
       @title_format = Spreadsheet::Format.new :weight => :bold, :size => 9, :horizontal_align => :center, :pattern_fg_color => :silver  , :pattern => 1,
       :vertical_align => :center
       @text_format = Spreadsheet::Format.new :size => 9, :horizontal_align => :center, :vertical_align => :center
@@ -18,7 +18,7 @@ module Excel
     def export
       string_io = StringIO.new
       @workbook.write string_io
-      string_io.string	       
+      string_io.string
     end
 
     def write_title(titles, current_row_number)

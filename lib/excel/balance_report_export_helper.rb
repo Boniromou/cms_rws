@@ -1,5 +1,5 @@
 module Excel
-  class PlayerBalanceReprotExportHelper < ExportHelper
+  class BalanceReprotExportHelper < ExportHelper
     def generate_export(players, player_balances, total_balances)
       @sheet = @workbook.create_worksheet name: I18n.t("export.player_balance_report")
       write_sheet(players, player_balances, total_balances)

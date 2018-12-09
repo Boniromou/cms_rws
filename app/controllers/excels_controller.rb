@@ -27,7 +27,7 @@ class ExcelsController < ApplicationController
     end
     total_balances = display_balance(wallet_requester.get_total_balances.total_balances)
     file_name = I18n.t("export.player_balance_report_file_name")
-    string_io = Excel::PlayerBalanceReprotExportHelper.new.generate_export(players, player_balances, total_balances)
+    string_io = Excel::BalanceReprotExportHelper.new.generate_export(players, player_balances, total_balances)
     send_data string_io, :filename => "#{file_name}", :type =>  "application/vnd.ms-excel"
   end
 end

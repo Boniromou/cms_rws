@@ -320,3 +320,5 @@ en:
     account_activity_file_name: Cage_AccountActivity.xls
     account_activity: Account Activity
     last_updated_at: Last updated at
+    player_balance_report: Player Balance Report
+    player_balance_report_file_name: Player_Balance_Report.xls

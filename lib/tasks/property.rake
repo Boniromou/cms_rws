@@ -52,7 +52,19 @@ namespace :property do
   def create_10002_data
     create_property_data(:property_id => 10002, :property_name => 'DIAMOND_MASS01', :casino_id => 10001, :casino_name => 'Casino Diamond', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
   end
-  
+
+  def create_10003_data
+    create_property_data(:property_id => 10003, :property_name => '10003', :casino_id => 10000, :casino_name => 'Casino Diamond', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
+  end
+
+  def create_10004_data
+    create_property_data(:property_id => 10004, :property_name => '10004', :casino_id => 10000, :casino_name => 'Casino Diamond', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
+  end
+
+  def create_10005_data
+    create_property_data(:property_id => 10005, :property_name => '10005', :casino_id => 10001, :casino_name => 'Casino Diamond', :licensee_id => 10000, :licensee_name => 'Alpha Group Limited')
+  end
+
   def create_10010_data
     create_day_shift_property_data(:property_id => 10010, :property_name => 'MGM Macau Config.Grp.1', :casino_id => 10010, :casino_name => 'MGM Macau', :licensee_id => 10010, :licensee_name => 'MGM Grand Paradise Limited')
   end

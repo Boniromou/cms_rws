@@ -6,6 +6,8 @@ class Player < ActiveRecord::Base
   belongs_to :licensee
   has_many :tokens
   has_many :players_lock_types
+  has_many :active_players_lock_types, :class_name => 'PlayersLockType', :conditions => {status: PlayersLockType::STATUS_ACTIVE}
+  has_many :active_lock_types, :through => :active_players_lock_types, :class_name => 'LockType', :source => :lock_type
   include FundHelper
   attr_accessible :card_id, :currency_id,:member_id, :first_name, :status, :last_name, :id, :licensee_id, :test_mode_player
   validates_uniqueness_of :member_id, scope: [:licensee_id]
@@ -58,7 +60,7 @@ class Player < ActiveRecord::Base
   end
 
   def discard_tokens
-    self.valid_tokens.each do |token| 
+    self.valid_tokens.each do |token|
       token.discard
     end
   end
@@ -131,8 +133,8 @@ class Player < ActiveRecord::Base
       casino = Casino.where(:licensee_id => player.licensee_id).first
       raise Remote::CasinoNotFound if casino.nil?
       # TODO: Need to refactor
-      get_requester_helper(casino.id).internal_deposit(player.member_id, amt[:initial_balance].to_s, nil, 'promotion_deposit', casino.id, 'INITPRO', 'system', 
-                                                    {:promotion_detail => 
+      get_requester_helper(casino.id).internal_deposit(player.member_id, amt[:initial_balance].to_s, nil, 'promotion_deposit', casino.id, 'INITPRO', 'system',
+                                                    {:promotion_detail =>
                                                                             {:promotion_type => "initial_amount",
                                                                              :award_condition => "Top Up Amount = #{amt[:initial_balance]}",
                                                                              :occurrences => 1
@@ -145,7 +147,7 @@ class Player < ActiveRecord::Base
       licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
       requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, licensee_id, nil)
       RequesterHelper.new(requester_facotry)
-    end 
+    end
 
     def update_by_params(params)
       verify_player_params(params)
@@ -236,7 +238,7 @@ class Player < ActiveRecord::Base
       licensee_id = Casino.get_licensee_id_by_casino_id(casino_id)
       find_by_card_id_and_licensee_id(card_id, licensee_id)
     end
-    
+
     def find_by_id_type_and_id_number(id_type, id_number, licensee_id)
       if id_type == :member_id
         Player.find_by_member_id_and_licensee_id(id_number, licensee_id)

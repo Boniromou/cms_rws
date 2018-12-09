@@ -19,11 +19,11 @@
           <i class="fa fa-lg fa-home"></i>
           <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
-      </li> 
+      </li>
       <% if (policy(:Player).create? || policy(:Player).profile?) && IS_MARKETING == 0 %>
         <li id="player_li">
           <a id="player" href="#" class="unlink"><i class="glyphicon glyphicon-user"></i> <span class="menu-item-parent"><%= t("tree_panel.player_management")%></span></a>
-          <ul style="display:block;"> 
+          <ul style="display:block;">
          <!--    <% if policy(:Player).create? %>
               <li id="nav_create_player">
                 <%= link_to new_player_path, :title => t("tree_panel.create_player") , :remote => true do %>
@@ -67,11 +67,19 @@
               </li>
               <% end %>
             <% end %>
-            
+
             <% if policy(:account_activity).list? %>
               <li id="nav_account_activity">
                 <%= link_to search_account_activities_path, :title => t("tree_panel.account_activity"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.account_activity") %></span>
+                <% end %>
+              </li>
+            <% end %>
+
+            <% if policy(:player_balance_report).list? %>
+              <li id="nav_player_balance_report">
+                <%= link_to search_player_balance_reports_path, :title => t("tree_panel.player_balance_report"), :remote => true do %>
+                  <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_balance_report") %></span>
                 <% end %>
               </li>
             <% end %>
@@ -177,7 +185,7 @@
     $('#home_link').mouseover(function(){
       $('#home_link').css("background-color","rgba(70,70,70,1)");
     });
-      
+
     $('#home_link').mouseleave(function(){
       $('#home_link').css("background-color","rgba(69,69,69,0)");
     });

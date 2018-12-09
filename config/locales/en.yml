@@ -31,6 +31,7 @@ en:
     audit: "Audit"
     audit_log: "Audit Log"
     account_activity: Account Activity
+    player_balance_report: Player Balance Report
 #    lock_history: "Lock Player Log"
 #    reset_pin: "Reset PIN"
 #    create_pin: "Create PIN"
@@ -67,6 +68,8 @@ en:
     date_range: "Time Range"
     date_time: "Date/Time"
     export: Export
+    data_updated_to: "Data Updated To"
+    total_balances: "Total Balances"
   login_page:
     username_tooltip: "Please enter username"
     password_tooltip: "Enter your password"
@@ -140,6 +143,9 @@ en:
     remain_deposit: "Daily Accumulative Deposit Amount"
     remain_withdraw: "Daily Accumulative Withdraw Amount"
     exceed_remain_limit: "Exceeded Daily Limit"
+    member_status: "Member Status"
+    locked_reasons: "Locked Reason(s)"
+    cash_balance: "Cash Balance"
   create_player:
     success: "Create player [%{first_name} %{last_name}] successful"
     member_id_exist: "The player [Member ID = %{member_id}] you tried to create is already exist."
@@ -258,7 +264,7 @@ en:
     audit_session_id: "Session ID"
     audit_ip: "IP"
     audit_action: "Action"
-    target: "Target"    
+    target: "Target"
   confirm_box:
     void_transaction: "Confirm to void transaction %{slip_number}"
     set_pin: "Confirm to set PIN for player %{member_id}"

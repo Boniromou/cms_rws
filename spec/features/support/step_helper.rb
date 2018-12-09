@@ -62,8 +62,8 @@ module StepHelper
                           :balance => 'balance_enquiry',
                           :profile => 'player_profile',
                           #player_transaction
-                          :search => 'transaction_history', 
-                          :reprint => 'reprint_slip', 
+                          :search => 'transaction_history',
+                          :reprint => 'reprint_slip',
                           :print => 'print_slip',
                           :print_void => 'print_void_slip',
                           :reprint_void => 'reprint_void_slip',
@@ -85,7 +85,7 @@ module StepHelper
     perm_hash = origin_perm_hash.merge({target => permissions})
     permission = {:permissions => {:role => role, :permissions => perm_hash}}
     Rails.cache.write cache_key,permission
-  end    
+  end
 
 
   def check_title(title_str)
@@ -95,7 +95,7 @@ module StepHelper
 
   def check_home_page
     within "div#content" do
-    
+
       expect(page).to have_content @location
       begin
         expect(page).to have_content @accounting_date
@@ -510,7 +510,7 @@ module StepHelper
     find("#button_find").click
     wait_for_ajax
     check_balance_page
-    
+
     within "div#content" do
         click_link I18n.t("button.credit_deposit")
     end
@@ -527,7 +527,7 @@ module StepHelper
     find("#button_find").click
     wait_for_ajax
     check_balance_page
-    
+
     within "div#content" do
         click_link I18n.t("button.credit_expire")
     end
@@ -567,13 +567,23 @@ module StepHelper
     check_account_activity_page(is_check)
   end
 
+  def go_to_player_balance_report_page
+    begin
+      find_link(I18n.t("tree_panel.player_balance_report"))
+    rescue Capybara::ElementNotFound
+      visit home_path
+    end
+    click_link I18n.t("tree_panel.player_balance_report")
+    wait_for_ajax
+  end
+
   def do_deposit(amount)
     go_to_deposit_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
     find("button#confirm_deposit").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-    
+
     expect(find("#fund_amt").text).to eq to_display_amount_str(amount * 100)
     expect(page).to have_selector("div#pop_up_dialog div button#confirm")
     expect(page).to have_selector("div#pop_up_dialog div button#cancel")

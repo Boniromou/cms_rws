@@ -31,7 +31,7 @@ CmsRws::Application.routes.draw do
 
   get 'fund_out' => 'withdraw#new'
   post 'fund_out' => 'withdraw#create'
-  
+
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'
 
@@ -64,14 +64,14 @@ CmsRws::Application.routes.draw do
       get 'current'
     end
   end
-  
+
   get 'search_audit_logs' => 'audit_logs#search'
   post 'search_audit_logs' => 'audit_logs#do_search'
-  
+
   get 'machines/current_location' => 'machines#current_location'
   get 'machines/current_casino' => 'machines#current_casino'
 
-  
+
   post 'get_player_info' => 'player_infos#get_player_info'
   post 'retrieve_player_info' => 'player_infos#retrieve_player_info'
   get 'get_player_currency' => 'player_infos#get_player_currency'
@@ -105,7 +105,10 @@ CmsRws::Application.routes.draw do
   namespace :excels do
     get 'account_activities'
   end
-  
+
+  get 'search_player_balance_reports' => 'player_balance_reports#search'
+  get 'do_search_player_balance_reports' => 'player_balance_reports#do_search'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

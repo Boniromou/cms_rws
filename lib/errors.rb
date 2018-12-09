@@ -124,10 +124,10 @@ module Remote
 
   class CreditExpireError < CallWalletError
   end
-  
+
   class AmountNotMatch < CreditExpireError
   end
-  
+
   class PlayerNotFound < RaiseError
   end
 
@@ -142,7 +142,7 @@ module Remote
 
   class PatronError < RaiseError
   end
-  
+
   class CallPatronFail < PatronError
   end
 end

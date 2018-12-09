@@ -3,7 +3,7 @@ module Requester
     def self.included(base)
       base.send :extend, ClassMethods
     end
-    
+
     module ClassMethods
       def define_attr(*args)
         args.each do |attr|
@@ -69,7 +69,7 @@ module Requester
         return 'no_balance'
       end
     end
-    
+
     def credit_balance
       if @result_hash[:credit_balance]
         return @result_hash[:credit_balance].to_f
@@ -94,6 +94,26 @@ module Requester
 
     def transactions
       @result_hash[:transactions] || []
+    end
+  end
+
+  class GetPlayerBalancesResponse < WalletResponse
+    def players
+      @result_hash[:players] || []
+    end
+  end
+
+  class GetTotalBalancesResponse < WalletResponse
+    def player_size
+      @result_hash[:player_size] || 0
+    end
+
+    def total_balances
+      @result_hash[:total_balances] || 0
+    end
+
+    def total_credit_balances
+      @result_hash[:total_credit_balances] || 0
     end
   end
 
@@ -125,11 +145,11 @@ module Requester
     def success?
       ['OK','AlreadyProcessed'].include?(error_code)
     end
-    
+
     def amount_not_enough?
       ['AmountNotEnough'].include?(error_code)
     end
-    
+
     def credit_not_expired?
       ['CreditNotExpired'].include?(error_code)
     end
@@ -147,7 +167,7 @@ module Requester
 
 # station
   class StationResponse < Response
-    define_attr :property_id, :zone_id, :zone_name, :location_id, :location_name, :machine_id, :machine_name, :uuid, :casino_id 
+    define_attr :property_id, :zone_id, :zone_name, :location_id, :location_name, :machine_id, :machine_name, :uuid, :casino_id
   end
 
 # patron

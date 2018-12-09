@@ -71,6 +71,27 @@ module MockHelper
     allow_any_instance_of("Requester::#{type}".constantize).to receive(:get_account_activity).and_return(response)
   end
 
+  def mock_player_balances(players = [])
+    response = Requester::GetPlayerBalancesResponse.new({:error_code => 'OK', :players => players})
+    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balances).and_return(response)
+  end
+
+  def mock_player_balances_failed
+    response = Requester::GetPlayerBalancesResponse.new({:error_code => 'Error'})
+    allow_any_instance_of(Requester::Wallet).to receive(:get_player_balances).and_return(response)
+  end
+
+  def mock_total_balances(player_size = 10, total_balances = 3000.13, total_credit_balances = 20.10)
+    result = {:error_code => 'OK', :player_size => player_size, :total_balances => total_balances, :total_credit_balances => total_credit_balances }
+    response = Requester::GetTotalBalancesResponse.new(result)
+    allow_any_instance_of(Requester::Wallet).to receive(:get_total_balances).and_return(response)
+  end
+
+  def mock_total_balances_failed
+    response = Requester::GetTotalBalancesResponse.new({:error_code => 'Error'})
+    allow_any_instance_of(Requester::Wallet).to receive(:get_total_balances).and_return(response)
+  end
+
   def mock_current_casino_id(casino_id = 20000)
     allow_any_instance_of(ApplicationController).to receive(:current_casino_id).and_return(casino_id)
   end
@@ -96,7 +117,7 @@ module MockHelper
   end
 
   def mock_permission_value(value)
-    allow_any_instance_of(User).to receive(:get_permission_value).and_return(value)    
+    allow_any_instance_of(User).to receive(:get_permission_value).and_return(value)
   end
 end
 

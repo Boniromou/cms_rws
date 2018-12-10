@@ -16,7 +16,7 @@ module Excel
       @sheet.row(3).push( I18n.t("general.total_balances"), total_balances)
       @sheet.row(1).default_format = @tip_format
       @sheet.row(3).default_format = @tip_format
-      @current_row_number = 4
+      @current_row_number = 5
       titles = [I18n.t("general.member_id"), I18n.t("player.member_status"), I18n.t("player.locked_reasons"), I18n.t("player.cash_balance")]
       write_title(titles, @current_row_number)
       players.each_with_index do |player, index|

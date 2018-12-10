@@ -22,10 +22,10 @@ class ExcelsController < ApplicationController
     players = Player.includes(:active_lock_types).where(licensee_id: current_licensee_id)
     wallet_requester = requester_factory.get_wallet_requester
     if players.present?
-      player_balances = wallet_requester.get_player_balances(players.map(&:member_id))
+      player_balances = wallet_requester.get_player_balances
       player_balances = Hash[player_balances.players.map{|player| [player['login_name'], display_balance(player['balance'])]}]
+      total_balances = display_balance(wallet_requester.get_total_balances.total_balances)
     end
-    total_balances = display_balance(wallet_requester.get_total_balances.total_balances)
     file_name = I18n.t("export.player_balance_report_file_name")
     string_io = Excel::BalanceReprotExportHelper.new.generate_export(players, player_balances, total_balances)
     send_data string_io, :filename => "#{file_name}", :type =>  "application/vnd.ms-excel"

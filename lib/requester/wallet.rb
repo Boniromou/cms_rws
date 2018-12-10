@@ -25,7 +25,7 @@ class Requester::Wallet < Requester::Base
     result
   end
 
-  def get_player_balances(login_names)
+  def get_player_balances(login_names = nil)
     result = retry_call(RETRY_TIMES) do
       response = remote_rws_call('post', "#{@path}/query_player_balances_cms", :query => {:login_names => login_names,
                                                                                          :licensee_id => @licensee_id

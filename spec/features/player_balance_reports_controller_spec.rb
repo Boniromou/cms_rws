@@ -36,7 +36,7 @@ describe PlayerBalanceReportsController do
       mock_player_balances
       login_as_admin
       go_to_player_balance_report_page
-      within('#player_balance_report_info') { expect(page).to have_content "#{I18n.t("general.total_balances")}: #{display_balance(3000.13)}"  }
+      within('#player_balance_report_info') { expect(page).to have_content "#{I18n.t("general.total_balances")}: #{I18n.t("general.hkd")} #{display_balance(3000.13)}"  }
     end
 
     it 'show player balance report data' do

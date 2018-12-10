@@ -13,7 +13,7 @@ module Excel
       @sheet.row(0).push( I18n.t("export.player_balance_report"))
       @sheet.row(0).default_format = @head_format
       @sheet.row(1).push( I18n.t("general.data_updated_to"), Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-      @sheet.row(3).push( I18n.t("general.total_balances"), total_balances)
+      @sheet.row(3).push( I18n.t("general.total_balances"), "#{I18n.t("general.hkd")} #{total_balances}")
       @sheet.row(1).default_format = @tip_format
       @sheet.row(3).default_format = @tip_format
       @current_row_number = 5

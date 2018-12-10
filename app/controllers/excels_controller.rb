@@ -19,7 +19,7 @@ class ExcelsController < ApplicationController
   end
 
   def player_balance_report
-    players = Player.includes(:active_lock_types).where(licensee_id: current_licensee_id)
+    players = Player.includes(:active_lock_types).where(licensee_id: current_licensee_id).order('member_id desc')
     wallet_requester = requester_factory.get_wallet_requester
     if players.present?
       player_balances = wallet_requester.get_player_balances

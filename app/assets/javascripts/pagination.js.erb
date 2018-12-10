@@ -60,7 +60,6 @@ $(document).ready(function() {
 
   $('#player_balance_report_datatable').DataTable({
     "serverSide": true,
-    "lengthMenu": [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
     "ajax": $('#player_balance_report_datatable').data('source'),
     "pagingType": 'full_numbers',
     "pageLength": 50,

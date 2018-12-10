@@ -6,6 +6,8 @@
       <div class="col-md-12">
         <p style="font-size: 16px;">
           <text><b><%= t("general.data_updated_to") %>:</b> <%= @data_updated_to %></span></text>
+        </p>
+        <p style="font-size: 16px;">
           <text><b><%= t("general.total_balances") %>:</b> <%= @total_balances %></span></text>
           <span style="float: right"><%= link_to t("general.export"), excels_player_balance_report_path, class: "btn btn-primary" %></span>
         </p>

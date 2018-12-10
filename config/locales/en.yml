@@ -68,7 +68,7 @@ en:
     date_range: "Time Range"
     date_time: "Date/Time"
     export: Export
-    data_updated_to: "Data Updated To"
+    data_updated_to: "Data Updated at"
     total_balances: "Total Balances"
   login_page:
     username_tooltip: "Please enter username"
@@ -321,4 +321,5 @@ en:
     account_activity: Account Activity
     last_updated_at: Last updated at
     player_balance_report: Player Balance Report
-    player_balance_report_file_name: Player_Balance_Report.xls
+    tab_player_balance_report: Cage_PlayerBalanceReport
+    player_balance_report_file_name: Cage_PlayerBalanceReport.xls

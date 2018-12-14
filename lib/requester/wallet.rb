@@ -191,7 +191,7 @@ class Requester::Wallet < Requester::Base
 
   def parse_get_account_activity_response(result)
     result_hash = remote_response_checking(result, :error_code)
-    response = Requester::WalletResponse.new(result_hash)
+    response = Requester::GetAccountActivityResponse.new(result_hash)
     raise Remote::GetAccountActivityError.new(Requester::NoAccountActivityResponse.new) unless response.success?
     return response
   end

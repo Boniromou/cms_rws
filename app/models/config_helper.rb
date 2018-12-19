@@ -10,6 +10,14 @@ class ConfigHelper
     nil
   end
 
+  def source_of_funds
+    retrieve_config('source_of_funds').split(',')
+  end
+  
+  def payment_method_types
+    retrieve_config('Payment_method_types').split(',')
+  end
+
   def trans_history_search_range
     retrieve_config('trans_history_search_range').to_i
   end

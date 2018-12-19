@@ -21,7 +21,7 @@ class PlayersController < ApplicationController
     @player = policy_scope(Player).find_by_member_id(member_id)
     @current_user = current_user
     @casino_id = params[:select_casino_id] || current_casino_id
-
+    @member_id = params[:member_id]
     unless @player
       raise PlayerProfile::PlayerNotFound
     end

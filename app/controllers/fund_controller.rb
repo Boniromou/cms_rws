@@ -49,6 +49,8 @@ class FundController < ApplicationController
     @server_amount = to_server_amount(@amount)
     @ref_trans_id = nil
     @data = {:remark => "#{params[:player_transaction][:remark]}"}
+    @payment_method_type = params[:player_transaction][:payment_method_type]
+    @source_of_funds = params[:player_transaction][:source_of_funds]
   end
 
   def check_transaction_acceptable
@@ -71,7 +73,7 @@ class FundController < ApplicationController
   end
 
   def create_player_transaction(member_id, amount, ref_trans_id = nil, data = nil)
-    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
+    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
   end
 
   def handle_wallet_result(transaction, response)

@@ -11,21 +11,16 @@ class PlayerTransactionsController < ApplicationController
     @operation = params[:operation]
   end
 
-  def do_search
-        
+  def do_search    
     begin
     @operation = params[:operation]
-
     id_type = params[:id_type]
     id_number = params[:id_number]
-
     selected_tab_index = params[:selected_tab_index]
     slip_number = params[:slip_number]
     search_range = config_helper.trans_history_search_range
-
     player_transactions = []
     kiosk_transactions = []
-
     if selected_tab_index == '0'
       current_user.casino_ids.each do | casino_id |
         shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range, casino_id)

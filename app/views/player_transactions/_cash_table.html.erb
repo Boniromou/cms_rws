@@ -10,7 +10,8 @@
               <th><%= t("transaction_history.cage_cashier_id")%></th>
               <th><%= t("transaction_history.status")%></th>
               <th><%= t("transaction_history.deposit")%></th>
-              <th><%= t("transaction_history.deposit_reason")%></th>
+              <th><%= t("deposit_withdrawal.payment_method_type")%></th>
+              <th><%= t("deposit_withdrawal.source_of_funds")%></th>
               <th><%= t("transaction_history.withdrawal")%></th>
               <th><%= t("transaction_history.void_slip_no")%></th>
               <th><%= t("transaction_history.action")%></th>
@@ -28,7 +29,8 @@
                   <td><%= !t.user.nil? ? t.user.name : 'System' %></td>
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <td><%= !t.user.nil? ? t.data_hash[:deposit_reason] : t.promotion_code %></td>
+                  <td><%= t.Payment_method_type%></td>
+                  <td><%= t.Source_of_funds%></td>
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>

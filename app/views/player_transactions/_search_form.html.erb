@@ -1,49 +1,60 @@
 <div class="row">
- <div class="col-xs-12 col-sm-8 col-md-8 col-lg-5">
-    <%= form_tag(search_transactions_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
-      <div id="search-tabs">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
-          <li>
-            <a id="byMemberTab" class="tab-link" href="#tabs-a"><%= t("transaction_history.by_member") %></a>
-          </li>
-          <% if @operation == 'cash' %>
+  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-5">
+   <%= form_tag(search_transactions_path, :remote => true, :id => "search_form", :autocomplete => "off") do %>
+     <div id="search-tabs">
+       <% if search_by_history == true %>
+         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
             <li>
-              <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_slip_number") %></a>
+              <a id="byMemberTab" class="tab-link" href="#tabs-a"><%= t("transaction_history.by_member") %></a>
             </li>
-          <% end %>
-        </ul>
+            <% if @operation == 'cash' %>
+              <li>
+                <a id="byTransactionIDTab" class="tab-link" href="#tabs-b"><%= t("transaction_history.by_slip_number") %></a>
+              </li>
+            <% end %>
+          </ul>
 
-        <div id="tabs-a">
-          <br/>
-          <div>
-            <%= hidden_field_tag(:"operation", @operation) %>
-          </div>
-          <div class="row">
-            <div class="col-md-5">
-              <section class="smart-form">
-                <div class="inline-group">
-                  <label class="radio">
-                    <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
-                    <i></i>
-                    <%= t("general.card_id") %>
-                  </label>
-                  <label class="radio">
-                    <input type="radio" id="member_id" name="id_type" value="member_id">
-                    <i></i>
-                    <%= t("general.member_id") %>
-                  </label>
-                </div>
-              </section>
+          <div id="tabs-a">
+            <br/>
+            <div>
+              <%= hidden_field_tag(:"operation", @operation) %>
             </div>
+            <div class="row">
+              <div class="col-md-5">
+                <section class="smart-form">
+                  <div class="inline-group">
+                    <label class="radio">
+                      <input type="radio" id="card_id" name="id_type" value="card_id" checked="checked">
+                      <i></i>
+                      <%= t("general.card_id") %>
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="member_id" name="id_type" value="member_id">
+                      <i></i>
+                      <%= t("general.member_id") %>
+                    </label>
+                  </div>
+                </section>
+              </div>
             
-            <div class="col-md-7">
-              <section class="smart-form">
-                <label class="input">
-                  <%= text_field_tag(:"id_number", @card_id, autofocus: true) %>
-                </label>
-              </section>
+              <div class="col-md-7">
+                <section class="smart-form">
+                  <label class="input">
+                    <%= text_field_tag(:"id_number", @card_id, autofocus: true) %>
+                  </label>
+                </section>
+              </div>
             </div>
-          </div>
+        <% elsif search_by_history == false %>
+           <div class="jarviswidget jarviswidget-color-blueDark jarviswidget-sortable" id="wid-id-12" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" role="widget" style = "top:150px;">
+             <header role="heading" style = "width:400px;" >
+               <span class="widget-icon"> <i class="glyphicon glyphicon-user"></i> </span>
+               <h2>
+                 <strong>Search Transaction History by Date</strong>
+               </h2>       
+               <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+           <div style = "width:400px;">
+        <% end %>   
 <br/>
           <div class="row">
             <div class="col-sm-12">
@@ -74,18 +85,35 @@
           </div>
         <% end %>
       </div>
-              
-      <div class="form-actions">
-        <div class="row">
-          <div class="col-md-12">
-            <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>
-          </div>
-        </div>
-      </div>
+ 
+ 
+           <% if search_by_history == true%>
+           <div class="form-actions">
+             <div class="row">
+               <div class="col-md-12">
+                 <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>
+               </div>
+             </div>
+           </div>
+           <% else %>
+             <div class="col-md-12" style = "top:130px; right:10px;">
+               <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>  
+             </div>
+           <% end %>   
 
+
+
+ 
       <%= hidden_field_tag 'from', search_transactions_path %>
       <%= hidden_field_tag 'selected_tab_index', 0 %>
-    <% end %>
+      <% if search_by_history != true%>
+        <%= hidden_field_tag 'operation' , 'cash' %>
+        <%= hidden_field_tag 'id_type' , 'member_id' %>
+        <%= hidden_field_tag 'selected_tab_index', 0 %>
+        <%= hidden_field_tag 'id_number' , @member_id %>
+      </div>
+      <% end %>    
+  <% end %>
   </div>
 </div>
 </br>

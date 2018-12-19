@@ -30,7 +30,7 @@
   
   function formValid(){
   <% if @action == 'deposit' %>
-    return amountValid() && depositReasonValid();
+    return amountValid() && typeValid() && sourceValid();
   <% else %>
     return amountValid();
   <% end %>
@@ -40,16 +40,47 @@
     amt = $('#player_transaction_amount').val().replace(/0+[.]?/,"");
     return amt != ""
   }
+  
+  function typeValid(){
+    type = $('#player_transaction_payment_method_type').val().replace(/0+[.]?/,"");
+    return type != ""
+  }
 
+  function sourceValid(){
+    source = $('#player_transaction_source_of_funds').val().replace(/0+[.]?/,"");
+    return source != ""
+  }
+  
   function showAmountError(){
     $("label#amount_error").css('visibility', 'visible');
     $("label#amount_error").css('display', 'block');
   }
-
+  
   function hideAmountError(){
     $("label#amount_error").css('visibility', 'hidden');
     $("label#amount_error").css('display', 'none');
   }
+  
+  function showTypeError(){
+    $("label#type_error").css('visibility', 'visible');
+    $("label#type_error").css('display', 'block');
+  }
+ 
+  function hideTypeError(){
+    $("label#type_error").css('visibility', 'hidden');
+    $("label#type_error").css('display', 'none');
+  }
+
+  function showSourceError(){
+    $("label#source_error").css('visibility', 'visible');
+    $("label#source_error").css('display', 'block');
+  }
+ 
+  function hideSourceError(){
+    $("label#source_error").css('visibility', 'hidden');
+    $("label#source_error").css('display', 'none');
+  }
+
 <% if @action == 'credit_deposit' %>
   function updateLimitAlert(){
     var limit = <%= @credit_limit %>;
@@ -79,18 +110,25 @@
 <% end %>
 
   $('#confirm_deposit, #confirm_withdraw, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
-    if( amountValid()){
+    if(amountValid() && typeValid() && sourceValid()){
       hideAmountError();
-            
+      hideTypeError();
+      hideSourceError();
       updateConfirmAmt();
     <% if  @action == 'credit_deposit' %>
       updateLimitAlert();
     <% elsif ['deposit','withdraw'].include?(@action) %>
       updateRemainAlert();
     <% end %>
-
-    } else {
+    }
+    else if( !amountValid()){
       showAmountError();
+    }
+    else if( !typeValid()){
+      showTypeError();
+    }
+    else if( !sourceValid()){
+      showSourceError();
     }
     return false;
   });

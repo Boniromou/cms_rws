@@ -92,6 +92,14 @@ class Player < ActiveRecord::Base
     limit - trans_amount(trans_type, casino_id)
   end
 
+  def get_fund_type(casino_id)
+    type = ConfigHelper.new(casino_id).send "source_of_funds"
+  end
+  
+  def payment_method_types(casino_id)
+    type = ConfigHelper.new(casino_id).send "payment_method_types"
+  end
+
   def trans_amount(trans_type, casino_id)
     accounting_date = AccountingDate.current(casino_id)
     player_transaction_daily_amount = PlayerTransaction.daily_transaction_amount_by_player(self, accounting_date, trans_type, casino_id)

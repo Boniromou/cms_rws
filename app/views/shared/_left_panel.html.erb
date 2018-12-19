@@ -86,6 +86,7 @@
           </ul>
         </li>
       <% end %>
+
       <% if policy(:Shift).roll? || policy(:Shift).search_fm? %>
         <li>
           <a href="#" class="unlink"><i class="glyphicon glyphicon-retweet"></i> <span class="menu-item-parent"><%= t("tree_panel.shift_management")%></span></a>

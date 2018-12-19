@@ -28,7 +28,7 @@ CmsRws::Application.routes.draw do
 
   get 'fund_in' => 'deposit#new'
   post 'fund_in' => 'deposit#create'
-
+  
   get 'fund_out' => 'withdraw#new'
   post 'fund_out' => 'withdraw#create'
 

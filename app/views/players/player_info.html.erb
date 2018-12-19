@@ -3,11 +3,23 @@
 <% else %>
   <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.profile")) %>
 <% end %>
+
 <% if @inactivate %>
   <% footer = render "players/inactivate_footer" %>
 <% else %>
   <% footer = render "players/#{@operation}_footer" %>
 <% end %>
+
 <% content = render "players/balance_amt" %>
-<%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content, :footer => footer, :show_remain => {:deposit => true, :withdraw => true}} %>
-</div>
+
+  <div style="width:100%; margin:0 auto; _display:inline-block;">
+    <div id = "div1" style= "width:650px; float:right;"><%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
+    </div>
+    <div id = "div2" style= "margin-right:10px;"><%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content,     :footer => footer, :show_remain => {:deposit => true, :withdraw => true}} %>
+    </div>
+    <div id="player_transactions_result">
+    </div>
+  </div>
+
+
+

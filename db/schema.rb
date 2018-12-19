@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181217000001) do
+ActiveRecord::Schema.define(:version => 20181219000002) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(:version => 20181217000001) do
   create_table "configurations", :force => true do |t|
     t.integer  "casino_id",                  :null => false
     t.string   "key",         :limit => 45,  :null => false
-    t.string   "value",       :limit => 200, :null => false
+    t.string   "value",       :limit => 256, :null => false
     t.string   "description", :limit => 45
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false

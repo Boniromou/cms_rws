@@ -10,7 +10,9 @@ class WithdrawController < FundController
   def extract_params
     super
     @deposit_reason = "#{params[:player_transaction][:deposit_reason]}"
-    @data[:withdraw_remark] ="#{ @deposit_reason }"
+    if @deposit_reason != ""
+      @data[:withdraw_remark] ="#{ @deposit_reason }"
+    end
   end
 
   def call_wallet(member_id, amount, ref_trans_id, trans_date, source_type, machine_token)

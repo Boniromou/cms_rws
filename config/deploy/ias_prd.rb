@@ -7,7 +7,7 @@ set :branch, 'REL_1_2_3'
 #   development SVN - svn.mo.laxino.com
 set :user, "ias"
 set :group, "ias_rnd"
-set :repo_host, 'git.lb.laxigames.local'
+set :repo_host, 'svn.mo.laxino.com'
 
 # Define your application servers for integration environment here.
 #   int - Integration

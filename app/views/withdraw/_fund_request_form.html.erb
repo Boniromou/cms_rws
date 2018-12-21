@@ -13,7 +13,9 @@
      <select  name="payment_method_type" id="player_transaction_payment_method_type">
         <option value=""> -- select an option -- </option>
         <% @payment_method.each do |method| %>
-        <option value=<%= method.id %>><%= method.name %></option>
+          <% if method.name != 'N/A' %>
+            <option value=<%= method.id %>><%= method.name %></option>
+          <% end %>
         <% end %>
       </select>
     <br>

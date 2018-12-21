@@ -19,9 +19,9 @@ p "====================================="
   def extract_params
     super
 #    @is_player_deposit = params[:player_transaction][:non_player_deposit] == "0"
-    @deposit_reason = params[:player_transaction][:deposit_reason]
+    @deposit_reason = "#{params[:player_transaction][:deposit_reason]}"
 #    @data[:is_player_deposit] = @is_player_deposit
-    @data[:remark] = @deposit_reason
+    @data[:deposit_remark] = @deposit_reason
   end
   
   def search

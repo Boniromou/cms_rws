@@ -12,13 +12,13 @@
 
 <% content = render "players/balance_amt" %>
 
-  <div style="width:100%; margin:0 auto; _display:inline-block;">
-    <% if policy(:PlayerTransaction).search? %>
-      <div id = "div1" style= "width:650px; float:right;"><%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
-      </div>
-    <% end %>
+  <div style="width:100%; margin:0 auto;">
     <div id = "div2" style= "margin-right:10px;"><%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content,     :footer => footer, :show_remain => {:deposit => true, :withdraw => true}} %>
     </div>
+    <% if policy(:PlayerTransaction).search? %>
+      <div id = "div1" style= "width:650px;"><%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
+      </div>
+    <% end %>
     <div id="player_transactions_result">
     </div>
   </div>

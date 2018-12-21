@@ -250,7 +250,7 @@ en:
     duration: "Duration"
     deposit_reason: "Deposit handle by"
     cage_cashier_id: "Cage Cashier"
-    source_type: "Source of Fund"
+    source_type: "System"
   shift_name:
     morning: "Morning"
     swing: "Swing"

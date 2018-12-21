@@ -46,14 +46,14 @@
               </div>
             </div>
         <% elsif search_by_history == false %>
-           <div class="jarviswidget jarviswidget-color-blueDark jarviswidget-sortable" id="wid-id-12" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" role="widget" style = "top:240px; right:50px">
-             <header role="heading" style = "width:400px;" >
+           <div class="jarviswidget jarviswidget-color-blueDark jarviswidget-sortable" id="wid-id-12" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" role="widget">
+             <header role="heading" style = "width:470px;" >
                <span class="widget-icon"> <i class="glyphicon glyphicon-user"></i> </span>
                <h2>
                  <strong>Search Transaction History by Date</strong>
                </h2>       
                <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-           <div style = "width:400px;">
+           <div style = "width:470px;">
         <% end %>   
 <br/>
           <div class="row">
@@ -96,7 +96,7 @@
              </div>
            </div>
            <% else %>
-             <div class="col-md-12" style = "top:215px; right:63px;">
+             <div class="col-md-12" style= "bottom:25px; right:10px;">
                <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>  
              </div>
            <% end %>   

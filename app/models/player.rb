@@ -97,7 +97,7 @@ class Player < ActiveRecord::Base
   end
   
   def payment_method_types
-    type = PaymentMethodType.all
+    type = PaymentMethod.all
   end
 
   def trans_amount(trans_type, casino_id)

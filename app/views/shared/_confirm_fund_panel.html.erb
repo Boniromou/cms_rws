@@ -134,11 +134,17 @@
       hideTypeError();
       updateConfirmAmt();
     }
+    else if ( !amountValid() && !typeValid()){
+      showAmountError();
+      showTypeError();
+    }
     else if( !amountValid()){
       showAmountError();
+      hideTypeError();
     }
     else if( !typeValid()){
       showTypeError();
+      hideAmountError();
     }
     return false;
   });
@@ -153,14 +159,40 @@
        updateRemainAlert();
      <% end %>
      }
+     else if (!amountValid() && !typeValid() && !sourceValid()){
+       showAmountError();
+       showTypeError();
+       showSourceError();
+     }
+     else if ( !amountValid() && !typeValid()){
+       showAmountError();
+       showTypeError();
+       hideSourceError();
+     }
+     else if ( !amountValid() && !sourceValid()){
+       showAmountError();
+       showSourceError();
+       hideTypeError();
+     }
+     else if ( !sourceValid() && !typeValid()){
+       showSourceError();
+       showTypeError();
+       hideAmountError();
+     }
      else if( !amountValid()){
        showAmountError();
+       hideTypeError();
+       hideSourceError();
      }
      else if( !typeValid()){
        showTypeError();
+       hideAmountError();
+       hideSourceError();
      }
      else if( !sourceValid()){
        showSourceError();
+       hideAmountError();
+       hideTypeError();
      }
      return false;
    });

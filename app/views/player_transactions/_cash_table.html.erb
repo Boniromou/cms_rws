@@ -29,17 +29,12 @@
                   <td><%= !t.user.nil? ? t.user.name : 'System' %></td>
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
-                  <% if t.payment_method_type_id.nil? ==  true %>
-                    <td><% t.payment_method_type_id%></td>       
-                  <% else %>
-                    <td><%= PaymentMethodType.find_by_id(t.payment_method_type_id).name %></td>
-                  <% end %>
+                  
+                  <td><%= PaymentMethod.find_by_id(t.payment_method_id).name %></td>
+                
      
-                  <% if t.withdraw_amt_str == '' && t.source_of_fund_id != 'N/A' && t.source_of_fund_id.nil? == false %>
-                    <td><%= SourceOfFund.find_by_id(t.source_of_fund_id).name %></td>
-                  <% else %>
-                    <td><%= t.source_of_fund_id %></td>
-                  <% end %>
+                  
+                  <td><%= SourceOfFund.find_by_id(t.source_of_fund_id).name %></td>
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>

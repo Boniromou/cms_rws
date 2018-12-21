@@ -34,6 +34,10 @@
           </label>
         </div>
   </div>
+  <div class="row">
+    <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.remark")%>:</strong></label></td>
+    <%= f.text_area :deposit_reason, :class => "col-xs-4 box", :style => "margin-bottom: 4px; resize: none; width: 300px", :maxlength => 400, cols: "6", rows: "10"%>
+  </div>
 <% end %>
 
 <script>

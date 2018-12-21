@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181221000001) do
+ActiveRecord::Schema.define(:version => 20181221000004) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(:version => 20181221000001) do
   add_index "lock_types", ["purge_at"], :name => "index_lock_types_on_purge_at"
   add_index "lock_types", ["updated_at"], :name => "idx_updated_at"
 
-  create_table "payment_method_types", :force => true do |t|
+  create_table "payment_methods", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -158,19 +158,19 @@ ActiveRecord::Schema.define(:version => 20181221000001) do
     t.integer  "user_id"
     t.integer  "transaction_type_id"
     t.string   "status"
-    t.integer  "amount",                 :limit => 8
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "ref_trans_id",           :limit => 45
+    t.integer  "amount",              :limit => 8
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.string   "ref_trans_id",        :limit => 45
     t.datetime "trans_date"
     t.datetime "purge_at"
-    t.integer  "casino_id",                              :null => false
+    t.integer  "casino_id",                           :null => false
     t.integer  "slip_number"
     t.string   "machine_token"
-    t.string   "data",                   :limit => 1024
-    t.string   "promotion_code",         :limit => 45
-    t.string   "payment_method_type_id", :limit => 45
-    t.string   "source_of_fund_id",      :limit => 45
+    t.string   "data",                :limit => 1024
+    t.string   "promotion_code",      :limit => 45
+    t.integer  "payment_method_id"
+    t.integer  "source_of_fund_id"
   end
 
   add_index "player_transactions", ["casino_id"], :name => "fk_player_transactions_casino_id"

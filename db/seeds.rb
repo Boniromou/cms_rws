@@ -28,18 +28,20 @@ TransactionType.where(:id => 4, :name => 'void_withdraw').first_or_create
 TransactionType.where(:id => 5, :name => 'credit_deposit').first_or_create
 TransactionType.where(:id => 6, :name => 'credit_expire').first_or_create
 
-PaymentMethodType.where(:id => 1, :name => 'Credit Cards').first_or_create
-PaymentMethodType.where(:id => 2, :name => 'Debit Cards').first_or_create
-PaymentMethodType.where(:id => 3, :name => 'Cashier Order').first_or_create
-PaymentMethodType.where(:id => 4, :name => 'Casino Cheque').first_or_create
-PaymentMethodType.where(:id => 5, :name => 'Personal Cheque').first_or_create
-PaymentMethodType.where(:id => 6, :name => 'TT-in').first_or_create
-PaymentMethodType.where(:id => 7, :name => 'Cash Chips').first_or_create
-PaymentMethodType.where(:id => 8, :name => 'Marker').first_or_create
+PaymentMethodType.where(:id => 1, :name => 'N/A').first_or_create
+PaymentMethodType.where(:id => 2, :name => 'Credit Cards').first_or_create
+PaymentMethodType.where(:id => 3, :name => 'Debit Cards').first_or_create
+PaymentMethodType.where(:id => 4, :name => 'Cashier Order').first_or_create
+PaymentMethodType.where(:id => 5, :name => 'Casino Cheque').first_or_create
+PaymentMethodType.where(:id => 6, :name => 'Personal Cheque').first_or_create
+PaymentMethodType.where(:id => 7, :name => 'TT-in').first_or_create
+PaymentMethodType.where(:id => 8, :name => 'Cash Chips').first_or_create
+PaymentMethodType.where(:id => 9, :name => 'Marker').first_or_create
 
-SourceOfFund.where(:id => 1, :name => 'Business earnings').first_or_create
-SourceOfFund.where(:id => 2, :name => 'Salary or wages').first_or_create
-SourceOfFund.where(:id => 3, :name => 'Savings').first_or_create
-SourceOfFund.where(:id => 4, :name => 'Winnings').first_or_create
-SourceOfFund.where(:id => 5, :name => 'Marker').first_or_create
-SourceOfFund.where(:id => 6, :name => 'Other(Please specify manually in remark)').first_or_create
+SourceOfFund.where(:id => 1, :name => 'N/A').first_or_create
+SourceOfFund.where(:id => 2, :name => 'Business earnings').first_or_create
+SourceOfFund.where(:id => 3, :name => 'Salary or wages').first_or_create
+SourceOfFund.where(:id => 4, :name => 'Savings').first_or_create
+SourceOfFund.where(:id => 5, :name => 'Winnings').first_or_create
+SourceOfFund.where(:id => 6, :name => 'Marker').first_or_create
+SourceOfFund.where(:id => 7, :name => 'Other(Please specify manually in remark)').first_or_create

@@ -78,3 +78,13 @@ production3:
   password: rothorn.pa$$w0rd123
   host: mo-prd-cms-vdb01.lb.laxigames.local
   port: 6033
+
+ias_prd:
+  adapter: mysql2
+  encoding: utf8
+  collation: utf8_bin
+  database: rothorn_cms_production
+  username: rothorn
+  password: rothorn.pa$$w0rd123
+  host: do-prd-cms-vdb01.idc.local
+  port: 6033

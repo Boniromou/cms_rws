@@ -113,3 +113,11 @@ sandbox:
   no_block: true
   timeout: 30
   
+ias_prd:
+  servers:
+    - do-prd-s3-vapp01.idc.local:7000
+    - do-prd-s3-vapp01.idc.local:7001
+  expires: 3600
+  namespace: s3_prd
+  no_block: true
+  timeout: 30

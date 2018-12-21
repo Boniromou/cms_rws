@@ -49,3 +49,7 @@ smartocean2:
 production3:
   <<: *default
   :internal_property_id: 5
+
+ias_prd:
+  <<: *default
+  :internal_property_id: 5

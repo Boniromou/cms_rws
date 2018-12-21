@@ -15,7 +15,7 @@ class ConfigHelper
   end
   
   def payment_method_types
-    retrieve_config('Payment_method_types').split(',')
+    retrieve_config('payment_method_types').split(',')
   end
 
   def trans_history_search_range

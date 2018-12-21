@@ -92,12 +92,12 @@ class Player < ActiveRecord::Base
     limit - trans_amount(trans_type, casino_id)
   end
 
-  def get_fund_type(casino_id)
-    type = ConfigHelper.new(casino_id).send "source_of_funds"
+  def get_fund_type
+    type = SourceOfFund.all 
   end
   
-  def payment_method_types(casino_id)
-    type = ConfigHelper.new(casino_id).send "payment_method_types"
+  def payment_method_types
+    type = PaymentMethodType.all
   end
 
   def trans_amount(trans_type, casino_id)

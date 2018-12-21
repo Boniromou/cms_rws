@@ -1,3 +1,4 @@
+M
 default: &default
   20000: &20000
     trans_history_search_range: [30, 'search range of transaction history(day)']
@@ -15,8 +16,8 @@ default: &default
     credit_life_time_array: ['0.5,1,3,5,7', 'array of credit life time options (day)']
     daily_deposit_limit: [25000000, 'limit amount of daily deposit (cent)']
     daily_withdraw_limit: [25000000, 'limit amount of daily withdraw (cent)']
-    source_of_funds: ['Business earnings,Salary or wages,Savings,Winnings,Marker,Other(Please specify manually in remark)','type of funds']
-    payment_method_types: ['Credit Cards,Debit Cards,Cashier Order,Casino Cheque,Personal Cheque,TT-in,Cash Chips,Marker','types payment method']
+ #   source_of_funds: ['Business earnings,Salary or wages,Savings,Winnings,Marker,Other(Please specify manually in remark)','type of funds']
+  #  payment_method_types: ['Credit Cards,Debit Cards,Cashier Order,Casino Cheque,Personal Cheque,TT-in,Cash Chips,Marker','types payment method']
   40000:
     <<: *20000
   20001:

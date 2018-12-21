@@ -2,6 +2,8 @@ class WithdrawController < FundController
   def new
     super
     @casino_id = current_casino_id
+    @fund_type = @player.get_fund_type
+    @payment_method = @player.payment_method_types
     @remain_limit = @player.remain_trans_amount(:withdraw, @casino_id)
   end
 

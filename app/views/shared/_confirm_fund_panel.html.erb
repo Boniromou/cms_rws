@@ -31,6 +31,8 @@
   function formValid(){
   <% if @action == 'deposit' %>
     return amountValid() && typeValid() && sourceValid();
+  <% elsif @action == 'withdraw' %>
+    return amountValid() && typeValid();
   <% else %>
     return amountValid();
   <% end %>
@@ -109,11 +111,10 @@
   }
 <% end %>
 
-  $('#confirm_deposit, #confirm_withdraw, #confirm_credit_deposit, #confirm_credit_expire').click(function() {
-    if(amountValid() && typeValid() && sourceValid()){
+  $('#confirm_credit_deposit, #confirm_credit_expire').click(function() {
+    if(amountValid()){
       hideAmountError();
-      hideTypeError();
-      hideSourceError();
+
       updateConfirmAmt();
     <% if  @action == 'credit_deposit' %>
       updateLimitAlert();
@@ -121,15 +122,50 @@
       updateRemainAlert();
     <% end %>
     }
+    else {
+      showAmountError();
+    }
+    return false;
+  });
+
+  $('#confirm_withdraw').click(function() {
+    if(amountValid() && typeValid()){
+      hideAmountError();
+      hideTypeError();
+      updateConfirmAmt();
+    }
     else if( !amountValid()){
       showAmountError();
     }
     else if( !typeValid()){
       showTypeError();
     }
-    else if( !sourceValid()){
-      showSourceError();
-    }
     return false;
   });
+  
+  $('#confirm_deposit').click(function() {
+     if(amountValid() && typeValid && sourceValid()){
+       hideAmountError();
+       hideTypeError();  
+       hideSourceError();
+       updateConfirmAmt(); 
+     <% if ['deposit','withdraw'].include?(@action) %>
+       updateRemainAlert();
+     <% end %>
+     }
+     else if( !amountValid()){
+       showAmountError();
+     }
+     else if( !typeValid()){
+       showTypeError();
+     }
+     else if( !sourceValid()){
+       showSourceError();
+     }
+     return false;
+   });
+
 </script>
+
+
+

@@ -131,8 +131,8 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:status] = "pending"
       transaction[:user_id] = user_id
       transaction[:promotion_code] = promotion_code
-      transaction[:Payment_method_type] = payment_method_type
-      transaction[:Source_of_funds] = source_of_funds
+      transaction[:payment_method_type_id] = payment_method_type
+      transaction[:source_of_fund_id] = source_of_funds
       data ||= {}
       data[:executed_by] = executed_by unless executed_by.nil?
       transaction[:data] = data
@@ -157,8 +157,8 @@ class PlayerTransaction < ActiveRecord::Base
       init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
     end
 
-    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
-      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, 'N/A')
     end
 
     def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)

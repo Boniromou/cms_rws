@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181219000002) do
+ActiveRecord::Schema.define(:version => 20181221000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -146,25 +146,31 @@ ActiveRecord::Schema.define(:version => 20181219000002) do
   add_index "lock_types", ["purge_at"], :name => "index_lock_types_on_purge_at"
   add_index "lock_types", ["updated_at"], :name => "idx_updated_at"
 
+  create_table "payment_method_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "player_transactions", :force => true do |t|
     t.integer  "shift_id"
     t.integer  "player_id"
     t.integer  "user_id"
     t.integer  "transaction_type_id"
     t.string   "status"
-    t.integer  "amount",              :limit => 8
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.string   "ref_trans_id",        :limit => 45
+    t.integer  "amount",                 :limit => 8
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "ref_trans_id",           :limit => 45
     t.datetime "trans_date"
     t.datetime "purge_at"
-    t.integer  "casino_id",                           :null => false
+    t.integer  "casino_id",                              :null => false
     t.integer  "slip_number"
     t.string   "machine_token"
-    t.string   "data",                :limit => 1024
-    t.string   "promotion_code",      :limit => 45
-    t.string   "Payment_method_type", :limit => 45
-    t.string   "Source_of_funds",     :limit => 45
+    t.string   "data",                   :limit => 1024
+    t.string   "promotion_code",         :limit => 45
+    t.string   "payment_method_type_id", :limit => 45
+    t.string   "source_of_fund_id",      :limit => 45
   end
 
   add_index "player_transactions", ["casino_id"], :name => "fk_player_transactions_casino_id"
@@ -261,6 +267,12 @@ ActiveRecord::Schema.define(:version => 20181219000002) do
   end
 
   add_index "slip_types", ["purge_at"], :name => "index_slip_types_on_purge_at"
+
+  create_table "source_of_funds", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "tokens", :force => true do |t|
     t.string   "session_token"

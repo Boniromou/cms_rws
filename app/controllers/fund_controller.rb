@@ -49,8 +49,12 @@ class FundController < ApplicationController
     @server_amount = to_server_amount(@amount)
     @ref_trans_id = nil
     @data = {:remark => "#{params[:player_transaction][:remark]}"}
-    @payment_method_type = params[:player_transaction][:payment_method_type]
-    @source_of_funds = params[:player_transaction][:source_of_funds]
+    @payment_method_type = params[:payment_method_type]
+    @source_of_funds = params[:source_of_funds]
+    p "============================"
+    p @payment_method_type
+    p @source_of_funds
+    p "============================"
   end
 
   def check_transaction_acceptable

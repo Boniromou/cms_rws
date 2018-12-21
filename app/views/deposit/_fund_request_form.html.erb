@@ -21,9 +21,20 @@
 
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.payment_method_type")%>:</strong></label></td>
-    <%= f.select :payment_method_type, options_for_select(@payment_method), :class => "col-xs-4 box", :style => "margin-bottom: 11px", :include_blank => '-- Select One -- ' , required: true %>
-    <br>
-    <div class='col-xs-4 box'>
+
+
+
+    <select  name="payment_method_type" id="player_transaction_payment_method_type">
+      <option value=""> -- select an option -- </option>
+      <% @payment_method.each do |method| %>
+      <option value=<%= method.id %>><%= method.name %></option>
+      <% end %>
+    </select>
+
+<br>
+
+
+    <div class='col-xs-4 box' style='width:300px; right:10px'>
       <label class='invisible_error' id='type_error'>
         <%= t("invalid_amt.payment_method_type") %>
       </label>  
@@ -32,8 +43,17 @@
 
   <div class="row" style="margin-bottom: 8px;">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.source_of_funds")%>:</strong></label></td>
-    <%= f.select :source_of_funds, options_for_select(@fund_type), :include_blank => '-- Select One --', required: true %>
-    <div class='col-xs-4 box'>
+
+
+    <select  name="source_of_funds" id="player_transaction_source_of_funds">
+      <option value=""> -- select an option -- </option>
+      <% @fund_type.each do |type| %>
+      <option value=<%= type.id %>><%= type.name %></option>
+      <% end %>
+    </select>
+
+
+     <div class='col-xs-4 box' style='width:300px; right:10px'>
         <label class='invisible_error' id='source_error'>
         <%= t("invalid_amt.source_of_funds") %>
         </label>

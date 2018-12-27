@@ -62,11 +62,12 @@
                       <% end %>
                       <% if policy(:player_transaction).reprint? %>
                         <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
-                 <% if t.data['deposit_remark'] != -1 %>
+                 <% if YAML.load(t.data)[:deposit_remark] != nil %>
                    <td><%= YAML.load(t.data)[:deposit_remark] %> </td>
-                 <% elsif t.data['withdraw_remark'] != -1 %>
+                 <% else %>
                    <td><%= YAML.load(t.data)[:withdraw_remark] %> </td>
                  <% end %>
+
                       <% end %>
                     <% end %>
                   </td>

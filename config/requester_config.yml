@@ -58,3 +58,10 @@ sandbox:
   :station: http://mo-snd-sm-vapp01.platform.gamesource.local:80
   :marketing: http://mo-snd-mp-vapp01.platform.gamesource.local:80
   :marketing_wallet: http://mo-snd-mwms-vapp01.platform.gamesource.local:80/mwms
+
+ias_prd:
+  :wallet: http://do-prd-cwms-vapp01.idc.local:80/cwms
+  :patron: http://do-prd-pis-vapp01.idc.local:80
+  :station: http://do-prd-sm-vapp01.idc.local:80
+  :marketing: http://do-prd-mp-vapp01.idc.local:80
+  :marketing_wallet: http://do-prd-mwms-vapp01.idc.local:80/mwms

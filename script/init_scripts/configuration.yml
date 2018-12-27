@@ -56,6 +56,9 @@ sandbox3:
   
 production3:
   <<: *default
+  
+ias_prd:
+  <<: *default
 
 sandbox:
   9000:

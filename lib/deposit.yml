@@ -5,3 +5,4 @@ integration0: http://hq-int-cms-app01.laxino.local:10064/
 staging0: http://hq-stg-cms-app01.laxino.local:10062/
 sandbox3: http://mo-snd-cms-vapp01.lb.laxigames.local/
 production3: http://mo-prd-cms-vapp01.lb.laxigames.local/
+ias_prd: http://do-prd-cms-vapp01.idc.local/

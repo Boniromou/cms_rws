@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181221000004) do
+ActiveRecord::Schema.define(:version => 20181227000004) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -147,7 +147,7 @@ ActiveRecord::Schema.define(:version => 20181221000004) do
   add_index "lock_types", ["updated_at"], :name => "idx_updated_at"
 
   create_table "payment_methods", :force => true do |t|
-    t.string   "name"
+    t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -174,12 +174,14 @@ ActiveRecord::Schema.define(:version => 20181221000004) do
   end
 
   add_index "player_transactions", ["casino_id"], :name => "fk_player_transactions_casino_id"
+  add_index "player_transactions", ["payment_method_id"], :name => "fk_payment_method_id"
   add_index "player_transactions", ["player_id", "promotion_code"], :name => "index_player_id_promotion_code", :unique => true
   add_index "player_transactions", ["player_id"], :name => "fk_player_id"
   add_index "player_transactions", ["promotion_code"], :name => "promotion_code"
   add_index "player_transactions", ["purge_at"], :name => "index_player_transactions_on_purge_at"
   add_index "player_transactions", ["shift_id"], :name => "fk_shift_id"
   add_index "player_transactions", ["slip_number"], :name => "index_player_transactions_on_slip_number"
+  add_index "player_transactions", ["source_of_fund_id"], :name => "fk_source_of_fund_id"
   add_index "player_transactions", ["transaction_type_id"], :name => "fk_transaction_type_id"
   add_index "player_transactions", ["updated_at"], :name => "idx_updated_at"
   add_index "player_transactions", ["user_id"], :name => "fk_playerTransaction_user_id"
@@ -269,7 +271,7 @@ ActiveRecord::Schema.define(:version => 20181221000004) do
   add_index "slip_types", ["purge_at"], :name => "index_slip_types_on_purge_at"
 
   create_table "source_of_funds", :force => true do |t|
-    t.string   "name"
+    t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

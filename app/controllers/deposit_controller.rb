@@ -6,10 +6,7 @@ class DepositController < FundController
     @remain_limit = @player.remain_trans_amount(:deposit, @casino_id)
     @fund_type = @player.get_fund_type
     @payment_method = @player.payment_method_types
-p "====================================="
-p @fund_type
-p @payment_method
-p "====================================="
+
   end
 
   def call_wallet(member_id, amount, ref_trans_id, trans_date, source_type, machine_token)

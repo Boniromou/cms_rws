@@ -82,7 +82,9 @@
     $("label#source_error").css('visibility', 'hidden');
     $("label#source_error").css('display', 'none');
   }
-
+  function emojiControl(){
+    ("textarea#textarea").val($("textarea#textarea").val().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF]/g,''));
+  }
 <% if @action == 'credit_deposit' %>
   function updateLimitAlert(){
     var limit = <%= @credit_limit %>;
@@ -133,6 +135,7 @@
       hideAmountError();
       hideTypeError();
       updateConfirmAmt();
+      emojoControl();
     }
     else if ( !amountValid() && !typeValid()){
       showAmountError();
@@ -155,6 +158,7 @@
        hideTypeError();  
        hideSourceError();
        updateConfirmAmt(); 
+       emojiControl();
      <% if ['deposit','withdraw'].include?(@action) %>
        updateRemainAlert();
      <% end %>

@@ -1,5 +1,5 @@
 class AddTablePaymentMethodTypeAndSourceOfFunds < ActiveRecord::Migration
-  def change
+  def up
     create_table :payment_method_type do |t|
       t.string :name
 
@@ -11,5 +11,9 @@ class AddTablePaymentMethodTypeAndSourceOfFunds < ActiveRecord::Migration
 
       t.timestamps
     end
+  end
+  def down
+    drop_table :payment_method_type
+    drop_table :source_of_funds
   end
 end

@@ -5,8 +5,8 @@ class AddFkForTwoNewColumn < ActiveRecord::Migration
   end
 
   def down
-    execute "ALTER TABLE player_transactions FROP FOREIGN KEY fk_payment_method_id"
-    execute "ALTER TABLE player_transactions FROP FOREIGN KEY fk_source_of_fund_id"
+    execute "ALTER TABLE player_transactions DROP FOREIGN KEY fk_payment_method_id"
+    execute "ALTER TABLE player_transactions DROP FOREIGN KEY fk_source_of_fund_id"
   end
 end
 

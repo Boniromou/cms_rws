@@ -93,6 +93,7 @@ en:
     source_of_funds: "Source of funds"
     payment_method_types: "Payment Method"
     remark: "Remark"
+    exception: "Exception Transaction"
 #    credit_deposit_amt: "Confirm to add promo. credits?"
 #    credit_expire_amt: "Confirm to expire all promo. credits?"
 #    non_player_deposit: "Non-Player Deposit"

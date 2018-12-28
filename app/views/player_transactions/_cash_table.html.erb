@@ -15,6 +15,7 @@
               <th><%= t("transaction_history.withdrawal")%></th>
               <th><%= t("transaction_history.void_slip_no")%></th>
               <th><%= t("transaction_history.action")%></th>
+              <th><%= t("transaction_history.remark") %>
             </thead>
             <tbody>
               <% @transactions.each do |t| %>
@@ -61,6 +62,12 @@
                       <% end %>
                       <% if policy(:player_transaction).reprint? %>
                         <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
+                 <% if YAML.load(t.data)[:deposit_remark] != nil %>
+                   <td><%= YAML.load(t.data)[:deposit_remark] %> </td>
+                 <% else %>
+                   <td><%= YAML.load(t.data)[:withdraw_remark] %> </td>
+                 <% end %>
+
                       <% end %>
                     <% end %>
                   </td>

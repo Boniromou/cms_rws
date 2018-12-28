@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181227000004) do
+ActiveRecord::Schema.define(:version => 20181228000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -159,18 +159,18 @@ ActiveRecord::Schema.define(:version => 20181227000004) do
     t.integer  "transaction_type_id"
     t.string   "status"
     t.integer  "amount",              :limit => 8
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.string   "ref_trans_id",        :limit => 45
     t.datetime "trans_date"
     t.datetime "purge_at"
-    t.integer  "casino_id",                           :null => false
+    t.integer  "casino_id",                                          :null => false
     t.integer  "slip_number"
     t.string   "machine_token"
     t.string   "data",                :limit => 1024
     t.string   "promotion_code",      :limit => 45
-    t.integer  "payment_method_id"
-    t.integer  "source_of_fund_id"
+    t.integer  "payment_method_id",                   :default => 1, :null => false
+    t.integer  "source_of_fund_id",                   :default => 1, :null => false
   end
 
   add_index "player_transactions", ["casino_id"], :name => "fk_player_transactions_casino_id"

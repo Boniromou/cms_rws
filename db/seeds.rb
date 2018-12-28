@@ -29,14 +29,13 @@ TransactionType.where(:id => 5, :name => 'credit_deposit').first_or_create
 TransactionType.where(:id => 6, :name => 'credit_expire').first_or_create
 
 PaymentMethod.where(:id => 1, :name => 'N/A').first_or_create
-PaymentMethod.where(:id => 2, :name => 'Credit Cards').first_or_create
-PaymentMethod.where(:id => 3, :name => 'Debit Cards').first_or_create
-PaymentMethod.where(:id => 4, :name => 'Cashier Order').first_or_create
+PaymentMethod.where(:id => 2, :name => 'Cash').first_or_create
+PaymentMethod.where(:id => 3, :name => 'Credit Cards').first_or_create
+PaymentMethod.where(:id => 4, :name => 'Debit Cards').first_or_create
 PaymentMethod.where(:id => 5, :name => 'Casino Cheque').first_or_create
-PaymentMethod.where(:id => 6, :name => 'Personal Cheque').first_or_create
-PaymentMethod.where(:id => 7, :name => 'TT-in').first_or_create
-PaymentMethod.where(:id => 8, :name => 'Cash Chips').first_or_create
-PaymentMethod.where(:id => 9, :name => 'Marker').first_or_create
+PaymentMethod.where(:id => 6, :name => 'TITO').first_or_create
+PaymentMethod.where(:id => 7, :name => 'Cash Chips').first_or_create
+PaymentMethod.where(:id => 8, :name => 'Marker').first_or_create
 
 SourceOfFund.where(:id => 1, :name => 'N/A').first_or_create
 SourceOfFund.where(:id => 2, :name => 'Business earnings').first_or_create

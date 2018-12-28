@@ -25,6 +25,8 @@ class VoidController < FundController
     @ref_trans_id = @target_transaction.ref_trans_id
     @data = {:remark => ""}
     @data[:void_reason] = "#{params[:remarks]}"
+    @payment_method_type = @target_transaction.payment_method_id
+    @source_of_funds = @target_transaction.source_of_fund_id
   end
 
   def check_transaction_acceptable

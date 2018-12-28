@@ -12,6 +12,7 @@
 
 <% content = render "players/balance_amt" %>
 
+  
   <div style="width:100%; margin:0 auto;">
     <div id = "div2" style= "margin-right:10px;"><%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content,     :footer => footer, :show_remain => {:deposit => true, :withdraw => true}} %>
     </div>

@@ -20,6 +20,7 @@
       <div id = "div1" style= "width:650px;"><%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
       </div>
     <% end %>
+    <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %> style="display:none" readonly>
     <div id="player_transactions_result">
     </div>
   </div>

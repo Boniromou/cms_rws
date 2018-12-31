@@ -6,7 +6,7 @@
     <% if ['deposit','withdraw'].include?(@action) %>
       <label id="remain_limit_alert" class="invisible_error"><%= t("deposit_withdrawal.exceed_remain_limit") %></label>
     <% end %>
-    <% if @action == 'withdraw' %>
+    <% if @action == 'withdraw' and @exception_transaction == 'no' %>
       <form class="form-horizontal">
         <div class="form-group">
             <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
@@ -17,6 +17,7 @@
       </form>
     <% elsif @action == 'credit_deposit' %>
       <label id="credit_limit_alert" class="invisible_error"><%= t("credit_deposit_expire.exceed_limit") %></label>
+      
     <% end %>
   <% end %>
 </div>

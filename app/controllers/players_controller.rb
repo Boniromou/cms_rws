@@ -23,9 +23,10 @@ class PlayersController < ApplicationController
     @casino_id = params[:select_casino_id] || current_casino_id
     @member_id = params[:member_id]
     @exception_transaction = params[:exception_transaction]
-    p "==============================="
+        
+    p "============================"
     p @exception_transaction
-    p "==============================="
+    p "============================"    
     unless @player
       raise PlayerProfile::PlayerNotFound
     end
@@ -61,7 +62,8 @@ class PlayersController < ApplicationController
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @player = Player.new
-
+    @exception_transaction = params[:exception]
+    
     respond_to do |format|
       format.html { render "players/search", formats: [:html] }
       format.js { render"players/search", formats: [:js] }
@@ -72,7 +74,7 @@ class PlayersController < ApplicationController
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @operation = params[:operation]
-    
+    @exception_transaction = params[:exception_transaction]
     begin
       requester_helper.update_player!(@id_type,@id_number)
     rescue Remote::PlayerNotFound => e
@@ -82,7 +84,7 @@ class PlayersController < ApplicationController
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player
     member_id = @player.member_id
-    redirect_to :action => @operation, :member_id => member_id
+    redirect_to :action => @operation, :member_id => member_id, :exception_transaction => @exception_transaction
   end
 
   def handle_player_not_found(e)

@@ -47,9 +47,16 @@
           <ul style="display:block;">
             <% if policy(:Player).balance? %>
               <li id="nav_balance_enquiry">
-                <%= link_to players_search_path + "?operation=balance", :title => t("tree_panel.balance"), :remote => true do %>
+                <%= link_to players_search_path + "?operation=balance;exception=no", :title => t("tree_panel.balance"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
-                  
+                <% end %>
+              </li>
+            <% end %>
+            
+            <% if policy(:Player).balance? %>
+              <li id="nav_balance_enquiry">
+                <%= link_to players_search_path +  "?operation=balance;exception=yes", :title => t("deposit_withdrawal.exception"), :remote => true do %>
+              <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.exception") %></span>
                 <% end %>
               </li>
             <% end %>

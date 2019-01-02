@@ -15,7 +15,9 @@ class PlayerTransaction < ActiveRecord::Base
   VOID_WITHDRAW = 'void_withdraw'
   CREDIT_DEPOSIT = 'credit_deposit'
   CREDIT_EXPIRE = 'credit_expire'
-  
+  EXCEPTION_DEPOSIT = 'exception_deposit'
+  EXCEPTION_WITHDRAW = 'exception_withdraw'
+ 
   def deposit_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT
@@ -176,6 +178,16 @@ class PlayerTransaction < ActiveRecord::Base
     def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
       init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
     end
+    
+    def save_exception_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, EXCEPTION_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+    end   
+
+    def save_exception_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, EXCEPTION_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, 1)
+    end
+
+
 
     def search_query_by_slip_number(slip_number)
       by_slip_number(slip_number).only_deposit_withdraw

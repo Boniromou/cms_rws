@@ -30,11 +30,19 @@ class FundController < ApplicationController
     @player = policy_scope(Player).find_by_member_id(@member_id)
     @casino_id = current_casino_id
     authorize_action @player, :non_test_mode?
+    @exception_transaction = params[:exception_transaction]
+
+    p "000000000000000000000000000000"
+    p @exception_transaction
+    p "000000000000000000000000000000"
   end
 
   def create
+    @exception_transaction = params[:exception_transaction]
     extract_params
-    check_transaction_acceptable
+    if @exception_transaction == "no"
+      check_transaction_acceptable
+    end 
     execute_transaction
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
   end
@@ -69,15 +77,28 @@ class FundController < ApplicationController
   end
 
   def execute_transaction
-    AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+    p "yoyoyooyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyo"
+    p @exception_transaction
+    if @exception_transaction == 'no'
+      AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+        @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
+        response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token)
+        handle_wallet_result(@transaction, response)
+      end
+    elsif @exception_transaction == 'yes'
+      p "11111111111111111111111111111111111111111111111111111"
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-      response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token)
-      handle_wallet_result(@transaction, response)
+      p "11111111111111111111111111111111111111111111111111111"
     end
   end
 
   def create_player_transaction(member_id, amount, ref_trans_id = nil, data = nil)
-    PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
+    if @exception_transaction == 'no'
+      PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
+    elsif @exception_transaction == 'yes'
+      PlayerTransaction.send "save_exception_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
+    end
+    
   end
 
   def handle_wallet_result(transaction, response)

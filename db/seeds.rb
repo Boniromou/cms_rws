@@ -27,6 +27,8 @@ TransactionType.where(:id => 3, :name => 'void_deposit').first_or_create
 TransactionType.where(:id => 4, :name => 'void_withdraw').first_or_create
 TransactionType.where(:id => 5, :name => 'credit_deposit').first_or_create
 TransactionType.where(:id => 6, :name => 'credit_expire').first_or_create
+TransactionType.where(:id => 7, :name => 'exception_deposit').first_or_create
+TransactionType.where(:id => 8, :name => 'exception_withdraw').first_or_create
 
 PaymentMethod.where(:id => 1, :name => 'N/A').first_or_create
 PaymentMethod.where(:id => 2, :name => 'Cash').first_or_create

@@ -3,7 +3,7 @@ class RequesterHelper
   def initialize(requester_factory)
     @requester_factory = requester_factory
   end
-  
+
   def patron_requester
     @requester_factory.get_patron_requester
   end
@@ -44,14 +44,19 @@ class RequesterHelper
     {:player => response}
   end
 
-  def retrieve_info(card_id, machine_type, machine_token, pin, casino_id)
+  def retrieve_info(credential, machine_type, machine_token, pin, casino_id)
     begin
       property_id = Machine.parse_machine_token(machine_token)[:property_id]
       raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id, casino_id)
-      player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
+      player = Player.find_by_card_id_and_casino_id(credential, casino_id)
+      player = Player.find_by_member_id_and_casino_id(credential, casino_id) unless player
       unless player
-        update_player!('card_id', card_id)
-        player = Player.find_by_card_id_and_casino_id(card_id, casino_id)
+        update_player!('card_id', credential)
+        player = Player.find_by_card_id_and_casino_id(credential, casino_id)
+      end
+      unless player
+        update_player!('member_id', credential)
+        player = Player.find_by_member_id_and_casino_id(credential, casino_id)
       end
 
       raise Request::InvalidCardId.new unless player
@@ -94,7 +99,7 @@ class RequesterHelper
       return false
     end
   end
-  
+
   def update_player!(id_type, id_value, mp_create = false)
     response = patron_requester.get_player_info(id_type, id_value)
     unless response.success?
@@ -213,7 +218,7 @@ class RequesterHelper
     handle_processed_trans( player_transaction ) unless player_transaction.nil?
     check_promotion_code( promotion_code, player ) unless promotion_code.nil?
     server_amount = PlayerTransaction.to_server_amount(amount)
-    
+
     player_transaction = PlayerTransaction.save_internal_deposit_transaction(login_name, server_amount, Shift.current(casino_id).id, ref_trans_id, casino_id, promotion_code, executed_by, {:promotion_detail => promotion_info})
     response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), source_type, nil, 'system', nil, promotion_code)
 

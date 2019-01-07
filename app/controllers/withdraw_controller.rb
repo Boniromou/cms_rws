@@ -16,11 +16,19 @@ class WithdrawController < FundController
   end
 
   def call_wallet(member_id, amount, ref_trans_id, trans_date, source_type, machine_token)
+    p "787777878787878787878787878787878787878787878787878787878787878787878787878"
     wallet_requester.withdraw(member_id, amount, ref_trans_id, trans_date, source_type, current_user.id, current_user.name, machine_token)
   end
 
   def check_transaction_acceptable
     super
-    validate_pin
+    if @exception_transaction == 'no'
+      validate_pin
+    end
   end
+  def create
+    super
+    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
+  end
+
 end

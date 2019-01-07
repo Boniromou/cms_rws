@@ -11,7 +11,7 @@ module ViewsHelper
   def close_to_balance(inactivate=false)
     icon = create_icon("fa fa-times")
     unless inactivate
-      content_tag(:a, "Cancel", :href =>  balance_path + "?member_id=#{@player.member_id}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default") 
+      content_tag(:a, "Cancel", :href =>  balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}", "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default") 
     else
       content_tag(:a, "Cancel", :href => inactivated_path + "?member_id=#{@player.member_id}&card_id=#{@player.card_id}&status=#{@player.status}&operation=#{@operation}" , "data-remote".to_sym => true, :id => "cancel", :class => "btn btn-default")
     end

@@ -32,17 +32,12 @@ class FundController < ApplicationController
     authorize_action @player, :non_test_mode?
     @exception_transaction = params[:exception_transaction]
 
-    p "000000000000000000000000000000"
-    p @exception_transaction
-    p "000000000000000000000000000000"
   end
 
   def create
     @exception_transaction = params[:exception_transaction]
     extract_params
-    if @exception_transaction == "no"
-      check_transaction_acceptable
-    end 
+    check_transaction_acceptable
     execute_transaction
     flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
   end
@@ -59,10 +54,6 @@ class FundController < ApplicationController
     @data = {:remark => "#{params[:player_transaction][:remark]}"}
     @payment_method_type = params[:payment_method_type]
     @source_of_funds = params[:source_of_funds]
-    p "============================"
-    p @payment_method_type
-    p @source_of_funds
-    p "============================"
   end
 
   def check_transaction_acceptable
@@ -77,8 +68,11 @@ class FundController < ApplicationController
   end
 
   def execute_transaction
-    p "yoyoyooyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyoyo"
-    p @exception_transaction
+
+    p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
+     p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
+     p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
+      p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
     if @exception_transaction == 'no'
       AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
         @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
@@ -86,9 +80,7 @@ class FundController < ApplicationController
         handle_wallet_result(@transaction, response)
       end
     elsif @exception_transaction == 'yes'
-      p "11111111111111111111111111111111111111111111111111111"
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-      p "11111111111111111111111111111111111111111111111111111"
     end
   end
 

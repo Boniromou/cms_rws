@@ -31,9 +31,9 @@ describe PlayerInfosController do
       clean_dbs
     end
 
-    it '[29.1] Card ID is not exist' do
+    it '[29.1] Credential is not exist' do
       allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK'}))
-      post 'retrieve_player_info', {:card_id => "1234567891", :machine_token => "1234567891", :pin => "1234"}
+      post 'retrieve_player_info', {:credential => "1234567891", :machine_token => "1234567891", :pin => "1234"}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidCardId'
     end
@@ -45,7 +45,7 @@ describe PlayerInfosController do
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(wallet_response)
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
       allow(SecureRandom).to receive(:uuid).and_return(mock_token)
-      post 'retrieve_player_info', {:card_id => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
+      post 'retrieve_player_info', {:credential => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -59,7 +59,7 @@ describe PlayerInfosController do
     it '[29.3] Player is locked' do
       @player.lock_account!
       allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK'}))
-      get 'retrieve_player_info', {:card_id => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
+      get 'retrieve_player_info', {:credential => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'PlayerLocked'
     end
@@ -69,9 +69,27 @@ describe PlayerInfosController do
       allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK'}))
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return({:balance => 100.00, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_raise(Remote::PinError)
-      get 'retrieve_player_info', {:card_id => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
+      get 'retrieve_player_info', {:credential => "1234567890", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidPin'
+    end
+
+    it '[29.5] Member ID is exist and generate token' do
+      mock_token = "afe1f247-5eaa-4c2c-91c7-33a5fb637713"
+      allow_any_instance_of(Requester::Station).to receive(:validate_machine_token).and_return(Requester::StationResponse.new({:error_code => 'OK'}))
+      wallet_response = Requester::GetPlayerBalanceResponse.new({:error_code => 'OK', :balance => 100.00, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
+      allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_return(wallet_response)
+      allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
+      allow(SecureRandom).to receive(:uuid).and_return(mock_token)
+      post 'retrieve_player_info', {:credential => "123456", :machine_type => 'game_terminal', :machine_token => "1234567891", :pin => "1234", :property_id => 20000}
+      result = JSON.parse(response.body).symbolize_keys
+      expect(result[:error_code]).to eq 'OK'
+      expect(result[:error_msg]).to eq 'Request is carried out successfully.'
+      expect(result[:session_token]).to eq mock_token
+      expect(result[:login_name]).to eq @player.member_id
+      expect(result[:currency]).to eq Currency.find(@player.currency_id).name
+      expect(result[:balance]).to eq 100.0
+      expect(result[:test_mode_player]).to eq false
     end
   end
 

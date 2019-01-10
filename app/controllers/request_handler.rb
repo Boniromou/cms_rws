@@ -28,28 +28,28 @@ class RequestHandler
     requester_facotry = Requester::RequesterFactory.new(requester_config_file, Rails.env, casino_id, licensee_id, nil)
     RequesterHelper.new(requester_facotry)
   end
-    
+
 
   def process_validate_token_event
     Token.validate(@inbound[:login_name], @inbound[:session_token], @inbound[:licensee_id])
     {}
   end
-  
+
   def process_get_player_info_event
     id_type = @inbound[:id_type]
     id_value = @inbound[:id_value]
     licensee_id = @inbound[:licensee_id]
-    casino_id = Casino.get_find_first_casino_id_by_licensee_id(licensee_id) 
+    casino_id = Casino.get_find_first_casino_id_by_licensee_id(licensee_id)
     get_requester_helper(casino_id).get_player_info(id_type, id_value, licensee_id)
   end
 
   def process_retrieve_player_info_event
     machine_type = @inbound[:machine_type]
-    card_id = @inbound[:card_id]
+    credential = @inbound[:credential]
     machine_token = @inbound[:machine_token]
     pin = @inbound[:pin]
     casino_id = @inbound[:casino_id]
-    get_requester_helper(casino_id).retrieve_info(card_id, machine_type, machine_token, pin, casino_id)
+    get_requester_helper(casino_id).retrieve_info(credential, machine_type, machine_token, pin, casino_id)
   end
 
   def process_keep_alive_event

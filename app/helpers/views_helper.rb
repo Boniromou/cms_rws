@@ -1,7 +1,8 @@
 module ViewsHelper
   BREAD_CRUMB_LIST ={
     I18n.t("tree_panel.balance").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("tree_panel.fund_management") },
-    I18n.t("tree_panel.profile").to_sym => { :icon_style => "glyphicon glyphicon-user", :title => I18n.t("tree_panel.player_management") }
+    I18n.t("tree_panel.profile").to_sym => { :icon_style => "glyphicon glyphicon-user", :title => I18n.t("tree_panel.player_management") },
+    I18n.t("deposit_withdrawal.exception").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("deposit_withdrawal.exception") }
   }
   def close_to_home
     icon = create_icon("fa fa-times")
@@ -36,9 +37,13 @@ module ViewsHelper
     if subtitle.class == String
       subtitle = [subtitle]
     end
-
+    
     subtitle.each do |str|
-      text += " > " + str
+      if str != t("deposit_withdrawal.exception")
+        text += " > " + str
+      elsif str == t("deposit_withdrawal.exception")
+        text = ""
+      end
     end
     subtitle_content = content_tag(:span, text)
     icon = create_icon(icon_style)    

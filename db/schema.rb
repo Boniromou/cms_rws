@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20181228000001) do
+ActiveRecord::Schema.define(:version => 20190110000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -23,6 +23,26 @@ ActiveRecord::Schema.define(:version => 20181228000001) do
   add_index "accounting_dates", ["accounting_date"], :name => "index_accounting_dates_on_accounting_date", :unique => true
   add_index "accounting_dates", ["purge_at"], :name => "index_accounting_dates_on_purge_at"
   add_index "accounting_dates", ["updated_at"], :name => "idx_updated_at"
+
+  create_table "approval_logs", :force => true do |t|
+    t.string   "action",              :limit => 45, :null => false
+    t.string   "action_by",                         :null => false
+    t.integer  "approval_request_id",               :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "approval_logs", ["approval_request_id"], :name => "fk_approvallogs_approvalrequests"
+
+  create_table "approval_requests", :force => true do |t|
+    t.string   "target",     :limit => 45,                          :null => false
+    t.integer  "target_id",                                         :null => false
+    t.string   "action",     :limit => 45,                          :null => false
+    t.string   "data",       :limit => 4096
+    t.string   "status",     :limit => 45,   :default => "pending", :null => false
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
+  end
 
   create_table "audit_logs", :force => true do |t|
     t.string   "audit_target"
@@ -171,6 +191,7 @@ ActiveRecord::Schema.define(:version => 20181228000001) do
     t.string   "promotion_code",      :limit => 45
     t.integer  "payment_method_id",                   :default => 1, :null => false
     t.integer  "source_of_fund_id",                   :default => 1, :null => false
+    t.string   "approved_by"
   end
 
   add_index "player_transactions", ["casino_id"], :name => "fk_player_transactions_casino_id"

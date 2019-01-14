@@ -14,6 +14,23 @@ class PlayerTransactionPolicy < ApplicationPolicy
   map_policy :reprint_void?, :action_name => :reprint_void_slip
   map_policy :can_deposit?, :action_name => :deposit
   map_policy :can_withdraw?, :action_name => :withdraw
+  map_policy :exception_transaction_approval_list?, :target => :transaction_approval,:action_name => :list
+  map_policy :exception_transaction_cancel_submit?,:target => :transaction_approval, :action_name => :reject_submit
+  map_policy :exception_transaction_approve?,:target => :transaction_approval, :action_name => :approve
+  map_policy :exception?, :action_name => :submit_exception_transaction
+
+  def exception?
+    true
+  end  
+  def exception_transaction_approve?
+    true
+  end
+  def exception_transaction_approval_list?
+    true
+  end
+  def exception_transaction_cancel_submit? 
+    true
+  end
   def deposit?
     have_active_location? && can_deposit?
   end

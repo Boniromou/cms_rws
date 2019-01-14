@@ -1,0 +1,15 @@
+layout: "cage"
+player_transaction:
+  exception_transaction:
+    casino_id: "transaction_approval.casino_id"
+    player_id: "transaction_approval.player_id"
+    amount: "transaction_approval.amount"
+    transaction_type: "transaction_approval.transaction_type"
+    payment_method: "transaction_approval.payment_method" 
+    source_of_fund: "transaction_approval.source_of_fund"
+  set_denom:
+    property_id: "general.property"
+    game_name: "general.game_name"
+    game_id: "general.game_id"
+    from_denom_set_id: "game_denom.from_denom_set"
+    to_denom_set_id: "game_denom.to_denom_set"

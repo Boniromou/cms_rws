@@ -78,6 +78,14 @@ en:
   logout_page:
     action_yes: "Yes"
     action_no: "No"
+  transaction_approval:
+    casino_id: "Casino" 
+    player_id: "Member id"
+    amount: "Amount"
+    transaction_type: "Transaction type"
+    status: "Status"
+    payment_method: "Payment method"
+    source_of_fund: "Source of fund"
   title:
     system: "GameSource"
     title: "Cage"
@@ -94,6 +102,7 @@ en:
     payment_method_types: "Payment Method"
     remark: "Remark"
     exception: "Exception Transaction"
+    approval: "Transaction Approval"
 #    credit_deposit_amt: "Confirm to add promo. credits?"
 #    credit_expire_amt: "Confirm to expire all promo. credits?"
 #    non_player_deposit: "Non-Player Deposit"
@@ -215,6 +224,8 @@ en:
     contact_service: "Operation failed, please contact customer service for more information."
     deposit_complete: "Deposit %{amount} is completed."
     withdraw_complete: "Withdraw %{amount} is completed."
+    exception_deposit_complete: "Deposit Request %{amount} is completed. Please wait for approval."
+    exception_withdraw_complete: "Withdraw Request %{amount} is completed. Please wait for approval."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:
@@ -252,6 +263,8 @@ en:
     deposit_reason: "Deposit handle by"
     cage_cashier_id: "Cage Cashier"
     source_type: "System"
+    transaction_type: "Transaction Type"
+    approved_by: "Approved by"
   shift_name:
     morning: "Morning"
     swing: "Swing"

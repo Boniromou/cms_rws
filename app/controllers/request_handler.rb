@@ -154,7 +154,26 @@ class RequestHandler
     promotion_info = handle_promotion_info(@inbound)
     get_requester_helper(casino_id).internal_deposit(login_name, amount, ref_trans_id, source_type, casino_id, promotion_code, executed_by, promotion_info)
   end
+   
+  def process_exception_deposit_event
+    login_name = @inbound[:login_name]
+    amount = @inbound[:amount]
+    ref_trans_id = @inbound[:ref_trans_id]
+    source_type = @inbound[:source_type]
+    casino_id = @inbound[:casino_id]
+    executed_by = @inbound[:executed_by]
+    get_requester_helper(casino_id).exception_deposit(login_name, amount, ref_trans_id, source_type, casino_id, executed_by)
+  end
 
+  def process_exception_withdraw_event
+    login_name = @inbound[:login_name]
+    amount = @inbound[:amount]
+    ref_trans_id = @inbound[:ref_trans_id]
+    source_type = @inbound[:source_type]
+    casino_id = @inbound[:casino_id]
+    executed_by = @inbound[:executed_by]
+    get_requester_helper(casino_id).exception_withdraw(login_name, amount, ref_trans_id, source_type, casino_id, executed_by)
+  end
   def handle_promotion_info(ib)
     Hood::ParamUtil.ensure_params_given(ib, :promotion_type, :amt)
     promotion_info = {}

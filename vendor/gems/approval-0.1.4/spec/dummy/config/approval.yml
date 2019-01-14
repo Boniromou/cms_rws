@@ -1,0 +1,10 @@
+layout: "application"
+property_game_title_config:
+  set_rtp:
+    property_id: "game_release.property"
+    game_title: "game_release.game_title"
+    game_title_id: "game.game_title_id"
+    from_rtp: "rtp_control.from_rtp"
+    to_rtp: "rtp_control.to_rtp"
+    submit_by: "general.submit_by"
+    updated_at: "general.updated_at"

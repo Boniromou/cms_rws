@@ -1,0 +1,45 @@
+<%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+
+<%= table_tabs(I18n.t('approval.log'),
+[ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
+[ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
+[ I18n.t('approval.log'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action}), policy(:approval_management).list_log? ]) %>
+
+<div class="tab-content" style="padding: 10px;">
+  <table id="log_table" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <% @titles.values.each do |title| %>
+          <th class="col-md-1"><%= I18n.t(title) %></th>
+        <% end %>
+        <th class="col-md-1"><%= I18n.t('approval.action') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.action_by') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.action_at') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @request_logs.each do |log| %>
+        <tr>
+          <% @titles.keys.each do |title| %>
+            <td><%= log[:request][title.to_sym].present? ? log[:request][title.to_sym] : '---' %></td>
+          <% end %>
+          <td><%= log[:action] %></td>
+          <td><%= log[:action_by] %></td>
+          <td><%= log[:updated_at] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= render :partial => "approval/shared/pop_up_panel" %>
+<%= render :partial => "approval/requests/request_detail" %>
+
+<script>
+$(function(){
+  $('#log_table').dataTable({
+    'order': [[ 0, 'asc']],
+    'pageLength' : 50
+  });
+})
+</script>

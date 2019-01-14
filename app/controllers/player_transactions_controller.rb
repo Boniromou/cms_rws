@@ -26,7 +26,7 @@ class PlayerTransactionsController < ApplicationController
         shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range, casino_id)
         requester_helper.update_player(id_type,id_number) unless id_number.blank?
 
-        player_transactions += PlayerTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation, current_licensee_id).where(:casino_id => casino_id)
+        player_transactions += PlayerTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id,@operation, current_licensee_id).where(:casino_id => casino_id, :status => 'completed')
         kiosk_transactions += KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation, current_licensee_id).where(:casino_id => casino_id)
       end
       @transactions = player_transactions + kiosk_transactions

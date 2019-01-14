@@ -40,7 +40,7 @@
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.remark")%>:</strong></label></td>
     <%= f.text_area :deposit_reason, :id => "textarea", :class => "col-xs-4 box", :style => "margin-bottom: 4px; resize: none; width: 300px", :maxlength => 400, cols: "6", rows: "10"%>
   </div>
-  <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %> style="disable:none" readonly>
+  <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %> style="display:none" readonly>
 <% end %>
 
 <script>

@@ -15,18 +15,19 @@ class PlayerTransaction < ActiveRecord::Base
   VOID_WITHDRAW = 'void_withdraw'
   CREDIT_DEPOSIT = 'credit_deposit'
   CREDIT_EXPIRE = 'credit_expire'
-  EXCEPTION_DEPOSIT = 'exception_deposit'
-  EXCEPTION_WITHDRAW = 'exception_withdraw'
- 
+  EXCEPTION_DEPOSIT = 'manual_deposit'
+  EXCEPTION_WITHDRAW = 'manual_withdraw'
+  VOID_EXCEPTION_DEPOSIT = 'void_manual_deposit'
+  VOID_EXCEPTION_WITHDRAW = 'void_manual_withdraw'  
   def deposit_amt_str
     result = ""
-    result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT
+    result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT || self.transaction_type.name == EXCEPTION_DEPOSIT
     result
   end
 
   def withdraw_amt_str
     result = ""
-    result = to_display_amount_str(amount) if self.transaction_type.name == WITHDRAW
+    result = to_display_amount_str(amount) if self.transaction_type.name == WITHDRAW|| self.transaction_type.name == EXCEPTION_WITHDRAW
     result
   end
 
@@ -77,17 +78,18 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def void_transaction
-    void_trans_type_name = "void_" + self.transaction_type.name
+    void_trans_type_name = "void_" + self.transaction_type.name.gsub('manual_','')
     void_trans_type = TransactionType.find_by_name(void_trans_type_name)
     trans_type_id = void_trans_type.id if void_trans_type
     PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed', 'pending']).first
   end
 
   def original_transaction
-    trans_type_name = self.transaction_type.name.split('_')[1]
-    trans_type = TransactionType.find_by_name(trans_type_name)
-    trans_type_id = trans_type.id if trans_type
-    PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed']).first
+    trans_type_name = self.transaction_type.name.split('_').last
+    trans_type_id = [TransactionType.find_by_name(trans_type_name).id,TransactionType.find_by_name(trans_type_name.prepend("manual_")).id]
+    a = PlayerTransaction.where(:ref_trans_id => self.ref_trans_id, :transaction_type_id => trans_type_id, :status => ['completed']).first
+    p a
+    a
   end
 
   def slip_type
@@ -187,18 +189,16 @@ class PlayerTransaction < ActiveRecord::Base
       init_transaction(member_id, amount, EXCEPTION_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, 1)
     end
 
-
-
     def search_query_by_slip_number(slip_number)
-      by_slip_number(slip_number).only_deposit_withdraw
+      by_slip_number(slip_number)
     end
 
     def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
-      by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
+      by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id)
     end 
 
     def search_transactions_by_shift_id(user_id, in_shift_id)
-      by_user_id(user_id).in_shift_id(in_shift_id).only_deposit_withdraw
+      by_user_id(user_id).in_shift_id(in_shift_id)
     end 
   end
 end

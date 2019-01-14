@@ -1,4 +1,8 @@
-<%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),[t("tree_panel.balance"), t("tree_panel.fund_in")]) %>
+<% if @exception_transaction == 'yes'%>
+  <%= bread_crumb("fa fa-bank",t("deposit_withdrawal.exception"),[t("deposit_withdrawal.exception"), t("tree_panel.fund_in")]) %>
+<% else %>
+  <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),[t("tree_panel.balance"), t("tree_panel.fund_in")]) %>
+<% end %>
 
 <% back_button = close_to_balance %>
 <% content = render partial: "deposit/fund_request_form" %>

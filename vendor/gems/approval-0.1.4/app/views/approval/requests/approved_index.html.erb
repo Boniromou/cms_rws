@@ -1,0 +1,60 @@
+<%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+
+<%= table_tabs(I18n.t('approval.approved'),
+[ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
+[ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
+[ I18n.t('approval.log'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all}), policy(:approval_management).list_log? ]) %>
+
+<div class="tab-content" style="padding: 10px;">
+  <table id="request_table" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <% @titles.values.each do |title| %>
+          <th class="col-md-1"><%= I18n.t(title) %></th>
+        <% end %>
+        <th class="col-md-1"><%= I18n.t('approval.submit_by') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-2"><%= I18n.t('approval.operation') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @requests.each do |request| %>
+        <tr>
+          <% @titles.keys.each do |title| %>
+            <td><%= request[title.to_sym] %></td>
+          <% end %>
+          <td><%= request[:submit_by] %></td>
+          <td><%= request[:updated_at] %></td>
+          <td>
+            <% if request[:status] == Approval::Request::APPROVED || request[:status] == Approval::Request::COMPLETED %>
+            <% end %>
+
+            <% if request[:detail_path] %>
+              <%= button_tag I18n.t('approval.detail'), :type => 'button', :class => 'btn btn-primary detail_button', 'data-toggle' => 'modal', 'data-target' => '#requestModal', 'detail-path'=>  request[:detail_path] %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= render :partial => "approval/shared/pop_up_panel" %>
+<%= render :partial => "approval/requests/request_detail" %>
+
+<script>
+$(function(){
+
+  $('#request_table').on('click','.cancel_approve',function(event) {
+    console.log("====================================================");
+    console.log("====================================================");
+    console.log("===================================================="); 
+    var target = $(event.currentTarget);
+    var request_id = target.attr('request_id');
+    function cancel_approve_request(){
+      $('#cancel_approve_' + request_id).click();
+    };
+    registerPopUpPanel('<%= I18n.t('approval.confirm_msg', operation: 'cancel approve') %>', cancel_approve_request);
+  });
+})
+</script>

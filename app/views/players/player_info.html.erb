@@ -1,5 +1,9 @@
 <% if @operation == 'balance' %>
-  <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.balance")) %>
+  <% if @exception_transaction == 'yes'%>
+    <%= bread_crumb("fa fa-bank",t("deposit_withdrawal.exception"),t("deposit_withdrawal.exception")) %>
+  <% else %>
+    <%= bread_crumb("fa fa-bank",t("tree_panel.fund_management"),t("tree_panel.balance")) %>
+  <% end %>
 <% else %>
   <%= bread_crumb("glyphicon glyphicon-user",t("tree_panel.player_management"),t("tree_panel.profile")) %>
 <% end %>
@@ -20,7 +24,7 @@
       <div id = "div1" style= "width:650px;"><%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
       </div>
     <% end %>
-    <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %> style="display:none" readonly>
+    <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %>  style="display:none" readonly >
     <div id="player_transactions_result">
     </div>
   </div>

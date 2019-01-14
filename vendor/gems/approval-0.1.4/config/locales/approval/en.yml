@@ -1,0 +1,20 @@
+en:
+  approval:
+    title: '%{approval_action} Approval'
+    operation: Operation
+    detail_title: Approval Detail
+    approved: Approved
+    pending: Pending
+    confirm_msg: Are you sure to %{operation} this change?
+    success: '%{operation} change request for %{approval_action} successful.'
+    failed: '%{operation} change request for %{approval_action} failed.'
+    approve: Approve
+    cancel: Reject
+    confirm: Confirm
+    detail: Detail
+    submit_by: Submitted by
+    updated_at: Updated at
+    log: Log
+    action: Action
+    action_by: Action by
+    action_at: Action at

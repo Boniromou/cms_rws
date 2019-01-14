@@ -2,7 +2,7 @@ CmsRws::Application.routes.draw do
 
 
   devise_for :users, controllers: {:sessions => "user_sessions"}
-
+  mount Approval::Engine, at: "/approval"
   devise_scope :user do
     root :to => "user_sessions#new"
     get "/login" => "user_sessions#new", :as => :login
@@ -34,7 +34,8 @@ CmsRws::Application.routes.draw do
 
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'
-
+  post 'void_manual_deposit' => 'void_deposit#create'
+  post 'void_manual_withdraw' => 'void_withdraw#create'
   #get 'credit_deposit' => 'credit_deposit#new'
   #post 'credit_deposit' => 'credit_deposit#create'
 
@@ -47,7 +48,7 @@ CmsRws::Application.routes.draw do
   get 'search_transactions' => 'player_transactions#search'
   post 'search_transactions' => 'player_transactions#do_search'
   get 'index' => 'player_transactions#index'
-
+  get 'approval' => 'transaction_approvals#index'
   get 'search_current_ac_date_by_casino' => 'front_money#search_current_accounting_date_by_casino_id'
   get 'search_front_money' => 'front_money#search'
   post 'search_front_money' => 'front_money#do_search'
@@ -102,7 +103,8 @@ CmsRws::Application.routes.draw do
   post 'withdraw' => 'kiosk#withdraw'
 
   post 'internal_deposit' => 'kiosk#internal_deposit'
-
+  post 'exception_deposit' => 'kiosk#exception_deposit'
+  post 'exception_withdraw' => 'kiosk#exception_withdraw'
   get 'search_account_activities' => 'account_activities#search'
   get 'do_search_account_activities' => 'account_activities#do_search'
   namespace :excels do

@@ -16,6 +16,8 @@ class InsertPromotion
       @deposit_path = File.expand_path(File.dirname(__FILE__)) + '/deposit.yml'
       file_exist?(@deposit_path)
       @deposit_url = YAML.load_file(@deposit_path)[@env]
+      @withdraw_path = File.expand_path(File.dirname(__FILE__)) + '/deposit.yml'
+      @withdraw_url = YAML.load_file(@withdraw_path)[@env]
   end   
   
   def run(data)

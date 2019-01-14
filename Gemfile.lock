@@ -1,4 +1,10 @@
 PATH
+  remote: vendor/gems/approval-0.1.4
+  specs:
+    approval (0.1.4)
+      rails (~> 3.2.13)
+
+PATH
   remote: vendor/gems/hood-1.4.6
   specs:
     hood (1.4.6)
@@ -202,6 +208,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-mysql-adapter
   ajax-datatables-rails (= 0.2.1)
+  approval!
   capybara (= 2.4.3)
   coffee-rails (~> 3.2.1)
   dalli (~> 2.0.3)

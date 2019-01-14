@@ -1,0 +1,44 @@
+<div id="requestModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="true">
+          &times;
+        </button>
+        <h4 class="modal-title"><%= I18n.t('approval.detail_title') %></h5>
+      </div>
+      <div class="modal-body">
+        <div id="request_detail"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(function(){
+  $("#request_table").on('click','.detail_button',function(event) {
+    var target = $(event.currentTarget);
+    var detail_path = target.attr('detail-path');
+    $.ajax({
+      type: 'GET',
+      url: detail_path,
+      dataType: 'html',
+      global: false,
+      async: false,
+      data: {'is_approval_request': true},
+      success: function(data) {
+        $('#request_detail').html(data);
+      }
+    });
+  });
+})
+</script>
+
+<style>
+  .modal-dialog { /* Width */
+    max-width: 90%;
+    width: auto !important;
+    display: inline-block;
+  }
+</style>

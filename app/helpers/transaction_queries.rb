@@ -20,7 +20,7 @@ module TransactionQueries
   end
 
   module ClassMethods
-    TRANSACTION_TYPE_ID_LIST = {:deposit => 1, :withdraw => 2, :void_deposit => 3, :void_withdraw => 4, :credit_deposit => 5, :credit_expire => 6}
+    TRANSACTION_TYPE_ID_LIST = {:deposit => 1, :withdraw => 2, :void_deposit => 3, :void_withdraw => 4, :credit_deposit => 5, :credit_expire => 6, :manual_deposit => 8, :manual_withdraw => 9}
 
     def only_deposit_withdraw
       by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit], TRANSACTION_TYPE_ID_LIST[:withdraw]]).by_status(['completed', 'pending'])
@@ -29,7 +29,11 @@ module TransactionQueries
     def only_credit_deposit_expire
       by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:credit_deposit], TRANSACTION_TYPE_ID_LIST[:credit_expire]]).by_status(['completed', 'pending'])
     end
-
+    
+    def only_deposit_withdraw_with_exception
+      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit], TRANSACTION_TYPE_ID_LIST[:withdraw], TRANSACTION_TYPE_ID_LIST[:manual_deposit],TRANSACTION_TYPE_ID_LIST[:manual_withdraw]]).by_status(['completed', 'pending'])
+    end
+  
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation, licensee_id)
       if id_number.empty?
         player_id = nil
@@ -39,7 +43,7 @@ module TransactionQueries
         player_id = player.id unless player.nil?
       end
       if operation == 'cash'
-        by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw
+        by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw_with_exception
       else
         by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_credit_deposit_expire
       end
@@ -52,8 +56,20 @@ module TransactionQueries
       start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
       end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id
       trans_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0
+      p "trans_amt"* 100
+      p trans_type.class 
+      p trans_amt
+      p "trans_amt"* 100
+
       today_ref_trans_id = select('ref_trans_id').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type])
-      void_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".to_sym]).where("ref_trans_id in (?)", today_ref_trans_id.map {|i| i.ref_trans_id }).first.amount || 0
+      p "today_ref_trans_id" * 10
+      p today_ref_trans_id
+      p "today_ref_trans_id" * 10
+      
+      p TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".to_sym]
+
+      void_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".gsub('manual_','').to_sym]).where("ref_trans_id in (?)", today_ref_trans_id.map {|i| i.ref_trans_id }).first.amount || 0
+      p "void: #{void_amt}"
       trans_amt - void_amt
     end
   end

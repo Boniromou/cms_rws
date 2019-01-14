@@ -31,7 +31,8 @@ class FundController < ApplicationController
     @casino_id = current_casino_id
     authorize_action @player, :non_test_mode?
     @exception_transaction = params[:exception_transaction]
-
+    p @exception_transaction
+    p "="*100
   end
 
   def create
@@ -39,7 +40,11 @@ class FundController < ApplicationController
     extract_params
     check_transaction_acceptable
     execute_transaction
-    flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
+    if @exception_transaction == 'yes'
+      flash[:success] = {key: "flash_message.exception_#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
+    else
+      flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
+    end
   end
   
   protected
@@ -68,29 +73,40 @@ class FundController < ApplicationController
   end
 
   def execute_transaction
-
-    p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
-     p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
-     p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
-      p '999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
-    if @exception_transaction == 'no'
+    if @exception_transaction == 'yes'
       AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
-        @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-        response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token)
-        handle_wallet_result(@transaction, response)
-      end
-    elsif @exception_transaction == 'yes'
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-    end
+      puts Approval::Request::PENDING
+      response = Approval::Models.submit('player_transaction', @transaction.id, 'exception_transaction', get_submit_data, @current_user.name)
+      p response
+      end
+    else
+      AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
+      response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token    )
+      handle_wallet_result(@transaction, response)
+      end
+    end  
   end
 
+  def get_submit_data
+    {    
+      :casino_id => Casino.find_by_id(@transaction.casino_id).name,
+      :player_id => @player.member_id,
+      :amount_in_cent => @transaction.amount,
+      :amount => @transaction.amount / 100,
+      :transaction_type => TransactionType.find_by_id(@transaction.transaction_type_id).name,
+      :payment_method => PaymentMethod.find_by_id(@transaction.payment_method_id).name,
+      :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name
+    }
+  end 
+
   def create_player_transaction(member_id, amount, ref_trans_id = nil, data = nil)
-    if @exception_transaction == 'no'
-      PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
-    elsif @exception_transaction == 'yes'
+    if @exception_transaction == 'yes'
       PlayerTransaction.send "save_exception_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
-    end
-    
+    else
+      PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
+    end    
   end
 
   def handle_wallet_result(transaction, response)
@@ -116,12 +132,12 @@ class FundController < ApplicationController
   def handle_call_wallet_fail(e)
     @player.lock_account!('pending')
     flash[:fail] = 'flash_message.contact_service'
-    redirect_to balance_path + "?member_id=#{@player.member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_fund_error(msg)
     flash[:fail] = msg
-    redirect_to :action => 'new', member_id: @player.member_id
+    redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 
   def handle_balance_not_enough(e)
@@ -131,23 +147,23 @@ class FundController < ApplicationController
 
   def handle_pin_error
     flash[:fail] = 'invalid_pin.invalid_pin'
-    redirect_to balance_path + "?member_id=#{@player.member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_call_patron_fail
     flash[:fail] = 'flash_message.contact_service'
-    redirect_to balance_path + "?member_id=#{@player.member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_credit_exist
     @transaction.rejected!
     flash[:fail] = 'invalid_amt.credit_exist'
-    redirect_to balance_path + "?member_id=#{@player.member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_credit_not_match(e)
     @transaction.rejected!
     flash[:fail] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
-    redirect_to balance_path + "?member_id=#{@player.member_id}"
+    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 end

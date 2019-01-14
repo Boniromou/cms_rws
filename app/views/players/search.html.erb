@@ -1,11 +1,17 @@
-<%= search_page_bread_crumb(t("tree_panel." + @operation)) %>
+<% if @exception_transaction == 'yes'%>
+  <%= search_page_bread_crumb(t("deposit_withdrawal.exception")) %> 
+<% else%>
+  <%= search_page_bread_crumb(t("tree_panel." + @operation)) %>
+<%end%>
+
 
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
        
 
     <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
-      <fieldset>
+    <%= f.hidden_field :exception_transaction, :value=> @exception_transaction %>  
+    <fieldset>
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <section class="smart-form">

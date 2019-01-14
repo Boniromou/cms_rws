@@ -6,6 +6,8 @@
               <th><%= t("transaction_history.member_id")%></th>
               <th><%= t("transaction_history.accounting_date")%></th>
               <th><%= t("transaction_history.date")%></th>
+              <th><%= t("transaction_history.transaction_type")%></th>
+              <th><%= t("transaction_history.approved_by")%></th>
               <th><%= t("transaction_history.location")%></th>
               <th><%= t("transaction_history.cage_cashier_id")%></th>
               <th><%= t("transaction_history.status")%></th>
@@ -20,12 +22,16 @@
             <tbody>
               <% @transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
+                  <% p t.source_type %>
+                  <% p "======================"* 100 %>
                   <td><%= t.source_type.gsub('_transaction','').titleize %></td>
                   <td><%= Casino.find_by_id(t.casino_id).name %></td>
                   <td><%= t.slip_number %></td>
                   <td><%= t.player.member_id %></td>
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
+                  <td><%= TransactionType.find_by_id(t.transaction_type_id).name %></td>
+                  <td><%= t.approved_by %></td>
                   <td><%= t.location %></td>
                   <td><%= !t.user.nil? ? t.user.name : 'System' %></td>
                   <td><%= t.display_status %></td>
@@ -39,12 +45,12 @@
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>
-                    <% if t.source_type == 'cage_transaction' %>
+                    <% if t.source_type == 'cage_transaction'%>
                       <% if policy(:player_transaction).void? && t.status == 'completed'%>
                         <% if t.can_void? %>
                           <% trans_type = t.transaction_type.name %>
                           <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
-                              <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
+                            <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
                               <form class="form-horizontal" id="popupform">
                                 <div class="form-group">
                                   <label for="inputRemarks" class="col-sm-5 control-label" id="remark_label"><strong>Remarks:</strong></label>
@@ -55,6 +61,7 @@
                               </form>
                           <% end %>
                         <% else %>
+
                           <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
                             <%= link_to t("button.print_void"), reprint_path + "?transaction_id=#{t.void_transaction.id}", :id => "reprint_void", :class => "btn btn-primary", :method => "get", :remote => true %>
                           <% end %>

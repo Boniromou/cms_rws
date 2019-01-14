@@ -1,0 +1,52 @@
+<div class="divMessageBox animated fadeOut fast" id="pop_up_dialog" style=" display: none;">
+  <div class="ui-dialog" id="pop_up_ui_dialog" style="width: 600px; top: 50%; left: 50%; margin-top: -75px; margin-left: -300px;">
+    <div id="pop_up_content" style="height: 60%; vertical-align: middle; padding: 20px; padding-bottom: 0px;" align="center">
+    <font class="title"></font>
+    </div>
+    <div id="pop_up_confirm_btn" align="center" style="margin-top: 10px; margin-bottom: 20px;">
+      <table>
+        <tr>
+          <td><button id="cancel" class="btn btn-default"><%= t('approval.cancel') %></button></td>
+          <td width='20%'></td>
+          <td><button id="confirm" class="btn btn-primary"><%= t('approval.confirm') %></button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function hidePopUpPanel(){
+    $('#pop_up_dialog #confirm').unbind("click");
+    $('#pop_up_dialog #cancel').unbind("click");
+    $('#pop_up_dialog').removeClass("fadeIn");
+    $('#pop_up_dialog').addClass("fadeOut");
+    setTimeout(function(){
+      $('#pop_up_dialog').css("display", "none");
+      $('#pop_up_content .title').html('');
+    },600);
+
+  }
+
+  function registerPopUpPanel(title,confirm_callback,cancel_callback){
+    $('#pop_up_content .title').html(title);
+    $('#pop_up_dialog').css("display", "block");
+    $('#pop_up_dialog').removeClass("fadeOut");
+    $('#pop_up_dialog').addClass("fadeIn");
+    $('#pop_up_dialog #confirm').focus();
+
+    $('#pop_up_dialog #cancel').click(function(){
+      hidePopUpPanel();
+      if (typeof cancel_callback == 'function') {
+        cancel_callback();
+      }
+    });
+
+    $('#pop_up_dialog #confirm').click(function(){
+      hidePopUpPanel();
+      if (typeof confirm_callback == 'function') {
+        confirm_callback();
+      }
+    });
+  }
+</script>

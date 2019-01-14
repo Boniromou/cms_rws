@@ -1,3 +1,4 @@
+<% @exception_transaction ||= 'no' %>
 <% if policy(@player).non_test_mode? %>
   <% if policy(:PlayerTransaction).deposit? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
     <% if @player.account_locked? %>

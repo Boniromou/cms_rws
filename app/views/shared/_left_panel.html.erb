@@ -47,26 +47,34 @@
           <ul style="display:block;">
             <% if policy(:Player).balance? %>
               <li id="nav_balance_enquiry">
-                <%= link_to players_search_path + "?operation=balance;exception=no", :title => t("tree_panel.balance"), :remote => true do %>
+                <%= link_to players_search_path(operation: :balance, exception_transaction: :no), :title => t("tree_panel.balance"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
                 <% end %>
               </li>
             <% end %>
             
-            <% if policy(:Player).balance? %>
-              <li id="nav_balance_enquiry">
-                <%= link_to players_search_path +  "?operation=balance;exception=yes", :title => t("deposit_withdrawal.exception"), :remote => true do %>
+            <% if policy(:PlayerTransaction).exception? %>
+              <li id="nav_exception_balance">
+                <%= link_to players_search_path(operation: :balance, exception_transaction: :yes), :title => t("deposit_withdrawal.exception"), :remote => true do %>
               <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.exception") %></span>
                 <% end %>
               </li>
+            <% end %>
+
+            <% if policy(:PlayerTransactionApproval).index? %>
+              <li id="nav_approval">
+              <%= link_to approval_path , :title => t("deposit_withdrawal.approval") do %>
+             <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.approval") %></span>
+              <% end %>
             <% end %>
             
             <% if policy(:PlayerTransaction).search? %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path + "?operation=cash", :title => t("tree_panel.player_transaction"), :remote => true do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
-                <% end %>
+            <% end %>
               </li>
+
               <% if IS_MARKETING == 0 %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path + "?operation=credit", :title => t("tree_panel.promotional_credit"), :remote => true do %>

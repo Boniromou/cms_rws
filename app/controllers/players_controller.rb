@@ -62,7 +62,7 @@ class PlayersController < ApplicationController
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @player = Player.new
-    @exception_transaction = params[:exception]
+    @exception_transaction = params[:exception_transaction]
     
     respond_to do |format|
       format.html { render "players/search", formats: [:html] }

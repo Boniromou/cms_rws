@@ -24,4 +24,12 @@ class KioskController < ApplicationController
   def internal_deposit
     handle_request(:internal_deposit, nil, false)
   end
+
+  def exception_withdraw
+    handle_request(:exception_withdraw, nil, false)
+  end
+
+  def exception_deposit
+    handle_request(:exception_deposit, nil, false)
+  end
 end

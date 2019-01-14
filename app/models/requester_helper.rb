@@ -48,15 +48,10 @@ class RequesterHelper
     begin
       property_id = Machine.parse_machine_token(machine_token)[:property_id]
       raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id, casino_id)
-      player = Player.find_by_card_id_and_casino_id(credential, casino_id)
-      player = Player.find_by_member_id_and_casino_id(credential, casino_id) unless player
+
+      player = update_player!('card_id', credential)
       unless player
-        update_player!('card_id', credential)
-        player = Player.find_by_card_id_and_casino_id(credential, casino_id)
-      end
-      unless player
-        update_player!('member_id', credential)
-        player = Player.find_by_member_id_and_casino_id(credential, casino_id)
+        player = update_player!('member_id', credential)
       end
 
       raise Request::InvalidCardId.new unless player

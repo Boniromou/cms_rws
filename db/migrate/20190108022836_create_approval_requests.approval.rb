@@ -7,7 +7,7 @@ class CreateApprovalRequests < ActiveRecord::Migration
       t.string  :action,    :limit => 45, :null => false
       t.string  :data,      :limit => 1024
       t.string  :status,    :limit => 45, :null => false, :default => "pending"
-​
+    
       t.timestamps
     end
   end

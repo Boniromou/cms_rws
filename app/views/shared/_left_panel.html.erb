@@ -63,7 +63,7 @@
 
             <% if policy(:PlayerTransactionApproval).index? %>
               <li id="nav_approval">
-              <%= link_to approval_path , :title => t("deposit_withdrawal.approval") do %>
+              <%= link_to approval_path , :title => t("deposit_withdrawal.approval"), :remote => true do %>
              <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.approval") %></span>
               <% end %>
             <% end %>

@@ -1,10 +1,10 @@
 <% if @transactions %>
 <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-editbutton="false">
-  <header>
+  <header role="heading">
     <span class="widget-icon"> <i class="fa fa-table"></i> </span>
       <h2><%= t("transaction_history.report") %></h2>
   </header>
-  <div>
+  <div class="content">
     <div class="widget-body no-padding">
       <% if @transactions.length > 0 %>
         <div id="player_trnasaction_result">

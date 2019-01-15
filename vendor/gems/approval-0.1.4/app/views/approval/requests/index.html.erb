@@ -1,9 +1,9 @@
 <%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
 
 <%= table_tabs(I18n.t('approval.pending'),
-[ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
-[ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
-[ I18n.t('approval.log'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all}), policy(:approval_management).list_log? ]) %>
+[ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
+[ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
+[ I18n.t('approval.log'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(:approval_management).list_log?, @remote ]) %>
 
 <div class="tab-content" style="padding: 10px;">
   <table id="request_table" class="table table-bordered table-striped">
@@ -27,13 +27,13 @@
           <td><%= request[:updated_at] %></td>
           <td>
             <% if policy(request[:target].to_sym).send("#{request[:action]}_cancel_submit?") %>
-              <%= button_tag I18n.t('approval.cancel'), :type => 'button', 'request_id' => request[:id], 'operation' => 'cancel_submit', :class => 'btn btn-primary cancel_submit request_button' %>
-              <%= link_to '', requests_cancel_submit_path(id: request[:id], search_by: @search_by, all: @all), method: :post, id: "cancel_submit_#{request[:id]}", method: :post, hidden: 'hidden' %>
+              <%= button_tag I18n.t('approval.reject'), :type => 'button', 'request_id' => request[:id], 'operation' => 'cancel_submit', :class => 'btn btn-primary cancel_submit request_button' %>
+              <%= link_to '', requests_cancel_submit_path(id: request[:id], search_by: @search_by, all: @all, remote: @remote), method: :post, id: "cancel_submit_#{request[:id]}", remote: @remote, method: :post, hidden: 'hidden' %>
             <% end %>
 
             <% if policy(request[:target].to_sym).send("#{request[:action]}_approve?") %>
               <%= button_tag I18n.t('approval.approve'), :type => 'button', 'request_id' => request[:id], 'operation' => 'approve', :class => 'btn btn-primary approve request_button' %>
-              <%= link_to '', requests_approve_path(id: request[:id], search_by: @search_by, all: @all), id: "approve_#{request[:id]}", method: :post, hidden: 'hidden' %>
+              <%= link_to '', requests_approve_path(id: request[:id], search_by: @search_by, all: @all, remote: @remote), id: "approve_#{request[:id]}", remote: @remote, method: :post, hidden: 'hidden' %>
             <% end %>
 
             <% if request[:detail_path] %>

@@ -95,7 +95,7 @@ class FundController < ApplicationController
       :player_id => @player.member_id,
       :amount_in_cent => @transaction.amount,
       :amount => @transaction.amount / 100,
-      :transaction_type => TransactionType.find_by_id(@transaction.transaction_type_id).name,
+      :transaction_type => TransactionType.find_by_id(@transaction.transaction_type_id).name.gsub('_',' ').titleize,
       :payment_method => PaymentMethod.find_by_id(@transaction.payment_method_id).name,
       :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name
     }

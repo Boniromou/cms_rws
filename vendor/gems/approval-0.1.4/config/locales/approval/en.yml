@@ -4,12 +4,13 @@ en:
     operation: Operation
     detail_title: Approval Detail
     approved: Approved
-    pending: Pending
+    pending: Pending Transaction
     confirm_msg: Are you sure to %{operation} this change?
     success: '%{operation} change request for %{approval_action} successful.'
     failed: '%{operation} change request for %{approval_action} failed.'
     approve: Approve
-    cancel: Reject
+    cancel: Cancel
+    reject: Reject
     confirm: Confirm
     detail: Detail
     submit_by: Submitted by

@@ -30,7 +30,7 @@
                   <td><%= t.player.member_id %></td>
                   <td><%= t.shift.accounting_date%></td>
                   <td><%= format_time(t.created_at) %></td>
-                  <td><%= TransactionType.find_by_id(t.transaction_type_id).name %></td>
+                  <td><%= TransactionType.find_by_id(t.transaction_type_id).name.gsub('_',' ').titleize %></td>
                   <td><%= t.approved_by %></td>
                   <td><%= t.location %></td>
                   <td><%= !t.user.nil? ? t.user.name : 'System' %></td>

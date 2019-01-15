@@ -61,10 +61,10 @@ module Approval
           title = tab_info[0]
           path = tab_info[1]
           visible = tab_info[2]
-
+          remote = tab_info[3]
           if visible
             li_div = content_tag(:li, nil, :class => selected == title ? "active" : "" ) do
-              concat link_to(title, path)
+              concat link_to(title, path, remote: remote)
             end
             
             concat li_div

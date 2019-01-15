@@ -17,7 +17,7 @@ class PlayerTransactionPolicy < ApplicationPolicy
   map_policy :exception_transaction_approval_list?, :target => :transaction_approval,:action_name => :list
   map_policy :exception_transaction_cancel_submit?,:target => :transaction_approval, :action_name => :reject_submit
   map_policy :exception_transaction_approve?,:target => :transaction_approval, :action_name => :approve
-  map_policy :exception?, :action_name => :submit_exception_transaction
+  map_policy :exception?, :action_name => :submit_manual_transaction
 
   def exception?
     true

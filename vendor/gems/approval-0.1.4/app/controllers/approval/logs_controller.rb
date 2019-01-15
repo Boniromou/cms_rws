@@ -5,6 +5,7 @@ module Approval
     def list
       authorize :approval_management, :list_log?
       @all = params[:all].to_s == 'true'
+      @remote = params[:remote].to_s == 'true'
       @target = params[:target]
       @approval_action = params[:approval_action]
       @search_by = params[:search_by]

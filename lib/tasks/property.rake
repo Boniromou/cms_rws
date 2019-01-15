@@ -105,7 +105,7 @@ namespace :property do
     TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 4, :slip_type_id => 2).first_or_create
     TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 8, :slip_type_id => 1).first_or_create
     TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 9, :slip_type_id => 2).first_or_create
- 
+  
     ruby "#{File.expand_path("../../../script/init_scripts/sync_configs.rb", __FILE__)} test 20000"
   end
 
@@ -134,6 +134,8 @@ namespace :property do
     TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 2, :slip_type_id => 2).first_or_create
     TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 3, :slip_type_id => 1).first_or_create
     TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 4, :slip_type_id => 2).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 8, :slip_type_id => 1).first_or_create
+    TransactionTypesSlipType.where(:casino_id => casino_id, :transaction_type_id => 9, :slip_type_id => 2).first_or_create
 
     shift = Shift.where(:roll_shift_at => nil, :casino_id => casino.id).first
     unless shift

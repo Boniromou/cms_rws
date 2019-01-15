@@ -1,4 +1,4 @@
-#This migration comes from approval (originally 20160927090242)
+# This migration comes from approval (originally 20160927090242)
 class CreateApprovalLogs < ActiveRecord::Migration
   def up
     create_table :approval_logs do |t|

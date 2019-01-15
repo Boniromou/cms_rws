@@ -5,46 +5,44 @@ module Approval
 
     ['approve', 'cancel_submit', 'cancel_approve'].each do |method_name|
       define_method method_name do
-        p "ididid"*100
-        p params[:id]
-         p "ididid"*100
         approval_request = Request.find(params[:id])
         authorize approval_request.target.to_sym, "#{approval_request.action}_#{method_name}?".to_sym
         begin
           operation = method_name.include?('cancel') ? 'cancel' : method_name
           approval_request.send(operation, current_user.name)
+          p "oooo"*100
+          p operation
+          p "oooo"*100
+          @Approvetransaction = ApprovalRequest.find_by_id(params[:id])
+          transaction = PlayerTransaction.find_by_id(@Approvetransaction.target_id)
+          player = Player.find_by_id(transaction.player_id)
           if operation == 'approve'
-            @Approvetransaction = ApprovalRequest.find_by_id(params[:id])
-            transaction = PlayerTransaction.find_by_id(@Approvetransaction.target_id)
-            player = Player.find_by_id(transaction.player_id)
             data = {}
             data[:login_name] = player.member_id
             data[:amount] = transaction.amount / 100
             data[:ref_trans_id] = transaction.ref_trans_id
             data[:trans_date] = transaction.trans_date.localtime
-            data[:source_type] = "cage_exception_transaction"
+            data[:source_type] = "cage_manual_transaction"
             data[:machine_token] = transaction.machine_token
             data[:casino_id] = transaction.casino_id
             data[:executed_by] = "system"
             transaction.approved_by = ApprovalLog.find_by_approval_request_id_and_action(@Approvetransaction.id, 'approve').action_by
             transaction.save
             
-          if JSON.parse(@Approvetransaction.data)["transaction_type"] == "Manual Deposit"
-            deposit_request(data)
-          elsif JSON.parse(@Approvetransaction.data)["transaction_type"] == "Manual Withdraw"
-            withdraw_request(data)
+            if JSON.parse(@Approvetransaction.data)["transaction_type"] == "Manual Deposit"
+              deposit_request(data)
+            elsif JSON.parse(@Approvetransaction.data)["transaction_type"] == "Manual Withdraw"
+              withdraw_request(data)
+            end
+          elsif operation == 'cancel'
+            transaction.status = 'rejected'
+            transaction.save  
           end
-
-          end          
+          
           flash[:success] = I18n.t('approval.success', operation: method_name.titleize.downcase, approval_action: approval_request.action.titleize.downcase)
         rescue ApprovalUpdateStatusFailed
           flash[:alert] = I18n.t('approval.failed', operation: method_name.titleize.downcase, approval_action: approval_request.action.titleize.downcase)
         end
-        p "======================="* 100
-        p params[:search_by]
-        p params[:all]
-       # p parmas[:remote]
-        p "=======================" * 100
         redirect_to_approval_list(method_name, approval_request, params[:search_by], params[:all], true)
       end
     end
@@ -55,6 +53,7 @@ module Approval
 #    def wallet_requester
 #      @requester_factory.get_wallet_requester
 #    end
+   
     
     def index
       requests_index(params, Approval::Request::PENDING)
@@ -97,18 +96,20 @@ module Approval
     #   handle_processed_trans( player_transaction ) unless player_transaction.nil?
       server_amount = PlayerTransaction.to_server_amount(data[:amount])
  
-      response = wallet_requester.withdraw(data[:login_name], data[:amount], player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%    M:%S"), data[:source_type], nil, 'system', nil)
+      response = wallet_requester.withdraw(data[:login_name], data[:amount], player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), data[:source_type], nil, 'system', nil)
  
       after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
       handle_wallet_result(player_transaction, response)
       {:amt => data[:amount], :trans_date => player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => after_balance, :ref_trans_id => player_transaction.ref_trans_id}
-    end
-
+    end 
+    
+    
     def handle_wallet_result(player_transaction, response)
       if !response.success?
         raise FundInOut::CallWalletFail
       else
         PlayerTransaction.transaction do
+         # flash[:success] = {key: "flash_message.deposit_complete", replace: {amount: to_display_amount_str(player_transaction.amount)}}
           player_transaction.trans_date = response.trans_date
           player_transaction.completed!
         end

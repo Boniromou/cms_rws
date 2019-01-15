@@ -51,10 +51,11 @@
 
 <script>
 $(function(){
+  $('#request_table').dataTable({
+    'order': [[ 0, 'asc']],
+    'pageLength' : 50
+  });
   $('#request_table').on('click','.request_button',function(event) {
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     var target = $(event.currentTarget);
     var request_id = target.attr('request_id');
     var operation = target.attr('operation')

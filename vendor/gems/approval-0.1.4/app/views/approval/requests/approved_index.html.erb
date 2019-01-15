@@ -14,7 +14,7 @@
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.submit_by') %></th>
         <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
-        <th class="col-md-2"><%= I18n.t('approval.operation') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.status') %></th>
       </tr>
     </thead>
     <tbody>
@@ -25,14 +25,8 @@
           <% end %>
           <td><%= request[:submit_by] %></td>
           <td><%= request[:updated_at] %></td>
-          <td>
-            <% if request[:status] == Approval::Request::APPROVED || request[:status] == Approval::Request::COMPLETED %>
-            <% end %>
+          <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td>
 
-            <% if request[:detail_path] %>
-              <%= button_tag I18n.t('approval.detail'), :type => 'button', :class => 'btn btn-primary detail_button', 'data-toggle' => 'modal', 'data-target' => '#requestModal', 'detail-path'=>  request[:detail_path] %>
-            <% end %>
-          </td>
         </tr>
       <% end %>
     </tbody>
@@ -44,7 +38,10 @@
 
 <script>
 $(function(){
-
+  $('#request_table').dataTable({
+    'order': [[ 0, 'asc']],
+    'pageLength' : 50
+  });
   $('#request_table').on('click','.cancel_approve',function(event) {
     var target = $(event.currentTarget);
     var request_id = target.attr('request_id');

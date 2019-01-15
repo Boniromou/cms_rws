@@ -31,7 +31,7 @@ module TransactionQueries
     end
     
     def only_deposit_withdraw_with_exception
-      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit], TRANSACTION_TYPE_ID_LIST[:withdraw], TRANSACTION_TYPE_ID_LIST[:manual_deposit],TRANSACTION_TYPE_ID_LIST[:manual_withdraw]]).by_status(['completed', 'pending'])
+      by_transaction_type_id([TRANSACTION_TYPE_ID_LIST[:deposit], TRANSACTION_TYPE_ID_LIST[:withdraw], TRANSACTION_TYPE_ID_LIST[:manual_deposit],TRANSACTION_TYPE_ID_LIST[:manual_withdraw]]).by_status(['completed', 'rejected'])
     end
   
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation, licensee_id)

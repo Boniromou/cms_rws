@@ -5,7 +5,6 @@ class VoidController < FundController
   rescue_from FundInOut::VoidRemarksRequired, :with => :handle_void_remarks_required
 
   def create
-    p "fkfkfk"*1000
     super
     flash[:success] = {key: "void_transaction.success", replace: {:slip_number => @target_transaction.slip_number}}
     

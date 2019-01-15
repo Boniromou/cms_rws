@@ -121,6 +121,7 @@ module Approval
     def requests_index(params, status)
       authorize params[:target].to_sym, "#{params[:approval_action]}_approval_list?".to_sym
       @all = params[:all].to_s == 'true'
+      @remote = params[:remote].to_s == 'true'
       @target = params[:target]
       @approval_action = params[:approval_action]
       @search_by = params[:search_by]
@@ -147,7 +148,7 @@ module Approval
        @requests = Request.get_requests_list(@target, @search_by, @approval_action, status, @all)
        @titles = approval_titles(@target, @approval_action) || {}
        # redirect_to approval.index_path(target: 'player_transaction', search_by: search_by, approval_action: 'exception_transaction'), format: 'js'
-       render "approval/requests/#{action}", :layout => approval_file[:layout]
+       render "approval/requests/#{action}", :layout => approval_file[:layout], :remote => true
      else
        redirect_to url_for(controller: :requests, action: action, target: approval_request.target, search_by: search_by, approval_action: approval_request.action, all: all, remote: remote)
      end

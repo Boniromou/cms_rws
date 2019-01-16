@@ -48,13 +48,15 @@
 
 <%= render :partial => "approval/shared/pop_up_panel" %>
 <%= render :partial => "approval/requests/request_detail" %>
+<%= javascript_include_tag "pagination" %>
 
 <script>
 $(function(){
-  $('#request_table').dataTable({
-    'order': [[ 0, 'asc']],
-    'pageLength' : 50
-  });
+    $('#request_table').dataTable({
+      'order': [[ 0, 'asc']],
+      'pageLength' : 50
+    });
+
   $('#request_table').on('click','.request_button',function(event) {
     var target = $(event.currentTarget);
     var request_id = target.attr('request_id');

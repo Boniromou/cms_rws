@@ -80,7 +80,6 @@ class FundController < ApplicationController
     else
       AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-p "111==#{@transaction.inspect}"
       response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token    )
       handle_wallet_result(@transaction, response)
       end

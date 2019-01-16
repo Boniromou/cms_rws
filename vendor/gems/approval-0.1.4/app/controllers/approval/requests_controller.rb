@@ -10,16 +10,13 @@ module Approval
         begin
           operation = method_name.include?('cancel') ? 'cancel' : method_name
           approval_request.send(operation, current_user.name)
-          p "oooo"*100
-          p operation
-          p "oooo"*100
           @Approvetransaction = ApprovalRequest.find_by_id(params[:id])
           transaction = PlayerTransaction.find_by_id(@Approvetransaction.target_id)
           player = Player.find_by_id(transaction.player_id)
           if operation == 'approve'
             data = {}
             data[:login_name] = player.member_id
-            data[:amount] = transaction.amount / 100
+            data[:amount] = transaction.amount / 100.0
             data[:ref_trans_id] = transaction.ref_trans_id
             data[:trans_date] = transaction.trans_date.localtime
             data[:source_type] = "cage_manual_transaction"

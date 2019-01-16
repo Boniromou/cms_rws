@@ -7,9 +7,9 @@ class PlayerTransactionApprovalPolicy < ApplicationPolicy
    false
  end
  
-# def index?
-#   true
-# end
+ def index?
+   true
+ end
 
  def exception_transaction_cancel_submit?
    false

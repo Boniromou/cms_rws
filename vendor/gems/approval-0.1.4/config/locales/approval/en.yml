@@ -6,8 +6,8 @@ en:
     approved: Approved
     pending: Pending Transaction
     confirm_msg: Are you sure to %{operation} this change?
-    success: '%{operation} change request for %{approval_action} successful.'
-    failed: '%{operation} change request for %{approval_action} failed.'
+    success: 'Approval process success, Transaction will be proceeded to player account.'
+    failed: Approval process failed. Please try again.
     approve: Approve
     cancel: Cancel
     reject: Reject
@@ -20,3 +20,12 @@ en:
     action_by: Action by
     action_at: Action at
     status: Status
+  cancel:
+    success: 'Manual transaction rejected successfully!'
+    failed: 'Manual transaction rejected failed, Please try again.'
+  approve:
+    success: 'Approval process success, Transaction will be proceeded to player''s account.'
+    failed: 'Approval process failed, Please try again.'
+  flash_message:
+    contact_service: "Operation failed, please contact customer service for more information." 
+    not_enough_amount: "Approve manual withdrawal failed. Insufficient fund for withdrawal."

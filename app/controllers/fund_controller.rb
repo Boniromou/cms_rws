@@ -31,8 +31,6 @@ class FundController < ApplicationController
     @casino_id = current_casino_id
     authorize_action @player, :non_test_mode?
     @exception_transaction = params[:exception_transaction]
-    p @exception_transaction
-    p "="*100
   end
 
   def create
@@ -41,7 +39,7 @@ class FundController < ApplicationController
     check_transaction_acceptable
     execute_transaction
     if @exception_transaction == 'yes'
-      flash[:success] = {key: "flash_message.exception_#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
+      flash[:success] = {key: "flash_message.manual_#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
     else
       flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
     end
@@ -78,11 +76,11 @@ class FundController < ApplicationController
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
       puts Approval::Request::PENDING
       response = Approval::Models.submit('player_transaction', @transaction.id, 'exception_transaction', get_submit_data, @current_user.name)
-      p response
       end
     else
       AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
+p "111==#{@transaction.inspect}"
       response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token    )
       handle_wallet_result(@transaction, response)
       end
@@ -94,7 +92,7 @@ class FundController < ApplicationController
       :casino_id => Casino.find_by_id(@transaction.casino_id).name,
       :player_id => @player.member_id,
       :amount_in_cent => @transaction.amount,
-      :amount => @transaction.amount / 100,
+      :amount => @transaction.amount / 100.0,
       :transaction_type => TransactionType.find_by_id(@transaction.transaction_type_id).name.gsub('_',' ').titleize,
       :payment_method => PaymentMethod.find_by_id(@transaction.payment_method_id).name,
       :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name

@@ -113,12 +113,14 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def source_type
+p "3"*100
     'cage_transaction'
   end
 
   class << self
     include FundHelper
     def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil, payment_method_type, source_of_funds)
+p "2"*100
       transaction = new
       if casino_id.nil?
         transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]

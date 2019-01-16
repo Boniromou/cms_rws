@@ -224,8 +224,8 @@ en:
     contact_service: "Operation failed, please contact customer service for more information."
     deposit_complete: "Deposit %{amount} is completed."
     withdraw_complete: "Withdraw %{amount} is completed."
-    exception_deposit_complete: "Deposit Request %{amount} is completed. Please wait for approval."
-    exception_withdraw_complete: "Withdraw Request %{amount} is completed. Please wait for approval."
+    manual_deposit_complete: "Manual deposit %{amount} submitted. Transaction pending approval."
+    manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:

@@ -15,7 +15,8 @@ class FundController < ApplicationController
   rescue_from Remote::CallPatronFail, :with => :handle_call_patron_fail
   rescue_from Remote::AmountNotMatch, :with => :handle_credit_not_match
   rescue_from FundInOut::PlayerLocked, :with => :handle_player_locked
-
+  rescue_from FundInOut::InvalidMachineToken, :with => :handle_invalid_machine_token
+ 
   def operation_sym
     (action_str + '?').to_sym
   end
@@ -99,6 +100,7 @@ class FundController < ApplicationController
   end 
 
   def create_player_transaction(member_id, amount, ref_trans_id = nil, data = nil)
+    raise FundInOut::InvalidMachineToken unless current_machine_token
     if @exception_transaction == 'yes'
       PlayerTransaction.send "save_exception_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
     else
@@ -163,4 +165,9 @@ class FundController < ApplicationController
     flash[:fail] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
     redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
+
+  def handle_invalid_machine_token(e)
+    handle_fund_error('void_transaction.invalid_machine_token')
+  end
+
 end

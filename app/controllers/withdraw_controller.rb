@@ -25,11 +25,4 @@ class WithdrawController < FundController
       validate_pin
     end
   end
-#  def create
-#    if @exception_transaction == 'yes'
-#      super
-#      redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
-#    end
-#  end
-
 end

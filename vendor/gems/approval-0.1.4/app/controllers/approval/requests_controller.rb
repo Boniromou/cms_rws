@@ -115,9 +115,6 @@ module Approval
           player_transaction.trans_date = response.trans_date
           player_transaction.completed!
         end
-        #redirect_to reprint_path(transaction_id: player_transaction.id)
-#redirect_to "/reprint?transaction_id=725"
-        #render controller: :player_transactions, action: :reprint, transaction_id: player_transaction.id
         #redirect_to main_app.reprint_path(transaction_id: player_transaction.id)
       end
     end

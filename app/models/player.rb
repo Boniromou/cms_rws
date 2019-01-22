@@ -89,7 +89,7 @@ class Player < ActiveRecord::Base
 
   def remain_trans_amount(trans_type, casino_id)
     limit = ConfigHelper.new(casino_id).send "daily_#{trans_type}_limit"
-    limit - trans_amount(trans_type, casino_id)
+    limit - trans_amount(trans_type, casino_id) - trans_amount(trans_type.to_s.prepend("manual_").to_sym,casino_id)
   end
 
   def get_fund_type

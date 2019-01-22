@@ -1,9 +1,9 @@
 <%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
 
 <%= table_tabs(I18n.t('approval.log'),
-[ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
-[ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action}), policy(@target.to_sym).send("#{@approval_action}_approval_list?") ],
-[ I18n.t('approval.log'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action}), policy(:approval_management).list_log? ]) %>
+[ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
+[ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
+[ I18n.t('approval.rejected'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ]) %>
 
 <div class="tab-content" style="padding: 10px;">
   <table id="log_table" class="table table-bordered table-striped">
@@ -12,9 +12,9 @@
         <% @titles.values.each do |title| %>
           <th class="col-md-1"><%= I18n.t(title) %></th>
         <% end %>
-        <th class="col-md-1"><%= I18n.t('approval.action') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.action_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.action_at') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.status') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.reject_by') %></th>
+        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
       </tr>
     </thead>
     <tbody>
@@ -23,7 +23,7 @@
           <% @titles.keys.each do |title| %>
             <td><%= log[:request][title.to_sym].present? ? log[:request][title.to_sym] : '---' %></td>
           <% end %>
-          <td><%= log[:action] %></td>
+          <td><%= I18n.t('approval.reject')%></td>
           <td><%= log[:action_by] %></td>
           <td><%= log[:updated_at] %></td>
         </tr>
@@ -38,7 +38,7 @@
 <script>
 $(function(){
   $('#log_table').dataTable({
-    'order': [[ 0, 'asc']],
+    'order': [[ 8, 'desc']],
     'pageLength' : 50
   });
 })

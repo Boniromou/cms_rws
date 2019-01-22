@@ -56,20 +56,10 @@ module TransactionQueries
       start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
       end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id
       trans_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0
-      p "trans_amt"* 100
-      p trans_type.class 
-      p trans_amt
-      p "trans_amt"* 100
 
       today_ref_trans_id = select('ref_trans_id').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type])
-      p "today_ref_trans_id" * 10
-      p today_ref_trans_id
-      p "today_ref_trans_id" * 10
       
-      p TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".to_sym]
-
       void_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".gsub('manual_','').to_sym]).where("ref_trans_id in (?)", today_ref_trans_id.map {|i| i.ref_trans_id }).first.amount || 0
-      p "void: #{void_amt}"
       trans_amt - void_amt
     end
   end

@@ -22,8 +22,6 @@
             <tbody>
               <% @transactions.each do |t| %>
                 <tr id="transaction_<%= t.id %>">
-                  <% p t.source_type %>
-                  <% p "======================"* 100 %>
                   <td><%= t.source_type.gsub('_transaction','').titleize %></td>
                   <td><%= Casino.find_by_id(t.casino_id).name %></td>
                   <td><%= t.slip_number %></td>
@@ -68,14 +66,15 @@
                         <% end %>
                       <% end %>
                       <% if policy(:player_transaction).reprint? %>
-                        <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> </td>
+                        <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> 
+                      <% end %>
+</td>
                  <% if YAML.load(t.data)[:deposit_remark] != nil %>
                    <td><%= YAML.load(t.data)[:deposit_remark] %> </td>
                  <% else %>
                    <td><%= YAML.load(t.data)[:withdraw_remark] %> </td>
                  <% end %>
 
-                      <% end %>
                     <% end %>
                   </td>
                 </tr>

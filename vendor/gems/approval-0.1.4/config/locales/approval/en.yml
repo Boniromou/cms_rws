@@ -4,6 +4,7 @@ en:
     operation: Operation
     detail_title: Approval Detail
     approved: Approved
+    rejected: Rejected
     pending: Pending Approval
     confirm_msg: Are you sure to %{operation} this change?
     success: 'Approval process success, Transaction will be proceeded to player account.'
@@ -14,12 +15,14 @@ en:
     confirm: Confirm
     detail: Detail
     submit_by: Submitted by
+    reject_by: Rejected_by
     updated_at: Updated at
     log: Log
     action: Action
     action_by: Action by
     action_at: Action at
-    status: Transaction Status
+    trans_status: Transaction Status
+    status: Status
   cancel:
     success: 'Manual transaction rejected successfully!'
     failed: 'Manual transaction rejected failed, Please try again.'

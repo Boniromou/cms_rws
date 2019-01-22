@@ -14,9 +14,6 @@ module Approval
         begin
           @Approvetransaction = ApprovalRequest.find_by_id(params[:id])
           transaction = PlayerTransaction.find_by_id(@Approvetransaction.target_id)
-          p 'tttt' * 100
-          p transaction
-          p 'tttt' * 100
           player = Player.find_by_id(transaction.player_id)
           if operation == 'approve'
             data = {}
@@ -118,6 +115,10 @@ module Approval
           player_transaction.trans_date = response.trans_date
           player_transaction.completed!
         end
+        #redirect_to reprint_path(transaction_id: player_transaction.id)
+#redirect_to "/reprint?transaction_id=725"
+        #render controller: :player_transactions, action: :reprint, transaction_id: player_transaction.id
+        #redirect_to main_app.reprint_path(transaction_id: player_transaction.id)
       end
     end
 
@@ -140,10 +141,6 @@ module Approval
      # path = operation == 'cancel_approve' ? 'requests_approved_index_path' : 'index_path'
      # redirect_to send(path, {target: approval_request.target, search_by: search_by, approval_action: approval_request.action, all: all, remote: remote})
      action = operation == 'cancel_approve' ? 'approved_index' : 'index'
-     p "test"*1000
-     p action
-     p approval_request
-     p "test"*1000
      if remote
        status = operation == 'cancel_approve' ? Approval::Request::APPROVED : Approval::Request::PENDING
        @all = all

@@ -63,7 +63,7 @@ module Approval
 
     def self.get_logs_list(target, search_by, action, all)
       log_lists = []
-      requests = self.includes(:logs).by_target(target).by_action(action).where(approval_logs: {action: ['approve', 'cancel']})
+      requests = self.includes(:logs).by_target(target).by_action(action).where(approval_logs: {action: ['cancel']})
       requests = filter_requests(requests, target, search_by) unless all
       requests.each do |request|
         request_list = request.format_json

@@ -39,8 +39,9 @@ class FundController < ApplicationController
     extract_params
     check_transaction_acceptable
     execute_transaction
-    if @exception_transaction == 'yes'
+    if @exception_transaction == 'yes' && (action_str == 'deposit' || action_str == 'withdraw')
       flash[:success] = {key: "flash_message.manual_#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
+      redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
     else
       flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
     end

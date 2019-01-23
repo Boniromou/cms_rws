@@ -1,6 +1,6 @@
 en:
   approval:
-    title: '%{approval_action} Approval'
+    title: Manual Transaction Approval
     operation: Operation
     detail_title: Approval Detail
     approved: Approved

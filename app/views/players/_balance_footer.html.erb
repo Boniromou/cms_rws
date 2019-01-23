@@ -1,19 +1,39 @@
 <% @exception_transaction ||= 'no' %>
 <% if policy(@player).non_test_mode? %>
-  <% if policy(:PlayerTransaction).deposit? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
-    <% if @player.account_locked? %>
-      <%= link_to t("button.deposit"), "#" , :title => t("button.deposit"), :id => "balance_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
-    <% else %>
-      <%= link_to t("button.deposit"), fund_in_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit", :class => "btn btn-primary" %>
+
+  <% if @exception_transaction == 'yes'%> 
+    <% if policy(:PlayerTransaction).exception? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
+      <% if @player.account_locked? %>
+        <%= link_to t("button.deposit"), "#" , :title => t("button.deposit"), :id => "balance_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
+      <% else %>
+        <%= link_to t("button.deposit"), fund_in_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit", :class => "btn btn-primary" %>
+      <% end %>
+    <% end %>
+    <% if policy(:PlayerTransaction).exception? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
+      <% if @player.account_locked? %>
+        <%= link_to t("button.withdrawal"), "#" , :title => t("button.withdrawal"), :id => "balance_withdraw", :class => "btn btn-primary", disabled: 'disabled' %>
+      <% else %>
+        <%= link_to t("button.withdrawal"), fund_out_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw", :class => "btn btn-primary" %>
+      <% end %>
+    <% end %>
+  <% elsif @exception_transaction == 'no' %>
+    <% if policy(:PlayerTransaction).deposit? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
+      <% if @player.account_locked? %>
+        <%= link_to t("button.deposit"), "#" , :title => t("button.deposit"), :id => "balance_deposit", :class => "btn btn-primary", disabled: 'disabled' %>
+      <% else %>
+        <%= link_to t("button.deposit"), fund_in_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.deposit"), :remote => true, :id => "balance_deposit", :class => "btn btn-primary" %>
+      <% end %>
+    <% end %>
+
+    <% if policy(:PlayerTransaction).withdraw? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
+      <% if @player.account_locked? %>
+        <%= link_to t("button.withdrawal"), "#" , :title => t("button.withdrawal"), :id => "balance_withdraw", :class => "btn btn-primary", disabled: 'disabled' %>
+      <% else %>
+        <%= link_to t("button.withdrawal"), fund_out_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw", :class => "btn btn-primary" %>
+      <% end %>
     <% end %>
   <% end %>
-  <% if policy(:PlayerTransaction).withdraw? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids) %>
-    <% if @player.account_locked? %>
-      <%= link_to t("button.withdrawal"), "#" , :title => t("button.withdrawal"), :id => "balance_withdraw", :class => "btn btn-primary", disabled: 'disabled' %>
-    <% else %>
-      <%= link_to t("button.withdrawal"), fund_out_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.withdrawal"), :remote => true, :id => "balance_withdraw", :class => "btn btn-primary" %>
-    <% end %>
-  <% end %>
+
   <% if policy(:PlayerTransaction).credit_deposit? && !IS_MARKETING %>
     <% if @player.account_locked? || !can_credit_deposit(@credit_balance) %>
       <%= link_to t("button.credit_deposit"), "#" , :title => t("button.credit_deposit"), :id => "credit_deposit", :class => "btn btn-primary", disabled: 'disabled' %>

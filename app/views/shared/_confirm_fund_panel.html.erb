@@ -155,7 +155,7 @@
   });
   
   $('#confirm_deposit').click(function() {
-     if(amountValid() && typeValid && sourceValid()){
+     if(amountValid() && typeValid() && sourceValid()){
        hideAmountError();
        hideTypeError();  
        hideSourceError();

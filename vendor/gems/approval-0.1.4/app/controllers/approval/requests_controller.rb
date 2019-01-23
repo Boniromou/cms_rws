@@ -164,8 +164,5 @@ module Approval
      flash[:fail] = 'flash_message.contact_service'
      redirect_to_approval_list(@method_name, @approval_request, params[:search_by], params[:all], true)
    end
-
-
-
   end
 end

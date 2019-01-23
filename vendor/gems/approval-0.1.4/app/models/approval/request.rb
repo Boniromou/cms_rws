@@ -49,7 +49,7 @@ module Approval
     def self.get_requests_list(target, search_by, action, status, all)
       request_lists = []
       requests = self.includes(:logs).by_target(target).by_action(action).by_status(status)
-      requests = filter_requests(requests, target, search_by) unless all
+      requests = filter_requests(requests, target, search_by)
       requests.each do |request|
         request_list = request.format_json
         request.logs.each do |log|
@@ -64,7 +64,7 @@ module Approval
     def self.get_logs_list(target, search_by, action, all)
       log_lists = []
       requests = self.includes(:logs).by_target(target).by_action(action).where(approval_logs: {action: ['cancel']})
-      requests = filter_requests(requests, target, search_by) unless all
+      requests = filter_requests(requests, target, search_by)
       requests.each do |request|
         request_list = request.format_json
         request.logs.each do |log|
@@ -129,6 +129,9 @@ module Approval
     end
 
     def self.filter_requests(requests, target, search_by)
+      p '444444444444444'
+      p search_by
+      p '444444444444444'
       target_ids = target.classify.constantize.where(search_by).map(&:id) if search_by.present?
       target_ids ||= []
       requests.delete_if {|request| !target_ids.include?(request.target_id)}

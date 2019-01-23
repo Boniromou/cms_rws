@@ -79,7 +79,7 @@
         <div class="floating-content"><%= @player.member_id %></div>
         <div class="floating-index" style="width: 10%;">Withdraw #:<br/>提款單編號:</div>
         <div class="floating-content"><%= @transaction.slip_number %></div>
-    <% else %>
+    <% elsif operation.downcase == 'deposit' %>
         <h3 class="tit">存款單</h3>
         <h3 class="tit">存款單</h3>
         <div class="floating-index">Member ID:<br/>會員號碼:</div>
@@ -90,6 +90,30 @@
         <div class="floating-index">Member ID:<br/>會員號碼:</div>
         <div class="floating-content"><%= @player.member_id %></div>
         <div class="floating-index" style="width: 10%;">Deposit #:<br/>存款單編號:</div>
+        <div class="floating-content"><%= @transaction.slip_number %></div>
+     <% elsif operation.downcase == 'manual_deposit' %>
+        <h3 class="tit">存款單[人手流程]</h3>
+        <h3 class="tit">存款單[人手流程]</h3>
+        <div class="floating-index">Member ID:<br/>會員號碼:</div>
+        <div class="floating-content"><%= @player.member_id %></div>
+        <div class="floating-index">Deposit #:<br/>存款單編號:</div>
+        <div class="floating-content"><%= @transaction.slip_number %></div>
+ 
+        <div class="floating-index">Member ID:<br/>會員號碼:</div>
+        <div class="floating-content"><%= @player.member_id %></div>
+        <div class="floating-index" style="width: 10%;">Deposit #:<br/>存款單編號:</div>
+        <div class="floating-content"><%= @transaction.slip_number %></div>
+     <% else %>
+        <h3 class="tit">提款單[人手流程]</h3>
+        <h3 class="tit">提款單[人手流程]</h3>
+        <div class="floating-index">Member ID:<br/>會員號碼:</div>
+        <div class="floating-content"><%= @player.member_id %></div>
+        <div class="floating-index">Withdraw #:<br/>提款單編號:</div>
+        <div class="floating-content"><%= @transaction.slip_number %></div>
+ 
+        <div class="floating-index">Member ID:<br/>會員號碼:</div>
+        <div class="floating-content"><%= @player.member_id %></div>
+        <div class="floating-index" style="width: 10%;">Withdraw #:<br/>提款單編號:</div>
         <div class="floating-content"><%= @transaction.slip_number %></div>
     <% end %>
 

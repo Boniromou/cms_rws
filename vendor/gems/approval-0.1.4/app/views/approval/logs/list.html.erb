@@ -1,6 +1,6 @@
 <%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
 
-<%= table_tabs(I18n.t('approval.log'),
+<%= table_tabs(I18n.t('approval.rejected'),
 [ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.rejected'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ]) %>

@@ -31,6 +31,12 @@ module FundInOut
   class InvalidMachineToken < FundError
   end
 
+  class NoBalanceRetrieve < FundError
+  end
+  
+  class InvalidLoginName < FundError
+  end
+  
   class AlreadyVoided < FundError
   end
 

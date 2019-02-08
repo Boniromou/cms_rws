@@ -113,14 +113,12 @@ class PlayerTransaction < ActiveRecord::Base
   end
 
   def source_type
-p "3"*100
     'cage_transaction'
   end
 
   class << self
     include FundHelper
-    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil, payment_method_type, source_of_funds)
-p "2"*100
+    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil, payment_method_type = 2, source_of_funds = 7)
       transaction = new
       if casino_id.nil?
         transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
@@ -160,35 +158,35 @@ p "2"*100
     end
 
     def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
     end
 
     def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, 1)
+      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1)
     end
 
     def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
     end
 
     def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, 1)
+      init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1)
     end
 
     def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil )
-      init_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, source_of_funds)
     end
 
     def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
-      init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
     end
     
     def save_exception_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, EXCEPTION_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, source_of_funds)
+      init_transaction(member_id, amount, EXCEPTION_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
     end   
 
     def save_exception_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, EXCEPTION_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, payment_method_type, 1)
+      init_transaction(member_id, amount, EXCEPTION_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1)
     end
 
     def search_query_by_slip_number(slip_number)

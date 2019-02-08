@@ -31,4 +31,6 @@ en:
     failed: 'Approval process failed, Please try again.'
   flash_message:
     contact_service: "Operation failed, please contact customer service for more information." 
-    not_enough_amount: "Approve manual withdrawal failed. Insufficient fund for withdrawal."
+    not_enough_amount: "Approve manual deposit/withdrawal failed. Insufficient fund for withdrawal."
+    invalid_login_name: "Approve manual deposit/withdrawal failed. Invalid login name"
+    no_balance_retrieve: "Approve manual deposit/withdrawal failed. Can't retrieve player balance"

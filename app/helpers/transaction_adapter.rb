@@ -23,7 +23,23 @@ module TransactionAdapter
   def user
     User.new(:name => kiosk_name)
   end
+  
+  def approved_by
+    ''
+  end
+  
+  def payment_method_id
+    nil
+  end
+  
+  def source_of_fund_id
+    nil
+  end
 
+  def data
+    ''
+  end
+  
   def data_hash
     {}
   end

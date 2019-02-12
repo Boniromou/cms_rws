@@ -165,7 +165,7 @@ class RequesterHelper
     kt = kiosk_transaction
     kt.pending! if kt.validated?
     begin
-      response = wallet_requester.send trans_type,kt.player.member_id, PlayerTransaction.cents_to_dollar(kt.amount), kt.ref_trans_id, kt.created_at.localtime, kt.source_type,nil ,nil, nil
+      response = wallet_requester.send trans_type,kt.player.member_id, PlayerTransaction.cents_to_dollar(kt.amount), kt.ref_trans_id, kt.created_at.localtime, kt.source_type, nil, kt.kiosk_name, nil
       raise Request::RetrieveBalanceFail unless response.success?
     rescue Remote::AmountNotEnough => e
       raise Request::AmountNotEnough

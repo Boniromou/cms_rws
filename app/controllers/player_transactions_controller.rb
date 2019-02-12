@@ -30,12 +30,6 @@ class PlayerTransactionsController < ApplicationController
         kiosk_transactions += KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation, current_licensee_id).where(:casino_id => casino_id)
       end
       @transactions = player_transactions + kiosk_transactions
-      p '======================================' * 20
-      p id_number
-      p id_type
-      p @operation
-      p kiosk_transactions
-      p '======================================' * 20
     else      
       @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_user.casino_ids)
     end

@@ -35,13 +35,13 @@
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
                   <% if t.payment_method_id == nil %>
-                    <td></td>
+                  <td><%= PaymentMethod.find_by_id(2).name %></td>
                   <% else %>
                     <td><%= PaymentMethod.find_by_id(t.payment_method_id).name %></td>
                   <% end %>
                   
                   <% if t.source_of_fund_id == nil %>
-                    <td></td>
+                    <td><%= SourceOfFund.find_by_id(7).name %></td>
                   <% else %>
                     <td><%= SourceOfFund.find_by_id(t.source_of_fund_id).name %></td>
                   <% end %>

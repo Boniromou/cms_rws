@@ -59,7 +59,7 @@ module TransactionQueries
 	  end
       start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
       end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id
-      start_time = accounting_date.shifts.where(:casino_id => casino_id).first.started_at
+      start_time = accounting_date.shifts.where(:casino_id => casino_id).first.created_at.change(min: 0)
       
       trans_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').where('trans_date >= ? AND trans_date < ?', start_time, start_time + 1.days).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0
      

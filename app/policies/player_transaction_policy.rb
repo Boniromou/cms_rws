@@ -19,18 +19,18 @@ class PlayerTransactionPolicy < ApplicationPolicy
   map_policy :exception_transaction_approve?,:target => :transaction_approval, :action_name => :approve
   map_policy :exception?, :action_name => :submit_manual_transaction
 
-  def exception?
-    true
-  end  
-  def exception_transaction_approve?
-    true
-  end
+#  def exception?
+#    true
+#  end  
+#  def exception_transaction_approve?
+#    true
+#  end
   def exception_transaction_approval_list?
     true
   end
-  def exception_transaction_cancel_submit? 
-    true
-  end
+#  def exception_transaction_cancel_submit? 
+#    true
+#  end
   def deposit?
     have_active_location? && can_deposit?
   end

@@ -38,13 +38,14 @@ require File.expand_path("#{RAILS_ROOT}/app/models/shift", __FILE__)
 require File.expand_path("#{RAILS_ROOT}/app/models/shift_type", __FILE__)
 require File.expand_path("#{RAILS_ROOT}/app/models/casinos_shift_type", __FILE__)
 require File.expand_path("#{RAILS_ROOT}/app/models/accounting_date", __FILE__)
-
+require File.expand_path("#{RAILS_ROOT}/app/models/config_helper", __FILE__)
+require File.expand_path("#{RAILS_ROOT}/app/models/configuration", __FILE__)
 puts '-------------------------------------------------'
 puts "***************[start: #{Time.now.utc} ]****************"
 roll_times.times do
   current_shift = Shift.current(casino_id)
   puts "current shift: #{current_shift.accounting_date}, #{current_shift.name}"
-  current_shift.roll!(nil, nil)
+  current_shift.manual_roll!(nil, nil)
   current_shift = Shift.current(casino_id)
   puts "roll shift success, current shift: #{current_shift.accounting_date}, #{current_shift.name}"
   puts ''

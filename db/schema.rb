@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190110000001) do
+ActiveRecord::Schema.define(:version => 20190219000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(:version => 20190110000001) do
     t.datetime "purge_at"
     t.integer  "casino_id",             :null => false
     t.string   "machine_token"
+    t.datetime "started_at"
   end
 
   add_index "shifts", ["accounting_date_id"], :name => "fk_accounting_date_id"

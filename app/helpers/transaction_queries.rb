@@ -35,6 +35,10 @@ module TransactionQueries
     end
   
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation, licensee_id)
+      p '888888888888888888888888888888'
+      p start_shift_id
+      p end_shift_id
+      p '888888888888888888888888888888'
       if id_number.empty?
         player_id = nil
       else

@@ -49,7 +49,7 @@ class KioskTransaction < ActiveRecord::Base
       transaction[:player_id] = player_id
       transaction[:amount] = amount
       transaction[:transaction_type_id] = TransactionType.find_by_name(trans_type).id
-      transaction[:shift_id] = shift_id
+      transaction[:shift_id] = nil
       transaction[:kiosk_name] = kiosk_name
       transaction[:status] = "validated"
       transaction[:source_type] = source_type

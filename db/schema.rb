@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190219000001) do
+ActiveRecord::Schema.define(:version => 20190219000002) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(:version => 20190219000001) do
   add_index "currencies", ["purge_at"], :name => "index_currencies_on_purge_at"
 
   create_table "kiosk_transactions", :force => true do |t|
-    t.integer  "shift_id",                          :null => false
+    t.integer  "shift_id"
     t.integer  "player_id",                         :null => false
     t.integer  "transaction_type_id",               :null => false
     t.string   "ref_trans_id",        :limit => 45

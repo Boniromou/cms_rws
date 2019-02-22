@@ -29,11 +29,13 @@ ActiveRecord::Base.establish_connection(:adapter => "mysql2",
 require File.expand_path("../../app/helpers/fund_helper", __FILE__)
 require File.expand_path("../../app/helpers/front_money_helper", __FILE__)
 require File.expand_path("../../app/helpers/transaction_queries", __FILE__)
+require File.expand_path("../../app/helpers/transaction_adapter", __FILE__)
 require File.expand_path("../../app/models/shift", __FILE__)
 require File.expand_path("../../app/models/shift_type", __FILE__)
 require File.expand_path("../../app/models/casinos_shift_type", __FILE__)
 require File.expand_path("../../app/models/accounting_date", __FILE__)
 require File.expand_path("../../app/models/player_transaction", __FILE__)
+require File.expand_path("../../app/models/kiosk_transaction", __FILE__)
 require File.expand_path("../../app/models/config_helper", __FILE__)
 require File.expand_path("../../app/models/configuration", __FILE__)
 #require File.expand_path("../../app/models/kiosk_transaction", __FILE__)
@@ -42,6 +44,7 @@ config_table = DB[:configurations]
 player_transactions_table = DB[:player_transactions]
 casino_table = DB[:casinos]
 shift_table = DB[:shifts]
+kiosk_transactions_table = DB[:kiosk_transactions]
 
 casino_table.all.each do |record|
   casino_id = record[:id]
@@ -50,25 +53,34 @@ casino_table.all.each do |record|
     current_shift = Shift.current(casino_id)
     shift_num = ConfigHelper.new(casino_id).send "roll_shift_time"
     current_shift_started_at = DateTime.parse(current_shift.started_at.strftime('%a, %e %b %Y %H:%M:%S'))
-        #p current_datetime
-        #p DateTime.now
-        #p DateTime.parse(current_shift.started_at.strftime('%a, %e %b %Y %H:%M:%S'))
-        #p  current_shift.started_at + (24 / shift_num.split(',').count).hours
-      if current_datetime.between?(current_shift_started_at, current_shift_started_at + (24 / shift_num.split(',').count).hours)
-        transaction_day = transaction[:updated_at].change(hour: 0) 
-        shift_table.where(started_at: transaction_day..transaction_day + 1.days, :casino_id => casino_id).each do |shift|
-          #p '3333333333333333333333333333333333333333
-          p shift[:started_at]
-          p transaction[:updated_at]
-          #p '3333333333333333333333333333333333333333'          
-          if transaction[:updated_at].between?(shift[:started_at], shift[:started_at] + (24 / shift_num.split(',').count).hours)
-            p '4444444444444444444444444444444444444'
-            @transaction = PlayerTransaction.find_by_id(transaction[:id])
-            @transaction.shift_id = shift[:id]
-            @transaction.save
-          end
+    if current_datetime >= current_shift_started_at and current_datetime < current_shift_started_at + (24 / shift_num.split(',').count).hours
+      transaction_day = transaction[:trans_date].change(hour: 0) 
+      shift_table.where(started_at: transaction_day..transaction_day + 1.days, :casino_id => casino_id).each do |shift|
+        if transaction[:trans_date] >= shift[:started_at] and transaction[:trans_date] < shift[:started_at] + (24 / shift_num.split(',').count).hours 
+          @transaction = PlayerTransaction.find_by_id(transaction[:id])
+          @transaction.shift_id = shift[:id]
+          @transaction.save
         end
       end
+    end
   end
+
+  kiosk_transactions_table.where(:shift_id => nil, :casino_id => casino_id).each do |kiosk_transaction|
+    current_datetime = DateTime.now.utc
+    current_shift = Shift.current(casino_id)
+    shift_num = ConfigHelper.new(casino_id).send "roll_shift_time"
+    current_shift_started_at = DateTime.parse(current_shift.started_at.strftime('%a, %e %b %Y %H:%M:%S'))
+    if current_datetime >= current_shift_started_at and current_datetime < current_shift_started_at + (24 / shift_num.split(',').count).hours
+      kiosk_transaction_day = kiosk_transaction[:trans_date].change(hour: 0) 
+      shift_table.where(started_at: kiosk_transaction_day..kiosk_transaction_day + 1.days, :casino_id => casino_id).each do |shift|
+        if kiosk_transaction[:trans_date] >= shift[:started_at] and kiosk_transaction[:trans_date] < shift[:started_at] + (24 / shift_num.split(',').count).hours
+          @ktransaction = KioskTransaction.find_by_id(kiosk_transaction[:id])
+          @ktransaction.shift_id = shift[:id]
+          @ktransaction.save
+        end
+      end
+    end
+  end
+
 end
 

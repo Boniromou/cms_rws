@@ -47,5 +47,6 @@ set(:cronjobs) {
   ["0,30 * * * * #{deploy_to}/current/cronjob/clean_expired_token.sh #{stage} >> #{deploy_to}/current/log/clean_expired_token_#{stage}.log 2>&1", 
    "0 * * * * #{deploy_to}/current/cronjob/roll_shift.sh #{stage} >> #{deploy_to}/current/log/roll_shift_#{stage}.log 2>&1",
 #   "* * * * * #{deploy_to}/current/cronjob/approve_transaction.sh  #{stage} >> #{deploy_to}/current/log/approve_transaction_#{stage}.log 2>&1",
-   "*/5 * * * * #{deploy_to}/current/cronjob/update_player.sh #{stage} >> #{deploy_to}/current/log/update_player_#{stage}.log 2>&1"]
+   "*/5 * * * * #{deploy_to}/current/cronjob/update_player.sh #{stage} >> #{deploy_to}/current/log/update_player_#{stage}.log 2>&1",
+   "0 * * * * #{deploy_to}/current/cronjob/add_shift_id.sh #{stage} >> #{deploy_to}/current/log/add_shift_id_#{stage}.log 2>&1"]
 }

@@ -59,11 +59,14 @@ module TransactionQueries
 	  end
       start_shift_id = accounting_date.shifts.where(:casino_id => casino_id).first.id
       end_shift_id = accounting_date.shifts.where(:casino_id => casino_id).last.id
-      trans_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0
-
-      today_ref_trans_id = select('ref_trans_id').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type])
+      start_time = accounting_date.shifts.where(:casino_id => casino_id).first.started_at
       
-      void_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').from_shift_id(start_shift_id).to_shift_id(end_shift_id).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".gsub('manual_','').to_sym]).where("ref_trans_id in (?)", today_ref_trans_id.map {|i| i.ref_trans_id }).first.amount || 0
+      trans_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').where('trans_date >= ? AND trans_date < ?', start_time, start_time + 1.days).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type]).first.amount || 0
+     
+      today_ref_trans_id = select('ref_trans_id').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').where('trans_date >= ? AND trans_date < ?', start_time, start_time + 1.days).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST[trans_type])
+      
+      void_amt = select('sum(amount) as amount').by_player_id(player.id).by_casino_id(casino_id).by_status('completed').where('trans_date >= ? AND trans_date < ?', start_time, start_time + 1.days).by_transaction_type_id(TRANSACTION_TYPE_ID_LIST["void_#{trans_type}".gsub('manual_','').to_sym]).where("ref_trans_id in (?)", today_ref_trans_id.map {|i| i.ref_trans_id }).first.amount || 0
+
       trans_amt - void_amt
     end
   end

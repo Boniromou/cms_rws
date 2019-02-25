@@ -59,7 +59,7 @@ casino_table.all.each do |record|
         if transaction[:trans_date] >= shift[:created_at].change(min: 0) and transaction[:trans_date] < shift[:created_at].change(min: 0) + (24 / shift_num.split(',').count).hours and transaction[:status] == 'completed'
           @transaction = PlayerTransaction.find_by_id(transaction[:id])
           @transaction.shift_id = shift[:id]
-          @transcation.updated_at = Time.now.utc.to_formatted_s(:db)
+          @transaction.updated_at = Time.now.utc.to_formatted_s(:db)
           @transaction.save
         end
       end

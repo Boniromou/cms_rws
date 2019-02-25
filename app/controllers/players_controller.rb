@@ -24,9 +24,6 @@ class PlayersController < ApplicationController
     @member_id = params[:member_id]
     @exception_transaction = params[:exception_transaction]
         
-    p "============================"
-    p @exception_transaction
-    p "============================"    
     unless @player
       raise PlayerProfile::PlayerNotFound
     end

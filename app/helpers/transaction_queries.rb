@@ -35,10 +35,8 @@ module TransactionQueries
     end
   
     def search_query_by_player(id_type, id_number, start_shift_id, end_shift_id, operation, licensee_id)
-      p '888888888888888888888888888888'
-      p start_shift_id
-      p end_shift_id
-      p '888888888888888888888888888888'
+      start_date = AccountingDate.find_by_id(Shift.find_by_id(start_shift_id).accounting_date_id).created_at.change(min: 0)
+      end_date = AccountingDate.find_by_id(Shift.find_by_id(end_shift_id).accounting_date_id).created_at.change(min: 0) + 1.days
       if id_number.empty?
         player_id = nil
       else
@@ -47,9 +45,11 @@ module TransactionQueries
         player_id = player.id unless player.nil?
       end
       if operation == 'cash'
-        by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw_with_exception
+        #by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw_with_exception
+        by_player_id(player_id).where('trans_date >= ? AND trans_date < ?', start_date, end_date).only_deposit_withdraw_with_exception
       else
-        by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_credit_deposit_expire
+        #by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_credit_deposit_expire
+        by_player_id(player_id).where('trans_date >= ? AND trans_date < ?', start_date, end_date).only_credit_deposit_expire
       end
     end
 

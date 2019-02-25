@@ -99,7 +99,8 @@ class RequesterHelper
     response = patron_requester.get_player_info(id_type, id_value)
     unless response.success?
       Rails.logger.error "update player info fail"
-      return
+      #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      raise PlayerProfile::PlayerNotActivated.new(player)
     end
     player_info = response.player
     if player_info && player_info[:pin_status] == 'blank'

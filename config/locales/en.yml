@@ -145,6 +145,7 @@ en:
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
+    not_validated: "Player validation failed or not found; Please try again." 
   player:
     create: "Create"
     deposit: "Deposit"

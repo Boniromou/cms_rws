@@ -65,6 +65,17 @@
   <% end %>
 <% end %>
 
+<% if @show_not_validated_message %>
+  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
+    <button class="close" data-dismiss="alert">×</button>
+    <div id="message_content">
+      <%= t("search_error.not_validated") %>
+    </div>
+  </div>
+<% end %>
+
+<% end %>
+
   </div>
 </div>
 

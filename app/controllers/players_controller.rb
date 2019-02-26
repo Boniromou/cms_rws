@@ -6,7 +6,7 @@ class PlayersController < ApplicationController
   end
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
-  
+  rescue_from PlayerProfile::PlayerNotValidated, :with => :handle_player_not_validated 
   def balance
     player_info
   end
@@ -88,7 +88,12 @@ class PlayersController < ApplicationController
     @show_not_found_message = true
     search
   end
-
+ 
+  def handle_player_not_validated(e)
+    @show_not_validated_message = true
+    search  
+  end
+   
   def lock
     member_id = params[:member_id]
     player = policy_scope(Player).find_by_member_id(member_id)

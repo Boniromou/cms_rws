@@ -14,7 +14,7 @@ class RequestHandler
     rescue Exception => e
       puts e.backtrace
       puts e.message
-      return {:status => 500, :error_code => 'internal error', :error_msg => 'e.message'}
+      return {:status => 500, :error_code => 'internal error', :error_msg => e.message}
     end
     if @outbound[:error_code].nil?
       @outbound.merge!({:status=>200, :error_code=>'OK', :error_msg=>'Request is carried out successfully.'})

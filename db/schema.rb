@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190219000002) do
+ActiveRecord::Schema.define(:version => 20190226000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"

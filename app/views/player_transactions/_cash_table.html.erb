@@ -26,7 +26,11 @@
                   <td><%= Casino.find_by_id(t.casino_id).name %></td>
                   <td><%= t.slip_number %></td>
                   <td><%= t.player.member_id %></td>
-                  <td><%= t.shift.accounting_date%></td>
+                  <% if t.shift %>
+                    <td><%= t.shift.accounting_date%></td>
+                  <% else %>
+                    <td></td>
+                  <% end %>
                   <td><%= format_time(t.created_at) %></td>
                   <td><%= TransactionType.find_by_id(t.transaction_type_id).name.gsub('_',' ').titleize %></td>
                   <td><%= t.approved_by %></td>
@@ -35,7 +39,7 @@
                   <td><%= t.display_status %></td>
                   <td><%= t.deposit_amt_str %></td>
                   <% if t.payment_method_id == nil %>
-                  <td><%= PaymentMethod.find_by_id(2).name %></td>
+                    <td><%= PaymentMethod.find_by_id(2).name %></td>
                   <% else %>
                     <td><%= PaymentMethod.find_by_id(t.payment_method_id).name %></td>
                   <% end %>

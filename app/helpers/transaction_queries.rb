@@ -46,7 +46,7 @@ module TransactionQueries
       end
       if operation == 'cash'
         #by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_deposit_withdraw_with_exception
-        by_player_id(player_id).where('trans_date >= ? AND trans_date < ?', start_date, end_date).only_deposit_withdraw_with_exception
+        by_player_id(player_id).where('trans_date >= ? AND trans_date < ? AND shift_id IS NOT ?', start_date, end_date, nil).only_deposit_withdraw_with_exception
       else
         #by_player_id(player_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id).only_credit_deposit_expire
         by_player_id(player_id).where('trans_date >= ? AND trans_date < ?', start_date, end_date).only_credit_deposit_expire

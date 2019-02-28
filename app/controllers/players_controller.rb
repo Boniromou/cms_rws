@@ -76,6 +76,9 @@ class PlayersController < ApplicationController
       requester_helper.update_player!(@id_type,@id_number)
     rescue Remote::PlayerNotFound => e
       Rails.logger.error 'PlayerNotFound in PIS'
+    rescue PlayerProfile::PlayerNotValidated => e
+      Rails.logger.error 'PlayerNotValidated'
+      raise PlayerProfile::PlayerNotValidated
     end
 
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @id_number)

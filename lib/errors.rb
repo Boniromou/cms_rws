@@ -50,6 +50,9 @@ module PlayerProfile
 
   class PlayerNotFound < PlayerProfile
   end
+  
+  class PlayerNotValidated < PlayerProfile
+  end 
 
   class PlayerNotActivated < PlayerProfile
     attr_reader :player

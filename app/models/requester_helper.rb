@@ -112,7 +112,7 @@ class RequesterHelper
   def update_player(id_type, id_value)
     begin
       update_player!(id_type, id_value)
-    rescue PlayerProfile::PlayerNotActivated => e
+    rescue PlayerProfile::PlayerNotActivated,PlayerProfile::PlayerNotValidated => e
       return 'PlayerNotActivated'
     end
   end

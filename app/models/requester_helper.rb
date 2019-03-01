@@ -31,7 +31,7 @@ class RequesterHelper
   def get_player_info(id_type, id_value, licensee_id)
     response = patron_requester.get_player_info(id_type, id_value).result_hash[:player]
     return {:player => response} if response[:pin_status] == 'blank'
-    update_player!(id_type, id_value, true)
+    update_player(id_type, id_value, true)
     if id_type == 'card_id'
       player = Player.find_by_card_id_and_licensee_id(id_value, licensee_id)
     else
@@ -49,9 +49,9 @@ class RequesterHelper
       property_id = Machine.parse_machine_token(machine_token)[:property_id]
       raise Request::InvalidMachineToken.new  unless validate_machine_token(machine_type ,machine_token, property_id, casino_id)
 
-      player = update_player!('card_id', credential)
+      player = update_player('card_id', credential)
       unless player
-        player = update_player!('member_id', credential)
+        player = update_player('member_id', credential)
       end
 
       raise Request::InvalidCardId.new unless player
@@ -112,8 +112,10 @@ class RequesterHelper
   def update_player(id_type, id_value)
     begin
       update_player!(id_type, id_value)
-    rescue PlayerProfile::PlayerNotActivated,PlayerProfile::PlayerNotValidated => e
+    rescue PlayerProfile::PlayerNotActivated => e
       return 'PlayerNotActivated'
+    rescue PlayerProfile::PlayerNotValidated => e
+      return
     end
   end
 
@@ -235,14 +237,14 @@ class RequesterHelper
     raise Request::RetrieveBalanceFail unless balance.class == Float
  #   handle_processed_trans( player_transaction ) unless player_transaction.nil?
     server_amount = PlayerTransaction.to_server_amount(amount)
-    
+
     response = wallet_requester.withdraw(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), source_type, nil, 'system', nil)
 
     after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
     handle_wallet_result(player_transaction, response)
     {:amt => amount, :trans_date => player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), :balance => after_balance, :ref_trans_id => player_transaction.ref_trans_id}
   end
-  
+
   def exception_deposit(login_name, amount, ref_trans_id, source_type, casino_id, executed_by)
     p "=======Start to exception_deposit"
     player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
@@ -258,7 +260,7 @@ class RequesterHelper
     raise Request::RetrieveBalanceFail unless balance.class == Float
   #  handle_processed_trans( player_transaction ) unless player_transaction.nil?
     server_amount = PlayerTransaction.to_server_amount(amount)
-    
+
     response = wallet_requester.deposit(login_name, amount, player_transaction.ref_trans_id, player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), source_type, nil, 'system', nil, nil)
 
     after_balance = balance + PlayerTransaction.cents_to_dollar(server_amount)
@@ -289,13 +291,13 @@ class RequesterHelper
       @approvetransaction.save!
       raise FundInOut::CallWalletFail
     else
-      @approvetransaction = ApprovalRequest.find_by_target_id(player_transaction.id) 
+      @approvetransaction = ApprovalRequest.find_by_target_id(player_transaction.id)
       PlayerTransaction.transaction do
         player_transaction.trans_date = response.trans_date
         player_transaction.completed!
       end
       @approvetransaction.status = 'completed'
-      @approvetransaction.save!      
+      @approvetransaction.save!
     end
   end
 end

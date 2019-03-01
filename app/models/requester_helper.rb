@@ -109,9 +109,9 @@ class RequesterHelper
     Player.update_info(player_info, mp_create)
   end
 
-  def update_player(id_type, id_value)
+  def update_player(id_type, id_value, mp_create = false)
     begin
-      update_player!(id_type, id_value)
+      update_player!(id_type, id_value, mp_create)
     rescue PlayerProfile::PlayerNotActivated => e
       return 'PlayerNotActivated'
     rescue PlayerProfile::PlayerNotValidated => e

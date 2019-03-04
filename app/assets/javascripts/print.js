@@ -9,7 +9,9 @@ function printHtml(html, landscape, title, have_title) {
   var frameDoc = printFrame.contentWindow ? printFrame.contentWindow : printFrame.contentDocument.document ? printFrame.contentDocument.document : printFrame.contentDocument;
   frameDoc.document.open();
   frameDoc.document.write('<html><head><title>');
-  frameDoc.document.write(title);
+  if (typeof title !== 'undefined' && title) {
+    frameDoc.document.write(title);
+  }
   frameDoc.document.write('</title>');
   if ( typeof landscape !== 'undefined' && landscape ){   
     frameDoc.document.write('<style>@media print{@page {size: landscape; '); //only work on Chrome

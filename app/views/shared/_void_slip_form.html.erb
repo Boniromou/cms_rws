@@ -143,14 +143,22 @@
 <!--  -->
     <div class="floating-index1" style="width: 5%;"></div>
     <div class="floating-index2">Shift:</div>
-    <div class="floating-content1"><%= @transaction.shift.shift_type.name.titleize %></div>
+    <% if @transactions.shift == nil%>
+      <div class="floating-content1"></div>
+    <% else %>
+      <div class="floating-content1"><%= @transaction.shift.shift_type.name.titleize %></div>
+    <% end %>
     <div class="separated"></div>
     <div class="floating-index1">Member id:</div>
     <div class="floating-content1"><%= Player.find_by_id(@transaction.player_id).member_id %></div>
 
     <div class="floating-index1" style="width: 5%;"></div>
     <div class="floating-index2">Shift:</div>
-    <div class="floating-content1"><%= @transaction.shift.shift_type.name.titleize %></div>
+    <% if @transactions.shift == nil%>
+      <div class="floating-content1"></div>
+    <% else %>
+      <div class="floating-content1"><%= @transaction.shift.shift_type.name.titleize %></div>
+    <% end %>
     <div class="separated"></div>
     <div class="floating-index1">Member id:</div>
     <div class="floating-content1"><%= Player.find_by_id(@transaction.player_id).member_id %></div>

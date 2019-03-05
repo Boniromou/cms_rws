@@ -43,7 +43,8 @@ describe FundController do
       mock_wallet_balance('no_balance')
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_deposit").click
-      find("div#pop_up_dialog div button#confirm").click
+      wait_for_ajax
+      find("div#pop_up_dialog div button#confirm").trigger('click')
       wait_for_ajax
 
       player_transaction = PlayerTransaction.find_by_player_id(@player.id)

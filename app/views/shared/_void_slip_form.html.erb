@@ -81,15 +81,16 @@
 
 </style>
 <div id="a" style="margin: 80px 0px 0px 0px; width: 297mm; height: 100mm;" >
+    
     <h3 class="tit" style="width: 5%;"></h3>
-    <h3 class="tit">VOID <%= operation.split('_')[1].titleize %></h3>
+    <h3 class="tit">GameSource <br/>VOID <%= operation.split('_')[1].titleize %></h3>
     <h3 class="tit" style="width: 5%;"></h3>
     <div class="separated" style="height: 30px;"></div>
     <div class="floating-index1" style="height: 30px;">Slip No.:</div>
     <div class="floating-content1" style="height: 30px;"><%= @transaction.slip_number %></div>
-
+    
     <h3 class="tit" style="width: 5%;"></h3>
-    <h3 class="tit">VOID <%= operation.split('_')[1].titleize %></h3>
+    <h3 class="tit">GameSource <br/>VOID <%= operation.split('_')[1].titleize %></h3>
     <h3 class="tit" style="width: 5%;"></h3>
     <div class="separated" style="height: 30px;"></div>
     <div class="floating-index1" style="height: 30px;">Slip No.:</div>
@@ -97,14 +98,14 @@
 
 <!---->
     <div class="tit" style="width: 5%;"></div>
-    <div class="tit"><%= operation.split('_')[1].titleize %></div>
+    <div class="tit"></div>
     <div class="tit" style="width: 5%;"></div>
     <div class="separated"></div>
     <div class="floating-index1" style="height: 30px;"></div>
     <div class="floating-content1" style="height: 30px;"></div>
 
     <div class="tit" style="width: 5%;"></div>
-    <div class="tit"><%= operation.split('_')[1].titleize %></div>
+    <div class="tit"></div>
     <div class="tit" style="width: 5%;"></div>
     <div class="separated"></div>
     <div class="floating-index1" style="height: 30px;"></div>
@@ -142,23 +143,15 @@
 
 <!--  -->
     <div class="floating-index1" style="width: 5%;"></div>
-    <div class="floating-index2">Shift:</div>
-    <% if @transactions.shift == nil%>
-      <div class="floating-content1"></div>
-    <% else %>
-      <div class="floating-content1"><%= @transaction.shift.shift_type.name.titleize %></div>
-    <% end %>
+    <div class="floating-index2"></div>
+    <div class="floating-content1"></div>
     <div class="separated"></div>
     <div class="floating-index1">Member id:</div>
     <div class="floating-content1"><%= Player.find_by_id(@transaction.player_id).member_id %></div>
 
     <div class="floating-index1" style="width: 5%;"></div>
-    <div class="floating-index2">Shift:</div>
-    <% if @transactions.shift == nil%>
-      <div class="floating-content1"></div>
-    <% else %>
-      <div class="floating-content1"><%= @transaction.shift.shift_type.name.titleize %></div>
-    <% end %>
+    <div class="floating-index2"></div>
+    <div class="floating-content1"></div>
     <div class="separated"></div>
     <div class="floating-index1">Member id:</div>
     <div class="floating-content1"><%= Player.find_by_id(@transaction.player_id).member_id %></div>
@@ -256,7 +249,10 @@
 
     <div class="floating-index1" style="width: 5%; margin-bottom: 0px; height: 1px;"></div>
     <h3 class="floating-index1">Cage Copy</h3>
-    <div class="floating-index1" style="width: 35.5%;"></div>
-    <div class="floating-index1" style="width: 5%;"></div>
+    <div class="floating-index1" style="width: 25%;"></div>
+    <h3 class="floating-index1">Page 1</h3>
+    <div class="floating-index1" style="width: 5.5%;"></div>
     <h3 class="floating-index1">Accounting Copy</h3>
+    <div class="floating-index1" style="width: 24.5%;"></div>
+    <h3 class="floating-index1">Page 2</h3>
 </div>

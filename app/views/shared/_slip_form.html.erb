@@ -22,7 +22,7 @@
     float: left;
     width: 8%;
     height: 10px;
-    margin: 0px 10px 0px 10px;
+    margin: 3px 10px 0px 10px;
     text-align:right;
     font-size: 10px;
 }
@@ -31,7 +31,7 @@
     float: left;
     width: 15%;
     height: 10px;
-    margin: 0px 10px 0px 10px;
+    margin: 3px 10px 0px 10px;
     text-align:right;
     font-size: 10px;
 }
@@ -64,9 +64,9 @@
 
 </style>
 <div id="a" style="margin: 40px 0px 0px 0px; width: 297mm; height: 195mm;" >
-    <h3 class="tit">Game Source</h3>
+    <h3 class="tit">GameSource</h3>
 
-    <h3 class="tit">Game Source</h3>
+    <h3 class="tit">GameSource</h3>
 
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
     
@@ -124,12 +124,13 @@
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
+
 
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index" style="width: 10%;">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
     <% if operation.downcase == 'withdraw' %>
       <div class="floating-index"></div>
       <div class="floating-content"></div>
@@ -269,10 +270,10 @@
 </div>
 
 <br/><br/>
-<div id="a" style="margin: 20px 0px 0px 0px; width: 297mm; height: 160mm;" >
-    <h3 class="tit">Game Source</h3>
+<div id="a" style="margin: 5px 0px 0px 0px; width: 297mm; height: 160mm;" >
+    <h3 class="tit">GameSource</h3>
     
-    <h3 class="tit">Game Source</h3>
+    <h3 class="tit">GameSource</h3>
 
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
 
@@ -330,12 +331,12 @@
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
 
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index" style="width: 10%;">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
     <% if operation.downcase == 'withdraw' %>
       <div class="floating-index"></div>
       <div class="floating-content"></div>

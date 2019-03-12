@@ -22,7 +22,7 @@
     float: left;
     width: 8%;
     height: 10px;
-    margin: 0px 10px 0px 10px;
+    margin: 3px 10px 0px 10px;
     text-align:right;
     font-size: 10px;
 }
@@ -31,7 +31,7 @@
     float: left;
     width: 15%;
     height: 10px;
-    margin: 0px 10px 0px 10px;
+    margin: 3px 10px 0px 10px;
     text-align:right;
     font-size: 10px;
 }
@@ -63,9 +63,13 @@
 }
 
 </style>
-<div id="a" style="margin: 120px 0px 0px 0px; width: 297mm; height: 180mm;" >
-    <h3 class="tit">Front Money <%= operation.titleize %></h3>
+<div id="a" style="margin: 40px 0px 0px 0px; width: 297mm; height: 195mm;" >
+    <h3 class="tit">GameSource</h3>
 
+    <h3 class="tit">GameSource</h3>
+
+    <h3 class="tit">Front Money <%= operation.titleize %></h3>
+    
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
     <% if operation.downcase == 'withdraw' %>
         <h3 class="tit">提款單</h3>
@@ -120,12 +124,13 @@
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
+
 
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index" style="width: 10%;">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
     <% if operation.downcase == 'withdraw' %>
       <div class="floating-index"></div>
       <div class="floating-content"></div>
@@ -149,12 +154,13 @@
     <% end %>
 
   <br/>
-
+    <h2 class="floating-index" style="width: 5%;"></h2>
     <h2 class="floating-index" style="width: 15%; font-size: 15px;">Total <%= operation.titleize %>:</h2>
-    <h2 class="floating-content" style="width: 35%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
-
+    <h2 class="floating-content" style="width: 30%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
+    
+    <h2 class="floating-index" style="width: 5%;"></h2> 
     <h2 class="floating-index" style="width: 15%; font-size: 15px;">Total <%= operation.titleize %>:</h2>
-    <h2 class="floating-content" style="width: 35%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
+    <h2 class="floating-content" style="width: 30%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
 
     <div class="floating-index">Patron Signature<br/>顧客簽名</div>
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
@@ -162,7 +168,7 @@
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
     
     <div class="floating-index"></div>
-    <% if operation == 'withdraw' %>
+    <% if operation == 'withdraw' || operation == 'manual_withdraw'%>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述存款之款項</div>
         <div class="floating-index"></div>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述存款之款項</div>
@@ -257,13 +263,19 @@
     <div class="floating-content2" style="width: 20%;"></div>
 
     <h3 class="footer-content">Patron Copy</h3>
-    <h3 class="footer-content" style="width: 37%;"></h3>
+    <h3 class="footer-content" style="width: 25%;"></h3>
+    <h3 class="footer-content">Page 1</h3>
     <h3 class="footer-content">Cage Copy</h3>
-   <h3 class="footer-content" style="width: 20%;"></h3> 
+    <h3 class="footer-content" style="width: 25%;"></h3> 
+    <h3 class="footer-content">Page 2</h3>
 </div>
 
+<br/><br/>
+<div id="a" style="margin: 5px 0px 0px 0px; width: 297mm; height: 160mm;" >
+    <h3 class="tit">GameSource</h3>
+    
+    <h3 class="tit">GameSource</h3>
 
-<div id="a" style="margin: 120px 0px 0px 0px; width: 297mm; height: 100mm;" >
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
 
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
@@ -317,18 +329,15 @@
         <div class="floating-content"><%= @transaction.slip_number %></div>
     <% end %>
 
-    
-
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
 
     <div class="floating-index">Windows #:<br/>窗口號碼:</div>
     <div class="floating-content"><%= @transaction.location %></div>
     <div class="floating-index" style="width: 10%;">Date/Time:<br/>日期/時間:</div>
-    <div class="floating-content"><%= format_time_slip(@transaction.created_at) %></div>
-
+    <div class="floating-content"><%= format_time_slip_date(@transaction.created_at) %><br/><%= format_time_slip_time(@transaction.created_at) %></div>
     <% if operation.downcase == 'withdraw' %>
       <div class="floating-index"></div>
       <div class="floating-content"></div>
@@ -352,12 +361,13 @@
     <% end %>
 
   <br/>
-
+    <h2 class="floating-index" style="width: 5%;"></h2>
     <h2 class="floating-index" style="width: 15%; font-size: 15px;">Total <%= operation.titleize %>:</h2>
-    <h2 class="floating-content" style="width: 35%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
+    <h2 class="floating-content" style="width: 30%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
 
+    <h2 class="floating-index" style="width: 5%;"></h2>
     <h2 class="floating-index" style="width: 15%; font-size: 15px;">Total <%= operation.titleize %>:</h2>
-    <h2 class="floating-content" style="width: 35%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
+    <h2 class="floating-content" style="width: 30%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
 
     <div class="floating-index">Patron Signature<br/>顧客簽名</div>
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
@@ -365,7 +375,7 @@
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
     
     <div class="floating-index"></div>
-    <% if operation == 'withdraw' %>
+    <% if operation == 'withdraw' || operation == 'manual_withdraw'%>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述存款之款項</div>
         <div class="floating-index"></div>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述存款之款項</div>
@@ -461,8 +471,12 @@
 
     <h3 class="footer-content" style="width: 2.5%;"></h3>
     <h3 class="footer-content">Compliance Copy</h3>
-    <h3 class="footer-content" style="width: 37%;"></h3>
+    <h3 class="footer-content" style="width: 22%;"></h3>
+    <h3 class="footer-content">Page 3</h3>
+    <h3 class="footer-content" style="width: 5%;"></h3>
     <h3 class="footer-content" style="width: 15%;">Casino Accounting Copy</h3>
-   <h3 class="footer-content" style="width: 5%;"></h3> 
+    <h3 class="footer-content" style="width: 17%;"></h3>
+    <h3 class="footer-content">Page 4</h3>
+    <h3 class="footer-content" style="width: 5%;"></h3> 
    </div>
 </div>

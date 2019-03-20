@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   def patron_requester
     requester_factory.get_patron_requester
   end
-  
+
   def station_requester
     requester_factory.get_station_requester
   end
@@ -45,6 +45,13 @@ class ApplicationController < ActionController::Base
 
   def marketing_wallet_requester
     requester_factory.get_marketing_wallet_requester
+  end
+
+  def write_cookie(name, value, domain = :all)
+    cookies[name] = {
+      value: value,
+      domain: domain
+    }
   end
 
   protected

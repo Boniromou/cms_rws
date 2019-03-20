@@ -48,6 +48,7 @@ end
 
 #SSO_URL = 'https://stg-sso2.laxino.com'
 SSO_URL = 'https://stg-sso.laxino.com'
+URL_BASE = 'https://stg-cms.laxino.com'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
 LOGIN_PATH = '/app_login'

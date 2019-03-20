@@ -13,7 +13,7 @@ class ConfigHelper
   def source_of_funds
     retrieve_config('source_of_funds').split(',')
   end
-  
+
   def payment_method_types
     retrieve_config('payment_method_types').split(',')
   end
@@ -50,7 +50,7 @@ class ConfigHelper
   def credit_life_time_array
     retrieve_config('credit_life_time_array').split(',').map{|t| t.to_f}
   end
-  
+
   def roll_shift_time
     Configuration.find_by_key_and_casino_id('roll_shift_time', @casino_id).value
   end
@@ -69,5 +69,9 @@ class ConfigHelper
 
   def daily_withdraw_limit
     retrieve_config('daily_withdraw_limit').to_i
+  end
+
+  def deposit_extra_amount
+    retrieve_config('deposit_extra_amount').to_f
   end
 end

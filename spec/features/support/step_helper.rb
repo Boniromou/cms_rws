@@ -581,6 +581,8 @@ module StepHelper
     go_to_deposit_page
     wait_for_ajax
     fill_in "player_transaction_amount", :with => amount
+    find("#player_transaction_payment_method_type option[value='2']").select_option
+    find("#player_transaction_source_of_funds option[value='2']").select_option
     find("button#confirm_deposit").click
     expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
 

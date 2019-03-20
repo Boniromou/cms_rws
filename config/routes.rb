@@ -27,10 +27,12 @@ CmsRws::Application.routes.draw do
   post "update" => "players#update"
 
   get 'fund_in' => 'deposit#new'
-  post 'fund_in' => 'deposit#create'
-  
+  # post 'fund_in' => 'deposit#create'
+  match "deposit" => "deposit#create", via: [:get, :post]
+
   get 'fund_out' => 'withdraw#new'
   post 'fund_out' => 'withdraw#create'
+  # match "withdraw" => "withdraw#create", via: [:get, :post]
 
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'

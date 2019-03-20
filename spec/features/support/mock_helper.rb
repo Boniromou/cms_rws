@@ -10,6 +10,7 @@ module MockHelper
     @casino_name = "---"
     @shift = "morning"
 
+    allow_any_instance_of(ApplicationController).to receive(:current_machine_token).and_return('|71|NielVIPcage|78|VIP01|54|machine1|ea0ba6020ea95930e3a46399b9fc42e2|20000')
     allow_any_instance_of(CageInfoHelper).to receive(:current_cage_location_str).and_return(@location)
     allow_any_instance_of(Shift).to receive(:name).and_return(@shift)
   end
@@ -118,6 +119,10 @@ module MockHelper
 
   def mock_permission_value(value)
     allow_any_instance_of(User).to receive(:get_permission_value).and_return(value)
+  end
+
+  def mock_configuration(name, value)
+    allow_any_instance_of(ConfigHelper).to receive(name).and_return(value)
   end
 end
 

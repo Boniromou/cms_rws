@@ -5,6 +5,7 @@
     <p style="font-size: 18px;" id="fund_amt"></p>
     <% if ['deposit','withdraw'].include?(@action) %>
       <label id="remain_limit_alert" class="invisible_error"><%= t("deposit_withdrawal.exceed_remain_limit") %></label>
+      <label id="authorize_alert" class="invisible_error"><%= t("deposit_withdrawal.need_authorize") %></label>
     <% end %>
     <% if @action == 'withdraw' and @exception_transaction == 'no' %>
       <form class="form-horizontal">
@@ -12,12 +13,12 @@
             <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
             <div class="col-sm-3">
               <%= text_field_tag 'player_transaction[pin]', nil, :form => "fund_request", :type => "password" ,:autocomplete => "off"%>
-            </div> 
+            </div>
         </div>
       </form>
     <% elsif @action == 'credit_deposit' %>
       <label id="credit_limit_alert" class="invisible_error"><%= t("credit_deposit_expire.exceed_limit") %></label>
-      
+
     <% end %>
   <% end %>
 </div>
@@ -28,7 +29,7 @@
     amt = $('#player_transaction_amount').val()
     $('#pop_up_content #fund_amt').text(formatNum(amt));
   }
-  
+
   function formValid(){
   <% if @action == 'deposit' %>
     return amountValid() && typeValid() && sourceValid();
@@ -43,7 +44,7 @@
     amt = $('#player_transaction_amount').val().replace(/0+[.]?/,"");
     return amt != ""
   }
-  
+
   function typeValid(){
     type = $('#player_transaction_payment_method_type').val().replace(/0+[.]?/,"");
     return type != ""
@@ -53,22 +54,22 @@
     source = $('#player_transaction_source_of_funds').val().replace(/0+[.]?/,"");
     return source != ""
   }
-  
+
   function showAmountError(){
     $("label#amount_error").css('visibility', 'visible');
     $("label#amount_error").css('display', 'block');
   }
-  
+
   function hideAmountError(){
     $("label#amount_error").css('visibility', 'hidden');
     $("label#amount_error").css('display', 'none');
   }
-  
+
   function showTypeError(){
     $("label#type_error").css('visibility', 'visible');
     $("label#type_error").css('display', 'block');
   }
- 
+
   function hideTypeError(){
     $("label#type_error").css('visibility', 'hidden');
     $("label#type_error").css('display', 'none');
@@ -78,7 +79,7 @@
     $("label#source_error").css('visibility', 'visible');
     $("label#source_error").css('display', 'block');
   }
- 
+
   function hideSourceError(){
     $("label#source_error").css('visibility', 'hidden');
     $("label#source_error").css('display', 'none');
@@ -111,6 +112,18 @@
     }else{
       $("label#remain_limit_alert").css('visibility', 'hidden');
       $("label#remain_limit_alert").css('display', 'none');
+    }
+  }
+
+  function updateAuthorizeAlert(){
+    var extra_amount = <%= @extra_amount %>;
+    var amt = $('#player_transaction_amount').val();
+    if(amt >= extra_amount){
+      $("label#authorize_alert").css('visibility', 'visible');
+      $("label#authorize_alert").css('display', 'block');
+    }else{
+      $("label#authorize_alert").css('visibility', 'hidden');
+      $("label#authorize_alert").css('display', 'none');
     }
   }
 <% end %>
@@ -153,16 +166,17 @@
     }
     return false;
   });
-  
+
   $('#confirm_deposit').click(function() {
      if(amountValid() && typeValid() && sourceValid()){
        hideAmountError();
-       hideTypeError();  
+       hideTypeError();
        hideSourceError();
-       updateConfirmAmt(); 
+       updateConfirmAmt();
        //emojiControl();
      <% if ['deposit','withdraw'].include?(@action) %>
        updateRemainAlert();
+       updateAuthorizeAlert();
      <% end %>
      }
      else if (!amountValid() && !typeValid() && !sourceValid()){

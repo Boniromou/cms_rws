@@ -79,7 +79,7 @@ en:
     action_yes: "Yes"
     action_no: "No"
   transaction_approval:
-    casino_id: "Casino" 
+    casino_id: "Casino"
     player_id: "Member id"
     amount: "Amount"
     transaction_type: "Transaction type"
@@ -109,6 +109,7 @@ en:
     staff_id: "Staff ID"
     staff_id_invalid: "Invalid input format, please try again."
     exceed_remain_limit: Transaction exceeded daily transaction limit. Please follow SOP to check patron identity before "Confirm" transaction.
+    need_authorize: Please call manager to authorize.
   balance_enquiry:
     account_balance: "Account Balance"
     no_balance: "--"
@@ -145,7 +146,7 @@ en:
   search_error:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
-    not_validated: "Player validation failed or not found; Please try again." 
+    not_validated: "Player validation failed or not found; Please try again."
   player:
     create: "Create"
     deposit: "Deposit"
@@ -227,6 +228,7 @@ en:
     withdraw_complete: "Withdraw %{amount} is completed."
     manual_deposit_complete: "Manual deposit %{amount} submitted. Transaction pending approval."
     manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
+    authorize_failed: "authorize failed."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:

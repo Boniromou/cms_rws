@@ -33,14 +33,20 @@ module FundInOut
 
   class NoBalanceRetrieve < FundError
   end
-  
+
   class InvalidLoginName < FundError
   end
-  
+
   class AlreadyVoided < FundError
   end
 
   class PlayerLocked <FundError
+  end
+
+  class AuthorizationFail < FundError
+  end
+
+  class NeedAuthorization < FundError
   end
 end
 
@@ -50,9 +56,9 @@ module PlayerProfile
 
   class PlayerNotFound < PlayerProfile
   end
-  
+
   class PlayerNotValidated < PlayerProfile
-  end 
+  end
 
   class PlayerNotActivated < PlayerProfile
     attr_reader :player

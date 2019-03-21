@@ -54,6 +54,11 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  def clear_authorize_info
+    cookies.delete(:second_auth_info, domain: :all)
+    cookies.delete(:second_auth_result, domain: :all)
+  end
+
   protected
 
   def check_session_expiration

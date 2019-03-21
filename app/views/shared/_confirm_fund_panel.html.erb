@@ -8,11 +8,11 @@
       <label id="authorize_alert" class="invisible_error"><%= t("deposit_withdrawal.need_authorize") %></label>
     <% end %>
     <% if @action == 'withdraw' and @exception_transaction == 'no' %>
-      <form class="form-horizontal">
+      <form class="form-horizontal" id="validate_pin_form">
         <div class="form-group">
             <label for="inputPIN" class="col-sm-5 control-label" id="pin_label"><strong>PIN:</strong></label>
             <div class="col-sm-3">
-              <%= text_field_tag 'player_transaction[pin]', nil, :form => "fund_request", :type => "password" ,:autocomplete => "off"%>
+              <%= text_field_tag 'player_pin', nil, :form => "fund_request", :type => "password" ,:autocomplete => "off"%>
             </div>
         </div>
       </form>
@@ -117,13 +117,29 @@
 
   function updateAuthorizeAlert(){
     var extra_amount = <%= @extra_amount %>;
+    var authorize_result = "<%= @authorize_result %>";
     var amt = $('#player_transaction_amount').val();
-    if(amt >= extra_amount){
-      $("label#authorize_alert").css('visibility', 'visible');
-      $("label#authorize_alert").css('display', 'block');
-    }else{
+    if(amt < extra_amount || authorize_result == 'yes'){
       $("label#authorize_alert").css('visibility', 'hidden');
       $("label#authorize_alert").css('display', 'none');
+    }else{
+      $("label#authorize_alert").css('visibility', 'visible');
+      $("label#authorize_alert").css('display', 'block');
+    }
+  }
+
+  function updateValidatePinForm(){
+    var extra_amount = <%= @extra_amount %>;
+    var authorize_result = "<%= @authorize_result %>";
+    var amt = $('#player_transaction_amount').val();
+    if(amt < extra_amount || authorize_result == 'yes'){
+      $("form#validate_pin_form").css('visibility', 'visible');
+      $("form#validate_pin_form").css('display', 'block');
+      $("input#player_pin").removeAttr('disabled');
+    }else{
+      $("form#validate_pin_form").css('visibility', 'hidden');
+      $("form#validate_pin_form").css('display', 'none');
+      $("input#player_pin").attr('disabled','disabled');
     }
   }
 <% end %>
@@ -151,6 +167,8 @@
       hideTypeError();
       updateConfirmAmt();
       updateRemainAlert();
+      updateAuthorizeAlert();
+      updateValidatePinForm();
     }
     else if ( !amountValid() && !typeValid()){
       showAmountError();

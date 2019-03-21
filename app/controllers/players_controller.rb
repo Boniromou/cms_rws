@@ -6,7 +6,7 @@ class PlayersController < ApplicationController
   end
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
-  rescue_from PlayerProfile::PlayerNotValidated, :with => :handle_player_not_validated 
+  rescue_from PlayerProfile::PlayerNotValidated, :with => :handle_player_not_validated
   def balance
     player_info
   end
@@ -16,6 +16,7 @@ class PlayersController < ApplicationController
   end
 
   def player_info
+    clear_authorize_info
     @operation = params[:action]
     member_id = params[:member_id]
     @player = policy_scope(Player).find_by_member_id(member_id)
@@ -23,7 +24,7 @@ class PlayersController < ApplicationController
     @casino_id = params[:select_casino_id] || current_casino_id
     @member_id = params[:member_id]
     @exception_transaction = params[:exception_transaction]
-        
+
     unless @player
       raise PlayerProfile::PlayerNotFound
     end
@@ -55,12 +56,13 @@ class PlayersController < ApplicationController
   end
 
   def search
+    clear_authorize_info
     @operation = params[:operation]
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @player = Player.new
     @exception_transaction = params[:exception_transaction]
-    
+
     respond_to do |format|
       format.html { render "players/search", formats: [:html] }
       format.js { render"players/search", formats: [:js] }
@@ -91,17 +93,17 @@ class PlayersController < ApplicationController
     @show_not_found_message = true
     search
   end
- 
+
   def handle_player_not_validated(e)
     @show_not_validated_message = true
-    search  
+    search
   end
-   
+
   def lock
     member_id = params[:member_id]
     player = policy_scope(Player).find_by_member_id(member_id)
     authorize_action player, :non_test_mode?
-    
+
     lock_status = ''
     AuditLog.player_log("lock", current_user.name, client_ip, sid, :description => {:location => get_location_info, :shift => current_shift.name}) do
       if player.cage_locked?
@@ -154,7 +156,7 @@ class PlayersController < ApplicationController
   def set_pin
     @operation = params[:operation]
     authorize_action @player, :non_test_mode?
-    
+
     respond_to do |format|
       format.html { render "players/set_pin", formats: [:html] }
       format.js { render "players/set_pin", formats: [:js] }
@@ -187,7 +189,7 @@ class PlayersController < ApplicationController
   protected
   def redirect_to_set_pin_path(member_id, card_id, status, inactivate, operation)
     @player = policy_scope(Player).find_by_member_id(member_id)
-    @player = Player.new(:member_id => member_id, :card_id => card_id, :status => status) unless @player 
+    @player = Player.new(:member_id => member_id, :card_id => card_id, :status => status) unless @player
     @inactivate = inactivate
     @operation = operation
     respond_to do |format|

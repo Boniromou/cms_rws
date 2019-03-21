@@ -1,6 +1,7 @@
 class DepositController < FundController
   include SearchHelper
   def new
+    clear_authorize_info
     super
     @casino_id = current_casino_id
     @remain_limit = @player.remain_trans_amount(:deposit, @casino_id)

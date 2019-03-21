@@ -5,8 +5,20 @@ class WithdrawController < FundController
     @fund_type = @player.get_fund_type
     @payment_method = @player.payment_method_types
     @remain_limit = @player.remain_trans_amount(:withdraw, @casino_id)
+    @extra_amount = @config_helper.withdraw_extra_amount
+    if @exception_transaction != 'yes' && cookies[:second_auth_result].present? && cookies[:second_auth_info].present?
+      auth_info = JSON.parse(cookies[:second_auth_info]).recursive_symbolize_keys![:auth_info]
+      auth_result = JSON.parse(cookies[:second_auth_result]).recursive_symbolize_keys!
+      raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK'
+
+      @authorize_result = 'yes'
+      @payment_method_type = auth_info[:payment_method_type]
+      @player_transaction_amount = auth_info[:player_transaction][:amount]
+      @deposit_reason = auth_info[:player_transaction][:deposit_reason]
+      flash[:notice] = "already authorize success"
+    end
   end
-  
+
   def extract_params
     super
     @deposit_reason = "#{params[:player_transaction][:deposit_reason]}"
@@ -24,5 +36,9 @@ class WithdrawController < FundController
     if @exception_transaction == 'no'
       validate_pin
     end
+  end
+
+  def auth_callback_url
+    "#{URL_BASE}/fund_out?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 end

@@ -31,8 +31,8 @@ CmsRws::Application.routes.draw do
   match "deposit" => "deposit#create", via: [:get, :post]
 
   get 'fund_out' => 'withdraw#new'
-  post 'fund_out' => 'withdraw#create'
-  # match "withdraw" => "withdraw#create", via: [:get, :post]
+  # post 'fund_out' => 'withdraw#create'
+  match "withdraw" => "withdraw#create", via: [:get, :post]
 
   post 'void_deposit' => 'void_deposit#create'
   post 'void_withdraw' => 'void_withdraw#create'

@@ -1,6 +1,6 @@
 <% flash.each do |type, msg| %>
   <!-- only care about notice & alert type-->
-  <% next unless type == :success || type == :alert || type == :error || type == :fail%>
+  <% next unless type == :success || type == :alert || type == :error || type == :fail || type == :notice %>
   <div style="<%='display: none;' if type == :success || type == :fail %>">
   <%= content_tag :div, :class => "alert #{bootstrap_class_for(type)} fade in" do %>
     <button class="close" data-dismiss="alert">×</button>

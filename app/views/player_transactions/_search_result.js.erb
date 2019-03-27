@@ -10,4 +10,9 @@ $('input#datetimepicker_end_time').val("<%= format_time(@end_time) %>");
 	$('tr th:nth-child(4)').click();
 <% end %>
 
+<% if @transaction && @transaction.status == 'completed' && policy(:PlayerTransaction).print_void? %>
+  var html = "<%= escape_javascript(render :partial => "shared/void_slip_form", :locals =>{:operation => @transaction.transaction_type.name}, :formats => [ :html ]) %>"
+  printHtml(html, true);
+<% end %>
+
 <%= render :partial => "shared/flash_message", :formats => [ :js ] %>

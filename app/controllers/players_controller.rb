@@ -17,6 +17,13 @@ class PlayersController < ApplicationController
 
   def player_info
     clear_authorize_info
+    if params[:void_error] == 'yes' && flash[:error].present?
+      @void_error = I18n.t(flash[:error])
+      flash.clear
+    end
+    @start_time = params[:start_time]
+    @end_time = params[:end_time]
+    @transaction_id = params[:transaction_id]
     @operation = params[:action]
     member_id = params[:member_id]
     @player = policy_scope(Player).find_by_member_id(member_id)

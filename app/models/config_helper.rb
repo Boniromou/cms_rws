@@ -78,4 +78,12 @@ class ConfigHelper
   def withdraw_extra_amount
     retrieve_config('withdraw_extra_amount').to_f
   end
+
+  def void_deposit_extra_amount
+    retrieve_config('void_deposit_extra_amount').to_f
+  end
+
+  def void_withdraw_extra_amount
+    retrieve_config('void_withdraw_extra_amount').to_f
+  end
 end

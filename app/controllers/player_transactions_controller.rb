@@ -11,28 +11,34 @@ class PlayerTransactionsController < ApplicationController
     @operation = params[:operation]
   end
 
-  def do_search    
+  def do_search
     begin
-    @operation = params[:operation]
-    id_type = params[:id_type]
-    id_number = params[:id_number]
-    selected_tab_index = params[:selected_tab_index]
-    slip_number = params[:slip_number]
-    search_range = config_helper.trans_history_search_range
-    player_transactions = []
-    kiosk_transactions = []
-    if selected_tab_index == '0'
-      current_user.casino_ids.each do | casino_id |
-        shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range, casino_id)
-        requester_helper.update_player(id_type,id_number) unless id_number.blank?
+      @operation = params[:operation]
+      @start_time = params[:start_time]
+      @end_time = params[:end_time]
+      @transaction = PlayerTransaction.find_by_id(params[:transaction_id]) if params[:transaction_id]
+      id_type = params[:id_type]
+      id_number = params[:id_number]
+      selected_tab_index = params[:selected_tab_index]
+      slip_number = params[:slip_number]
+      search_range = config_helper.trans_history_search_range
+      player_transactions = []
+      kiosk_transactions = []
+      if selected_tab_index == '0'
+        current_user.casino_ids.each do | casino_id |
+          next if casino_id != 20000
+          shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range, casino_id)
+          requester_helper.update_player(id_type,id_number) unless id_number.blank?
 
-        player_transactions += PlayerTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id,@operation, current_licensee_id).where(:casino_id => casino_id, :status => 'completed')
-        kiosk_transactions += KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation, current_licensee_id).where(:casino_id => casino_id, :status => 'completed')
+          player_transactions += PlayerTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id,@operation, current_licensee_id).where(:casino_id => casino_id, :status => 'completed')
+          kiosk_transactions += KioskTransaction.search_query_by_player(id_type, id_number, shifts[0].id, shifts[1].id, @operation, current_licensee_id).where(:casino_id => casino_id, :status => 'completed')
+        end
+        @transactions = player_transactions + kiosk_transactions
+      else
+        @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_user.casino_ids)
       end
-      @transactions = player_transactions + kiosk_transactions
-    else      
-      @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_user.casino_ids)
-    end
+      @extra_deposit_amount = @config_helper.void_deposit_extra_amount
+      @extra_withdraw_amount = @config_helper.void_withdraw_extra_amount
     rescue Remote::PlayerNotFound => e
       @transactions = []
     rescue Search::NoResultException => e
@@ -43,7 +49,7 @@ class PlayerTransactionsController < ApplicationController
       flash[:error] = { key: "report_search." + e.message, replace: {day: search_range}}
     rescue Search::DateTimeError => e
       flash[:error] = "transaction_history." + e.message
-    rescue ArgumentError 
+    rescue ArgumentError
       flash[:error] = "transaction_history.datetime_format_not_valid"
     end
 
@@ -66,7 +72,7 @@ class PlayerTransactionsController < ApplicationController
     @player = Player.find(@transaction.player_id)
     @operation =  @transaction.transaction_type.name
   end
-  
+
   def get_start_time(time_str)
     start_time = parse_datetime(time_str, today_start_time)
     start_time = today_start_time if today_start_time - 30*24*60*60 > start_time

@@ -1,5 +1,5 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :casino_id
+  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :casino_id, :trans_date
   belongs_to :player
   belongs_to :shift
   belongs_to :user
@@ -18,7 +18,7 @@ class PlayerTransaction < ActiveRecord::Base
   EXCEPTION_DEPOSIT = 'manual_deposit'
   EXCEPTION_WITHDRAW = 'manual_withdraw'
   VOID_EXCEPTION_DEPOSIT = 'void_manual_deposit'
-  VOID_EXCEPTION_WITHDRAW = 'void_manual_withdraw'  
+  VOID_EXCEPTION_WITHDRAW = 'void_manual_withdraw'
   def deposit_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT || self.transaction_type.name == EXCEPTION_DEPOSIT
@@ -98,7 +98,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   def location
     if self.machine_token
-      machine_token_array = self.machine_token.split('|') 
+      machine_token_array = self.machine_token.split('|')
       return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
     end
     '---'
@@ -192,10 +192,10 @@ class PlayerTransaction < ActiveRecord::Base
     def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
       init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, source_of_funds)
     end
-    
+
     def save_exception_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
       init_transaction(member_id, amount, EXCEPTION_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
-    end   
+    end
 
     def save_exception_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
       init_transaction(member_id, amount, EXCEPTION_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, 1)
@@ -207,10 +207,10 @@ class PlayerTransaction < ActiveRecord::Base
 
     def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
       by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id)
-    end 
+    end
 
     def search_transactions_by_shift_id(user_id, in_shift_id)
       by_user_id(user_id).in_shift_id(in_shift_id)
-    end 
+    end
   end
 end

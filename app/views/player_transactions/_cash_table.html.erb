@@ -43,13 +43,13 @@
                   <% else %>
                     <td><%= PaymentMethod.find_by_id(t.payment_method_id).name %></td>
                   <% end %>
-                  
+
                   <% if t.source_of_fund_id == nil %>
                     <td><%= SourceOfFund.find_by_id(7).name %></td>
                   <% else %>
                     <td><%= SourceOfFund.find_by_id(t.source_of_fund_id).name %></td>
                   <% end %>
-       
+
                   <td><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>
@@ -73,13 +73,13 @@
                             <%= link_to t("button.print_void"), reprint_path + "?transaction_id=#{t.void_transaction.id}", :id => "reprint_void", :class => "btn btn-primary", :method => "get", :remote => true %>
                           <% end %>
                         <% end %>
-                      <% end %> 
+                      <% end %>
                         <% if policy(:player_transaction).reprint? %>
-                          <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %> 
+                          <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %>
                         <% end %>
                     <% end %>
                   </td>
-                     <% if t.data != '' %>
+                     <% if t.data.present? %>
                         <% if YAML.load(t.data)[:deposit_remark] != nil %>
                           <td><%= YAML.load(t.data)[:deposit_remark] %> </td>
                         <% else %>

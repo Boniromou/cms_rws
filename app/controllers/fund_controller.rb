@@ -40,7 +40,7 @@ class FundController < ApplicationController
     read_auth_info
     @exception_transaction = params[:exception_transaction]
     extract_params
-    check_authorization if action_str == 'deposit' || action_str == 'withdraw'
+    check_authorization if @exception_transaction != 'yes'
     check_transaction_acceptable
     execute_transaction
     clear_authorize_info
@@ -70,7 +70,7 @@ class FundController < ApplicationController
     if @exception_transaction != 'yes' && cookies[:second_auth_info]
       auth_info = JSON.parse cookies[:second_auth_info]
       params.merge!(auth_info['auth_info'].recursive_symbolize_keys!)
-      Rails.logger.info 'Auth params: #{params}'
+      Rails.logger.info "Auth params: #{params}"
     end
   end
 

@@ -8,6 +8,7 @@
               <th><%= t("transaction_history.date")%></th>
               <th><%= t("transaction_history.transaction_type")%></th>
               <th><%= t("transaction_history.approved_by")%></th>
+              <th><%= t("transaction_history.authorized_by")%></th>
               <th><%= t("transaction_history.location")%></th>
               <th><%= t("transaction_history.cage_cashier_id")%></th>
               <th><%= t("transaction_history.status")%></th>
@@ -34,10 +35,11 @@
                   <td><%= format_time(t.created_at) %></td>
                   <td><%= TransactionType.find_by_id(t.transaction_type_id).name.gsub('_',' ').titleize %></td>
                   <td><%= t.approved_by %></td>
+                  <td><%= t.authorized_by %></td>
                   <td><%= t.location %></td>
                   <td><%= !t.user.nil? ? t.user.name : 'System' %></td>
                   <td><%= t.display_status %></td>
-                  <td><%= t.deposit_amt_str %></td>
+                  <td class='deposit_amt'><%= t.deposit_amt_str %></td>
                   <% if t.payment_method_id == nil %>
                     <td><%= PaymentMethod.find_by_id(2).name %></td>
                   <% else %>
@@ -50,7 +52,7 @@
                     <td><%= SourceOfFund.find_by_id(t.source_of_fund_id).name %></td>
                   <% end %>
 
-                  <td><%= t.withdraw_amt_str %></td>
+                  <td class='withdraw_amt'><%= t.withdraw_amt_str %></td>
                   <td><%= t.void_transaction.slip_number if t.voided? %></td>
                   <td>
                     <% if t.source_type == 'cage_transaction'%>
@@ -59,14 +61,17 @@
                           <% trans_type = t.transaction_type.name %>
                           <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
                             <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
-                              <form class="form-horizontal" id="popupform">
-                                <div class="form-group">
-                                  <label for="inputRemarks" class="col-sm-5 control-label" id="remark_label"><strong>Remarks:</strong></label>
-                                  <div class="col-sm-3">
-                                    <%= text_area_tag 'remarks', nil, size: "35x10", :required => true, :id => "void_remarks", :form => "void_#{trans_type}", :oninput => "validateMaxLength($(this), value, 200)"%>
-                                  </div>
+                            <% if ['deposit','withdraw'].include?(trans_type) %>
+                              <p><label id="authorize_alert" class="invisible_error"><%= t("deposit_withdrawal.need_authorize") %></label></p>
+                            <% end %>
+                            <form class="form-horizontal" id="popupform">
+                              <div class="form-group">
+                                <label for="inputRemarks" class="col-sm-5 control-label" id="remark_label"><strong>Remarks:</strong></label>
+                                <div class="col-sm-3">
+                                  <%= text_area_tag 'remarks', nil, size: "35x10", :required => true, :id => "void_remarks", :form => "void_#{trans_type}", :oninput => "validateMaxLength($(this), value, 200)"%>
                                 </div>
-                              </form>
+                              </div>
+                            </form>
                           <% end %>
                         <% else %>
                           <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
@@ -101,4 +106,27 @@
     }
     return false;
   }
+
+  function updateAuthorizeAlert(amt, extra_amount){
+    var amt = parseFloat(amt);
+    if(amt < extra_amount){
+      $("label#authorize_alert").css('visibility', 'hidden');
+      $("label#authorize_alert").css('display', 'none');
+    }else{
+      $("label#authorize_alert").css('visibility', 'visible');
+      $("label#authorize_alert").css('display', 'block');
+    }
+  }
+
+  $('.void_deposit_btn').click(function() {
+    var amt = $(this).closest('tr').find('.deposit_amt').text();
+    updateAuthorizeAlert(amt, <%=@extra_deposit_amount%>);
+    return false;
+  });
+
+  $('.void_withdraw_btn').click(function() {
+    var amt = $(this).closest('tr').find('.withdraw_amt').text();
+    updateAuthorizeAlert(amt, <%=@extra_withdraw_amount%>);
+    return false;
+  });
 </script>

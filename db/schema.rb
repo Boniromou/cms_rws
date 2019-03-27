@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190226000001) do
+ActiveRecord::Schema.define(:version => 20190327031521) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
 
   add_index "accounting_dates", ["accounting_date"], :name => "index_accounting_dates_on_accounting_date", :unique => true
   add_index "accounting_dates", ["purge_at"], :name => "index_accounting_dates_on_purge_at"
+  add_index "accounting_dates", ["updated_at"], :name => "idx_updated_at"
 
   create_table "approval_logs", :force => true do |t|
     t.string   "action",              :limit => 45, :null => false
@@ -56,7 +57,11 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
     t.datetime "action_at"
+    t.datetime "purge_at"
   end
+
+  add_index "audit_logs", ["purge_at"], :name => "idx_purge_at"
+  add_index "audit_logs", ["updated_at"], :name => "idx_updated_at"
 
   create_table "casinos", :force => true do |t|
     t.string   "name",        :limit => 45, :null => false
@@ -91,9 +96,59 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
     t.datetime "created_at",                  :null => false
     t.datetime "updated_at",                  :null => false
     t.integer  "casino_id"
+    t.datetime "purge_at"
   end
 
   add_index "change_histories", ["licensee_id"], :name => "fk_change_histories_licensee_id"
+  add_index "change_histories", ["purge_at"], :name => "idx_purge_at"
+  add_index "change_histories", ["updated_at"], :name => "idx_updated_at"
+
+  create_table "chronos_archive_transaction_logs", :force => true do |t|
+    t.string   "archive_job_id",              :null => false
+    t.string   "target_uuid"
+    t.integer  "target_id",      :limit => 8
+    t.datetime "traced_at",                   :null => false
+    t.datetime "opened_at",                   :null => false
+    t.datetime "closed_at",                   :null => false
+  end
+
+  add_index "chronos_archive_transaction_logs", ["archive_job_id", "closed_at"], :name => "chronos_archive_transaction_logs_archive_job_id_closed_at_index"
+  add_index "chronos_archive_transaction_logs", ["archive_job_id", "traced_at"], :name => "chronos_archive_transaction_logs_archive_job_id_traced_at_index"
+  add_index "chronos_archive_transaction_logs", ["closed_at"], :name => "chronos_archive_transaction_logs_closed_at_index"
+  add_index "chronos_archive_transaction_logs", ["target_id", "archive_job_id"], :name => "chronos_atxs_tid_ajid", :unique => true
+  add_index "chronos_archive_transaction_logs", ["target_uuid", "archive_job_id"], :name => "chronos_atxs_tuuid_ajid", :unique => true
+
+  create_table "chronos_archive_transactions", :force => true do |t|
+    t.string   "archive_job_id",              :null => false
+    t.string   "target_uuid"
+    t.integer  "target_id",      :limit => 8
+    t.datetime "traced_at",                   :null => false
+    t.datetime "opened_at",                   :null => false
+    t.datetime "closed_at"
+  end
+
+  add_index "chronos_archive_transactions", ["archive_job_id", "closed_at"], :name => "chronos_archive_transactions_archive_job_id_closed_at_index"
+  add_index "chronos_archive_transactions", ["archive_job_id", "traced_at"], :name => "chronos_archive_transactions_archive_job_id_traced_at_index"
+  add_index "chronos_archive_transactions", ["target_id", "archive_job_id"], :name => "chronos_atxs_tid_ajid", :unique => true
+  add_index "chronos_archive_transactions", ["target_uuid", "archive_job_id"], :name => "chronos_atxs_tuuid_ajid", :unique => true
+
+  create_table "chronos_schema_info", :id => false, :force => true do |t|
+    t.integer "version", :default => 0, :null => false
+  end
+
+  create_table "chronos_trace_logs", :force => true do |t|
+    t.string   "job_id",     :null => false
+    t.string   "target",     :null => false
+    t.string   "type",       :null => false
+    t.datetime "synced_at",  :null => false
+    t.datetime "traced_at",  :null => false
+    t.datetime "created_at", :null => false
+  end
+
+  add_index "chronos_trace_logs", ["created_at"], :name => "chronos_trace_logs_created_at_index"
+  add_index "chronos_trace_logs", ["job_id", "created_at"], :name => "chronos_trace_logs_job_id_created_at_index"
+  add_index "chronos_trace_logs", ["target", "job_id", "synced_at"], :name => "chronos_trace_logs_target_job_id_synced_at_index"
+  add_index "chronos_trace_logs", ["type", "job_id", "target"], :name => "chronos_trace_logs_type_job_id_target_id"
 
   create_table "configurations", :force => true do |t|
     t.integer  "casino_id",                  :null => false
@@ -137,6 +192,7 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
   add_index "kiosk_transactions", ["ref_trans_id"], :name => "index_kiosk_transactions_on_ref_trans_id"
   add_index "kiosk_transactions", ["shift_id"], :name => "fk_kiosk_shift_id"
   add_index "kiosk_transactions", ["transaction_type_id"], :name => "fk_kiosk_transaction_type_id"
+  add_index "kiosk_transactions", ["updated_at"], :name => "idx_updated_at"
 
   create_table "licensees", :force => true do |t|
     t.string   "name"
@@ -155,11 +211,12 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
   end
 
   add_index "lock_types", ["purge_at"], :name => "index_lock_types_on_purge_at"
+  add_index "lock_types", ["updated_at"], :name => "idx_updated_at"
 
   create_table "payment_methods", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name",       :limit => 45, :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   create_table "player_transactions", :force => true do |t|
@@ -182,17 +239,21 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
     t.integer  "payment_method_id",                   :default => 1, :null => false
     t.integer  "source_of_fund_id",                   :default => 1, :null => false
     t.string   "approved_by"
+    t.string   "authorized_by"
+    t.datetime "authorized_at"
   end
 
   add_index "player_transactions", ["casino_id"], :name => "fk_player_transactions_casino_id"
   add_index "player_transactions", ["payment_method_id"], :name => "fk_payment_method_id"
   add_index "player_transactions", ["player_id", "promotion_code"], :name => "index_player_id_promotion_code", :unique => true
+  add_index "player_transactions", ["player_id"], :name => "fk_player_id"
   add_index "player_transactions", ["promotion_code"], :name => "promotion_code"
   add_index "player_transactions", ["purge_at"], :name => "index_player_transactions_on_purge_at"
   add_index "player_transactions", ["shift_id"], :name => "fk_shift_id"
   add_index "player_transactions", ["slip_number"], :name => "index_player_transactions_on_slip_number"
   add_index "player_transactions", ["source_of_fund_id"], :name => "fk_source_of_fund_id"
   add_index "player_transactions", ["transaction_type_id"], :name => "fk_transaction_type_id"
+  add_index "player_transactions", ["updated_at"], :name => "idx_updated_at"
   add_index "player_transactions", ["user_id"], :name => "fk_playerTransaction_user_id"
 
   create_table "players", :force => true do |t|
@@ -214,6 +275,7 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
   add_index "players", ["licensee_id"], :name => "fk_players_licensee_id"
   add_index "players", ["member_id", "licensee_id"], :name => "index_players_on_member_id_and_property_id", :unique => true
   add_index "players", ["purge_at"], :name => "index_players_on_purge_at"
+  add_index "players", ["updated_at"], :name => "idx_updated_at"
 
   create_table "players_lock_types", :force => true do |t|
     t.integer  "player_id",                  :null => false
@@ -239,6 +301,26 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
 
   add_index "properties", ["purge_at"], :name => "index_properties_on_purge_at"
 
+  create_table "shfits_bak", :force => true do |t|
+    t.integer  "shift_type_id"
+    t.integer  "roll_shift_by_user_id"
+    t.datetime "roll_shift_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+    t.integer  "accounting_date_id"
+    t.integer  "lock_version"
+    t.datetime "purge_at"
+    t.integer  "casino_id",             :null => false
+    t.string   "machine_token"
+  end
+
+  add_index "shfits_bak", ["accounting_date_id"], :name => "fk_accounting_date_id"
+  add_index "shfits_bak", ["casino_id"], :name => "fk_shifts_casino_id"
+  add_index "shfits_bak", ["purge_at"], :name => "index_shifts_on_purge_at"
+  add_index "shfits_bak", ["roll_shift_by_user_id"], :name => "fk_user_id"
+  add_index "shfits_bak", ["shift_type_id"], :name => "fk_shift_type_id"
+  add_index "shfits_bak", ["updated_at"], :name => "idx_updated_at"
+
   create_table "shift_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -247,6 +329,7 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
   end
 
   add_index "shift_types", ["purge_at"], :name => "index_shift_types_on_purge_at"
+  add_index "shift_types", ["updated_at"], :name => "idx_updated_at"
 
   create_table "shifts", :force => true do |t|
     t.integer  "shift_type_id"
@@ -267,6 +350,7 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
   add_index "shifts", ["purge_at"], :name => "index_shifts_on_purge_at"
   add_index "shifts", ["roll_shift_by_user_id"], :name => "fk_user_id"
   add_index "shifts", ["shift_type_id"], :name => "fk_shift_type_id"
+  add_index "shifts", ["updated_at"], :name => "idx_updated_at"
 
   create_table "slip_types", :force => true do |t|
     t.string   "name",       :null => false
@@ -312,6 +396,7 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
   end
 
   add_index "transaction_types", ["purge_at"], :name => "index_transaction_types_on_purge_at"
+  add_index "transaction_types", ["updated_at"], :name => "idx_updated_at"
 
   create_table "transaction_types_slip_types", :force => true do |t|
     t.integer  "casino_id",           :null => false
@@ -333,8 +418,10 @@ ActiveRecord::Schema.define(:version => 20190226000001) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "purge_at"
+    t.integer  "casino_id"
   end
 
   add_index "users", ["purge_at"], :name => "index_users_on_purge_at"
+  add_index "users", ["updated_at"], :name => "idx_updated_at"
 
 end

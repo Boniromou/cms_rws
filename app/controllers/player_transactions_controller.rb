@@ -16,7 +16,7 @@ class PlayerTransactionsController < ApplicationController
       @operation = params[:operation]
       @start_time = params[:start_time]
       @end_time = params[:end_time]
-      @transaction = PlayerTransaction.find_by_id(params[:transaction_id]) if params[:transaction_id]
+      @transaction = PlayerTransaction.find_by_id(params[:transaction_id]) if params[:transaction_id].present?
       id_type = params[:id_type]
       id_number = params[:id_number]
       selected_tab_index = params[:selected_tab_index]
@@ -26,7 +26,6 @@ class PlayerTransactionsController < ApplicationController
       kiosk_transactions = []
       if selected_tab_index == '0'
         current_user.casino_ids.each do | casino_id |
-          next if casino_id != 20000
           shifts = get_shifts(params[:start_time], params[:end_time], id_number, @operation, search_range, casino_id)
           requester_helper.update_player(id_type,id_number) unless id_number.blank?
 

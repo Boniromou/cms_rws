@@ -68,6 +68,7 @@
                               <div class="form-group">
                                 <label for="inputRemarks" class="col-sm-5 control-label" id="remark_label"><strong>Remarks:</strong></label>
                                 <div class="col-sm-3">
+                                  <%= hidden_field_tag :member_id, t.player.member_id, :form => "void_#{trans_type}" %>
                                   <%= text_area_tag 'remarks', nil, size: "35x10", :required => true, :id => "void_remarks", :form => "void_#{trans_type}", :oninput => "validateMaxLength($(this), value, 200)"%>
                                 </div>
                               </div>

@@ -18,7 +18,8 @@ class PlayersController < ApplicationController
   def player_info
     clear_authorize_info
     if params[:void_error] == 'yes' && flash[:error].present?
-      @void_error = I18n.t(flash[:error])
+      msg = flash[:error]
+      @void_error = msg.is_a?(Hash) ? I18n.t(flash[:error][:key], flash[:error][:replace]) : I18n.t(msg)
       flash.clear
     end
     @start_time = params[:start_time]

@@ -10,7 +10,7 @@ describe VoidController do
     Warden.test_reset!
   end
 
-  
+
   describe '[47] Void Transaction' do
     before(:each) do
       clean_dbs
@@ -22,25 +22,25 @@ describe VoidController do
 
       mock_wallet_balance(0.0)
     end
-    
+
     after(:each) do
       clean_dbs
     end
-    
+
     def create_player_transaction
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001', :casino_id => 20000)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001', :casino_id => 20000, :trans_date => Time.now)
     end
 
     it '[47.1] Display void button', :js => true do
       login_as_admin
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
       create_past_shift
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :casino_id => 20000)
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :casino_id => 20000)
+      @player_transaction2 = PlayerTransaction.create!(:shift_id => @past_shift.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :casino_id => 20000, :trans_date => Time.now)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :casino_id => 20000, :trans_date => Time.now)
 
       fill_in "start", :with => @player_transaction2.shift.accounting_date.to_s
       fill_in "end", :with => @player_transaction1.shift.accounting_date.to_s
@@ -51,31 +51,32 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction2,@player_transaction1])
     end
-    
+
     it '[47.2] Void success', :js => true do
+      mock_patron_not_change
       mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
-
       fill_in "slip_number", :with => @player_transaction1.slip_number
       find("input#selected_tab_index").set "1"
 
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      sleep 3
 
-      check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
+      # check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
+      # expect(page.source).to have_selector("iframe")
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
-      expect(page.source).to have_selector("iframe")
       expect(void_transaction.status).to eq 'completed'
+
     end
 
     it '[47.3] disconnection Void depopsit fail', :js => true do
@@ -84,7 +85,7 @@ describe VoidController do
       login_as_admin
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -93,11 +94,12 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
+
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
-      
-      check_flash_message I18n.t("flash_message.contact_service")
+      sleep 3
+
+      expect(find('label#void_error').text).to eq I18n.t("flash_message.contact_service")
       wait_for_ajax
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
@@ -116,7 +118,7 @@ describe VoidController do
       @player_transaction1.transaction_type_id = 2
       @player_transaction1.save
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -125,11 +127,12 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
+
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_withdraw_" + @player_transaction1.id.to_s, content_list, 1)
-      
-      check_flash_message I18n.t("flash_message.contact_service")
+      sleep 3
+
+      expect(find('label#void_error').text).to eq I18n.t("flash_message.contact_service")
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 4).first
@@ -145,7 +148,7 @@ describe VoidController do
       login_as_admin
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -154,11 +157,12 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
+
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
-      
-      check_flash_message I18n.t("invalid_amt.no_enough_to_void_deposit", { balance: to_display_amount_str(@player_balance)})
+      sleep 3
+
+      expect(find('label#void_error').text).to eq I18n.t("invalid_amt.no_enough_to_void_deposit", { balance: to_display_amount_str(@player_balance)})
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
@@ -173,7 +177,7 @@ describe VoidController do
       set_permission(@test_user,"cashier",:player_transaction,['search'])
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -183,13 +187,13 @@ describe VoidController do
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1],false,false,false)
     end
-    
+
     it '[47.7] Void deposit fail when the transaction had been voided', :js => true do
       mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -198,22 +202,23 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
+
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       create_void_transaction(@player_transaction1.id)
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      sleep 3
 
-      check_flash_message I18n.t("void_transaction.already_void", slip_number: @player_transaction1.slip_number.to_s)
+      expect(find('label#void_error').text).to eq I18n.t("void_transaction.already_void", slip_number: @player_transaction1.slip_number.to_s)
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
     end
-    
+
     it '[47.8] Void deposit fail when the transaction not exist', :js => true do
       mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -222,16 +227,17 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
+
       @player_transaction1.casino_id = 1003
       @player_transaction1.save!
-      
+
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      sleep 3
 
-      check_flash_message I18n.t("void_transaction.invalid_machine_token")
+      expect(find('label#void_error').text).to eq I18n.t("void_transaction.invalid_machine_token")
     end
-    
+
     it '[47.9] Update trans date', :js => true do
       trans_date = (Time.now + 5.second).strftime("%Y-%m-%d %H:%M:%S")
       wallet_response = Requester::WalletTransactionResponse.new({:error_code => 'OK', :error_message => 'Request is carried out successfully.', :trans_date => trans_date})
@@ -239,7 +245,7 @@ describe VoidController do
       login_as_admin
       create_player_transaction
       visit home_path
-      click_link I18n.t("tree_panel.player_transaction") 
+      click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
 
       fill_in "slip_number", :with => @player_transaction1.slip_number
@@ -248,15 +254,16 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
-      
+
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      sleep 3
 
-      check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
+      # check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
-      expect(page.source).to have_selector("iframe")
+      # expect(page.source).to have_selector("iframe")
       expect(void_transaction.status).to eq 'completed'
       expect(void_transaction.trans_date).to eq trans_date.to_time(:local).utc
     end

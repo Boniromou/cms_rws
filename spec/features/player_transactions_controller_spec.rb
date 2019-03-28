@@ -17,7 +17,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       mock_patron_not_change
-      
+
       @player = create_default_player
       @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
       @player_10010 = create_default_player(:last_name => "player_10010", :member_id => "123457", :card_id => "1234567891", :licensee_id => 10010)
@@ -26,7 +26,7 @@ describe PlayersController do
     end
 
     after(:each) do
-      PlayerTransaction.delete_all
+      clean_dbs
     end
 
     it '[8.2] successfully generate report. (search by accounting date)', js: true do
@@ -67,7 +67,7 @@ describe PlayersController do
     it '[8.3] successfully generate report. (search by slip ID)', js: true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000, :trans_date => Time.now)
       create_10010_player_transaction
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
@@ -91,7 +91,7 @@ describe PlayersController do
 
       expect(find("div.widget-body label").text).to eq t("report_search.no_transaction_found")
     end
-    
+
     it '[8.5] successfully generate report. (search by member ID)', js: true do
       login_as_admin
       create_player_transaction
@@ -112,7 +112,7 @@ describe PlayersController do
       set_permission(@test_user,"cashier",:player_transaction,[])
       expect(page).to_not have_selector("li#nav_search_transactions")
     end
-    
+
     it '[8.7] re-print slip', :js => true do
       login_as_admin
       create_player_transaction
@@ -121,12 +121,12 @@ describe PlayersController do
       check_player_transaction_page_js
       fill_search_info_js("member_id", @player2.member_id)
       find("input#search").click
-      
+
       find("div a#reprint").click
       wait_for_ajax
       expect(page.source).to have_selector("iframe")
     end
-    
+
     it '[8.9] Re-print slip unauthorized', js: true do
       login_as_test_user
       set_permission(@test_user,"cashier",:player_transaction,["search"])
@@ -140,7 +140,7 @@ describe PlayersController do
 
       check_player_transaction_result_items([@player_transaction1, @player_transaction3], false,false,false)
     end
-    
+
     it '[8.10] empty search', :js => true do
       login_as_admin
       create_player_transaction
@@ -195,7 +195,7 @@ describe PlayersController do
       check_flash_message I18n.t("transaction_history.no_id")
       expect(page).to_not have_selector("div#wid-id-2")
     end
-    
+
     it '[8.14] cannot search othoer casino transactions. (search by accounting date)', js: true do
       login_as_admin
       create_player_transaction
@@ -212,17 +212,17 @@ describe PlayersController do
 
       check_player_transaction_result_items([@player_transaction2])
     end
-    
+
     it '[8.15] successfully generate report with kiosk transactions.', js: true do
       login_as_admin
       create_player_transaction
       create_10010_player_transaction
       @kiosk_id = '123456789'
       @source_type = 'everi_kiosk'
-      @kiosk_transaction1 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 70*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 70*60)
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now + 80*60, :slip_number => 1, :casino_id => 20000, :created_at => Time.now + 80*60)
-      @kiosk_transaction2 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60)
-      @kiosk_transaction3 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 10010, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60)
+      @kiosk_transaction1 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 70*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 70*60, :trans_date => Time.now + 70*60)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now + 80*60, :slip_number => 1, :casino_id => 20000, :created_at => Time.now + 80*60, :trans_date => Time.now + 80*60)
+      @kiosk_transaction2 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60, :trans_date => Time.now + 90*60)
+      @kiosk_transaction3 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 10010, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60, :trans_date => Time.now + 90*60)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -236,14 +236,14 @@ describe PlayersController do
       check_player_transaction_result_items([@player_transaction1,@player_transaction3,@kiosk_transaction1,@player_transaction4,@kiosk_transaction2])
     end
   end
-  
+
   describe '[16] Print Transaction report' do
     before(:each) do
       clean_dbs
       create_shift_data
       mock_cage_info
       mock_patron_not_change
-      
+
       @player = create_default_player
       @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
@@ -253,7 +253,7 @@ describe PlayersController do
     after(:each) do
       PlayerTransaction.delete_all
     end
-    
+
     it '[16.2] unauthorized print transaction report', js: true do
       login_as_test_user
       visit home_path
@@ -270,7 +270,7 @@ describe PlayersController do
       expect(page.source).to_not have_selector("button#print_player_transaction")
     end
   end
-  
+
   describe '[49] Slip ID' do
     before(:each) do
       clean_dbs
@@ -289,7 +289,7 @@ describe PlayersController do
       mock_wallet_transaction_success(:void_withdraw)
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
     end
-    
+
     after(:each) do
     end
 
@@ -320,14 +320,14 @@ describe PlayersController do
       expect(find("label#player_remain_deposit").text).to eq '0.00'
     end
 
-    it '[6.22] Daily limit no change after deposit and void deposit', :js => true do
-      login_as_admin
+    # it '[6.22] Daily limit no change after deposit and void deposit', :js => true do
+    #   login_as_admin
 
-      check_daily_amout
-      @player_transaction1 = do_deposit(1000)
-      @void_transaction1 = do_void(@player_transaction1.id)
-      check_daily_amout
-    end
+    #   check_daily_amout
+    #   @player_transaction1 = do_deposit(1000)
+    #   @void_transaction1 = do_void(@player_transaction1.id)
+    #   check_daily_amout
+    # end
 
     it '[49.1] Show correct slip ID', :js => true do
 =begin
@@ -373,7 +373,7 @@ describe PlayersController do
       clean_dbs
       create_shift_data
       mock_cage_info
-      
+
       @player = create_default_player
       @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
@@ -426,7 +426,7 @@ describe PlayersController do
       create_shift_data
       mock_cage_info
       mock_patron_not_change
-      
+
       @player = create_default_player
       @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 

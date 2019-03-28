@@ -273,33 +273,19 @@ module StepHelper
     else
       void_slip_number_str = ""
     end
-    i = 0
-    expect(item[i].text).to eq player_transaction.source_type.gsub('_transaction','').titleize
-    i +=1
-    expect(item[i].text).to eq casino
-    i +=1
-    expect(item[i].text).to eq player_transaction.slip_number.to_s
-    i +=1
-    expect(item[i].text).to eq player.member_id
-    i +=1
-    expect(item[i].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
-    i +=1
-    expect(item[i].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
-    i +=1
-    expect(item[i].text).to eq location
-    i +=1
-    expect(item[i].text).to eq user.name
-    i +=1
-    expect(item[i].text).to eq player_transaction.display_status
-    i +=1
-    expect(item[i].text).to eq deposit_str
-    i +=1
-    expect(item[i].text).to eq player_transaction.data_hash[:deposit_reason].to_s
-    i +=1
-    expect(item[i].text).to eq withdraw_str
-    i +=1
-    expect(item[i].text).to eq void_slip_number_str
-    i +=1
+
+    authorized_by = player_transaction.authorized_by if player_transaction.source_type == 'cage_transaction'
+    payment_method = player_transaction.payment_method_id ? player_transaction.payment_method.name : PaymentMethod.find_by_id(2).name
+    source_of_fund = player_transaction.source_of_fund_id ? player_transaction.source_of_fund.name : SourceOfFund.find_by_id(7).name
+
+    texts = [player_transaction.source_type.gsub('_transaction','').titleize, casino, player_transaction.slip_number.to_s, player.member_id, accounting_date.accounting_date.strftime("%Y-%m-%d"), player_transaction.trans_date.localtime.strftime("%Y-%m-%d %H:%M:%S"), player_transaction.transaction_type.name.titleize, player_transaction.approved_by.to_s, authorized_by.to_s, location, user.name, player_transaction.display_status, deposit_str, payment_method.to_s, source_of_fund.to_s, withdraw_str, void_slip_number_str]
+
+    texts.each_with_index do |text, idx|
+      expect(item[idx].text).to eq text
+    end
+
+    expect(item[18].text).to eq player_transaction.data_hash[:deposit_reason].to_s
+    i = 17
     within item[i] do
       if player_transaction.source_type == 'cage_transaction'
         if player_transaction.status == 'completed'
@@ -721,15 +707,15 @@ module StepHelper
     @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
     @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
 
-    @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000)
-    @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 20000)
-    @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3, :casino_id => 20000)
+    @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000, :trans_date => Time.now)
+    @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 20000, :trans_date => Time.now + 30*60)
+    @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3, :casino_id => 20000, :trans_date => Time.now + 60*60)
   end
 
   def create_10010_player_transaction
     @machine_token_lic_10010 = '10010|10|LOCATION10|10|STATION10|10|machine10|6e80a295eeff4554bf025098cca6eb100'
 
-    @player_transaction_lic_10010 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token_lic_10010, :created_at => Time.now, :slip_number => 1, :casino_id => 10010)
+    @player_transaction_lic_10010 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token_lic_10010, :created_at => Time.now, :slip_number => 1, :casino_id => 10010, :trans_date => Time.now)
   end
 
   def create_credit_transaction

@@ -23,15 +23,19 @@ module TransactionAdapter
   def user
     User.new(:name => kiosk_name)
   end
-  
+
   def approved_by
     ''
   end
-  
+
+  def authorized_by
+    ''
+  end
+
   def payment_method_id
     nil
   end
-  
+
   def source_of_fund_id
     nil
   end
@@ -39,7 +43,7 @@ module TransactionAdapter
   def data
     ''
   end
-  
+
   def data_hash
     {}
   end
@@ -47,7 +51,7 @@ module TransactionAdapter
   def void_transaction
     nil
   end
-  
+
   def voided?
     display_status == 'voided'
   end

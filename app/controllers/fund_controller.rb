@@ -1,6 +1,8 @@
 class FundController < ApplicationController
   include FundHelper
 
+  HMAC_SECRET = 'test_key'
+
   layout 'cage'
 
   before_filter :only => [:new, :create] do |controller|
@@ -68,8 +70,7 @@ class FundController < ApplicationController
 
   def read_auth_info
     if @exception_transaction != 'yes' && cookies[:second_auth_info]
-      auth_info = JSON.parse cookies[:second_auth_info]
-      params.merge!(auth_info['auth_info'].recursive_symbolize_keys!)
+      params.merge!(second_auth_info[:auth_info].recursive_symbolize_keys!)
       Rails.logger.info "Auth params: #{params}"
     end
   end
@@ -82,12 +83,13 @@ class FundController < ApplicationController
   def check_authorization
     return if @exception_transaction == 'yes' || @amount.to_f < @config_helper.send("#{action_str}_authorized_amount")
     raise FundInOut::NeedAuthorization if cookies[:second_auth_result].blank?
-    second_auth_result = JSON.parse(cookies[:second_auth_result]).symbolize_keys!
-    Rails.logger.info "Authorize result: #{second_auth_result}"
 
-    raise FundInOut::AuthorizationFail if second_auth_result[:error_code] != 'OK' || cookies[:second_auth_info].blank?
-    @authorized_by = second_auth_result[:authorized_by]
-    @authorized_at = second_auth_result[:authorized_at]
+    auth_result = second_auth_result
+    Rails.logger.info "Authorize result: #{auth_result}"
+    raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || cookies[:second_auth_info].blank? || auth_result[:message_id] != second_auth_info[:message_id]
+
+    @authorized_by = auth_result[:authorized_by]
+    @authorized_at = auth_result[:authorized_at]
   end
 
   def validate_pin
@@ -204,15 +206,26 @@ class FundController < ApplicationController
   def handle_need_authorization(e)
     clear_authorize_info
     auth_info = params.clone.slice!('utf8', 'authenticity_token', 'controller', 'action')
+    permission = action_str.include?('void') ? 'authorize_void' : "authorize_#{action_str}"
     value = {
       auth_info: auth_info,
       app_name: APP_NAME,
       casino_id: current_casino_id,
-      permission: ['player_transaction', "authorize_#{action_str}"],
-      callback_url: auth_callback_url
+      permission: ['player_transaction', permission],
+      callback_url: auth_callback_url,
+      message_id: SecureRandom.hex(12)
     }
-    write_cookie(:second_auth_info, JSON.generate(value))
+    value = JWT.encode value, HMAC_SECRET, 'HS256'
+    write_cookie(:second_auth_info, value)
     redirect_to "#{SSO_URL}/second_authorize"
+  end
+
+  def second_auth_info
+    JWT.decode(cookies[:second_auth_info], HMAC_SECRET, true, { algorithm: 'HS256' })[0].symbolize_keys! if cookies[:second_auth_info]
+  end
+
+  def second_auth_result
+    JWT.decode(cookies[:second_auth_result], HMAC_SECRET, true, { algorithm: 'HS256' })[0].symbolize_keys! if cookies[:second_auth_result]
   end
 
   def auth_callback_url

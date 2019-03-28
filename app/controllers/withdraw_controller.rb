@@ -7,15 +7,16 @@ class WithdrawController < FundController
     @remain_limit = @player.remain_trans_amount(:withdraw, @casino_id)
     @authorized_amount = @config_helper.withdraw_authorized_amount
     if @exception_transaction != 'yes' && cookies[:second_auth_result].present? && cookies[:second_auth_info].present?
-      auth_info = JSON.parse(cookies[:second_auth_info]).recursive_symbolize_keys![:auth_info]
-      auth_result = JSON.parse(cookies[:second_auth_result]).recursive_symbolize_keys!
-      raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK'
+      auth_info = second_auth_info
+      auth_result = second_auth_result
+      raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || auth_result[:message_id] != auth_info[:message_id]
 
+      auth_info = auth_info[:auth_info].recursive_symbolize_keys!
       @authorize_result = 'yes'
       @payment_method_type = auth_info[:payment_method_type]
       @player_transaction_amount = auth_info[:player_transaction][:amount]
       @deposit_reason = auth_info[:player_transaction][:deposit_reason]
-      flash[:notice] = "already authorize success"
+      flash[:notice] = 'flash_message.authorize_success'
     end
   end
 

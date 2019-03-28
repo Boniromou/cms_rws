@@ -15,7 +15,7 @@
 
     <ul style>
       <li id="nav_home" style="background: rgba(69,69,69,0.6);padding: 7px 0">
-        <%= link_to home_path, :title => t("tree_panel.home") , :id => "home_link", :remote => true do %>
+        <%= link_to home_path, :title => t("tree_panel.home") , :id => "home_link" do %>
           <i class="fa fa-lg fa-home"></i>
           <span class="menu-item-parent"><%= t("tree_panel.home")%></span>
         <% end %>
@@ -33,7 +33,7 @@
             <% end %> -->
             <% if policy(:Player).profile? %>
               <li id="nav_player_profile">
-                <%= link_to players_search_path + "?operation=profile", :title => t("tree_panel.profile") , :remote => true do %>
+                <%= link_to players_search_path + "?operation=profile", :title => t("tree_panel.profile") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.profile")%></span>
                 <% end %>
               </li>

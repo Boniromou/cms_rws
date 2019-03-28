@@ -229,6 +229,7 @@ en:
     manual_deposit_complete: "Manual deposit %{amount} submitted. Transaction pending approval."
     manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
     authorize_failed: "authorize failed."
+    authorize_success: "authorize already success."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:

@@ -71,19 +71,19 @@ class ConfigHelper
     retrieve_config('daily_withdraw_limit').to_i
   end
 
-  def deposit_extra_amount
-    retrieve_config('deposit_extra_amount').to_f
+  def deposit_authorized_amount
+    retrieve_config('deposit_authorized_amount').to_i / 100.0
   end
 
-  def withdraw_extra_amount
-    retrieve_config('withdraw_extra_amount').to_f
+  def withdraw_authorized_amount
+    retrieve_config('withdraw_authorized_amount').to_i / 100.0
   end
 
-  def void_deposit_extra_amount
-    retrieve_config('void_deposit_extra_amount').to_f
+  def void_deposit_authorized_amount
+    retrieve_config('void_deposit_authorized_amount').to_i / 100.0
   end
 
-  def void_withdraw_extra_amount
-    retrieve_config('void_withdraw_extra_amount').to_f
+  def void_withdraw_authorized_amount
+    retrieve_config('void_withdraw_authorized_amount').to_i / 100.0
   end
 end

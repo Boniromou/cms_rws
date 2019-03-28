@@ -80,7 +80,7 @@ class FundController < ApplicationController
   end
 
   def check_authorization
-    return if @exception_transaction == 'yes' || @amount.to_f < @config_helper.send("#{action_str}_extra_amount")
+    return if @exception_transaction == 'yes' || @amount.to_f < @config_helper.send("#{action_str}_authorized_amount")
     raise FundInOut::NeedAuthorization if cookies[:second_auth_result].blank?
     second_auth_result = JSON.parse(cookies[:second_auth_result]).symbolize_keys!
     Rails.logger.info "Authorize result: #{second_auth_result}"

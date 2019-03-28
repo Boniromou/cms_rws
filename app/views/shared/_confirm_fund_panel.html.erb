@@ -116,10 +116,10 @@
   }
 
   function updateAuthorizeAlert(){
-    var extra_amount = <%= @extra_amount %>;
+    var authorized_amount = <%= @authorized_amount %>;
     var authorize_result = "<%= @authorize_result %>";
     var amt = $('#player_transaction_amount').val();
-    if(amt < extra_amount || authorize_result == 'yes'){
+    if(amt < authorized_amount || authorize_result == 'yes'){
       $("label#authorize_alert").css('visibility', 'hidden');
       $("label#authorize_alert").css('display', 'none');
     }else{
@@ -129,10 +129,10 @@
   }
 
   function updateValidatePinForm(){
-    var extra_amount = <%= @extra_amount %>;
+    var authorized_amount = <%= @authorized_amount %>;
     var authorize_result = "<%= @authorize_result %>";
     var amt = $('#player_transaction_amount').val();
-    if(amt < extra_amount || authorize_result == 'yes'){
+    if(amt < authorized_amount || authorize_result == 'yes'){
       $("form#validate_pin_form").css('visibility', 'visible');
       $("form#validate_pin_form").css('display', 'block');
       $("input#player_pin").removeAttr('disabled');

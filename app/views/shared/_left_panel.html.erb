@@ -47,15 +47,15 @@
           <ul style="display:block;">
             <% if policy(:Player).balance? %>
               <li id="nav_balance_enquiry">
-                <%= link_to players_search_path(operation: :balance, exception_transaction: :no), :title => t("tree_panel.balance"), :remote => true do %>
+                <%= link_to players_search_path(operation: :balance, exception_transaction: :no), :title => t("tree_panel.balance") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.balance") %></span>
                 <% end %>
               </li>
             <% end %>
-            
+
             <% if policy(:PlayerTransaction).exception? %>
               <li id="nav_exception_balance">
-                <%= link_to players_search_path(operation: :balance, exception_transaction: :yes), :title => t("deposit_withdrawal.exception"), :remote => true do %>
+                <%= link_to players_search_path(operation: :balance, exception_transaction: :yes), :title => t("deposit_withdrawal.exception") do %>
               <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.exception") %></span>
                 <% end %>
               </li>
@@ -63,21 +63,21 @@
 
             <% if policy(:PlayerTransactionApproval).index? %>
               <li id="nav_approval">
-              <%= link_to approval_path , :title => t("deposit_withdrawal.approval"), :remote => true do %>
+              <%= link_to approval_path , :title => t("deposit_withdrawal.approval") do %>
              <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.approval") %></span>
               <% end %>
             <% end %>
-            
+
             <% if policy(:PlayerTransaction).search? %>
               <li id="nav_search_transactions">
-                <%= link_to search_transactions_path + "?operation=cash", :title => t("tree_panel.player_transaction"), :remote => true do %>
+                <%= link_to search_transactions_path + "?operation=cash", :title => t("tree_panel.player_transaction") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_transaction") %></span>
             <% end %>
               </li>
 
               <% if IS_MARKETING == 0 %>
               <li id="nav_search_transactions">
-                <%= link_to search_transactions_path + "?operation=credit", :title => t("tree_panel.promotional_credit"), :remote => true do %>
+                <%= link_to search_transactions_path + "?operation=credit", :title => t("tree_panel.promotional_credit") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.promotional_credit") %></span>
                 <% end %>
               </li>
@@ -86,7 +86,7 @@
 
             <% if policy(:account_activity).list? %>
               <li id="nav_account_activity">
-                <%= link_to search_account_activities_path, :title => t("tree_panel.account_activity"), :remote => true do %>
+                <%= link_to search_account_activities_path, :title => t("tree_panel.account_activity") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.account_activity") %></span>
                 <% end %>
               </li>
@@ -94,7 +94,7 @@
 
             <% if policy(:player_balance_report).list? %>
               <li id="nav_player_balance_report">
-                <%= link_to search_player_balance_reports_path, :title => t("tree_panel.player_balance_report"), :remote => true do %>
+                <%= link_to search_player_balance_reports_path, :title => t("tree_panel.player_balance_report") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.player_balance_report") %></span>
                 <% end %>
               </li>
@@ -116,7 +116,7 @@
             <% end %> -->
             <% if policy(:Shift).search_fm? %>
               <li id="nav_front_money">
-                <%= link_to search_front_money_path, :title => t("tree_panel.front_money"), :remote => true do %>
+                <%= link_to search_front_money_path, :title => t("tree_panel.front_money") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.front_money") %></span>
                 <% end %>
               </li>
@@ -130,21 +130,21 @@
           <ul style="display:block;">
             <% if policy(:AuditLog).search_audit_log? %>
               <li id="nav_audit_log">
-                <%= link_to search_audit_logs_path, :title => t("tree_panel.audit_log"), :remote => true do %>
+                <%= link_to search_audit_logs_path, :title => t("tree_panel.audit_log") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.audit_log") %></span>
                 <% end %>
               </li>
             <% end %>
             <% if (policy(:ChangeHistory).lock_player_log?) && IS_MARKETING == 0 %>
               <li id="nav_audit_log">
-                <%= link_to search_lock_histories_path, :title => t("tree_panel.lock_history"), :remote => true do %>
+                <%= link_to search_lock_histories_path, :title => t("tree_panel.lock_history") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.lock_history") %></span>
                 <% end %>
               </li>
             <% end %>
             <% if (policy(:ChangeHistory).pin_change_log?) && IS_MARKETING == 0 %>
               <li id="nav_audit_log">
-                <%= link_to search_pin_histories_path, :title => t("tree_panel.pin_history"), :remote => true do %>
+                <%= link_to search_pin_histories_path, :title => t("tree_panel.pin_history") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.pin_history") %></span>
                 <% end %>
               </li>

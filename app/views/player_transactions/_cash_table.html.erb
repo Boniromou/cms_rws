@@ -107,9 +107,9 @@
     return false;
   }
 
-  function updateAuthorizeAlert(amt, extra_amount){
+  function updateAuthorizeAlert(amt, authorized_amount){
     var amt = parseFloat(amt);
-    if(amt < extra_amount){
+    if(amt < authorized_amount){
       $("label#authorize_alert").css('visibility', 'hidden');
       $("label#authorize_alert").css('display', 'none');
     }else{
@@ -120,13 +120,13 @@
 
   $('.void_deposit_btn').click(function() {
     var amt = $(this).closest('tr').find('.deposit_amt').text();
-    updateAuthorizeAlert(amt, <%=@extra_deposit_amount%>);
+    updateAuthorizeAlert(amt, <%=@void_deposit_authorized_amount%>);
     return false;
   });
 
   $('.void_withdraw_btn').click(function() {
     var amt = $(this).closest('tr').find('.withdraw_amt').text();
-    updateAuthorizeAlert(amt, <%=@extra_withdraw_amount%>);
+    updateAuthorizeAlert(amt, <%=@void_withdraw_authorized_amount%>);
     return false;
   });
 </script>

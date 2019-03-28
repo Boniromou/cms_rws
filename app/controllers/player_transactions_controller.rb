@@ -37,8 +37,8 @@ class PlayerTransactionsController < ApplicationController
       else
         @transactions = PlayerTransaction.search_query_by_slip_number(slip_number).where(:casino_id => current_user.casino_ids)
       end
-      @extra_deposit_amount = @config_helper.void_deposit_extra_amount
-      @extra_withdraw_amount = @config_helper.void_withdraw_extra_amount
+      @void_deposit_authorized_amount = @config_helper.void_deposit_authorized_amount
+      @void_withdraw_authorized_amount = @config_helper.void_withdraw_authorized_amount
     rescue Remote::PlayerNotFound => e
       @transactions = []
     rescue Search::NoResultException => e

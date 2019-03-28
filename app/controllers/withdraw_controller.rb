@@ -5,7 +5,7 @@ class WithdrawController < FundController
     @fund_type = @player.get_fund_type
     @payment_method = @player.payment_method_types
     @remain_limit = @player.remain_trans_amount(:withdraw, @casino_id)
-    @extra_amount = @config_helper.withdraw_extra_amount
+    @authorized_amount = @config_helper.withdraw_authorized_amount
     if @exception_transaction != 'yes' && cookies[:second_auth_result].present? && cookies[:second_auth_info].present?
       auth_info = JSON.parse(cookies[:second_auth_info]).recursive_symbolize_keys![:auth_info]
       auth_result = JSON.parse(cookies[:second_auth_result]).recursive_symbolize_keys!

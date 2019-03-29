@@ -109,7 +109,7 @@
   }
 
   function updateAuthorizeAlert(amt, authorized_amount){
-    var amt = parseFloat(amt);
+    var amt = parseFloat(amt.replace(',', ''));
     if(amt < authorized_amount){
       $("label#authorize_alert").css('visibility', 'hidden');
       $("label#authorize_alert").css('display', 'none');

@@ -21,35 +21,37 @@ describe FundController do
       @player = create_default_player
 
       mock_wallet_balance(0)
-      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
-      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
+      # allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'not OK'})
+      # allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
       allow_any_instance_of(RequesterHelper).to receive(:validate_pin).and_return(true)
     end
-    
+
     after(:each) do
       clean_dbs
     end
-    
+
     def create_player_transaction
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "pending", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000, :trans_date => Time.now)
     end
 
     it '[48.1] Pending Deposit Transaction', :js => true do
       login_as_admin
       go_to_deposit_page
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
-      mock_wallet_balance('no_balance')
+      mock_wallet_response_failed(:deposit)
+
       fill_in "player_transaction_amount", :with => 100
+      find("#player_transaction_payment_method_type option[value='2']").select_option
+      find("#player_transaction_source_of_funds option[value='2']").select_option
       find("button#confirm_deposit").click
       wait_for_ajax
-      find("div#pop_up_dialog div button#confirm").trigger('click')
+      find("div#pop_up_dialog div button#confirm").click
       wait_for_ajax
 
       player_transaction = PlayerTransaction.find_by_player_id(@player.id)
       expect(player_transaction.status).to eq 'pending'
-      check_balance_page_without_balance
       check_player_lock_types
       @player.reload
       expect(@player.lock_types.include?('pending')).to eq true
@@ -82,9 +84,10 @@ describe FundController do
 
     it '[48.4] invalid Withdraw (invalid balance)', :js => true do
       allow_any_instance_of(Requester::Wallet).to receive(:withdraw).and_raise(Remote::AmountNotEnough, "0.0")
-      login_as_admin 
+      login_as_admin
       mock_have_active_location
       go_to_withdraw_page
+      find("#player_transaction_payment_method_type option[value='2']").select_option
       fill_in "player_transaction_amount", :with => 300
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
@@ -101,7 +104,8 @@ describe FundController do
       login_as_admin
       go_to_withdraw_page
       allow_any_instance_of(Requester::Wallet).to receive(:get_player_balance).and_call_original
-      mock_wallet_balance('no_balance')
+      mock_wallet_response_failed(:withdraw)
+      find("#player_transaction_payment_method_type option[value='2']").select_option
       fill_in "player_transaction_amount", :with => 100
       find("button#confirm_withdraw").click
       find("div#pop_up_dialog div button#confirm").click
@@ -109,7 +113,6 @@ describe FundController do
 
       player_transaction = PlayerTransaction.find_by_player_id(@player.id)
       expect(player_transaction.status).to eq 'pending'
-      check_balance_page_without_balance
       check_player_lock_types
       @player.reload
       expect(@player.lock_types.include?('pending')).to eq true
@@ -132,34 +135,37 @@ describe FundController do
       mock_wallet_balance(0.0)
       mock_wallet_transaction_success(:deposit)
     end
-    
+
     after(:each) do
       clean_dbs
     end
 
     it '[73.1] Deposit fail due to test mode player', :js => true do
-      login_as_admin 
+      login_as_admin
       go_to_deposit_page
       fill_in "player_transaction_amount", :with => 100
+      find("#player_transaction_payment_method_type option[value='2']").select_option
+      find("#player_transaction_source_of_funds option[value='2']").select_option
       find("button#confirm_deposit").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
-      
+
       expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       expect(page).to have_selector("div#pop_up_dialog div button#confirm")
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
       @player.test_mode_player = true
       @player.save!
       find("div#pop_up_dialog div button#confirm").click
-      
+
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
 
     it '[73.2] Withdraw fail due to test mode player', :js => true do
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
-      login_as_admin 
+      login_as_admin
       go_to_withdraw_page
       fill_in "player_transaction_amount", :with => 100
+      find("#player_transaction_payment_method_type option[value='2']").select_option
       find("button#confirm_withdraw").click
       expect(find("div#pop_up_dialog")[:style].include?("block")).to eq true
       expect(find("div#pop_up_dialog")[:class].include?("fadeIn")).to eq true
@@ -168,12 +174,12 @@ describe FundController do
       expect(page).to have_selector("div#pop_up_dialog div button#cancel")
       expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
       expect(page).to have_selector("div#pop_up_dialog div label#pin_label")
-      expect(page).to have_selector("div#pop_up_dialog div input#player_transaction_pin")
-      fill_in "player_transaction_pin", :with => 1111
+      expect(page).to have_selector("div#pop_up_dialog div input#player_pin")
+      fill_in "player_pin", :with => 1111
       @player.test_mode_player = true
       @player.save!
       find("div#pop_up_dialog div button#confirm").click
-      
+
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
@@ -192,15 +198,15 @@ describe FundController do
       @player.save!
       click_pop_up_confirm("confirm_credit_deposit", content_list)
       wait_for_ajax
-      
+
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
-    
+
     it '[73.4] expire credit fail due to test mode player', :js => true do
       mock_wallet_transaction_success(:credit_expire)
       mock_wallet_balance(0.00, 50.00, Time.now)
-      login_as_admin 
+      login_as_admin
       go_to_credit_expire_page
       fill_in "player_transaction_remark", :with => 'test'
       content_list = [I18n.t("deposit_withdrawal.credit_expire_amt")]
@@ -208,7 +214,7 @@ describe FundController do
       @player.save!
       click_pop_up_confirm("confirm_credit_expire", content_list)
       wait_for_ajax
-      
+
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end

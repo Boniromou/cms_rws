@@ -117,9 +117,9 @@ module StepHelper
     expect(page.source).to have_selector("input#id_number")
   end
 
-  def check_not_found
+  def check_not_found(msg = 'search_error.not_found')
     check_search_page
-    expect(page.source).to have_content(I18n.t("search_error.not_found"))
+    expect(page.source).to have_content(I18n.t(msg))
   end
 
   def fill_search_info(id_type,id_number)
@@ -444,6 +444,7 @@ module StepHelper
   def click_pop_up_confirm(btn_id, content_list, remarks = 0)
     find("div#button_set button##{btn_id}").trigger('click')
     within ("div#pop_up_content") do
+      expect(find("#authorize_alert")[:style].include?("block")).to eq false
       content_list.each do |str|
         expect(page).to have_content str
       end

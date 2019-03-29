@@ -107,6 +107,11 @@ module MockHelper
     allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
   end
 
+  def mock_wallet_response_failed(trans_type_sym)
+    wallet_response = Requester::WalletResponse.new({:error_code => 'not ok'})
+    allow_any_instance_of(Requester::Wallet).to receive(trans_type_sym).and_return(wallet_response)
+  end
+
   def mock_player_info_result(result_hash)
     patron_response = Requester::PlayerInfoResponse.new(result_hash)
     allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return(patron_response)

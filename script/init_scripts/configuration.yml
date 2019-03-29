@@ -64,6 +64,9 @@ test:
     withdraw_authorized_amount: [5000000]
     void_deposit_authorized_amount: [5000000]
     void_withdraw_authorized_amount: [5000000]
+  10010:
+    daily_deposit_limit: [20000, 'limit amount of daily deposit (cent)']
+    daily_withdraw_limit: [20000, 'limit amount of daily withdraw (cent)']
 
 mockup0:
   <<: *default

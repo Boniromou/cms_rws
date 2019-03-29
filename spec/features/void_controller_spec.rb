@@ -27,9 +27,9 @@ describe VoidController do
       clean_dbs
     end
 
-    def create_player_transaction
+    def create_player_transaction(amount = 10000)
       @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001', :casino_id => 20000, :trans_date => Time.now)
+      @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => amount, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :ref_trans_id => 'C00000001', :casino_id => 20000, :trans_date => Time.now)
     end
 
     it '[47.1] Display void button', :js => true do
@@ -266,6 +266,29 @@ describe VoidController do
       # expect(page.source).to have_selector("iframe")
       expect(void_transaction.status).to eq 'completed'
       expect(void_transaction.trans_date).to eq trans_date.to_time(:local).utc
+    end
+
+    it '[47.10] Void, show need authorize', :js => true do
+      mock_patron_not_change
+      login_as_admin
+      create_player_transaction(6000000)
+      visit home_path
+      click_link I18n.t("tree_panel.player_transaction")
+      check_player_transaction_page_js
+      fill_in "slip_number", :with => @player_transaction1.slip_number
+      find("input#selected_tab_index").set "1"
+
+      find("input#search").click
+      wait_for_ajax
+      check_player_transaction_result_items([@player_transaction1])
+      find("div#button_set button#void_deposit_#{@player_transaction1.id.to_s}").trigger('click')
+      wait_for_ajax
+      within ("div#pop_up_content") do
+        expect(page).to have_content I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)
+        # puts find("label#authorize_alert")[:style]
+        expect(find("label#authorize_alert")[:style].include?("block")).to eq true
+      end
+
     end
   end
 end

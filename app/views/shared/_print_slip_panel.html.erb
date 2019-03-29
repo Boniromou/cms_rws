@@ -2,10 +2,10 @@
 <% if policy(:PlayerTransaction).print? %>
   <button id="print_slip" class="btn btn-primary">Print</button>
 <% end %>
-<%= link_to balance_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.close"), :remote => true, :id => "close_link", :class => "btn btn-primary" do %>
+<%= link_to balance_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.close"), :id => "close_link", :class => "btn btn-primary" do %>
   <span> <%= t("button.close")%></span>
 <% end %>
-<%= link_to print_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.Print"), :remote => true, :id => "print_link" , :style => "display: none" do %>
+<%= link_to print_path + "?member_id=#{@player.member_id};exception_transaction=#{@exception_transaction}" , :title => t("button.Print"), :id => "print_link" , :style => "display: none" do %>
   <span> <%= t("button.Print")%></span>
 <% end %>
 

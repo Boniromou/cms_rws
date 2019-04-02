@@ -1,6 +1,7 @@
 en:
   approval:
     title: Manual Transaction Approval
+    merge_title: Merge Approval
     operation: Operation
     detail_title: Approval Detail
     approved: Approved
@@ -23,12 +24,26 @@ en:
     action_at: Action at
     trans_status: Transaction Status
     status: Status
-  cancel:
-    success: 'Manual transaction rejected successfully!'
-    failed: 'Manual transaction rejected failed, Please try again.'
-  approve:
+#  cancel:
+#    success: 'Manual transaction rejected successfully!'
+#    failed: 'Manual transaction rejected failed, Please try again.'
+#  approve:
+#    success: 'Approval process success, Transaction will be proceeded to player''s account.'
+#    failed: 'Approval process failed, Please try again.'
+ 
+  merge_player_approve:
+    success: 'Merge approval process success, Transaction will be proceeded to player''s account.'
+    failed: 'Merge approval process failed, Please try again.'
+  exception_transaction_approve:
     success: 'Approval process success, Transaction will be proceeded to player''s account.'
     failed: 'Approval process failed, Please try again.'
+  merge_player_cancel:
+    success: 'Merge request rejected successfully!'
+    failed:  'Merge request rejected failed, Please try again.'
+  exception_transaction_cancel:
+    success: 'Manual transaction rejected successfully!'
+    failed: 'Manual transaction rejected failed, Please try again.'
+
   flash_message:
     contact_service: "Operation failed, please contact customer service for more information." 
     not_enough_amount: "Approve manual deposit/withdrawal failed. Insufficient fund for withdrawal."

@@ -1,0 +1,3 @@
+$('div#player_merge_info').css({ opacity: "0.0" }).html("<%= escape_javascript(render @players, {show_info: true, show_balance: true, show_remain: {deposit: true, withdraw: true}}) %>").delay(50).animate({ opacity: "1.0" }, 300);
+
+$('div#merge_button').css({ opacity: "0.0" }).html("<%= escape_javascript(render :file => "players/_merge_footer", :formats => [ :html ]) %>").delay(50).animate({ opacity: "1.0" }, 300);

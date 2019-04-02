@@ -122,6 +122,7 @@ class PlayerTransaction < ActiveRecord::Base
     include FundHelper
     def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
       transaction = new
+ 
       if casino_id.nil?
         transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
       else
@@ -161,27 +162,27 @@ class PlayerTransaction < ActiveRecord::Base
       init_transaction(member_id, amount, DEPOSIT, shift_id, '', nil, ref_trans_id, data, casino_id, promotion_code, executed_by)
     end
 
-    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil, authorized_by = nil, authorized_at = nil)
+    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
       init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds, authorized_by, authorized_at)
     end
 
-    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil, authorized_by = nil, authorized_at = nil)
+    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
       init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1, authorized_by, authorized_at)
     end
 
-    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil, authorized_by = nil, authorized_at = nil)
+    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
       init_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds, authorized_by, authorized_at)
     end
 
-    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil, authorized_by = nil, authorized_at = nil)
+    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
       init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1, authorized_by, authorized_at)
     end
 
-    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil )
+    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7 )
       init_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, source_of_funds)
     end
 
-    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
+    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7)
       init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
     end
 

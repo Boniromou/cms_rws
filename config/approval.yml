@@ -7,9 +7,15 @@ player_transaction:
     transaction_type: "transaction_approval.transaction_type"
     payment_method: "transaction_approval.payment_method" 
     source_of_fund: "transaction_approval.source_of_fund"
-  set_denom:
-    property_id: "general.property"
-    game_name: "general.game_name"
-    game_id: "general.game_id"
-    from_denom_set_id: "game_denom.from_denom_set"
-    to_denom_set_id: "game_denom.to_denom_set"
+player:
+  merge_player:
+    licensee_id: "merge_approval.licensee_id"
+    player_vic_id: "merge_approval.vic_member"
+    player_vic_before_amount: "merge_approval.before_amount"
+    minus_amount: "merge_approval.amount"
+    player_vic_after_balance: "merge_approval.after_amount"
+    player_sur_id: "merge_approval.sur_member"
+    player_sur_before_amount: "merge_approval.before_amount"
+    amount: "merge_approval.amount"
+    player_sur_after_amount: "merge_approval.after_amount"
+   

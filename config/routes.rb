@@ -13,11 +13,13 @@ CmsRws::Application.routes.draw do
   root :to => "user_sessions#new"
 
   get 'home' => 'home#index'
-
+  
+  get "merge" => 'players#merge'
   get "balance" => 'players#balance'
   get "search" => 'players#search' ,:as => :players_search
+  get "search_merge" => 'players#search_merge' ,:as => :players_search_merge
   post "search" => "players#do_search"
-  #get "profile" => "players#profile"
+  post "search_merge" => "players#do_search_merge"
   get "reset_pin" => "players#reset_pin"
   get "create_pin" => "players#create_pin"
   post "reset_pin" => "players#do_reset_pin"
@@ -25,7 +27,9 @@ CmsRws::Application.routes.draw do
   post "lock_account" => "players#lock"
   post "unlock_account" => "players#unlock"
   post "update" => "players#update"
-
+  
+  post 'merge_player' => 'merge#merge_player' 
+ 
   get 'fund_in' => 'deposit#new'
   # post 'fund_in' => 'deposit#create'
   match "deposit" => "deposit#create", via: [:get, :post]
@@ -51,6 +55,7 @@ CmsRws::Application.routes.draw do
   post 'search_transactions' => 'player_transactions#do_search'
   get 'index' => 'player_transactions#index'
   get 'approval' => 'transaction_approvals#index'
+  get 'merge_approval' => 'transaction_approvals#merge_index'
   get 'search_current_ac_date_by_casino' => 'front_money#search_current_accounting_date_by_casino_id'
   get 'search_front_money' => 'front_money#search'
   post 'search_front_money' => 'front_money#do_search'

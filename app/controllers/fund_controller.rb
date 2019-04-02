@@ -53,7 +53,6 @@ class FundController < ApplicationController
       flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
     end
   end
-
   protected
 
   def extract_params
@@ -122,7 +121,8 @@ class FundController < ApplicationController
       :amount => @transaction.amount / 100.0,
       :transaction_type => TransactionType.find_by_id(@transaction.transaction_type_id).name.gsub('_',' ').titleize,
       :payment_method => PaymentMethod.find_by_id(@transaction.payment_method_id).name,
-      :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name
+      :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name,
+      :transaction => [@transaction.id]
     }
   end
 

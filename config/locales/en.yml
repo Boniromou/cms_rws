@@ -20,6 +20,7 @@ en:
     edit_player: "Edit Player"
     fund_management: "Fund Management"
     balance: "Balance Enquiry"
+    merge: "Merge Cards"
     withdraw_exception: "Exception Withdraw"
     fund_in: "Deposit"
     fund_out: "Withdrawal"
@@ -27,7 +28,7 @@ en:
     roll_shift: "Roll Shift"
     player_transaction: "Transaction History"
     front_money: "FM Activity Report"
-#    profile: "Player Profile"
+    profile: "Player Profile"
     edit: "Edit Player"
     audit: "Audit"
     audit_log: "Audit Log"
@@ -86,6 +87,13 @@ en:
     status: "Status"
     payment_method: "Payment method"
     source_of_fund: "Source of fund"
+  merge_approval:
+    licensee_id: "Licensee"
+    sur_member: "Member ID(To)"
+    before_amount: "Amount(Before)"
+    after_amount: "Amount(After)"
+    vic_member: "Member ID(From)"
+    amount: "Amount"
   title:
     system: "GameSource"
     title: "Cage"
@@ -110,6 +118,8 @@ en:
     staff_id_invalid: "Invalid input format, please try again."
     exceed_remain_limit: Transaction exceeded daily transaction limit. Please follow SOP to check patron identity before "Confirm" transaction.
     need_authorize: Please call manager to authorize.
+  merge:
+    approval: "Merge Approval"
   balance_enquiry:
     account_balance: "Account Balance"
     no_balance: "--"
@@ -127,6 +137,7 @@ en:
     deposit: "Deposit"
     withdrawal: "Withdrawal"
     search: "Search"
+    search_merge: "Search"
    # search_by_time: "Search by time"
     roll_shift_now: "Roll Shift Now"
     edit: "Edit"
@@ -139,6 +150,7 @@ en:
     void: "Void"
     print_void: "Print Void"
     export: Export
+    merge: "Merge"
 #    create_pin: "Set PIN"
 #    reset_pin: "Reset PIN"
 #    credit_deposit: "Add Promo. Credit"
@@ -230,6 +242,7 @@ en:
     manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
     authorize_failed: "authorize failed."
     authorize_success: "authorize already success."
+    merge_complete: "Merge Player( %{vic_player} to %{sur_player}) request is submitted. Merge request pending approval."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:

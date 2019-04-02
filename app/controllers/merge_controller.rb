@@ -1,5 +1,7 @@
-class MergeController < FundController
+class MergeController < ApplicationController
   include SearchHelper
+  include FundHelper
+
   def new
     super
     @casino_id = current_casino_id
@@ -20,18 +22,25 @@ class MergeController < FundController
     @ref_trans_id = nil
     @payment_method_type = params[:payment_method_type]
     @source_of_funds = params[:source_of_funds]
-    
-    @transaction = create_deposit_transaction(@player_sur.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-    @transaction2 = create_withdraw_transaction(@player_vic.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-   
-    puts Approval::Request::PENDING
-    response = Approval::Models.submit('player', @player_vic.id, 'merge_player', get_submit_data, @current_user.name)   
+    execute_transaction
+  
     @player_vic.lock_account!('cage_lock')    
- 
     flash[:success] = {key: "flash_message.merge_complete", replace: {vic_player: @player_vic.member_id, sur_player: @player_sur.member_id}}
     redirect_to players_search_merge_path(operation: :merge)
   end
-   
+  
+  def execute_transaction
+    AuditLog.player_log('deposit', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @transaction = create_deposit_transaction(@player_sur.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
+    end    
+    AuditLog.player_log('withdraw', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @transaction2 = create_withdraw_transaction(@player_vic.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
+    end
+    puts Approval::Request::PENDING
+    response = Approval::Models.submit('player', @player_vic.id, 'merge_player', get_submit_data, @current_user.name)
+    
+  end
+    
   def create_deposit_transaction(member_id, amount, ref_trans_id = nil, data = nil)
     raise FundInOut::InvalidMachineToken unless current_machine_token
     PlayerTransaction.send "save_deposit_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data

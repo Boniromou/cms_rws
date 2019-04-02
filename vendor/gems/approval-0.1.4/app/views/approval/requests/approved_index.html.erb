@@ -32,13 +32,17 @@
           <% end %>
           <td><%= request[:submit_by] %></td>
           <td><%= request[:updated_at] %></td>
-          <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td>
-          <% if @approval_action == 'exception_transaction'%> 
+          <% if @approval_action == 'exception_transaction'%>
+            <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td> 
             <td>
             <% if policy(:player_transaction).reprint? && PlayerTransaction.find_by_id(request[:target_id]).status == 'completed' %>
               <%= link_to t("button.print"), reprint_path(transaction_id: PlayerTransaction.find_by_id(request[:target_id]).id), :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %>
             <% end %>
             </td>
+          <% else %>
+            <% approval = ApprovalRequest.find_by_id(request[:id])%>
+            <% transaction = JSON.parse(approval.data)["transaction"]%>
+            <td><%= PlayerTransaction.find_by_id(transaction).status %></td>
           <% end %>
           
         </tr>

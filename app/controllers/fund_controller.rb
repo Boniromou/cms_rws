@@ -157,12 +157,12 @@ class FundController < ApplicationController
 
   def handle_call_wallet_fail(e)
     @player.lock_account!('pending')
-    flash[:error] = 'flash_message.contact_service'
+    flash[:fail] = 'flash_message.contact_service'
     redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_fund_error(msg)
-    flash[:error] = msg
+    flash[:fail] = msg
     redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 
@@ -172,24 +172,24 @@ class FundController < ApplicationController
   end
 
   def handle_pin_error
-    flash[:error] = 'invalid_pin.invalid_pin'
+    flash[:fail] = 'invalid_pin.invalid_pin'
     redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 
   def handle_call_patron_fail
-    flash[:error] = 'flash_message.contact_service'
+    flash[:fail] = 'flash_message.contact_service'
     redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_credit_exist
     @transaction.rejected!
-    flash[:error] = 'invalid_amt.credit_exist'
+    flash[:fail] = 'invalid_amt.credit_exist'
     redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
   def handle_credit_not_match(e)
     @transaction.rejected!
-    flash[:error] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
+    flash[:fail] = { key: "invalid_amt.no_enough_to_credit_expire", replace: { balance: to_formatted_display_amount_str(e.result.to_f)} }
     redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
   end
 
@@ -199,7 +199,7 @@ class FundController < ApplicationController
 
   def handle_authorization_fail(e)
     clear_authorize_info
-    flash[:error] = 'flash_message.authorize_failed'
+    flash[:fail] = 'flash_message.authorize_failed'
     redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 

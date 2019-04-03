@@ -64,3 +64,56 @@ $("#to").datepicker({
         $("#from").datepicker("option", "maxDate", selectedDate);
     }
 });
+
+function popSuccess() {
+  $.smallBox({
+    title: "Success",
+    content: $('div#message_content').text(),
+    color: "#659265",
+    icon: "fa fa-check",
+  });
+}
+
+function popFail() {
+  $.smallBox({
+    title: "Fail",
+    content: $('div#message_content').text(),
+    color: "#C46A69",
+    icon: "fa fa-warning",
+  });
+}
+
+function clearFlashMessage() {
+  if ($("div#divSmallBoxes").length) {
+    $("div#divSmallBoxes").empty();
+  }
+}
+
+function popFlashMessage() {
+  if ($('div#message_content').length) {
+    var flash_type = $('div#message_content').parent();
+    if (flash_type.hasClass("alert alert-success")) {
+      popSuccess();
+    } else if (flash_type.hasClass("alert-warning")) {
+      popFail();
+    }
+  }
+}
+
+function getMessage(url, params) {
+  return ($.ajax({
+    type: 'GET',
+    url: url,
+    dataType: 'json',
+    global: false,
+    async: false,
+    data: params,
+    success: function (data) { return data; }
+  }).responseText);
+}
+
+// pop for existing content if found
+$(document).ready(function () {
+  clearFlashMessage();
+  popFlashMessage();
+});

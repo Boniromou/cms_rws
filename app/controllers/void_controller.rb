@@ -57,7 +57,7 @@ class VoidController < FundController
 
   def handle_fund_error(msg)
     clear_authorize_info
-    flash[:error] = msg
+    flash[:fail] = msg
     respond_to do |format|
       format.html {redirect_to balance_path(member_id: params[:member_id], exception_transaction: 'no', start_time: params[:start_time], end_time: params[:end_time], void_error: 'yes')}
       format.js { render partial: "player_transactions/refresh_result", formats: [:js] }

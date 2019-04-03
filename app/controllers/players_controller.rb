@@ -17,11 +17,6 @@ class PlayersController < ApplicationController
 
   def player_info
     clear_authorize_info
-    if params[:void_error] == 'yes' && flash[:error].present?
-      msg = flash[:error]
-      @void_error = msg.is_a?(Hash) ? I18n.t(flash[:error][:key], flash[:error][:replace]) : I18n.t(msg)
-      flash.clear
-    end
     @start_time = params[:start_time]
     @end_time = params[:end_time]
     @transaction_id = params[:transaction_id]
@@ -79,13 +74,13 @@ class PlayersController < ApplicationController
       format.js { render"players/search", formats: [:js] }
     end
   end
-  
+
   def search_merge
     @operation = params[:operation]
     @id_number = params[:id_number]
     @id_type = params[:id_type]
     @player = Player.new
- 
+
     respond_to do |format|
       format.html { render "players/search_merge", formats: [:html] }
       format.js { render"players/search_merge", formats: [:js] }
@@ -97,7 +92,7 @@ class PlayersController < ApplicationController
     @id_type = params[:id_type]
     @operation = params[:operation]
     @exception_transaction = params[:exception_transaction]
-   
+
     begin
       requester_helper.update_player!(@id_type,@id_number)
     rescue Remote::PlayerNotFound => e
@@ -106,41 +101,41 @@ class PlayersController < ApplicationController
       Rails.logger.error 'PlayerNotValidated'
       raise PlayerProfile::PlayerNotValidated
     end
-    
+
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @id_number)
     raise PlayerProfile::PlayerNotFound unless @player
 
     member_id = @player.member_id
     redirect_to :action => @operation, :member_id => member_id, :exception_transaction => @exception_transaction
   end
-  
+
   def do_search_merge
     @card_id = params[:id_number]
     @card_id2 = params[:id_number2]
     @id_type = 'member_id'
     @operation = params[:operation]
-    
+
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id)
     @player2 = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id2)
     raise PlayerProfile::PlayerNotFound unless (@player && @player2)
-    
+
     @players = policy_scope(Player).where(member_id: [@card_id, @card_id2])
     @current_user = current_user
     @casino_id = params[:select_casino_id] || current_casino_id
-    
+
     balance_response = wallet_requester.get_player_balance(@card_id, @player.currency.name, @player.id, @player.currency_id, @player.test_mode_player)
     @player_balance = balance_response.balance
     @credit_balance = balance_response.credit_balance
     @credit_expired_at = balance_response.credit_expired_at
-    
+
     balance_response = wallet_requester.get_player_balance(@card_id2, @player2.currency.name, @player2.id, @player2.currency_id, @player2.test_mode_player)
     @player_balance2 = balance_response.balance
     @credit_balance2 = balance_response.credit_balance
     @credit_expired_at2 = balance_response.credit_expired_at
 
     flash[:error] = "balance_enquiry.query_balance_fail" if @player_balance == 'no_balance' && @player_balance2 == 'no_balance' && flash[:fail].nil?
-  end  
-  
+  end
+
   def handle_player_not_found(e)
     @show_not_found_message = true
     if @exception_transaction == nil
@@ -155,7 +150,7 @@ class PlayersController < ApplicationController
     if @exception_transaction == nil
       search_merge
     else
-      search  
+      search
     end
   end
 

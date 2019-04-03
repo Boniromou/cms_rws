@@ -119,7 +119,8 @@
     var authorized_amount = <%= @authorized_amount %>;
     var authorize_result = "<%= @authorize_result %>";
     var amt = $('#player_transaction_amount').val();
-    if(amt < authorized_amount || authorize_result == 'yes'){
+    var exception_flag = "<%= @exception_transaction %>";
+    if(amt < authorized_amount || authorize_result == 'yes' || exception_flag == 'yes'){
       $("label#authorize_alert").css('visibility', 'hidden');
       $("label#authorize_alert").css('display', 'none');
     }else{

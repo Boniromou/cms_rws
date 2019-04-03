@@ -16,7 +16,7 @@ class WithdrawController < FundController
       @payment_method_type = auth_info[:payment_method_type]
       @player_transaction_amount = auth_info[:player_transaction][:amount]
       @deposit_reason = auth_info[:player_transaction][:deposit_reason]
-      flash[:success] = 'flash_message.authorize_success'
+      flash[:success] = 'flash_message.authorize_success' unless flash[:fail]
     end
   end
 

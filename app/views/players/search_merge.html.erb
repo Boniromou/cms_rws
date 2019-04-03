@@ -1,8 +1,8 @@
-  <%= search_page_bread_crumb(t("tree_panel.merge")) %> 
+  <%= search_page_bread_crumb(t("tree_panel.merge")) %>
 
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-       
+
 
     <%= form_for :player,:remote => true, :url =>{:action => :do_search_merge, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
     <fieldset>
@@ -14,8 +14,8 @@
                 <%= text_field_tag(:"id_number", @id_number, autofocus: true, size:15) %>
               </label>
             </section>
-          </div>          
-          
+          </div>
+
           <div class= "col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <label><strong>Survival Member ID:</strong></label>
             <section class="smart-form">
@@ -37,12 +37,12 @@
 
   </div>
   <div id="merge_button" style="padding-right: 90px; padding-top: 94px">
-  </div> 
+  </div>
 </div>
 
 <br/>
 <% if @show_not_found_message %>
-  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
+  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:error)} fade in" do %>
     <button class="close" data-dismiss="alert">×</button>
     <div id="message_content">
       <%= t("search_error.not_found") %>
@@ -52,7 +52,7 @@
 <% end %>
 
 <% if @show_not_validated_message %>
-  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
+  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:error)} fade in" do %>
     <button class="close" data-dismiss="alert">×</button>
     <div id="message_content">
       <%= t("search_error.not_validated") %>
@@ -80,5 +80,5 @@
    $("#button_find").click(function(){
       document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-4';
       document.getElementById('flash_message').style.marginLeft = '0px';
-  });    
+  });
 </script>

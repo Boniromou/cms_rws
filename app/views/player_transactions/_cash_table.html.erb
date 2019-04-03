@@ -85,7 +85,7 @@
                         <% end %>
                     <% end %>
                   </td>
-                     <% if t.data.present? %>
+                     <% if t.data.present? && YAML.load(t.data).present? %>
                         <% if YAML.load(t.data)[:deposit_remark] != nil %>
                           <td><%= YAML.load(t.data)[:deposit_remark] %> </td>
                         <% else %>

@@ -52,7 +52,7 @@
                 <% end %>
               </li>
             <% end %>
-        
+
             <% if policy(:Player).balance? %>
               <li id="nav_balance_enquiry_merge">
                 <%= link_to players_search_merge_path(operation: :merge), :title => t("tree_panel.merge") do %>
@@ -75,14 +75,14 @@
              <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.approval") %></span>
               <% end %>
             <% end %>
-            
+
             <% if policy(:MergeApproval).index? %>
               <li id="nav_approval">
               <%= link_to merge_approval_path , :title => t("merge.approval") do %>
               <i></i> <span class="menu-item-parent"><%= t("merge.approval") %></span>
               <% end %>
             <% end %>
- 
+
             <% if policy(:PlayerTransaction).search? %>
               <li id="nav_search_transactions">
                 <%= link_to search_transactions_path + "?operation=cash", :title => t("tree_panel.player_transaction") do %>
@@ -220,12 +220,6 @@
 
     $('#home_link').mouseleave(function(){
       $('#home_link').css("background-color","rgba(69,69,69,0)");
-    });
-
-    $("a").click(function(){
-      document.getElementById('flash_message').style.display = 'block';
-      document.getElementById('flash_message').className = '';
-      document.getElementById('flash_message').style.marginLeft = '';
     });
   });
 

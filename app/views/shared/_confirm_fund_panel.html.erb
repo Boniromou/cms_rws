@@ -133,7 +133,8 @@
     var authorized_amount = <%= @authorized_amount %>;
     var authorize_result = "<%= @authorize_result %>";
     var amt = $('#player_transaction_amount').val();
-    if(amt < authorized_amount || authorize_result == 'yes'){
+    var exception_flag = "<%= @exception_transaction %>";
+    if(amt < authorized_amount || authorize_result == 'yes' || exception_flag == 'yes'){
       $("form#validate_pin_form").css('visibility', 'visible');
       $("form#validate_pin_form").css('display', 'block');
       $("input#player_pin").removeAttr('disabled');

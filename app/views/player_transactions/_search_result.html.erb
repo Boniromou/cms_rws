@@ -37,16 +37,6 @@
   <%= hidden_field_tag :end_time, @end_time %>
 <% end %>
 
-<%= form_tag(void_deposit_path, :remote => true, :id => "void_manual_deposit", :style => 'display: none;') do |f|%>
-  <%= hidden_field_tag :transaction_id, 0 %>
-<% end %>
-
-<%= form_tag(void_withdraw_path, :remote => true, :id => "void_manual_withdraw", :style => 'display: none;') do |f|%>
-  <%= hidden_field_tag :transaction_id, 0 %>
-<% end %>
-
-
-
 
 <%= javascript_include_tag "print.js" %>
 
@@ -83,18 +73,6 @@
     var target = event.target? event.target : event.srcElement;
     transaction_id = target.id.replace("void_withdraw_","");
     $('form#void_withdraw input#transaction_id').val(transaction_id);
-  });
-
-  $('button.void_manual_deposit_btn').click(function() {
-    var target = event.target? event.target : event.srcElement;
-    transaction_id = target.id.replace("void_manual_deposit_","");
-    $('form#void_manual_deposit input#transaction_id').val(transaction_id);
-  });
-
-  $('button.void_manual_withdraw_btn').click(function() {
-    var target = event.target? event.target : event.srcElement;
-    transaction_id = target.id.replace("void_manual_withdraw_","");
-    $('form#void_manual_withdraw input#transaction_id').val(transaction_id);
   });
 
 

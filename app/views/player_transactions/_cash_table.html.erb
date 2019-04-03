@@ -58,7 +58,7 @@
                     <% if t.source_type == 'cage_transaction'%>
                       <% if policy(:player_transaction).void? && t.status == 'completed'%>
                         <% if t.can_void? %>
-                          <% trans_type = t.transaction_type.name %>
+                          <% trans_type = t.transaction_type.name.gsub('manual_', '') %>
                           <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
                             <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
                             <% if ['deposit','withdraw'].include?(trans_type) %>

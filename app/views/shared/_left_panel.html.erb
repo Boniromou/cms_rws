@@ -52,8 +52,8 @@
                 <% end %>
               </li>
             <% end %>
-
-            <% if policy(:Player).balance? %>
+       
+            <% if policy(:Player).merge? %>
               <li id="nav_balance_enquiry_merge">
                 <%= link_to players_search_merge_path(operation: :merge), :title => t("tree_panel.merge") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.merge") %></span>

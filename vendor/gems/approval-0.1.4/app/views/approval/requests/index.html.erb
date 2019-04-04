@@ -17,7 +17,7 @@
           <th class="col-md-1"><%= I18n.t(title) %></th>
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.submit_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-1" id='updated_at'><%= I18n.t('approval.updated_at') %></th>
         <th class="col-md-2"><%= I18n.t('approval.operation') %></th>
       </tr>
     </thead>
@@ -62,10 +62,11 @@
 <%= javascript_include_tag "print.js" %>
 <script>
 $(function(){
-    $('#request_table').dataTable({
-      'order': [[ 7, 'desc']],
-      'pageLength': 50
-    });
+  var index = $('#updated_at').index();
+  $('#request_table').dataTable({
+    'order': [[ index, 'desc']],
+    'pageLength': 50
+  });
 
   $('#request_table').on('click','.request_button',function(event) {
     var target = $(event.currentTarget);

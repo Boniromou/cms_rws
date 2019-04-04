@@ -18,7 +18,7 @@
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.status') %></th>
         <th class="col-md-1"><%= I18n.t('approval.reject_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-1" id='updated_at'><%= I18n.t('approval.updated_at') %></th>
       </tr>
     </thead>
     <tbody>
@@ -47,12 +47,13 @@
 
 <script>
 $(function(){
+  var index = $('#updated_at').index();
   $('#log_table').dataTable({
-    'order': [[ 8, 'desc']],
+    'order': [[ index, 'desc']],
     'pageLength' : 50
   });
 })
- 
+
   function trimToPrintContent(raw) {
     $('div.dt-toolbar', raw).remove();
     $('table', raw).css("border","1px double");

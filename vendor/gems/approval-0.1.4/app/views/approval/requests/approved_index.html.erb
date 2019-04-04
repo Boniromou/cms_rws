@@ -17,7 +17,7 @@
           <th class="col-md-1"><%= I18n.t(title) %></th>
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.submit_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-1" id='updated_at'><%= I18n.t('approval.updated_at') %></th>
         <th class="col-md-1"><%= I18n.t('approval.trans_status') %></th>
         <% if @approval_action == 'exception_transaction' %>
           <th class="col-md-1"><%= I18n.t('approval.action') %></th>
@@ -33,7 +33,7 @@
           <td><%= request[:submit_by] %></td>
           <td><%= request[:updated_at] %></td>
           <% if @approval_action == 'exception_transaction'%>
-            <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td> 
+            <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td>
             <td>
             <% if policy(:player_transaction).reprint? && PlayerTransaction.find_by_id(request[:target_id]).status == 'completed' %>
               <%= link_to t("button.print"), reprint_path(transaction_id: PlayerTransaction.find_by_id(request[:target_id]).id), :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %>
@@ -44,7 +44,7 @@
             <% transaction = JSON.parse(approval.data)["transaction"]%>
             <td><%= PlayerTransaction.find_by_id(transaction).status %></td>
           <% end %>
-          
+
         </tr>
       <% end %>
     </tbody>
@@ -61,8 +61,9 @@
 
 <script>
 $(function(){
+  var index = $('#updated_at').index();
   $('#request_table').dataTable({
-    'order': [[ 7, 'desc']],
+    'order': [[ index, 'desc']],
     'pageLength' : 50
   });
   $('#request_table').on('click','.cancel_approve',function(event) {
@@ -98,5 +99,5 @@ $(function(){
   });
 
 
- 
+
 </script>

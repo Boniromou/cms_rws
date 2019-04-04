@@ -3,10 +3,11 @@
 <div id="myTabContent1" class="tab-content padding-10">
 	<div class="tab-pane fade in active" id="front_money_content">
     <%= render "front_money/search_form" %>
-    
+
     <div id="front_money_result">
-      
+
     </div>
   </div>
 </div>
 
+<%= render partial: "shared/nav_setup", locals: { tab_to_activate: "front_money" } %>

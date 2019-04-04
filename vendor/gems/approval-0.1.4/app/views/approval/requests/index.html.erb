@@ -56,15 +56,17 @@
 
 <%= render :partial => "approval/shared/pop_up_panel" %>
 <%= render :partial => "approval/requests/request_detail" %>
+ <%= render partial: "shared/nav_setup", locals: { tab_to_activate: "approval_#{@approval_action}" } %>
+
 <%= javascript_include_tag "pagination" %>
 <%= javascript_include_tag "print.js" %>
 <script>
 $(function(){
     $('#request_table').dataTable({
       'order': [[ 7, 'desc']],
-      'pageLength': 50     
+      'pageLength': 50
     });
-    
+
   $('#request_table').on('click','.request_button',function(event) {
     var target = $(event.currentTarget);
     var request_id = target.attr('request_id');
@@ -90,7 +92,7 @@ $(function(){
     $('table', raw).attr('height', 10);
     $('div.dt-toolbar-footer', raw).remove();
   }
-  
+
   var raw_result = $('div#tab-content').clone();
   trimToPrintContent(raw_result);
 

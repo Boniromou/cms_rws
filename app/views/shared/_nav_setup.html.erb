@@ -1,0 +1,7 @@
+<!-- activate left panel selected tab -->
+<script>
+  <% unless tab_to_activate.blank? %>
+    $('nav li.active').removeClass("active");
+  <% end %>
+  $('#nav_<%= tab_to_activate %>').addClass("active");
+</script>

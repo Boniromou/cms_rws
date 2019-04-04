@@ -97,9 +97,9 @@ describe VoidController do
 
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      check_flash_message I18n.t("flash_message.contact_service")
       sleep 3
 
-      expect(find('label#void_error').text).to eq I18n.t("flash_message.contact_service")
       wait_for_ajax
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
@@ -130,9 +130,9 @@ describe VoidController do
 
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_withdraw_" + @player_transaction1.id.to_s, content_list, 1)
+      check_flash_message I18n.t("flash_message.contact_service")
       sleep 3
 
-      expect(find('label#void_error').text).to eq I18n.t("flash_message.contact_service")
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 4).first
@@ -160,9 +160,9 @@ describe VoidController do
 
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      check_flash_message I18n.t("invalid_amt.no_enough_to_void_deposit", { balance: to_display_amount_str(@player_balance)})
       sleep 3
 
-      expect(find('label#void_error').text).to eq I18n.t("invalid_amt.no_enough_to_void_deposit", { balance: to_display_amount_str(@player_balance)})
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
@@ -206,9 +206,9 @@ describe VoidController do
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       create_void_transaction(@player_transaction1.id)
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      check_flash_message I18n.t("void_transaction.already_void", slip_number: @player_transaction1.slip_number.to_s)
       sleep 3
 
-      expect(find('label#void_error').text).to eq I18n.t("void_transaction.already_void", slip_number: @player_transaction1.slip_number.to_s)
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
     end
@@ -233,9 +233,7 @@ describe VoidController do
 
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
-      sleep 3
-
-      expect(find('label#void_error').text).to eq I18n.t("void_transaction.invalid_machine_token")
+      check_flash_message I18n.t("void_transaction.invalid_machine_token")
     end
 
     it '[47.9] Update trans date', :js => true do
@@ -257,9 +255,9 @@ describe VoidController do
 
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
+      check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
       sleep 3
 
-      # check_flash_message I18n.t("void_transaction.success", slip_number: @player_transaction1.slip_number.to_s)
       @player_transaction1.reload
       check_player_transaction_result_items([@player_transaction1])
       void_transaction = PlayerTransaction.where(:player_id => @player.id, :transaction_type_id => 3).first
@@ -285,7 +283,6 @@ describe VoidController do
       wait_for_ajax
       within ("div#pop_up_content") do
         expect(page).to have_content I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)
-        # puts find("label#authorize_alert")[:style]
         expect(find("label#authorize_alert")[:style].include?("block")).to eq true
       end
 

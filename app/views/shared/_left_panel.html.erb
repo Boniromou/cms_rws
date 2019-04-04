@@ -70,14 +70,14 @@
             <% end %>
 
             <% if policy(:PlayerTransactionApproval).index? %>
-              <li id="nav_approval">
+              <li id="nav_approval_exception_transaction">
               <%= link_to approval_path , :title => t("deposit_withdrawal.approval") do %>
              <i></i> <span class="menu-item-parent"><%= t("deposit_withdrawal.approval") %></span>
               <% end %>
             <% end %>
 
             <% if policy(:MergeApproval).index? %>
-              <li id="nav_approval">
+              <li id="nav_approval_merge_player">
               <%= link_to merge_approval_path , :title => t("merge.approval") do %>
               <i></i> <span class="menu-item-parent"><%= t("merge.approval") %></span>
               <% end %>
@@ -151,14 +151,14 @@
               </li>
             <% end %>
             <% if (policy(:ChangeHistory).lock_player_log?) && IS_MARKETING == 0 %>
-              <li id="nav_audit_log">
+              <li id="nav_lock_history">
                 <%= link_to search_lock_histories_path, :title => t("tree_panel.lock_history") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.lock_history") %></span>
                 <% end %>
               </li>
             <% end %>
             <% if (policy(:ChangeHistory).pin_change_log?) && IS_MARKETING == 0 %>
-              <li id="nav_audit_log">
+              <li id="nav_pin_history">
                 <%= link_to search_pin_histories_path, :title => t("tree_panel.pin_history") do %>
                   <i></i> <span class="menu-item-parent"><%= t("tree_panel.pin_history") %></span>
                 <% end %>
@@ -187,17 +187,6 @@
 </style>
 
 <script type='text/javascript'>
-  $("li ul li").attr("onclick","ActiveOption(event)");
-  $("li#nav_home").attr("onclick","ActiveOption(event)");
-
-  function ActiveOption(e){
-    RemoveActiveOption();
-    target = e.target;
-    while(target!=null && target.nodeName!= "LI"){
-      target = target.parentNode
-    }
-    $(target).addClass("active");
-  }
 
   $(document).ready(function(){
     function changeHomeBackground(){
@@ -223,8 +212,4 @@
     });
   });
 
-  function RemoveActiveOption(){
-    $("li ul li").removeClass("active");
-    $("li#nav_home").removeClass("active");
-  }
 </script>

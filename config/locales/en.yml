@@ -89,11 +89,11 @@ en:
     source_of_fund: "Source of fund"
   merge_approval:
     licensee_id: "Licensee"
-    sur_member: "Member ID(To)"
-    before_amount: "Amount(Before)"
-    after_amount: "Amount(After)"
-    vic_member: "Member ID(From)"
-    amount: "Amount"
+    sur_member: "Survival member id"
+    before_amount: "Before amount"
+    after_amount: "After amount"
+    vic_member: "Victim member id"
+    amount: "Transaction amount"
   title:
     system: "GameSource"
     title: "Cage"

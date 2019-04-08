@@ -13,7 +13,7 @@ player:
     player_vic_id: "merge_approval.vic_member"
     player_vic_before_amount: "merge_approval.before_amount"
     minus_amount: "merge_approval.amount"
-    player_vic_after_balance: "merge_approval.after_amount"
+    player_vic_after_amount: "merge_approval.after_amount"
     player_sur_id: "merge_approval.sur_member"
     player_sur_before_amount: "merge_approval.before_amount"
     amount: "merge_approval.amount"

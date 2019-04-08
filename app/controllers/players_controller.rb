@@ -114,12 +114,16 @@ class PlayersController < ApplicationController
     @card_id2 = params[:id_number2]
     @id_type = 'member_id'
     @operation = params[:operation]
+    
+    card_ids = [@card_id, @card_id2]
 
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id)
     @player2 = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id2)
-    raise PlayerProfile::PlayerNotFound unless (@player && @player2)
-
+    raise PlayerProfile::PlayerNotFound unless (@player && @player2 && (@player != @player2))
+    
     @players = policy_scope(Player).where(member_id: [@card_id, @card_id2])
+    @players = @players.index_by(&:member_id).values_at(*card_ids)
+
     @current_user = current_user
     @casino_id = params[:select_casino_id] || current_casino_id
 

@@ -28,7 +28,7 @@ class PlayerPolicy < ApplicationPolicy
   
 #  def merge?
 #    true
-#  end
+# end
   class Scope
     attr_reader :user, :scope
 

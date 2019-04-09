@@ -17,7 +17,7 @@ class MergeController < ApplicationController
     @player_vic = policy_scope(Player).find_by_member_id(vic_member_id)
     @amount = params[:player_transaction][:sur_amount]
     @amount2 = params[:player_transaction][:vic_amount]
-    validate_amount_str(@amount2)
+    validate_amount(@amount2)
     @server_amount = to_server_amount(@amount2)
     @ref_trans_id = nil
     @payment_method_type = params[:payment_method_type]
@@ -29,6 +29,14 @@ class MergeController < ApplicationController
     redirect_to players_search_merge_path(operation: :merge)
   end
   
+  def validate_amount(amount)
+    raise FundInOut::AmountInvalidError.new "Input amount not valid" unless amount.is_a?(String) && to_server_amount( amount ) > 0 
+  end 
+
+  def to_server_amount( amount )
+    (amount.to_f * 100).round(2).to_i 
+  end 
+
   def execute_transaction
     AuditLog.player_log('deposit', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = create_deposit_transaction(@player_sur.member_id, @server_amount, @ref_trans_id, @data.to_yaml)

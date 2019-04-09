@@ -2,7 +2,7 @@ class PlayerPolicy < ApplicationPolicy
   policy_target :player
   map_policy :lock?, :unlock?, :reset_pin?
   map_policy :balance?, :action_name => :balance_enquiry
-  map_policy :merge?, :action_name => :merge_card
+  map_policy :merge?, :action_name => :merge
   map_policy :profile?, :action_name => :player_profile
   map_policy :create_pin?, :delegate_policies => [:reset_pin?]
   map_policy :do_reset_pin?, :delegate_policies => [:reset_pin?]
@@ -14,21 +14,21 @@ class PlayerPolicy < ApplicationPolicy
     true
   end
   
-  def merge_player_cancel_submit?
-    true
-  end
+#  def merge_player_cancel_submit?
+#    true
+#  end
   
-  def merge_player_approve?
-    true
-  end
+#  def merge_player_approve?
+#    true
+#  end
 
   def non_test_mode?
     !@record.test_mode_player
   end
   
-  def merge?
-    true
-  end
+#  def merge?
+#    true
+# end
   class Scope
     attr_reader :user, :scope
 

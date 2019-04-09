@@ -1,13 +1,13 @@
 <%= search_page_bread_crumb(t("tree_panel.merge")) %>
 
   <div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 
 
   <%= form_for :player,:remote => true, :url =>{:action => :do_search_merge, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
   <fieldset>
       <div class="row">
-        <div class= "col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class= "col-xs-6 col-sm-6 col-md-4 col-lg-4">
           <label><strong>Victim Member ID:</strong></label>
           <section class="smart-form">
             <label class="input">
@@ -15,8 +15,9 @@
             </label>
           </section>
         </div>
-
-        <div class= "col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class= "col-xs-6 col-sm-6 col-md-4 col-lg-4">
+        </div>
+        <div class= "col-xs-6 col-sm-6 col-md-4 col-lg-4">
           <label><strong>Survival Member ID:</strong></label>
           <section class="smart-form">
             <label class="input">
@@ -32,11 +33,11 @@
             </div>
           </div>
         </div>
-    </fieldset>
+  </fieldset>
   <% end %>
 
 </div>
-<div id="merge_button" style="padding-right: 90px; padding-top: 94px">
+<div id="merge_button" style="padding-right: 90px; padding-top: 22px">
 </div>
 </div>
 

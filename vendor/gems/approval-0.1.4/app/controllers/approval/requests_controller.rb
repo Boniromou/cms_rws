@@ -11,7 +11,7 @@ module Approval
     ['approve', 'cancel_submit', 'cancel_approve'].each do |method_name|
       define_method method_name do
         @method_name = method_name
-        approval_request = Request.find(params[:id])
+        approval_request = Approval::Request.find(params[:id])
         @approval_request = approval_request
         authorize approval_request.target.to_sym, "#{approval_request.action}_#{method_name}?".to_sym
         operation = method_name.include?('cancel') ? 'cancel' : method_name
@@ -159,7 +159,7 @@ module Approval
       @target = params[:target]
       @approval_action = params[:approval_action]
       @search_by = params[:search_by]
-      @requests = Request.get_requests_list(@target, @search_by, @approval_action, status, @all)
+      @requests = Approval::Request.get_requests_list(@target, @search_by, @approval_action, status, @all)
       @titles = approval_titles(@target, @approval_action) || {}
       render :layout => approval_file[:layout]
     end
@@ -175,7 +175,7 @@ module Approval
        @target = approval_request.target
        @approval_action = approval_request.action
        @search_by = search_by
-       @requests = Request.get_requests_list(@target, @search_by, @approval_action, status, @all)
+       @requests = Approval::Request.get_requests_list(@target, @search_by, @approval_action, status, @all)
        @titles = approval_titles(@target, @approval_action) || {}
        
        # redirect_to approval.index_path(target: 'player_transaction', search_by: search_by, approval_action: 'exception_transaction'), format: 'js'

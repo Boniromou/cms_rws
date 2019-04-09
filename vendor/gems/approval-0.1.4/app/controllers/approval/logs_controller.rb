@@ -9,7 +9,7 @@ module Approval
       @target = params[:target]
       @approval_action = params[:approval_action]
       @search_by = params[:search_by]
-      @request_logs = Request.get_logs_list(@target, @search_by, @approval_action, @all)
+      @request_logs = Approval::Request.get_logs_list(@target, @search_by, @approval_action, @all)
       @titles = approval_titles(@target, @approval_action) || {}
       render :layout => approval_file[:layout]
     end

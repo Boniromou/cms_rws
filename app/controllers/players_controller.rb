@@ -137,7 +137,7 @@ class PlayersController < ApplicationController
   end
 
   def handle_player_not_found(e)
-    @show_not_found_message = true
+    flash[:error] = 'search_error.not_found'
     if @exception_transaction == nil
       search_merge
     else
@@ -146,7 +146,7 @@ class PlayersController < ApplicationController
   end
 
   def handle_player_not_validated(e)
-    @show_not_validated_message = true
+    flash[:error] = 'search_error.not_validated'
     if @exception_transaction == nil
       search_merge
     else

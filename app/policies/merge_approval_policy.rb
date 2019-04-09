@@ -6,8 +6,8 @@ class MergeApprovalPolicy < ApplicationPolicy
 # def history?
 #   true
 # end
-#  def index?
-#    true
-#  end
+  def index?
+    true
+  end
 end
 

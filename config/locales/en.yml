@@ -89,11 +89,11 @@ en:
     source_of_fund: "Source of fund"
   merge_approval:
     licensee_id: "Licensee"
-    sur_member: "Survival member id"
-    before_amount: "Before amount"
-    after_amount: "After amount"
-    vic_member: "Victim member id"
-    amount: "Transaction amount"
+    sur_member: "Survival Member ID"
+    before_amount: "Before Amount"
+    after_amount: "After Amount"
+    vic_member: "Victim Member ID"
+    amount: "Transaction Amount"
   title:
     system: "GameSource"
     title: "Cage"
@@ -117,7 +117,7 @@ en:
     staff_id: "Staff ID"
     staff_id_invalid: "Invalid input format, please try again."
     exceed_remain_limit: Transaction exceeded daily transaction limit. Please follow SOP to check patron identity before "Confirm" transaction.
-    need_authorize: Please call manager to authorize.
+    need_authorize: Authorization is required. Click "Confirm" for override process.
   merge:
     approval: "Merge Approval"
   balance_enquiry:
@@ -240,9 +240,9 @@ en:
     withdraw_complete: "Withdraw %{amount} is completed."
     manual_deposit_complete: "Manual deposit %{amount} submitted. Transaction pending approval."
     manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
-    authorize_failed: "authorize failed."
-    authorize_success: "authorize already success."
-    merge_complete: "Merge Player( %{vic_player} to %{sur_player}) request is submitted. Merge request pending approval."
+    authorize_failed: "Authorize failed; Please try again or contact technical support to check your role permission."
+    authorize_success: Authorize Withdrawal success; Please click "Confirm" to enter player PIN.
+    merge_complete: "Merge Player [%{vic_player}] to [%{sur_player}] request is submitted. Merge request pending approval."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:

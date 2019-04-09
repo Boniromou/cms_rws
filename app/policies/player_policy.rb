@@ -14,21 +14,21 @@ class PlayerPolicy < ApplicationPolicy
     true
   end
   
-#  def merge_player_cancel_submit?
-#    true
-#  end
+  def merge_player_cancel_submit?
+    true
+  end
   
-#  def merge_player_approve?
-#    true
-#  end
+  def merge_player_approve?
+    true
+  end
 
   def non_test_mode?
     !@record.test_mode_player
   end
   
-#  def merge?
-#    true
-#  end
+  def merge?
+    true
+  end
   class Scope
     attr_reader :user, :scope
 

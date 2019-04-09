@@ -30,4 +30,19 @@ class ExcelsController < ApplicationController
     string_io = Excel::BalanceReprotExportHelper.new.generate_export(players, player_balances, total_balances)
     send_data string_io, :filename => "#{file_name}", :type =>  "application/vnd.ms-excel"
   end
+
+  def approval_page
+
+    record = Approval::Request.get_requests_list(params[:target], params[:search_by], params[:approval_action], params[:status], '')
+    p record
+    if params[:status] == 'approved'
+      file_name = I18n.t("export.approved_merge_file_name")
+      string_io = Excel::ApprovalExportHelper.new.generate_export(record)
+    else
+      file_name = I18n.t("export.rejected_merge_file_name")
+      string_io = Excel::ApprovalExportHelper.new.generate_reject_export(record)
+    end
+    send_data string_io, :filename => "#{file_name}", :type =>  "application/vnd.ms-excel"    
+
+  end
 end

@@ -46,7 +46,12 @@
 </div>
 
 <div style="margin-top:5px; margin-bottom:40px;">
-  <button id="print_approval" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+  <% if policy(:MergeApproval).index? %>
+    <button id="print_approval" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+    <% if @approval_action == 'merge_player' %>
+      <span style="float: right"><%= link_to t("general.export"), excels_approval_page_path(approval_action: @approval_action, search_by: @search_by, target: @target, status: 'canceled'), class: "btn btn-primary" %></span>
+    <% end %>
+  <% end %>
 </div>
 
 

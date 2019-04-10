@@ -36,11 +36,13 @@ class ExcelsController < ApplicationController
     record = Approval::Request.get_requests_list(params[:target], params[:search_by], params[:approval_action], params[:status], '')
     p record
     if params[:status] == 'approved'
+      record2 = record.sort_by{ |hsh| hsh[:updated_at]}.reverse
       file_name = I18n.t("export.approved_merge_file_name")
-      string_io = Excel::ApprovalExportHelper.new.generate_export(record)
+      string_io = Excel::ApprovalExportHelper.new.generate_export(record2)
     else
+      record2 = record.sort_by{ |hsh| hsh[:updated_at]}.reverse
       file_name = I18n.t("export.rejected_merge_file_name")
-      string_io = Excel::ApprovalExportHelper.new.generate_reject_export(record)
+      string_io = Excel::ApprovalExportHelper.new.generate_reject_export(record2)
     end
     send_data string_io, :filename => "#{file_name}", :type =>  "application/vnd.ms-excel"    
 

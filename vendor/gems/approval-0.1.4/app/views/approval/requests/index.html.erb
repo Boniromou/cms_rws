@@ -1,11 +1,15 @@
-<%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% if @target == 'player'%>
+  <%= breadcrumbs([ I18n.t('approval.merge_title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% else %>
+  <%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% end %>
 
 <%= table_tabs(I18n.t('approval.pending'),
 [ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.rejected'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}),  policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ])%>
 
-<div class="tab-content" style="padding: 10px;">
+<div class="tab-content" style="padding: 10px;" id="tab-content">
   <table id="request_table" class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -13,7 +17,7 @@
           <th class="col-md-1"><%= I18n.t(title) %></th>
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.submit_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-1" id='updated_at'><%= I18n.t('approval.updated_at') %></th>
         <th class="col-md-2"><%= I18n.t('approval.operation') %></th>
       </tr>
     </thead>
@@ -46,17 +50,23 @@
   </table>
 </div>
 
+<div style="margin-top:5px; margin-bottom:40px;">
+  <button id="print_approval" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+</div>
+
 <%= render :partial => "approval/shared/pop_up_panel" %>
 <%= render :partial => "approval/requests/request_detail" %>
+ <%= render partial: "shared/nav_setup", locals: { tab_to_activate: "approval_#{@approval_action}" } %>
+
 <%= javascript_include_tag "pagination" %>
 <%= javascript_include_tag "print.js" %>
-
 <script>
 $(function(){
-    $('#request_table').dataTable({
-      'order': [[ 7, 'desc']],
-      'pageLength' : 50
-    });
+  var index = $('#updated_at').index();
+  $('#request_table').dataTable({
+    'order': [[ index, 'desc']],
+    'pageLength': 50
+  });
 
   $('#request_table').on('click','.request_button',function(event) {
     var target = $(event.currentTarget);
@@ -74,4 +84,27 @@ $(function(){
     registerPopUpPanel(msg, call_request);
   });
 })
+
+  function trimToPrintContent(raw) {
+    $('div.dt-toolbar', raw).remove();
+    $('table', raw).css("border","1px double");
+    $('tbody tr td', raw).css("border","1px double");
+    $('thead th', raw).css("border","1px double");
+    $('table', raw).attr('height', 10);
+    $('div.dt-toolbar-footer', raw).remove();
+  }
+
+  var raw_result = $('div#tab-content').clone();
+  trimToPrintContent(raw_result);
+
+  $(document).ready(function() {
+    $('button#print_approval').click(function() {
+      var content = raw_result.html();
+
+      printHtml(content, true);
+
+      return false;
+    });
+  });
+
 </script>

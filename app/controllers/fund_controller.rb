@@ -1,6 +1,8 @@
 class FundController < ApplicationController
   include FundHelper
 
+  HMAC_SECRET = 'test_key'
+
   layout 'cage'
 
   before_filter :only => [:new, :create] do |controller|
@@ -16,7 +18,9 @@ class FundController < ApplicationController
   rescue_from Remote::AmountNotMatch, :with => :handle_credit_not_match
   rescue_from FundInOut::PlayerLocked, :with => :handle_player_locked
   rescue_from FundInOut::InvalidMachineToken, :with => :handle_invalid_machine_token
- 
+  rescue_from FundInOut::AuthorizationFail, :with => :handle_authorization_fail
+  rescue_from FundInOut::NeedAuthorization, :with => :handle_need_authorization
+
   def operation_sym
     (action_str + '?').to_sym
   end
@@ -35,10 +39,13 @@ class FundController < ApplicationController
   end
 
   def create
+    read_auth_info
     @exception_transaction = params[:exception_transaction]
     extract_params
+    check_authorization if @exception_transaction != 'yes'
     check_transaction_acceptable
     execute_transaction
+    clear_authorize_info
     if @exception_transaction == 'yes' && (action_str == 'deposit' || action_str == 'withdraw')
       flash[:success] = {key: "flash_message.manual_#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
       redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
@@ -46,7 +53,6 @@ class FundController < ApplicationController
       flash[:success] = {key: "flash_message.#{action_str}_complete", replace: {amount: to_display_amount_str(@transaction.amount)}}
     end
   end
-  
   protected
 
   def extract_params
@@ -61,13 +67,32 @@ class FundController < ApplicationController
     @source_of_funds = params[:source_of_funds]
   end
 
+  def read_auth_info
+    if @exception_transaction != 'yes' && cookies[:second_auth_info]
+      params.merge!(second_auth_info[:auth_info].recursive_symbolize_keys!)
+      Rails.logger.info "Auth params: #{params}"
+    end
+  end
+
   def check_transaction_acceptable
     authorize_action @player, :non_test_mode?
     raise FundInOut::PlayerLocked if @player.account_locked?
   end
 
+  def check_authorization
+    return if @exception_transaction == 'yes' || @amount.to_f < @config_helper.send("#{action_str}_authorized_amount")
+    raise FundInOut::NeedAuthorization if cookies[:second_auth_result].blank?
+
+    auth_result = second_auth_result
+    Rails.logger.info "Authorize result: #{auth_result}"
+    raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || cookies[:second_auth_info].blank? || auth_result[:message_id] != second_auth_info[:message_id]
+
+    @authorized_by = auth_result[:authorized_by]
+    @authorized_at = auth_result[:authorized_at]
+  end
+
   def validate_pin
-    pin = params[:player_transaction][:pin]
+    pin = params[:player_pin]
     result = requester_helper.validate_pin(@player.member_id, pin)
     raise Request::InvalidPin unless result
   end
@@ -82,31 +107,32 @@ class FundController < ApplicationController
     else
       AuditLog.player_log(action_str, current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @transaction = create_player_transaction(@player.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
-      response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token    )
+      response = call_wallet(@player.member_id, @amount, @transaction.ref_trans_id, @transaction.trans_date.localtime, @transaction.source_type, @transaction.machine_token)
       handle_wallet_result(@transaction, response)
       end
-    end  
+    end
   end
 
   def get_submit_data
-    {    
+    {
       :casino_id => Casino.find_by_id(@transaction.casino_id).name,
       :player_id => @player.member_id,
       :amount_in_cent => @transaction.amount,
       :amount => @transaction.amount / 100.0,
       :transaction_type => TransactionType.find_by_id(@transaction.transaction_type_id).name.gsub('_',' ').titleize,
       :payment_method => PaymentMethod.find_by_id(@transaction.payment_method_id).name,
-      :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name
+      :source_of_fund => SourceOfFund.find_by_id(@transaction.source_of_fund_id).name,
+      :transaction => [@transaction.id]
     }
-  end 
+  end
 
   def create_player_transaction(member_id, amount, ref_trans_id = nil, data = nil)
     raise FundInOut::InvalidMachineToken unless current_machine_token
     if @exception_transaction == 'yes'
       PlayerTransaction.send "save_exception_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
     else
-      PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds
-    end    
+      PlayerTransaction.send "save_#{action_str}_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data, @payment_method_type, @source_of_funds, @authorized_by, @authorized_at
+    end
   end
 
   def handle_wallet_result(transaction, response)
@@ -119,7 +145,7 @@ class FundController < ApplicationController
       end
     end
   end
-  
+
   def handle_player_locked(e)
     handle_fund_error("player_status.is_locked")
   end
@@ -147,7 +173,7 @@ class FundController < ApplicationController
 
   def handle_pin_error
     flash[:fail] = 'invalid_pin.invalid_pin'
-    redirect_to balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}"
+    redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 
   def handle_call_patron_fail
@@ -169,6 +195,41 @@ class FundController < ApplicationController
 
   def handle_invalid_machine_token(e)
     handle_fund_error('void_transaction.invalid_machine_token')
+  end
+
+  def handle_authorization_fail(e)
+    clear_authorize_info
+    flash[:fail] = 'flash_message.authorize_failed'
+    redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
+  end
+
+  def handle_need_authorization(e)
+    clear_authorize_info
+    auth_info = params.clone.slice!('utf8', 'authenticity_token', 'controller', 'action')
+    permission = action_str.include?('void') ? 'authorize_void' : "authorize_#{action_str}"
+    value = {
+      auth_info: auth_info,
+      app_name: APP_NAME,
+      casino_id: current_casino_id,
+      permission: ['player_transaction', permission],
+      callback_url: auth_callback_url,
+      message_id: SecureRandom.hex(12)
+    }
+    value = JWT.encode value, HMAC_SECRET, 'HS256'
+    write_cookie(:second_auth_info, value)
+    redirect_to "#{SSO_URL}/second_authorize"
+  end
+
+  def second_auth_info
+    JWT.decode(cookies[:second_auth_info], HMAC_SECRET, true, { algorithm: 'HS256' })[0].symbolize_keys! if cookies[:second_auth_info]
+  end
+
+  def second_auth_result
+    JWT.decode(cookies[:second_auth_result], HMAC_SECRET, true, { algorithm: 'HS256' })[0].symbolize_keys! if cookies[:second_auth_result]
+  end
+
+  def auth_callback_url
+    "#{URL_BASE}/#{action_str}"
   end
 
 end

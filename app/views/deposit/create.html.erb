@@ -4,3 +4,9 @@
   <%= render :partial =>"shared/slip_form", :locals => {:operation => "Deposit"} %>
 
 <% end %>
+
+<script type='text/javascript'>
+<% if @exception_transaction == 'no' %>
+  history.pushState(history.state, document.title, "<%= balance_path + "?member_id=#{@player.member_id}&exception_transaction=#{@exception_transaction}" %>");
+<% end %>
+</script>

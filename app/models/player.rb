@@ -93,9 +93,9 @@ class Player < ActiveRecord::Base
   end
 
   def get_fund_type
-    type = SourceOfFund.all 
+    type = SourceOfFund.all
   end
-  
+
   def payment_method_types
     type = PaymentMethod.all
   end

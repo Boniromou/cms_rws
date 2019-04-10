@@ -1,9 +1,11 @@
 class PlayerTransaction < ActiveRecord::Base
-  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :casino_id
+  attr_accessible :action, :amount, :player_id, :shift_id, :machine_token, :status, :transaction_type_id, :user_id, :slip_number, :created_at, :ref_trans_id, :data, :casino_id, :trans_date, :authorized_by, :authorized_at
   belongs_to :player
   belongs_to :shift
   belongs_to :user
   belongs_to :transaction_type
+  belongs_to :payment_method
+  belongs_to :source_of_fund
 
   include FundHelper
   include ActionView::Helpers
@@ -18,7 +20,7 @@ class PlayerTransaction < ActiveRecord::Base
   EXCEPTION_DEPOSIT = 'manual_deposit'
   EXCEPTION_WITHDRAW = 'manual_withdraw'
   VOID_EXCEPTION_DEPOSIT = 'void_manual_deposit'
-  VOID_EXCEPTION_WITHDRAW = 'void_manual_withdraw'  
+  VOID_EXCEPTION_WITHDRAW = 'void_manual_withdraw'
   def deposit_amt_str
     result = ""
     result = to_display_amount_str(amount) if self.transaction_type.name == DEPOSIT || self.transaction_type.name == EXCEPTION_DEPOSIT
@@ -98,7 +100,7 @@ class PlayerTransaction < ActiveRecord::Base
 
   def location
     if self.machine_token
-      machine_token_array = self.machine_token.split('|') 
+      machine_token_array = self.machine_token.split('|')
       return machine_token_array[2] + '/' + machine_token_array[4] if machine_token_array[2] && machine_token_array[4]
     end
     '---'
@@ -118,8 +120,9 @@ class PlayerTransaction < ActiveRecord::Base
 
   class << self
     include FundHelper
-    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil, payment_method_type = 2, source_of_funds = 7)
+    def init_transaction(member_id, amount, trans_type, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, casino_id = nil, promotion_code = nil, executed_by = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
       transaction = new
+ 
       if casino_id.nil?
         transaction[:casino_id] = machine_token.nil? ? User.find_by_id(user_id).casino_id : Machine.parse_machine_token(machine_token)[:casino_id]
       else
@@ -137,6 +140,8 @@ class PlayerTransaction < ActiveRecord::Base
       transaction[:promotion_code] = promotion_code
       transaction[:payment_method_id] = payment_method_type
       transaction[:source_of_fund_id] = source_of_funds
+      transaction[:authorized_by] = authorized_by if authorized_by
+      transaction[:authorized_at] = authorized_at if authorized_at
       data ||= {}
       data[:executed_by] = executed_by unless executed_by.nil?
       transaction[:data] = data
@@ -157,45 +162,33 @@ class PlayerTransaction < ActiveRecord::Base
       init_transaction(member_id, amount, DEPOSIT, shift_id, '', nil, ref_trans_id, data, casino_id, promotion_code, executed_by)
     end
 
-    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
+    def save_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
+      init_transaction(member_id, amount, DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds, authorized_by, authorized_at)
     end
 
-    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1)
+    def save_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
+      init_transaction(member_id, amount, WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1, authorized_by, authorized_at)
     end
 
-    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
+    def save_void_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
+      init_transaction(member_id, amount, VOID_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds, authorized_by, authorized_at)
     end
 
-    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1)
+    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7, authorized_by = nil, authorized_at = nil)
+      init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, 1, authorized_by, authorized_at)
     end
 
-    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil )
+    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7 )
       init_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, source_of_funds)
     end
 
-    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
+    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = 2, source_of_funds = 7)
       init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
     end
 
-    def save_void_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
-      init_transaction(member_id, amount, VOID_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, 1)
-    end
-
-    def save_credit_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil )
-      init_transaction(member_id, amount, CREDIT_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
-    end
-
-    def save_credit_expire_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type = nil, source_of_funds = nil)
-      init_transaction(member_id, amount, CREDIT_EXPIRE, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, source_of_funds)
-    end
-    
     def save_exception_deposit_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
       init_transaction(member_id, amount, EXCEPTION_DEPOSIT, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil, payment_method_type, source_of_funds)
-    end   
+    end
 
     def save_exception_withdraw_transaction(member_id, amount, shift_id, user_id, machine_token, ref_trans_id = nil, data = nil, payment_method_type, source_of_funds)
       init_transaction(member_id, amount, EXCEPTION_WITHDRAW, shift_id, user_id, machine_token, ref_trans_id, data, nil, nil, nil,payment_method_type, 1)
@@ -207,10 +200,10 @@ class PlayerTransaction < ActiveRecord::Base
 
     def search_transactions_by_user_and_shift(user_id, start_shift_id, end_shift_id)
       by_user_id(user_id).from_shift_id(start_shift_id).to_shift_id(end_shift_id)
-    end 
+    end
 
     def search_transactions_by_shift_id(user_id, in_shift_id)
       by_user_id(user_id).in_shift_id(in_shift_id)
-    end 
+    end
   end
 end

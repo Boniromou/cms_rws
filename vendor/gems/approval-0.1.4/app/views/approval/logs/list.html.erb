@@ -1,11 +1,15 @@
-<%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% if @target == 'player'%>
+  <%= breadcrumbs([ I18n.t('approval.merge_title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% else %>
+  <%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% end %>
 
 <%= table_tabs(I18n.t('approval.rejected'),
 [ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.rejected'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ]) %>
 
-<div class="tab-content" style="padding: 10px;">
+<div class="tab-content" id="tab-content" style="padding: 10px;">
   <table id="log_table" class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -14,14 +18,22 @@
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.status') %></th>
         <th class="col-md-1"><%= I18n.t('approval.reject_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-1" id='updated_at'><%= I18n.t('approval.updated_at') %></th>
       </tr>
     </thead>
     <tbody>
       <% @request_logs.each do |log| %>
         <tr>
           <% @titles.keys.each do |title| %>
-            <td><%= log[:request][title.to_sym].present? ? log[:request][title.to_sym] : '---' %></td>
+            <% if title.to_s == "player_sur_after_amount"%>
+              <td><%= log[:request][:player_sur_before_amount].present? ? log[:request][:player_sur_before_amount] : '---' %></td>
+            <% elsif title.to_s == "player_vic_after_amount"%>
+              <td><%= log[:request][:player_vic_before_amount].present? ? log[:request][:player_vic_before_amount] : '---' %></td>
+            <% elsif title.to_s == "minus_amount" || title.to_s == "amount"%>
+              <td>0</td>
+            <% else %>
+              <td><%= log[:request][title.to_sym].present? ? log[:request][title.to_sym] : '---' %></td>
+            <% end %>
           <% end %>
           <td><%= I18n.t('approval.reject')%></td>
           <td><%= log[:action_by] %></td>
@@ -32,14 +44,50 @@
   </table>
 </div>
 
+<div style="margin-top:5px; margin-bottom:40px;">
+  <% if policy(:MergeApproval).index? %>
+    <button id="print_approval" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+    <% if @approval_action == 'merge_player' %>
+      <span style="float: right"><%= link_to t("general.export"), excels_approval_page_path(approval_action: @approval_action, search_by: @search_by, target: @target, status: 'canceled'), class: "btn btn-primary" %></span>
+    <% end %>
+  <% end %>
+</div>
+
+
 <%= render :partial => "approval/shared/pop_up_panel" %>
 <%= render :partial => "approval/requests/request_detail" %>
+<%= javascript_include_tag "print.js" %>
 
 <script>
 $(function(){
+  var index = $('#updated_at').index();
   $('#log_table').dataTable({
-    'order': [[ 8, 'desc']],
+    'order': [[ index, 'desc']],
     'pageLength' : 50
   });
 })
+
+  function trimToPrintContent(raw) {
+    $('div.dt-toolbar', raw).remove();
+    $('table', raw).css("border","1px double");
+    $('tbody tr td', raw).css("border","1px double");
+    $('thead th', raw).css("border","1px double");
+    $('table', raw).attr('height', 11);
+    $('div.dt-toolbar-footer', raw).remove();
+  }
+
+  var raw_result = $('div#tab-content').clone();
+  trimToPrintContent(raw_result);
+
+  $(document).ready(function() {
+    $('button#print_approval').click(function() {
+      var content = raw_result.html();
+
+      printHtml(content, true);
+
+      return false;
+    });
+  });
+
+
 </script>

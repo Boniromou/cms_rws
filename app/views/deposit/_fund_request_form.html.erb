@@ -1,4 +1,4 @@
-<%=form_for :player_transaction, url: fund_in_path, remote: true, html: { id: "fund_request", autocomplete: :off  } do |f| %>
+<%=form_for :player_transaction, url: deposit_path, html: { id: "fund_request", autocomplete: :off  } do |f| %>
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
@@ -39,7 +39,7 @@
     <div class='col-xs-4 box' style='width:300px; right:10px'>
       <label class='invisible_error' id='type_error'>
         <%= t("invalid_amt.payment_method_type") %>
-      </label>  
+      </label>
     </div>
   </div>
 
@@ -61,7 +61,7 @@
         <label class='invisible_error' id='source_error'>
         <%= t("invalid_amt.source_of_funds") %>
         </label>
-     </div> 
+     </div>
   </div>
 
   <div class="row">

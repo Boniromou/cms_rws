@@ -90,6 +90,7 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.2)
+    jwt (1.5.6)
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -216,6 +217,7 @@ DEPENDENCIES
   hood!
   httparty
   jquery-rails
+  jwt (= 1.5.6)
   kaminari (= 0.17.0)
   lax-support (= 0.6.32)!
   mysql2
@@ -235,4 +237,4 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
 
 BUNDLED WITH
-   1.16.1
+   1.16.6

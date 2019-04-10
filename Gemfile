@@ -55,6 +55,7 @@ end
 gem 'dalli', "~> 2.0.3"
 
 gem 'thin', '1.6.2'
+gem 'jwt', '1.5.6'
 
 gem 'activerecord-mysql-adapter'
 gem 'spreadsheet', '1.1.2'

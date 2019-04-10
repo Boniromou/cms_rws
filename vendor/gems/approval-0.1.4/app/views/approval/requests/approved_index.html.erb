@@ -1,11 +1,15 @@
-<%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% if @target == 'player'%>
+  <%= breadcrumbs([ I18n.t('approval.merge_title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% else %>
+  <%= breadcrumbs([ I18n.t('approval.title', approval_action: @approval_action.titleize) ], 'fa fa-lg fa-fw fa-bank') -%>
+<% end %>
 
 <%= table_tabs(I18n.t('approval.approved'),
 [ I18n.t('approval.pending'), index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.approved'), requests_approved_index_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}), policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ],
 [ I18n.t('approval.rejected'), logs_list_path({:target => @target, :search_by => @search_by, :approval_action => @approval_action, :all => @all, :remote => @remote}),  policy(@target.to_sym).send("#{@approval_action}_approval_list?"), @remote ]) %>
 
-<div class="tab-content" style="padding: 10px;">
+<div class="tab-content" id="tab-content" style="padding: 10px;">
   <table id="request_table" class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -13,9 +17,11 @@
           <th class="col-md-1"><%= I18n.t(title) %></th>
         <% end %>
         <th class="col-md-1"><%= I18n.t('approval.submit_by') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.updated_at') %></th>
+        <th class="col-md-1" id='updated_at'><%= I18n.t('approval.updated_at') %></th>
         <th class="col-md-1"><%= I18n.t('approval.trans_status') %></th>
-        <th class="col-md-1"><%= I18n.t('approval.action') %></th>
+        <% if @approval_action == 'exception_transaction' %>
+          <th class="col-md-1"><%= I18n.t('approval.action') %></th>
+        <% end %>
       </tr>
     </thead>
     <tbody>
@@ -26,16 +32,32 @@
           <% end %>
           <td><%= request[:submit_by] %></td>
           <td><%= request[:updated_at] %></td>
-          <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td>
-          <td>
-            <% if policy(:player_transaction).reprint? && PlayerTransaction.find_by_id(request[:target_id]).status == 'completed'%>
+          <% if @approval_action == 'exception_transaction'%>
+            <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td>
+            <td>
+            <% if policy(:player_transaction).reprint? && PlayerTransaction.find_by_id(request[:target_id]).status == 'completed' %>
               <%= link_to t("button.print"), reprint_path(transaction_id: PlayerTransaction.find_by_id(request[:target_id]).id), :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %>
             <% end %>
-          </td>
+            </td>
+          <% else %>
+            <% approval = ApprovalRequest.find_by_id(request[:id])%>
+            <% transaction = JSON.parse(approval.data)["transaction"]%>
+            <td><%= PlayerTransaction.find_by_id(transaction).status %></td>
+          <% end %>
+
         </tr>
       <% end %>
     </tbody>
   </table>
+</div>
+
+<div style="margin-top:5px; margin-bottom:40px;">
+  <% if policy(:MergeApproval).index? %>
+    <button id="print_approval" class="btn btn-primary pull-right"><%= t("button.print") %></button>
+    <% if @approval_action == 'merge_player' %>
+      <span style="float: right"><%= link_to t("general.export"), excels_approval_page_path(approval_action: @approval_action, search_by: @search_by, target: @target, status: 'approved'), class: "btn btn-primary" %></span>
+    <% end %>
+  <% end %>
 </div>
 
 <%= render :partial => "approval/shared/pop_up_panel" %>
@@ -44,8 +66,9 @@
 
 <script>
 $(function(){
+  var index = $('#updated_at').index();
   $('#request_table').dataTable({
-    'order': [[ 7, 'desc']],
+    'order': [[ index, 'desc']],
     'pageLength' : 50
   });
   $('#request_table').on('click','.cancel_approve',function(event) {
@@ -57,4 +80,29 @@ $(function(){
     registerPopUpPanel('<%= I18n.t('approval.confirm_msg', operation: 'cancel approve') %>', cancel_approve_request);
   });
 })
+
+  function trimToPrintContent(raw) {
+    $('div.dt-toolbar', raw).remove();
+    $('table', raw).css("border","1px double");
+    $('tbody tr td', raw).css("border","1px double");
+    $('thead th', raw).css("border","1px double");
+    $('table', raw).attr('height', 11);
+    $('div.dt-toolbar-footer', raw).remove();
+  }
+
+  var raw_result = $('div#tab-content').clone();
+  trimToPrintContent(raw_result);
+
+  $(document).ready(function() {
+    $('button#print_approval').click(function() {
+      var content = raw_result.html();
+
+      printHtml(content, true);
+
+      return false;
+    });
+  });
+
+
+
 </script>

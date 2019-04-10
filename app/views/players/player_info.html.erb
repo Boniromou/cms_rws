@@ -10,24 +10,38 @@
 
 <% if @inactivate %>
   <% footer = render "players/inactivate_footer" %>
+<% elsif @operation == 'merge' %>
+  <% footer = '' %>
 <% else %>
   <% footer = render "players/#{@operation}_footer" %>
 <% end %>
+<%= render partial: "shared/pop_up_panel" %>
 
-<% content = render "players/balance_amt" %>
-
-  
-  <div style="width:100%; margin:0 auto;">
-    <div id = "div2" style= "margin-right:10px;"><%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :content => content,     :footer => footer, :show_remain => {:deposit => true, :withdraw => true}} %>
-    </div>
-    <% if policy(:PlayerTransaction).search? %>
-      <div id = "div1" style= "width:650px;"><%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
+<div style="width:100%; margin:0 auto;">
+  <div class="row">
+    <%= render @players , {show_info: true, show_balance: true, footer: footer, show_remain: {deposit: true, withdraw: true}}%>
+    <% if policy(:PlayerTransaction).search? and @operation == 'balance' %>
+      <div id = "div1" style= "width:800px; padding-left: 12px;">
+        <%= render partial:"player_transactions/search_form" , :locals => {:search_by_history => false} %>
       </div>
+      <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %>  style="display:none" readonly >
     <% end %>
-    <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %>  style="display:none" readonly >
     <div id="player_transactions_result">
     </div>
   </div>
+</div>
+
+<%= render partial: "shared/nav_setup", locals: { tab_to_activate: @exception_transaction == "yes" ? "exception_balance" : "balance_enquiry" } %>
+
+<script>
+  $(document).ready(function() {
+    <% if @start_time.present? || @end_time.present? %>
+      $('input[name=start_time]').val("<%= @start_time %>");
+      $('input[name=end_time]').val("<%= @end_time %>");
+      $('input#search').click();
+    <% end %>
+  });
+</script>
 
 
 

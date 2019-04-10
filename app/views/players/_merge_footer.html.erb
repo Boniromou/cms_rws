@@ -1,0 +1,17 @@
+<% if policy(@player).non_test_mode? && policy(@player2).non_test_mode?%>
+  <% if policy(:Player).merge? && policy(:PlayerTransaction).usermatchtoken(@casino_id, @current_user.casino_ids)%>
+    <% if @player.account_locked? || @player2.account_locked?%>
+      <%= link_to t("button.merge"), "#" , :title => t("button.merge"), :id => "player_merge", :class => "btn btn-primary", disabled: 'disabled' %>
+    <% else %>
+        <%=form_for :player_transaction, url: merge_player_path, remote: true, html: { id: "merge_request", autocomplete: :off  } do |f| %>
+          <%= hidden_field(:player, :sur_member_id, :value => @player2.member_id)%>
+          <%= hidden_field(:player, :vic_member_id, :value => @player.member_id)%>
+          <%= hidden_field(:player_transaction, :sur_amount, :value => @player_balance2)%>
+          <%= hidden_field(:player_transaction, :vic_amount, :value => @player_balance) %>
+        <% end %>   
+        <% pop_up_btn :id => "confirm_#{@player2.member_id}",:str => t("button.merge"), :form_id => "merge_request", :style => "confirm_fund_btn" do %>
+          <% label_tag(:confirm_message, "Confirm to merge to account from [#{@card_id}] to [#{@card_id2}] ?") %>
+        <% end %>
+    <% end %>
+  <% end %>
+<% end %>

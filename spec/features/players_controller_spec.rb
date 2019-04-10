@@ -12,7 +12,7 @@ describe PlayersController do
     User.delete_all
     Warden.test_reset!
   end
-  
+
   describe '[4] Search player by membership ID' do
     before(:each) do
       clean_dbs
@@ -58,7 +58,7 @@ describe PlayersController do
       check_player_info_10010
       expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
     end
-    
+
     it '[4.3] fail to search player' do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @player = Player.new
@@ -71,7 +71,7 @@ describe PlayersController do
       find("#button_find").click
       check_not_found
     end
-    
+
     it '[4.4] fail to search other licensee player' do
       mock_player_info_result({:error_code => 'not OK'})
       @player = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 1003)
@@ -79,10 +79,10 @@ describe PlayersController do
       visit players_search_path + "?operation=balance"
       fill_search_info("member_id", @player.member_id)
       find("#button_find").click
-      check_not_found
+      check_not_found('search_error.not_validated')
     end
   end
-  
+
   describe '[5] Balance Enquiry' do
     before(:each) do
       clean_dbs
@@ -111,7 +111,7 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_player_info
       check_balance_page(9999)
 
@@ -123,7 +123,7 @@ describe PlayersController do
       expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
     end
 
-    it '[5.2] click unauthorized action', :js => true do 
+    it '[5.2] click unauthorized action', :js => true do
       login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
       visit home_path
@@ -132,18 +132,18 @@ describe PlayersController do
       wait_for_ajax
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
-    end     
-    
-    it '[5.3] click link to the unauthorized page', :js => true do 
+    end
+
+    it '[5.3] click link to the unauthorized page', :js => true do
       login_as_test_user
       set_permission(@test_user,"cashier",:player,[])
       visit balance_path
       wait_for_ajax
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
-    end     
-    
-    it '[5.4] authorized to search and unauthorized to create' do 
+    end
+
+    it '[5.4] authorized to search and unauthorized to create' do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       login_as_test_user
       set_permission(@test_user,"cashier",:player,["balance"])
@@ -153,8 +153,8 @@ describe PlayersController do
       find("#button_find").click
       check_not_found
       expect(page.source).to_not have_content(I18n.t("search_error.create_player"))
-    end     
-    
+    end
+
     it '[5.5] Return to Cage home', :js => true do
       login_as_admin
 
@@ -168,10 +168,10 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_balance_page(9999)
       check_player_info
-      
+
       expect(page.source).to have_selector("div a#balance_deposit")
       expect(page.source).to have_selector("div a#balance_withdraw")
 
@@ -194,22 +194,22 @@ describe PlayersController do
 
       check_balance_page(9999)
       check_player_info
-      
+
       expect(page.source).to_not have_selector("div a#balance_deposit")
       expect(page.source).to_not have_selector("div a#balance_withdraw")
     end
-    
-    it '[5.7] unathorized to balance enquriy ' do 
+
+    it '[5.7] unathorized to balance enquriy ' do
       login_as_test_user
       set_permission(@test_user,"cashier",:player,[])
       visit home_path
       expect(first("aside#left-panel ul li#nav_balance_enquiry")).to eq nil
-    end     
+    end
 
     it '[5.8] balance enquiry with locked player', :js => true do
       mock_wallet_balance(99.99)
       mock_have_active_location
-      
+
       @player = create_default_player(:first_name => "exist", :last_name => "player", :status => "locked")
       @player.lock_account!
       login_as_admin
@@ -220,7 +220,7 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_player_info
       check_balance_page(9999)
 
@@ -248,10 +248,12 @@ describe PlayersController do
       go_to_deposit_page
       wait_for_ajax
       check_remain_amount(:deposit)
-      fill_in "player_transaction_amount", :with => 10000
+      fill_in "player_transaction_amount", :with => 100
+      find("#player_transaction_payment_method_type option[value='2']").select_option
+      find("#player_transaction_source_of_funds option[value='2']").select_option
 
       find("button#confirm_deposit").click
-      expect(find("#fund_amt").text).to eq to_display_amount_str(1000000)
+      expect(find("#fund_amt").text).to eq to_display_amount_str(10000)
       find("div#pop_up_dialog div button#confirm").click
 
       visit home_path
@@ -260,9 +262,9 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       expect(find("select#select_casino").value).to eq @root_user.casino_id.to_s
-      expect(find("label#player_remain_deposit").text).to eq to_display_amount_str(1000000)
+      expect(find("label#player_remain_deposit").text).to eq to_display_amount_str(10000)
       clean_dbs
       #create_shift_data_multi
       #select('test', :from => 'select_casino')
@@ -273,7 +275,7 @@ describe PlayersController do
       #expect(find("label#player_remain_deposit").text).to eq to_display_amount_str(1000000)
     end
   end
-  
+
   describe '[12] Search player by card ID' do
     before(:each) do
       clean_dbs
@@ -304,7 +306,7 @@ describe PlayersController do
       check_balance_page
       check_player_info
     end
-    
+
     it '[12.3] fail to search player' do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       @player = Player.new
@@ -394,7 +396,7 @@ describe PlayersController do
 
     it '[15.1] Successfully Lock player', js: true do
       lock_or_unlock_player_and_check
-    end 
+    end
 
     it '[15.2] Successfully unlock player', js: true do
       @player.status = "locked"
@@ -402,9 +404,9 @@ describe PlayersController do
       @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'cage_lock')
 
       lock_or_unlock_player_and_check
-    end 
+    end
 
-    it '[15.3] unauthorized to lock/unlock' do 
+    it '[15.3] unauthorized to lock/unlock' do
       login_as_test_user
       set_permission(@test_user,"cashier",:player,["profile"])
       visit home_path
@@ -459,8 +461,8 @@ describe PlayersController do
       @players_lock_type = PlayersLockType.add_lock_to_player(@player.id,'blacklist')
 
       lock_or_unlock_player_and_check
-    end 
-    
+    end
+
     it '[15.7] Fail to lock player', js: true do
       login_as_admin
       visit home_path
@@ -484,8 +486,8 @@ describe PlayersController do
 
       check_lock_unlock_page
       check_flash_message expected_flash_message
-    end 
-    
+    end
+
     it '[15.8] Fail to unlock player', js: true do
       @player.status = "locked"
       @player.save
@@ -512,7 +514,7 @@ describe PlayersController do
 
       check_lock_unlock_page
       check_flash_message expected_flash_message
-    end 
+    end
   end
 =end
 
@@ -624,7 +626,7 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_player_info
       check_balance_page_without_balance
 
@@ -632,12 +634,12 @@ describe PlayersController do
       expect(page.source).to have_selector("div a#balance_withdraw")
       expect(find("div a#balance_deposit")[:disabled]).to eq nil
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
-      
+
       check_flash_message I18n.t("balance_enquiry.query_balance_fail")
 
     end
   end
-  
+
   describe '[38] Retry create player' do
     before(:each) do
       clean_dbs
@@ -652,36 +654,36 @@ describe PlayersController do
       clean_dbs
     end
 
-    it '[38.1] Retry create player success', :js => true do
-      @credit_expird_at = (Time.now + 2.day).utc.to_s
-      allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
-      allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
-      mock_wallet_response_success(:create_player)
+    # it '[38.1] Retry create player success', :js => true do
+    #   @credit_expird_at = (Time.now + 2.day).utc.to_s
+    #   allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
+    #   allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'},{:error_code => 'OK', :balance => 99.99, :credit_balance => 99.99, :credit_expired_at => @credit_expird_at})
+    #   mock_wallet_response_success(:create_player)
 
-      login_as_admin
+    #   login_as_admin
 
-      visit home_path
-      click_link I18n.t("tree_panel.balance")
-      wait_for_ajax
-      check_search_page
-      fill_search_info_js("member_id", @player.member_id)
-      find("#button_find").click
-      
-      check_player_info
-      check_balance_page(9999)
+    #   visit home_path
+    #   click_link I18n.t("tree_panel.balance")
+    #   wait_for_ajax
+    #   check_search_page
+    #   fill_search_info_js("member_id", @player.member_id)
+    #   find("#button_find").click
 
-      expect(page.source).to have_selector("div a#balance_deposit")
-      expect(page.source).to have_selector("div a#balance_withdraw")
-      expect(find("div a#balance_deposit")[:disabled]).to eq nil
-      expect(find("div a#balance_withdraw")[:disabled]).to eq nil
-    end
+    #   check_player_info
+    #   check_balance_page(9999)
+
+    #   expect(page.source).to have_selector("div a#balance_deposit")
+    #   expect(page.source).to have_selector("div a#balance_withdraw")
+    #   expect(find("div a#balance_deposit")[:disabled]).to eq nil
+    #   expect(find("div a#balance_withdraw")[:disabled]).to eq nil
+    # end
 
     it '[38.2] Retry create player  fail', :js => true do
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Base).to receive(:send).and_return({:error_code => 'InvalidLoginName'})
       allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_return({:error_code => 'InvalidLoginName'})
 
       login_as_admin
-      
+
       visit home_path
       click_link I18n.t("tree_panel.balance")
       wait_for_ajax
@@ -699,7 +701,7 @@ describe PlayersController do
       expect(find("div a#balance_withdraw")[:disabled]).to eq nil
     end
   end
-  
+
   describe '[53] Update player info when search in Balance Enquiry/Player Profile' do
     before(:each) do
       clean_dbs
@@ -790,7 +792,7 @@ describe PlayersController do
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
       #expect(page.source).to have_selector("a#create_pin")
     end
-    
+
     it '[53.6] Card ID not found in PIS' do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)
       login_as_admin
@@ -854,14 +856,14 @@ describe PlayersController do
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
-      
+
       wait_for_ajax
       check_title("tree_panel.create_pin")
       fill_in "new_pin", :with => '1111'
       fill_in "confirm_pin", :with => '1111'
       content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
       click_pop_up_confirm("confirm_set_pin", content_list)
-      
+
       wait_for_ajax
       check_flash_message I18n.t("reset_pin.set_pin_success", name: "123456")
     end
@@ -885,7 +887,7 @@ describe PlayersController do
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
-      
+
       wait_for_ajax
       check_title("tree_panel.create_pin")
       fill_in "new_pin", :with => '11'
@@ -916,7 +918,7 @@ describe PlayersController do
       expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
 
       find("#create_pin").click
-      
+
       wait_for_ajax
       check_title("tree_panel.create_pin")
       fill_in "new_pin", :with => '1111'
@@ -949,14 +951,14 @@ describe PlayersController do
       expect(find("label#player_status").text).to eq I18n.t("player_status.active")
 
       find("#reset_pin").click
-      
+
       wait_for_ajax
       check_title("tree_panel.reset_pin")
       fill_in "new_pin", :with => '1111'
       fill_in "confirm_pin", :with => '1111'
       content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
       click_pop_up_confirm("confirm_set_pin", content_list)
-      
+
       wait_for_ajax
       check_flash_message I18n.t("reset_pin.set_pin_success", name: "123456")
     end
@@ -988,7 +990,7 @@ describe PlayersController do
       fill_in "confirm_pin", :with => '1111'
       content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
       click_pop_up_confirm("confirm_set_pin", content_list)
-      
+
       wait_for_ajax
       check_flash_message I18n.t("reset_pin.set_pin_success", name: "123456")
     end
@@ -1020,7 +1022,7 @@ describe PlayersController do
       fill_in "confirm_pin", :with => '1111'
       content_list = [I18n.t("confirm_box.set_pin", member_id: '123456')]
       click_pop_up_confirm("confirm_set_pin", content_list)
-      
+
       wait_for_ajax
       check_flash_message I18n.t("reset_pin.call_patron_fail")
     end
@@ -1071,43 +1073,43 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_player_info
     end
 
     it '[59.1] seach player profile with credit balance=0', :js => true do
       mock_wallet_balance(99.99,0.0)
-      
+
       check_credit_balance_base
 
       check_balance_page(9999,0,"")
-      
+
       check_footer_btn(true,true,true,false)
     end
 
     it '[59.2] seach player profile with credit balance=100', :js => true do
       credit_expired_at = (Time.now + 2.day).strftime("%Y-%m-%d %H:%M:%S")
       mock_wallet_balance(99.99,100.0, credit_expired_at)
-      
+
       check_credit_balance_base
 
       check_balance_page(9999,10000, I18n.t("balance_enquiry.expiry",expired_at: credit_expired_at.to_time(:local).strftime("%F %R")))
-      
+
       check_footer_btn(true,true,false,true)
     end
 
     it '[59.3] seach player profile with disconnect with wallet', :js => true do
       mock_wallet_balance('no_balance','no_balance')
-      
+
       check_credit_balance_base
 
       check_balance_page('no_balance','no_balance', "")
-      
+
       check_footer_btn(true,true,false,false)
     end
   end
 =end
-  
+
 =begin
   describe '[71] Test mode player - player profile' do
     before(:each) do
@@ -1122,7 +1124,7 @@ describe PlayersController do
     after(:each) do
       clean_dbs
     end
-   
+
     it '[71.1] Show test mode player info, disappear reset PIN and lock button', :js => true do
       mock_wallet_balance(99.99)
 
@@ -1137,16 +1139,16 @@ describe PlayersController do
       check_search_page('profile')
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_player_info
       check_profile_page(9999)
-      
+
       expect(page.source).to_not have_selector("a#reset_pin")
       expect(page.source).to_not have_selector("div#button_set button#lock_player")
     end
   end
 =end
-  
+
   describe '[72] Test mode player - Balance enquiry' do
     before(:each) do
       clean_dbs
@@ -1175,7 +1177,7 @@ describe PlayersController do
       check_search_page
       fill_search_info_js("member_id", @player.member_id)
       find("#button_find").click
-      
+
       check_player_info
       check_balance_page(9999)
 
@@ -1186,7 +1188,7 @@ describe PlayersController do
 
     end
   end
-  
+
 =begin
   describe '[75] Do not allow test mode player to reset PIN or Lock', :js => true do
     before(:each) do
@@ -1201,11 +1203,11 @@ describe PlayersController do
       mock_wallet_balance(0.0)
       mock_wallet_transaction_success(:deposit)
     end
-    
+
     after(:each) do
       clean_dbs
     end
-    
+
     it '[75.1] Reset PIN fail due to test mode player', js: true do
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'created', :licensee_id => 20000}})
       mock_reset_pin_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'reset', :licensee_id => 20000}})
@@ -1228,7 +1230,7 @@ describe PlayersController do
       expect(find("label#player_status").text).to eq I18n.t("player_status.active")
 
       find("#reset_pin").click
-      
+
       wait_for_ajax
       check_title("tree_panel.reset_pin")
       fill_in "new_pin", :with => '1111'
@@ -1238,12 +1240,12 @@ describe PlayersController do
       @player.test_mode_player = true
       @player.save!
       click_pop_up_confirm("confirm_set_pin", content_list)
-      
+
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end
-      
-    
+
+
     it '[75.2] Lock player fail due to test mode player', js: true do
       login_as_admin
       visit home_path
@@ -1263,7 +1265,7 @@ describe PlayersController do
 
       click_button I18n.t("button.confirm")
       wait_for_ajax
-      
+
       check_home_page
       check_flash_message I18n.t("flash_message.not_authorize")
     end

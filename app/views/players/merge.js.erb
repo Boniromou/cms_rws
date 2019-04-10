@@ -1,0 +1,2 @@
+$('div#player_merge_info').css({ opacity: "0.0" }).html("<%= escape_javascript(render :file => "players/player_info", :formats => [ :html ]) %>").delay(50).animate({ opacity: "1.0" }, 300);
+

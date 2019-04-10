@@ -9,6 +9,7 @@
 <% footer = render "shared/confirm_fund_panel" %>
 <%= render partial:"shared/player_info" , :locals => {:show_info => true, :show_balance => true, :back_button => back_button, :content => content, :footer => footer, :show_remain => {:withdraw => true}} %>
 <%= render partial: "shared/pop_up_panel" %>
+<%= render partial: "shared/nav_setup", locals: { tab_to_activate: @exception_transaction == "yes" ? "exception_balance" : "balance_enquiry" } %>
 
 <%= javascript_include_tag "validate.input.js" %>
 <%= javascript_include_tag "block.enter.js" %>

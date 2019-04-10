@@ -46,6 +46,7 @@ CmsRws::Application.configure do
 end
 
 SSO_URL = 'https://cert-sso.gogamesource.com'
+URL_BASE = 'https://cert-cms.gogamesource.com'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'
 LOGIN_PATH = '/app_login'

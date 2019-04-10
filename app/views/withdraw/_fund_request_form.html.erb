@@ -1,4 +1,4 @@
-<%=form_for :player_transaction, url: fund_out_path, remote: true, html: { id: "fund_request", autocomplete: :off  } do |f| %>
+<%=form_for :player_transaction, url: withdraw_path, html: { id: "fund_request", autocomplete: :off  } do |f| %>
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>
@@ -10,7 +10,7 @@
 
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.payment_method_type")%>:</strong></label></td>
-     <select  name="payment_method_type" id="player_transaction_payment_method_type">
+     <select  name="payment_method_type_select" id="player_transaction_payment_method_type">
         <option value=""> -- select an option -- </option>
         <% @payment_method.each do |method| %>
           <% if method.name != 'N/A' %>
@@ -18,6 +18,7 @@
           <% end %>
         <% end %>
       </select>
+      <%= hidden_field_tag(:payment_method_type, @payment_method_type) %>
     <br>
 
     <div class='col-xs-4 box' style='width:300px; right:10px'>
@@ -29,7 +30,7 @@
 
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.#{@action.split('_')[0]}_amount")%>:</strong></label></td>
-    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box" %>
+    <%= f.text_field :amount, required: true, autofocus: true, pattern: '^\d+(\.\d{1,2})?$', :id => "player_transaction_amount", :oninput => "return ValidateFloat($(this),value)", :class => "col-xs-4 box", :value => @player_transaction_amount %>
         <div class='col-xs-4 box'>
           <label class='invisible_error' id='amount_error'>
             <%= t("invalid_amt."+@action) %>
@@ -38,14 +39,25 @@
   </div>
   <div class="row">
     <label class="col-xs-4 box"><strong><%= t("deposit_withdrawal.remark")%>:</strong></label></td>
-    <%= f.text_area :deposit_reason, :id => "textarea", :class => "col-xs-4 box", :style => "margin-bottom: 4px; resize: none; width: 300px", :maxlength => 400, cols: "6", rows: "10"%>
+    <%= f.text_area :deposit_reason, :id => "player_transaction_textarea", :class => "col-xs-4 box", :style => "margin-bottom: 4px; resize: none; width: 300px", :maxlength => 400, cols: "6", rows: "10", :value => @deposit_reason%>
   </div>
   <input type="text" id="exception_transaction" name="exception_transaction" value=<%= @exception_transaction %> style="display:none" readonly>
 <% end %>
 
 <script>
   $(document).ready(function() {
-    $('textarea[autofocus="autofocus"]').focus();
+    $('player_transaction_textarea[autofocus="autofocus"]').focus();
     $('input[autofocus="autofocus"]').focus();
+    <% if @authorize_result == 'yes' %>
+      $("select#player_transaction_payment_method_type").val("<%= @payment_method_type %>");
+      $('#player_transaction_payment_method_type').attr("disabled", true);
+      $('#player_transaction_amount').prop('readonly', true);
+      $('#player_transaction_textarea').prop('readonly', true);
+    <% end %>
+
+    $("#player_transaction_payment_method_type").change(function(event) {
+      var payment_method_type = $('#player_transaction_payment_method_type').val();
+      $('#payment_method_type').val(payment_method_type);
+    });
   });
 </script>

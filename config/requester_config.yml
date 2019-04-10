@@ -18,7 +18,7 @@ mockup0:
   :station: http://mo-mock-sm-vapp01.rnd.laxino.com:80
   :marketing: http://mo-mock-mp-vapp01.rnd.laxino.com:80
   :marketing_wallet: http://mo-mock-mwms-vapp01.rnd.laxino.com:80/mwms
-  
+
 integration0:
   :wallet: http://hq-int-cwms-vapp01.laxino.local:80/cwms
   :patron: http://hq-int-pis-vapp01.laxino.local:80
@@ -27,11 +27,11 @@ integration0:
   :marketing_wallet: http://hq-int-mwms-vapp01.laxino.local:80/mwms
 
 staging0:
-#  :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
-#  :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
-#  :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
-#  :marketing: http://mo-stg-mp-vapp01.rnd.laxino.com:80
-#  :marketing_wallet: http://mo-stg-mwms-vapp01.rnd.laxino.com:80/mwms
+  # :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
+  # :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
+  # :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
+  # :marketing: http://mo-stg-mp-vapp01.rnd.laxino.com:80
+  # :marketing_wallet: http://mo-stg-mwms-vapp01.rnd.laxino.com:80/mwms
   :wallet: http://hq-stg-cwms-vapp01.laxino.local:80/cwms
   :patron: http://hq-stg-pis-vapp01.laxino.local:80
   :station: http://hq-stg-sm-vapp01.laxino.local:80
@@ -51,7 +51,7 @@ production3:
   :station: http://mo-prd-sm-vapp01.lb.laxigames.local:80
   :marketing: http://mo-prd-mp-vapp01.lb.laxigames.local:80
   :marketing_wallet: http://mo-prd-mwms-vapp01.lb.laxigames.local:80/mwms
-   
+
 sandbox:
   :wallet: http://mo-snd-cwms-vapp01.platform.gamesource.local:80/cwms
   :patron: http://mo-snd-pis-vapp01.platform.gamesource.local:80

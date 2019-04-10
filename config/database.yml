@@ -35,7 +35,7 @@ staging0:
   database: rothorn_cms_staging
   username: rothorn
   password: rothorn
-#  host: mo-stg-cms-vdb01.rnd.laxino.com
+  # host: mo-stg-cms-vdb01.rnd.laxino.com
   host: hq-stg-cms-vdb01.laxino.local
   port: 3306
 
@@ -57,8 +57,8 @@ sandbox:
   username: rothorn
   password: rothorn.pa$$w0rd123
   host: mo-snd-cms-vdb01.platform.gamesource.local
-  port: 6034  
-  
+  port: 6034
+
 sandbox3:
   adapter: mysql2
   encoding: utf8

@@ -36,7 +36,7 @@
                   </div>
                 </section>
               </div>
-            
+
               <div class="col-md-7">
                 <section class="smart-form">
                   <label class="input">
@@ -51,10 +51,10 @@
                <span class="widget-icon"> <i class="glyphicon glyphicon-user"></i> </span>
                <h2>
                  <strong>Search Transaction History by Date</strong>
-               </h2>       
+               </h2>
                <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
            <div style = "width:470px;">
-        <% end %>   
+        <% end %>
 <br/>
           <div class="row">
             <div class="col-sm-12">
@@ -85,8 +85,8 @@
           </div>
         <% end %>
       </div>
- 
- 
+
+
            <% if search_by_history == true%>
            <div class="form-actions">
              <div class="row">
@@ -97,14 +97,15 @@
            </div>
            <% else %>
              <div class="col-md-12" style= "bottom:25px; right:10px;">
-               <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>  
+               <%= submit_tag t("button.search"), :id => "search", :class => "btn btn-primary" %>
              </div>
-           <% end %>   
+           <% end %>
 
 
 
- 
+
       <%= hidden_field_tag 'from', search_transactions_path %>
+      <%= hidden_field_tag 'transaction_id', @transaction_id %>
       <%= hidden_field_tag 'selected_tab_index', 0 %>
       <% if search_by_history != true%>
         <%= hidden_field_tag 'operation' , 'cash' %>
@@ -112,7 +113,7 @@
         <%= hidden_field_tag 'selected_tab_index', 0 %>
         <%= hidden_field_tag 'id_number' , @member_id %>
       </div>
-      <% end %>    
+      <% end %>
   <% end %>
   </div>
 </div>
@@ -133,7 +134,7 @@
     $("#search").click(function(){
       document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-8 col-lg-5';
       document.getElementById('flash_message').style.marginLeft = '0px';
-    });    
+    });
 
     $('div#search-tabs').tabs({
       activate: function(event, ui) {
@@ -157,4 +158,4 @@
     padding-top: 7px;
   }
 </style>
-  
+

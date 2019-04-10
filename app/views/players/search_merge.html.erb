@@ -1,0 +1,65 @@
+<%= search_page_bread_crumb(t("tree_panel.merge")) %>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+
+
+  <%= form_for :player,:remote => true, :url =>{:action => :do_search_merge, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
+  <fieldset>
+      <div class="row">
+        <div class= "col-xs-6 col-sm-6 col-md-4 col-lg-4">
+          <label><strong>Victim Member ID:</strong></label>
+          <section class="smart-form">
+            <label class="input">
+              <%= text_field_tag(:"id_number", @id_number, autofocus: true, size:15) %>
+            </label>
+          </section>
+        </div>
+        <div class= "col-xs-6 col-sm-6 col-md-4 col-lg-4">
+        </div>
+        <div class= "col-xs-6 col-sm-6 col-md-4 col-lg-4">
+          <label><strong>Survival Member ID:</strong></label>
+          <section class="smart-form">
+            <label class="input">
+              <%= text_field_tag(:"id_number2", @id_number2, autofocus: true, size:15) %>
+            </label>
+          </section>
+        </div>
+      </div>
+        <div class="form-actions">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <%= submit_tag t("button.search"), :id => "button_find", :class => "btn btn-primary"  %>
+            </div>
+          </div>
+        </div>
+  </fieldset>
+  <% end %>
+
+</div>
+<div id="merge_button" style="padding-right: 90px; padding-top: 22px">
+</div>
+</div>
+
+<div class="row">
+  <div id="player_merge_info">
+  </div>
+</div>
+
+<%= render partial: "shared/pop_up_panel" %>
+<%= render partial: "shared/nav_setup", locals: { tab_to_activate: "balance_enquiry_merge" } %>
+
+<script>
+  $(document).ready(function() {
+    $('input[autofocus="autofocus"]').focus();
+
+    $('input:radio[name="id_type"]').click(function() {
+      $('input[autofocus="autofocus"]').focus();
+    });
+  });
+
+   $("#button_find").click(function(){
+      document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-4';
+      document.getElementById('flash_message').style.marginLeft = '0px';
+  });
+</script>

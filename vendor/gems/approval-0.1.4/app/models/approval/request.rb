@@ -129,9 +129,6 @@ module Approval
     end
 
     def self.filter_requests(requests, target, search_by)
-      p '444444444444444'
-      p search_by
-      p '444444444444444'
       target_ids = target.classify.constantize.where(search_by).map(&:id) if search_by.present?
       target_ids ||= []
       requests.delete_if {|request| !target_ids.include?(request.target_id)}

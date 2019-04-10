@@ -1,16 +1,16 @@
 <% if @exception_transaction == 'yes'%>
-  <%= search_page_bread_crumb(t("deposit_withdrawal.exception")) %> 
-<% else%>
+  <%= search_page_bread_crumb(t("deposit_withdrawal.exception")) %>
+<% else %>
   <%= search_page_bread_crumb(t("tree_panel." + @operation)) %>
 <%end%>
 
 
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-       
+
 
     <%= form_for :player,:remote => true, :url =>{:action => :do_search, :operation => @operation}, :html => { autocomplete: :off }  do |f| %>
-    <%= f.hidden_field :exception_transaction, :value=> @exception_transaction %>  
+    <%= f.hidden_field :exception_transaction, :value=> @exception_transaction %>
     <fieldset>
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -52,33 +52,10 @@
       </fieldset>
     <% end %>
 
-
-
-<br/>
-<% if @show_not_found_message %>
-  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
-    <button class="close" data-dismiss="alert">×</button>
-    <div id="message_content">
-      <%= t("search_error.not_found") %>
-    </div>
-  </div>
-  <% end %>
-<% end %>
-
-<% if @show_not_validated_message %>
-  <%= content_tag :div, :class => "alert #{bootstrap_class_for(:alert)} fade in" do %>
-    <button class="close" data-dismiss="alert">×</button>
-    <div id="message_content">
-      <%= t("search_error.not_validated") %>
-    </div>
-  </div>
-  <% end %>
-<% end %>
-
-
   </div>
 </div>
 
+<%= render partial: "shared/nav_setup", locals: { tab_to_activate: @exception_transaction == "yes" ? "exception_balance" : "balance_enquiry" } %>
 
 <script>
   $(document).ready(function() {
@@ -92,5 +69,5 @@
    $("#button_find").click(function(){
       document.getElementById('flash_message').className = 'col-xs-12 col-sm-8 col-md-6 col-lg-4';
       document.getElementById('flash_message').style.marginLeft = '0px';
-  });    
+  });
 </script>

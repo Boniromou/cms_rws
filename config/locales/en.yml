@@ -164,6 +164,7 @@ en:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
     not_validated: "Player validation failed or not found; Please try again."
+    duplicate: "Vittim and Surcical member ID duplicated, please try again."
   player:
     create: "Create"
     deposit: "Deposit"

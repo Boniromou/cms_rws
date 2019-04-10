@@ -7,6 +7,7 @@ class PlayersController < ApplicationController
   rescue_from PlayerProfile::PlayerNotFound, :with => :handle_player_not_found
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
   rescue_from PlayerProfile::PlayerNotValidated, :with => :handle_player_not_validated
+  rescue_from PlayerProfile::PlayerDuplicate, :with => :handle_player_duplicate
   def balance
     player_info
   end
@@ -119,8 +120,9 @@ class PlayersController < ApplicationController
 
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id)
     @player2 = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id2)
-    raise PlayerProfile::PlayerNotFound unless (@player && @player2 && (@player != @player2))
-    
+    raise PlayerProfile::PlayerNotFound unless (@player && @player2)
+    raise PlayerProfile::PlayerDuplicate unless (@player != @player2)
+ 
     @players = policy_scope(Player).where(member_id: [@card_id, @card_id2])
     @players = @players.index_by(&:member_id).values_at(*card_ids)
 
@@ -138,6 +140,15 @@ class PlayersController < ApplicationController
     @credit_expired_at2 = balance_response.credit_expired_at
 
     flash[:error] = "balance_enquiry.query_balance_fail" if @player_balance == 'no_balance' && @player_balance2 == 'no_balance' && flash[:fail].nil?
+  end
+
+  def handle_player_duplicate(e)
+    flash[:error] = 'search_error.duplicate'
+    if @exception_transaction == nil
+      search_merge
+    else  
+      search 
+    end
   end
 
   def handle_player_not_found(e)

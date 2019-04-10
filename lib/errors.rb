@@ -56,7 +56,10 @@ module PlayerProfile
 
   class PlayerNotFound < PlayerProfile
   end
-
+  
+  class PlayerDuplicate < PlayerProfile
+  end 
+  
   class PlayerNotValidated < PlayerProfile
   end
 

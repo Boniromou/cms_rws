@@ -32,6 +32,9 @@ default: &default
     <<: *20000
   10001:
     <<: *20000
+  10006:
+    <<: *20000
+    session_life_time: [30]
   10010:
     <<: *20000
     trans_history_search_range: [40, 'search range of transaction history(day)']

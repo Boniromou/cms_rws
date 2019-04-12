@@ -117,6 +117,7 @@ CmsRws::Application.routes.draw do
   namespace :excels do
     get 'account_activities'
     get 'player_balance_report'
+    get 'approval_page'
   end
 
   get 'search_player_balance_reports' => 'player_balance_reports#search'

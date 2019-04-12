@@ -63,13 +63,13 @@ class MergeController < ApplicationController
     {
       :licensee_id => Licensee.find_by_id(@player_sur.licensee_id).name,
       :player_vic_id => @player_vic.member_id,
-      :player_vic_before_amount => @amount2,
-      :minus_amount => @amount2.to_str,
+      :player_vic_before_amount => '%.2f'% @amount2,
+      :minus_amount => '%.2f'% @amount2,
       :player_vic_after_amount => 0,
       :player_sur_id => @player_sur.member_id,
-      :player_sur_before_amount => @amount,
-      :amount => @amount2,
-      :player_sur_after_amount => @amount.to_f + @amount2.to_f,
+      :player_sur_before_amount => '%.2f'% @amount,
+      :amount => '%.2f'% @amount2,
+      :player_sur_after_amount => '%.2f'% ((@amount.to_f + @amount2.to_f).round(3)),
       :transaction => [@transaction.id, @transaction2.id]
     }  
   end

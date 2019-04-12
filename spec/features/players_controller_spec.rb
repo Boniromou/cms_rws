@@ -777,21 +777,21 @@ describe PlayersController do
       expect(@player.valid_tokens).to eq []
     end
 
-    it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do
-      @player.delete
-      @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active")
-      mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :licensee_id => 20000}})
-      login_as_admin
-      visit players_search_path + "?operation=balance"
-      fill_search_info("card_id", @player.card_id)
-      find("#button_find").click
-      #check_profile_page('no_balance')
-      check_balance_page('no_balance')
-      expect(find("label#player_member_id").text).to eq @player.member_id.to_s
-      expect(find("label#player_card_id").text).to eq @player.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
-      expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
-      #expect(page.source).to have_selector("a#create_pin")
-    end
+    # it '[53.5] Show PIS player info when search  Player Profile, player not exist in Cage' do
+    #   @player.delete
+    #   @player = Player.new(:first_name => "exist", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active")
+    #   mock_player_info_result({:error_code => 'OK', :player => {:card_id => @player.card_id, :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'blank', :licensee_id => 20000}})
+    #   login_as_admin
+    #   visit players_search_path + "?operation=balance"
+    #   fill_search_info("card_id", @player.card_id)
+    #   find("#button_find").click
+    #   #check_profile_page('no_balance')
+    #   check_balance_page('no_balance')
+    #   expect(find("label#player_member_id").text).to eq @player.member_id.to_s
+    #   expect(find("label#player_card_id").text).to eq @player.card_id.to_s.gsub(/(\d{4})(?=\d)/, '\\1-')
+    #   expect(find("label#player_status").text).to eq I18n.t("player_status.not_activate")
+    #   #expect(page.source).to have_selector("a#create_pin")
+    # end
 
     it '[53.6] Card ID not found in PIS' do
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_raise(Remote::PlayerNotFound)

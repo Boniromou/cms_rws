@@ -1,4 +1,4 @@
-<%=form_for :player_transaction, url: deposit_path, html: { id: "fund_request", autocomplete: :off  } do |f| %>
+<%=form_for :player_transaction, url: fund_deposit_path, html: { id: "fund_request", autocomplete: :off  } do |f| %>
   <div>
     <%= hidden_field(:player, :member_id) %>
   </div>

@@ -13,7 +13,7 @@ CmsRws::Application.routes.draw do
   root :to => "user_sessions#new"
 
   get 'home' => 'home#index'
-  
+
   get "merge" => 'players#merge'
   get "balance" => 'players#balance'
   get "search" => 'players#search' ,:as => :players_search
@@ -27,16 +27,16 @@ CmsRws::Application.routes.draw do
   post "lock_account" => "players#lock"
   post "unlock_account" => "players#unlock"
   post "update" => "players#update"
-  
-  post 'merge_player' => 'merge#merge_player' 
- 
+
+  post 'merge_player' => 'merge#merge_player'
+
   get 'fund_in' => 'deposit#new'
   # post 'fund_in' => 'deposit#create'
-  match "deposit" => "deposit#create", via: [:get, :post]
+  match "fund_deposit" => "deposit#create", via: [:get, :post]
 
   get 'fund_out' => 'withdraw#new'
   # post 'fund_out' => 'withdraw#create'
-  match "withdraw" => "withdraw#create", via: [:get, :post]
+  post "fund_withdraw" => "withdraw#create"
 
   match 'void_deposit' => 'void_deposit#create', via: [:get, :post]
   match 'void_withdraw' => 'void_withdraw#create', via: [:get, :post]

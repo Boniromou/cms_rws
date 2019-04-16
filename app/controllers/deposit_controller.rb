@@ -31,4 +31,8 @@ class DepositController < FundController
     player_trans_controller = PlayerTransactionsController.new
     start_time = player_trans_controller.get_start_time
   end
+
+  def auth_callback_url
+    "#{URL_BASE}/fund_deposit"
+  end
 end

@@ -22,6 +22,7 @@ class MergeController < ApplicationController
     @ref_trans_id = nil
     @payment_method_type = params[:payment_method_type]
     @source_of_funds = params[:source_of_funds]
+    
     execute_transaction
   
     @player_vic.lock_account!('cage_lock')    
@@ -39,9 +40,13 @@ class MergeController < ApplicationController
 
   def execute_transaction
     AuditLog.player_log('deposit', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @data = {:remark => ""}
+      @data[:deposit_remark] = "from merge account #{@player_vic.member_id}"
       @transaction = create_deposit_transaction(@player_sur.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
     end    
     AuditLog.player_log('withdraw', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @data = {:remark => ""}
+      @data[:withdraw_remark] = "To merge account #{@player_sur.member_id}"
       @transaction2 = create_withdraw_transaction(@player_vic.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
     end
     puts Approval::Request::PENDING
@@ -49,12 +54,12 @@ class MergeController < ApplicationController
     
   end
     
-  def create_deposit_transaction(member_id, amount, ref_trans_id = nil, data = nil)
+  def create_deposit_transaction(member_id, amount, ref_trans_id = nil, data)
     raise FundInOut::InvalidMachineToken unless current_machine_token
     PlayerTransaction.send "save_deposit_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
   end
 
-  def create_withdraw_transaction(member_id, amount, ref_trans_id = nil, data = nil)
+  def create_withdraw_transaction(member_id, amount, ref_trans_id = nil, data)
     raise FundInOut::InvalidMachineToken unless current_machine_token 
     PlayerTransaction.send "save_withdraw_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
   end

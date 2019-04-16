@@ -6,8 +6,20 @@ class ExcelsController < ApplicationController
     wallet_requester = requester_factory.get_wallet_requester
     response = wallet_requester.get_account_activity(params[:member_id], params[:start_time], params[:end_time], params[:round_id], params[:length], params[:start], "trans_date desc")
     transactions = response.success? ? response.transactions : []
+    cage_transaction = []
     player_id = transactions.first['player_id'] if transactions.present?
+    ref_trans_id = transactions.map{|trans| trans['ref_trans_id']}
+
+    ref_trans_id.each do |trans_id|
+      cage_transaction = PlayerTransaction.where(:ref_trans_id => trans_id)
+      cage_slip_number = cage_transaction.map{|cage| cage['slip_number']}
+      transactions.each{|transaction|
+        transaction['slip_number'] = cage_slip_number[0].to_s if (trans_id == transaction["ref_trans_id"])
+      }
+    end
+    Rails.logger.info(transactions)
     data = { transactions: transactions }
+    Rails.logger.info(data)
     player_id = transactions[0]['player_id'] if params[:round_id].present? && transactions.present?
     if player_id
       player = policy_scope(Player).find_by_id(player_id)

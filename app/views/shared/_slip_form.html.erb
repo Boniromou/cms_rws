@@ -68,7 +68,7 @@
 
     <h3 class="tit">GameSource</h3>
     
-    <% if operation.downcase == 'withdraw' %>
+    <% if operation.downcase == 'withdraw' || operation.downcase == 'manual_withdraw'%>
     <h3 class="tit">Front Money <%= operation.titleize %>al</h3>
     
     <h3 class="tit">Front Money <%= operation.titleize %>al</h3>
@@ -283,7 +283,7 @@
     
     <h3 class="tit">GameSource</h3>
     
-    <% if operation.downcase == 'withdraw' %>
+    <% if operation.downcase == 'withdraw' || operation.downcase == 'manual_withdraw'%>
 
     <h3 class="tit">Front Money <%= operation.titleize %>al</h3>
 

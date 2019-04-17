@@ -229,6 +229,7 @@ en:
     withdraw: "invalid withdrawal amount"
     fund_in: "invalid deposit amount"
     fund_out: "invalid withdrawal amount"
+    merge: "invalid merge amount"
     payment_method_type: "Please select one method type"
     source_of_funds: "Please select one source"
 #    credit_deposit: "invalid credit amount"

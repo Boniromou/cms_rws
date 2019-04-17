@@ -12,6 +12,14 @@ module CreatePlayer
   end
 end
 
+module Merge
+  class InvalidMachineToken < CageError
+  end 
+  
+  class AmountInvalidError < CageError
+  end
+end
+
 module FundInOut
   class FundError < CageError
   end

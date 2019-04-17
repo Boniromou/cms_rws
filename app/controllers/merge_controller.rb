@@ -1,7 +1,9 @@
 class MergeController < ApplicationController
   include SearchHelper
   include FundHelper
-
+  
+  rescue_from Merge::InvalidMachineToken, :with => :handle_invalid_machine_token
+  rescue_from Merge::AmountInvalidError, :with => :handle_amount_invalid_error
   def new
     super
     @casino_id = current_casino_id
@@ -22,6 +24,7 @@ class MergeController < ApplicationController
     @ref_trans_id = nil
     @payment_method_type = params[:payment_method_type]
     @source_of_funds = params[:source_of_funds]
+    
     execute_transaction
   
     @player_vic.lock_account!('cage_lock')    
@@ -30,7 +33,7 @@ class MergeController < ApplicationController
   end
   
   def validate_amount(amount)
-    raise FundInOut::AmountInvalidError.new "Input amount not valid" unless amount.is_a?(String) && to_server_amount( amount ) > 0 
+    raise Merge::AmountInvalidError.new "Input amount not valid" unless amount.is_a?(String) && to_server_amount( amount ) > 0 
   end 
 
   def to_server_amount( amount )
@@ -39,9 +42,13 @@ class MergeController < ApplicationController
 
   def execute_transaction
     AuditLog.player_log('deposit', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @data = {:remark => ""}
+      @data[:deposit_remark] = "From merge account #{@player_vic.member_id}"
       @transaction = create_deposit_transaction(@player_sur.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
     end    
     AuditLog.player_log('withdraw', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
+      @data = {:remark => ""}
+      @data[:withdraw_remark] = "To merge account #{@player_sur.member_id}"
       @transaction2 = create_withdraw_transaction(@player_vic.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
     end
     puts Approval::Request::PENDING
@@ -49,13 +56,13 @@ class MergeController < ApplicationController
     
   end
     
-  def create_deposit_transaction(member_id, amount, ref_trans_id = nil, data = nil)
-    raise FundInOut::InvalidMachineToken unless current_machine_token
+  def create_deposit_transaction(member_id, amount, ref_trans_id = nil, data)
+    raise Merge::InvalidMachineToken unless current_machine_token
     PlayerTransaction.send "save_deposit_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
   end
 
-  def create_withdraw_transaction(member_id, amount, ref_trans_id = nil, data = nil)
-    raise FundInOut::InvalidMachineToken unless current_machine_token 
+  def create_withdraw_transaction(member_id, amount, ref_trans_id = nil, data)
+    raise Merge::InvalidMachineToken unless current_machine_token 
     PlayerTransaction.send "save_withdraw_transaction", member_id, amount, current_shift.id, current_user.id, current_machine_token, ref_trans_id, data
   end
   
@@ -90,6 +97,18 @@ class MergeController < ApplicationController
     @operation = params[:operation]
     @card_id = params[:card_id] 
   end
- 
+  
+  def handle_invalid_machine_token(e)
+    handle_fund_error('void_transaction.invalid_machine_token')
+  end
+  
+  def handle_amount_invalid_error(e)
+    handle_fund_error("invalid_amt.merge")
+  end
+  
+  def handle_fund_error(msg)
+    flash[:fail] = msg
+    redirect_to players_search_merge_path + "?operation=merge"
+  end 
 end
 

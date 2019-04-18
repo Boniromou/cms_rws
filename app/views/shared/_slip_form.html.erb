@@ -67,10 +67,10 @@
     <h3 class="tit">GameSource</h3>
 
     <h3 class="tit">GameSource</h3>
-    
+
     <% if operation.downcase == 'withdraw' || operation.downcase == 'manual_withdraw'%>
     <h3 class="tit">Front Money <%= operation.titleize %>al</h3>
-    
+
     <h3 class="tit">Front Money <%= operation.titleize %>al</h3>
     <% else %>
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
@@ -109,7 +109,7 @@
         <div class="floating-content"><%= @player.member_id %></div>
         <div class="floating-index">Deposit #:<br/>存款單編號:</div>
         <div class="floating-content"><%= @transaction.slip_number %></div>
- 
+
         <div class="floating-index">Member ID:<br/>會員號碼:</div>
         <div class="floating-content"><%= @player.member_id %></div>
         <div class="floating-index" style="width: 10%;">Deposit #:<br/>存款單編號:</div>
@@ -121,7 +121,7 @@
         <div class="floating-content"><%= @player.member_id %></div>
         <div class="floating-index">Withdraw #:<br/>提款單編號:</div>
         <div class="floating-content"><%= @transaction.slip_number %></div>
- 
+
         <div class="floating-index">Member ID:<br/>會員號碼:</div>
         <div class="floating-content"><%= @player.member_id %></div>
         <div class="floating-index" style="width: 10%;">Withdraw #:<br/>提款單編號:</div>
@@ -164,8 +164,8 @@
     <h2 class="floating-index" style="width: 5%;"></h2>
     <h2 class="floating-index" style="width: 15%; font-size: 15px;">Total <%= operation.titleize %>:</h2>
     <h2 class="floating-content" style="width: 30%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
-    
-    <h2 class="floating-index" style="width: 5%;"></h2> 
+
+    <h2 class="floating-index" style="width: 5%;"></h2>
     <h2 class="floating-index" style="width: 15%; font-size: 15px;">Total <%= operation.titleize %>:</h2>
     <h2 class="floating-content" style="width: 30%; text-align: left; font-size: 15px;">HK$<%= to_display_amount_str(@transaction[:amount]) %></h2>
 
@@ -173,12 +173,12 @@
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
     <div class="floating-index">Patron Signature<br/>顧客簽名</div>
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
-    
+
     <div class="floating-index"></div>
     <% if operation.downcase == 'withdraw' || operation.downcase == 'manual_withdraw'%>
-        <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述之款項</div>
+        <div class="floating-content" style="width: 37.5%; font-size: 12px; height: 30px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述之款項</div>
         <div class="floating-index"></div>
-        <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述之款項</div>
+        <div class="floating-content" style="width: 37.5%; font-size: 12px; height: 30px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述之款項</div>
     <% else %>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;"><br/></div>
         <div class="floating-index"></div>
@@ -273,16 +273,16 @@
     <h3 class="footer-content" style="width: 25%;"></h3>
     <h3 class="footer-content">Page 1</h3>
     <h3 class="footer-content">Cage Copy</h3>
-    <h3 class="footer-content" style="width: 25%;"></h3> 
+    <h3 class="footer-content" style="width: 25%;"></h3>
     <h3 class="footer-content">Page 2</h3>
 </div>
 
 <br/><br/>
 <div id="a" style="margin: 5px 0px 0px 0px; width: 297mm; height: 160mm;" >
     <h3 class="tit">GameSource</h3>
-    
+
     <h3 class="tit">GameSource</h3>
-    
+
     <% if operation.downcase == 'withdraw' || operation.downcase == 'manual_withdraw'%>
 
     <h3 class="tit">Front Money <%= operation.titleize %>al</h3>
@@ -293,7 +293,7 @@
 
     <h3 class="tit">Front Money <%= operation.titleize %></h3>
     <% end %>
- 
+
     <% if operation.downcase == 'withdraw' %>
         <h3 class="tit">提款單</h3>
         <h3 class="tit">提款單</h3>
@@ -388,9 +388,9 @@
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
     <div class="floating-index">Patron Signature<br/>顧客簽名</div>
     <div class="floating-content" style="width: 37.5%;"><br/>_____________________________________________</div>
-    
+
     <div class="floating-index"></div>
-    <% if operation == 'withdraw' || operation == 'manual_withdraw'%>
+    <% if operation.downcase == 'withdraw' || operation.downcase == 'manual_withdraw'%>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述之款項</div>
         <div class="floating-index"></div>
         <div class="floating-content" style="width: 37.5%; font-size: 12px;">By signing above, I acknowledge the receipt of funds previously placed on Deposit.<br/>本人確認已簽收上述之款項</div>
@@ -492,6 +492,6 @@
     <h3 class="footer-content" style="width: 15%;">Casino Accounting Copy</h3>
     <h3 class="footer-content" style="width: 17%;"></h3>
     <h3 class="footer-content">Page 4</h3>
-    <h3 class="footer-content" style="width: 5%;"></h3> 
+    <h3 class="footer-content" style="width: 5%;"></h3>
    </div>
 </div>

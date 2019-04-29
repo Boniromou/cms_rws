@@ -48,41 +48,53 @@ kiosk_transactions_table = DB[:kiosk_transactions]
 
 casino_table.all.each do |record|
   casino_id = record[:id]
-  player_transactions_table.where(:shift_id => nil, :casino_id => casino_id).each do |transaction|
+  player_transactions_table.where(:shift_id => nil, :casino_id => casino_id, :status => 'completed').each do |transaction|
     current_datetime = DateTime.now.utc
-    current_shift = Shift.current(casino_id)
+
+    #current_shift = Shift.current(casino_id)
+
+    current_shift = shift_table.where(:roll_shift_at => nil, :casino_id  => casino_id).first
     shift_num = ConfigHelper.new(casino_id).send "roll_shift_time"
-    current_shift_started_at = DateTime.parse(current_shift.created_at.change(min: 0).strftime('%a, %e %b %Y %H:%M:%S'))
+
+    current_shift_started_at = DateTime.parse(current_shift[:created_at].change(min: 0).strftime('%a, %e %b %Y %H:%M:%S'))
+
     if current_datetime >= current_shift_started_at and current_datetime < current_shift_started_at + (24 / shift_num.split(',').count).hours
-      transaction_day = transaction[:trans_date].change(hour: 0) 
-      shift_table.where(created_at: transaction_day - 1.days..transaction_day + 1.days, :casino_id => casino_id).each do |shift|
-        if transaction[:trans_date] >= shift[:created_at].change(min: 0) and transaction[:trans_date] < shift[:created_at].change(min: 0) + (24 / shift_num.split(',').count).hours and transaction[:status] == 'completed'
-          @transaction = PlayerTransaction.find_by_id(transaction[:id])
-          @transaction.shift_id = shift[:id]
-          @transaction.updated_at = Time.now.utc.to_formatted_s(:db)
-          @transaction.save
-        end
-      end
+#      transaction_day = transaction[:trans_date].change(hour: 0) 
+ #     shift_table.where(created_at: transaction_day - 1.days..transaction_day + 1.days, :casino_id => casino_id).each do |shift|
+       shift = shift_table.where("created_at <= ? and DATE_ADD(created_at, INTERVAL #{(24 / shift_num.split(',').count)} HOUR) > ? and casino_id = ?", transaction[:trans_date], transaction[:trans_date], casino_id)
+       player_transactions_table.where(:id => transaction[:id]).update(:shift_id => shift[:id], :updated_at => Time.now.utc.to_formatted_s(:db))
+        #if transaction[:trans_date] >= shift[:created_at].change(min: 0) and transaction[:trans_date] < shift[:created_at].change(min: 0) + (24 / shift_num.split(',').count).hours
+         # @transaction = PlayerTransaction.find_by_id(transaction[:id])
+         # @transaction.shift_id = shift[:id]
+         # @transaction.updated_at = Time.now.utc.to_formatted_s(:db)
+         # @transaction.save
+        #end
+  #    end
     end
   end
 
   kiosk_transactions_table.where(:shift_id => nil, :casino_id => casino_id).each do |kiosk_transaction|
     current_datetime = DateTime.now.utc
-    current_shift = Shift.current(casino_id)
+    #current_shift = Shift.current(casino_id)
+    current_shift = shift_table.where(:roll_shift_at => nil, :casino_id  => casino_id).first
     shift_num = ConfigHelper.new(casino_id).send "roll_shift_time"
-    current_shift_started_at = DateTime.parse(current_shift.created_at.change(min: 0).strftime('%a, %e %b %Y %H:%M:%S'))
+      
+    current_shift_started_at = DateTime.parse(current_shift[:created_at].change(min: 0).strftime('%a, %e %b %Y %H:%M:%S'))
+
     if current_datetime >= current_shift_started_at and current_datetime < current_shift_started_at + (24 / shift_num.split(',').count).hours
-      kiosk_transaction_day = kiosk_transaction[:trans_date].change(hour: 0) 
-      shift_table.where(created_at: kiosk_transaction_day - 1.days..kiosk_transaction_day + 1.days , :casino_id => casino_id).each do |shift|
-        if kiosk_transaction[:trans_date] >= shift[:created_at].change(min: 0) and kiosk_transaction[:trans_date] < shift[:created_at].change(min: 0) + (24 / shift_num.split(',').count).hours and kiosk_transaction[:status] == 'completed'
-          @ktransaction = KioskTransaction.find_by_id(kiosk_transaction[:id])
-          @ktransaction.shift_id = shift[:id]
-          @ktransaction.updated_at = Time.now.utc.to_formatted_s(:db)
-          @ktransaction.save
-        end
-      end
+#      kiosk_transaction_day = kiosk_transaction[:trans_date].change(hour: 0) 
+#      shift_table.where(created_at: kiosk_transaction_day - 1.days..kiosk_transaction_day + 1.days , :casino_id => casino_id).each do |shift|
+#        if kiosk_transaction[:trans_date] >= shift[:created_at].change(min: 0) and kiosk_transaction[:trans_date] < shift[:created_at].change(min: 0) + (24 / shift_num.split(',').count).hours and kiosk_transaction[:status] == 'completed'
+#          @ktransaction = KioskTransaction.find_by_id(kiosk_transaction[:id])
+#          @ktransaction.shift_id = shift[:id]
+#          @ktransaction.updated_at = Time.now.utc.to_formatted_s(:db)
+#          @ktransaction.save
+
+#        end
+    shift = shift_table.where("created_at <= ? and DATE_ADD(created_at, INTERVAL #{(24 / shift_num.split(',').count)} HOUR) > ? and casino_id = ?", kiosk_transaction[:trans_date], kiosk_transaction[:trans_date], casino_id).first  
+    kiosk_transactions_table.where(:id => kiosk_transaction[:id]).update(:shift_id => shift[:id], :updated_at => Time.now.utc.to_formatted_s(:db))
     end
   end
-
 end
+
 

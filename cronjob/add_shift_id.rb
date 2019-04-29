@@ -61,7 +61,7 @@ casino_table.all.each do |record|
     if current_datetime >= current_shift_started_at and current_datetime < current_shift_started_at + (24 / shift_num.split(',').count).hours
 #      transaction_day = transaction[:trans_date].change(hour: 0) 
  #     shift_table.where(created_at: transaction_day - 1.days..transaction_day + 1.days, :casino_id => casino_id).each do |shift|
-       shift = shift_table.where("created_at <= ? and DATE_ADD(created_at, INTERVAL #{(24 / shift_num.split(',').count)} HOUR) > ? and casino_id = ?", transaction[:trans_date], transaction[:trans_date], casino_id)
+       shift = shift_table.where("created_at <= ? and DATE_ADD(created_at, INTERVAL #{(24 / shift_num.split(',').count)} HOUR) > ? and casino_id = ?", transaction[:trans_date], transaction[:trans_date], casino_id).first
        player_transactions_table.where(:id => transaction[:id]).update(:shift_id => shift[:id], :updated_at => Time.now.utc.to_formatted_s(:db))
         #if transaction[:trans_date] >= shift[:created_at].change(min: 0) and transaction[:trans_date] < shift[:created_at].change(min: 0) + (24 / shift_num.split(',').count).hours
          # @transaction = PlayerTransaction.find_by_id(transaction[:id])

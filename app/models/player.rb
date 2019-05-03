@@ -209,33 +209,19 @@ class Player < ActiveRecord::Base
     end
 
     def verify_player_params(params)
-      card_id = params[:card_id]
-      member_id = params[:member_id]
-      first_name = params[:first_name]
-      last_name = params[:last_name]
-
-      raise CreatePlayer::ParamsError, "card_id_length_error" if card_id.nil? || card_id.blank?
-      raise CreatePlayer::ParamsError, "member_id_length_error" if member_id.nil? || member_id.blank?
-      raise CreatePlayer::ParamsError, "first_name_blank_error" if first_name.nil? || first_name.blank?
-      raise CreatePlayer::ParamsError, "last_name_blank_error" if last_name.nil? || last_name.blank?
-
-      raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
-      raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)
+      raise CreatePlayer::ParamsError, "card_id_length_error" if params[:card_id].blank?
+      raise CreatePlayer::ParamsError, "member_id_length_error" if params[:member_id].blank?
+      raise CreatePlayer::ParamsError, "first_name_blank_error" if params[:first_name].blank?
+      raise CreatePlayer::ParamsError, "last_name_blank_error" if params[:last_name].blank?
+      # raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(params[:card_id])
+      # raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(params[:member_id])
     end
 
     def verify_player_info(params)
-      card_id = params[:card_id]
-      member_id = params[:member_id]
-      first_name = params[:first_name]
-      last_name = params[:last_name]
-
-      raise CreatePlayer::ParamsError, "card_id_length_error" if card_id.nil? || card_id.blank?
-      raise CreatePlayer::ParamsError, "member_id_length_error" if member_id.nil? || member_id.blank?
-      # raise CreatePlayer::ParamsError, "first_name_blank_error" if first_name.nil? || first_name.blank?
-      # raise CreatePlayer::ParamsError, "last_name_blank_error" if last_name.nil? || last_name.blank?
-
-      raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(card_id)
-      raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(member_id)
+      raise CreatePlayer::ParamsError, "card_id_length_error" if params[:card_id].blank?
+      raise CreatePlayer::ParamsError, "member_id_length_error" if params[:member_id].blank?
+      # raise CreatePlayer::ParamsError, "card_id_only_number_allowed_error" if !str_is_i?(params[:card_id])
+      # raise CreatePlayer::ParamsError, "member_id_only_number_allowed_error" if !str_is_i?(params[:member_id])
     end
 
     def find_by_member_id_and_casino_id(member_id, casino_id)

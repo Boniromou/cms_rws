@@ -3,7 +3,7 @@ require 'lax-support'
 
 module Requester
   class Base
-    RETRY_TIMES = 0
+    RETRY_TIMES = 1
 
 #    def initialize(casino_id, licensee_id, secret_access_key, base_path)
 #      @casino_id = casino_id

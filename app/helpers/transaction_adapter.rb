@@ -32,14 +32,6 @@ module TransactionAdapter
     ''
   end
 
-  def payment_method_id
-    nil
-  end
-
-  def source_of_fund_id
-    nil
-  end
-
   def data
     ''
   end

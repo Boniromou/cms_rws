@@ -69,6 +69,7 @@ GEM
     coffee-script-source (1.9.1)
     daemons (1.1.9)
     dalli (2.0.5)
+    database_cleaner (1.4.1)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -213,6 +214,7 @@ DEPENDENCIES
   capybara (= 2.4.3)
   coffee-rails (~> 3.2.1)
   dalli (~> 2.0.3)
+  database_cleaner (= 1.4.1)
   devise (= 3.2.4)
   hood!
   httparty

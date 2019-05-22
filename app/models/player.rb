@@ -1,5 +1,4 @@
 SELF_ROOT = File.expand_path('.')
-require SELF_ROOT + "/lib/promotion_helper"
 
 class Player < ActiveRecord::Base
   belongs_to :currency
@@ -132,7 +131,6 @@ class Player < ActiveRecord::Base
         casino = Casino.where(:licensee_id => player.licensee_id).first
         get_requester_helper(casino.id).create_mp_player(player.id, player.member_id, player.card_id, player_status, player.test_mode_player, player.licensee_id, player.currency_id, params[:blacklist])
       end
-      #new_player_deposit(player) if params[:test_mode_player] == 0 || params[:test_mode_player] == false
       player
     end
 

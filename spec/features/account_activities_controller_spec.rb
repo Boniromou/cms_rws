@@ -29,101 +29,87 @@ describe AccountActivitiesController do
     end
   end
 
-  describe 'Search Account Activity by Member', js: true do
-    before(:each) do
-      clean_dbs
-      create_shift_data
-      mock_cage_info
-      mock_patron_not_change
-      @player = create_default_player
-    end
+  # describe 'Search Account Activity by Member', js: true do
+  #   before(:each) do
+  #     mock_cage_info
+  #     mock_patron_not_change
+  #     @player = create_default_player
+  #   end
 
-    after(:each) do
-      PlayerTransaction.delete_all
-      Player.delete_all
-    end
+  #   it 'show account activity page' do
+  #     mock_account_activities
+  #     login_as_admin
+  #     go_to_account_activity_page
+  #   end
 
-    it 'show account activity page' do
-      mock_account_activities
-      login_as_admin
-      go_to_account_activity_page
-    end
+  #   it 'show account activity data' do
+  #     player_trans = create_player_transaction
+  #     transactions = mock_transactions('deposit', player_trans.ref_trans_id)
+  #     mock_account_activities(transactions)
+  #     login_as_admin
+  #     go_to_account_activity_page
+  #     check_account_activity_data(transactions[0], player_trans)
+  #   end
 
-    it 'show account activity data' do
-      player_trans = create_player_transaction
-      transactions = mock_transactions('deposit', player_trans.ref_trans_id)
-      mock_account_activities(transactions)
-      login_as_admin
-      go_to_account_activity_page
-      check_account_activity_data(transactions[0], player_trans)
-    end
+  #   it 'show account activity failed: member_id is empty' do
+  #     login_as_admin
+  #     go_to_account_activity_page(nil, false)
+  #     check_flash_message I18n.t('transaction_history.no_id')
+  #   end
 
-    it 'show account activity failed: member_id is empty' do
-      login_as_admin
-      go_to_account_activity_page(nil, false)
-      check_flash_message I18n.t('transaction_history.no_id')
-    end
+  #   it 'show account activity failed: search player error' do
+  #     mock_player_info_result({:error_code => 'error'})
+  #     login_as_admin
+  #     go_to_account_activity_page('1111', false)
+  #     check_flash_message I18n.t('search_error.not_found')
+  #   end
 
-    it 'show account activity failed: search player error' do
-      mock_player_info_result({:error_code => 'error'})
-      login_as_admin
-      go_to_account_activity_page('1111', false)
-      check_flash_message I18n.t('search_error.not_found')
-    end
+  #   it 'show account activity failed: get_account_activity error' do
+  #     mock_account_activities_failed
+  #     login_as_admin
+  #     go_to_account_activity_page
+  #     expect(find('table#account_activity_datatable')).to have_content I18n.t('account_activity.search_error')
+  #   end
 
-    it 'show account activity failed: get_account_activity error' do
-      mock_account_activities_failed
-      login_as_admin
-      go_to_account_activity_page
-      expect(find('table#account_activity_datatable')).to have_content I18n.t('account_activity.search_error')
-    end
+  #   it 'unauthorized account activity' do
+  #     login_as_test_user
+  #     visit home_path
+  #     expect(first("aside#left-panel ul li#nav_account_activity")).to eq nil
+  #   end
+  # end
 
-    it 'unauthorized account activity' do
-      login_as_test_user
-      visit home_path
-      expect(first("aside#left-panel ul li#nav_account_activity")).to eq nil
-    end
-  end
+  # describe 'Search Account Activity by Round', js: true do
+  #   before(:each) do
+  #     mock_cage_info
+  #     mock_patron_not_change
+  #     @player = create_default_player
+  #   end
 
-  describe 'Search Account Activity by Round', js: true do
-    before(:each) do
-      clean_dbs
-      create_shift_data
-      mock_cage_info
-      mock_patron_not_change
-      @player = create_default_player
-    end
+  #   it 'show account activity page without transactions' do
+  #     mock_account_activities
+  #     login_as_admin
+  #     go_to_account_activity_page(nil, false, '123456', 1)
+  #   end
 
-    after(:each) do
-      PlayerTransaction.delete_all
-      Player.delete_all
-    end
+  #   it 'show account activity page with player info' do
+  #     transactions = mock_transactions('bet')
+  #     mock_account_activities(transactions)
+  #     login_as_admin
+  #     go_to_account_activity_page(nil, true, '123456', 1)
+  #     check_account_activity_data(transactions[0])
+  #   end
 
-    it 'show account activity page without transactions' do
-      mock_account_activities
-      login_as_admin
-      go_to_account_activity_page(nil, false, '123456', 1)
-    end
+  #   it 'show account activity failed: round_id is empty' do
+  #     login_as_admin
+  #     go_to_account_activity_page(nil, false, nil, 1)
+  #     check_flash_message I18n.t('account_activity.no_round_id')
+  #   end
 
-    it 'show account activity page with player info' do
-      transactions = mock_transactions('bet')
-      mock_account_activities(transactions)
-      login_as_admin
-      go_to_account_activity_page(nil, true, '123456', 1)
-      check_account_activity_data(transactions[0])
-    end
-
-    it 'show account activity failed: round_id is empty' do
-      login_as_admin
-      go_to_account_activity_page(nil, false, nil, 1)
-      check_flash_message I18n.t('account_activity.no_round_id')
-    end
-
-    it 'show account activity failed: get_account_activity error' do
-      mock_account_activities_failed
-      login_as_admin
-      go_to_account_activity_page(nil, false, '123456', 1)
-      expect(find('table#account_activity_datatable')).to have_content I18n.t('account_activity.search_error')
-    end
-  end
+  #   it 'show account activity failed: get_account_activity error' do
+  #     mock_account_activities_failed
+  #     login_as_admin
+  #     go_to_account_activity_page(nil, false, '123456', 1)
+  #     expect(find('table#account_activity_datatable')).to have_content I18n.t('account_activity.search_error')
+  #   end
+  # end
 end

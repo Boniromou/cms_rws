@@ -2,14 +2,6 @@ require "feature_spec_helper"
 require "rails_helper"
 
 describe PlayerInfosController do
-  def clean_dbs
-    Token.delete_all
-    PlayersLockType.delete_all
-    PlayerTransaction.delete_all
-    Player.delete_all
-    ChangeHistory.delete_all
-  end
-
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
@@ -21,16 +13,11 @@ describe PlayerInfosController do
 
   describe '[29] Itegration Service Cage APIs Login' do
     before(:each) do
-      clean_dbs
       @player = Player.create!(:first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
       @patron_result = {:error_code => 'OK', :player => {:blacklist => false, :member_id => '123456', :card_id => '1234567890', :pin_status => 'used', :licensee_id => 20000, :test_mode_player => false, :deactivated => false}}
       allow_any_instance_of(Requester::Patron).to receive(:get_player_info).and_return(Requester::PlayerInfoResponse.new(@patron_result))
       bypass_rescue
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[29.1] Credential is not exist' do
@@ -80,19 +67,13 @@ describe PlayerInfosController do
 
   describe '[41] get player Currency API ' do
     before(:each) do
-      clean_dbs
       bypass_rescue
       @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
 
-    after(:each) do
-      Player.delete_all
-      clean_dbs
-    end
-
     it '[41.1] Return Currency' do
-      get 'get_player_currency', {:login_name => @player.member_id}
+      get 'get_player_currency', {:login_name => @player.member_id, licensee_id: 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -100,7 +81,7 @@ describe PlayerInfosController do
     end
 
     it '[41.2] Return Currency fail' do
-      get 'get_player_currency', {:login_name => '1234'}
+      get 'get_player_currency', {:login_name => '1234', licensee_id: 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidLoginName'
     end
@@ -108,21 +89,14 @@ describe PlayerInfosController do
 
   describe '[74] test mode player API ' do
     before(:each) do
-      clean_dbs
       bypass_rescue
       @player = Player.create!(:id => 10, :first_name => "test", :last_name => "player", :member_id => '123456', :card_id => '1234567890', :currency_id => 2, :status => "active", :licensee_id => 20000, :test_mode_player => true)
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
     end
 
-    after(:each) do
-      Token.delete_all
-      Player.delete_all
-      clean_dbs
-    end
-
     it '[74.1] Get is test mode player success' do
       @token = Token.create!(:session_token => 'abm39492i9jd9wjn', :player_id => 10, :expired_at => Time.now + 1800)
-      get 'is_test_mode_player', {:login_name => @player.member_id, :session_token => @token.session_token}
+      get 'is_test_mode_player', {:login_name => @player.member_id, :session_token => @token.session_token, licensee_id: 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'OK'
       expect(result[:error_msg]).to eq 'Request is carried out successfully.'
@@ -130,7 +104,7 @@ describe PlayerInfosController do
     end
 
     it '[74.2] Get is test mode player fail with invalid token' do
-      get 'is_test_mode_player', {:login_name => @player.member_id, :session_token => 'abc'}
+      get 'is_test_mode_player', {:login_name => @player.member_id, :session_token => 'abc', licensee_id: 20000}
       result = JSON.parse(response.body).symbolize_keys
       expect(result[:error_code]).to eq 'InvalidSessionToken'
       expect(result[:error_msg]).to eq 'Session token is invalid.'

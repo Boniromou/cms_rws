@@ -129,8 +129,71 @@ module MockHelper
   def mock_configuration(name, value)
     allow_any_instance_of(ConfigHelper).to receive(name).and_return(value)
   end
+
+  def create_config(key, value, casino_id = 20000)
+    Configuration.create!(key: key, value: value, casino_id: casino_id)
+  end
+
+  def create_casino(casino_id = 20000)
+    Licensee.where(id: casino_id, name: casino_id).first_or_create
+    Casino.where(id: casino_id, name: casino_id, licensee_id: casino_id).first_or_create
+    # Property.where(id: casino_id, name: casino_id, casino_id: casino_id).first_or_create
+  end
+
+  def create_transaction_slip_type(transaction_type = 'deposit', casino_id = 20000)
+    transaction_types = TransactionType.where(name: [transaction_type, "void_#{transaction_type}", "manual_#{transaction_type}"])
+    slip_type_id = SlipType.find_by_name(transaction_type).id
+    TransactionSlip.create!(casino_id: 20000, slip_type_id: slip_type_id, next_number: '10000')
+    transaction_types.each do |transaction_type|
+      TransactionTypesSlipType.create!(casino_id: casino_id, transaction_type_id: transaction_type.id, slip_type_id: slip_type_id)
+    end
+  end
+
+  def create_default_player(*params)
+    player_data = {:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :licensee_id => 20000}
+    options = params.extract_options!
+    options.each do |k,v|
+      player_data[k] = v
+    end
+    Player.create!(player_data)
+  end
+
+  def create_void_transaction(transaction_id)
+    target_transaction = PlayerTransaction.find(transaction_id)
+    transaction = PlayerTransaction.create!(:shift_id => target_transaction.shift_id, :player_id => target_transaction.player_id, :user_id => target_transaction.user_id, :transaction_type_id => target_transaction.transaction_type_id + 2, :status => "completed", :amount => target_transaction.amount, :machine_token => target_transaction.machine_token , :created_at => Time.now, :slip_number => target_transaction.slip_number + 1, :ref_trans_id => target_transaction.ref_trans_id, :casino_id => 20000)
+  end
+
+  def create_player_transaction
+    @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
+    @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
+
+    @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000, :trans_date => Time.now)
+    @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 20000, :trans_date => Time.now + 30*60)
+    @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3, :casino_id => 20000, :trans_date => Time.now + 60*60)
+  end
+
+  def create_10010_player_transaction
+    @machine_token_lic_10010 = '10010|10|LOCATION10|10|STATION10|10|machine10|6e80a295eeff4554bf025098cca6eb100'
+
+    @player_transaction_lic_10010 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token_lic_10010, :created_at => Time.now, :slip_number => 1, :casino_id => 10010, :trans_date => Time.now)
+  end
+
+  def create_credit_transaction
+    @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
+    @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
+
+    @credit_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :data => {:remark => 'test1', :duration => 0.5}.to_yaml, :casino_id => 20000)
+    @credit_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :data => {:remark => 'test2', :duration => 3}.to_yaml, :casino_id => 20000)
+    @credit_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 6, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :data => {:remark => 'test3'}.to_yaml, :casino_id => 20000)
+  end
 end
 
 RSpec.configure do |config|
-  config.include MockHelper, type: :feature
+  config.include MockHelper
+
+  config.before(:each) do
+    create_casino
+    create_casino(10010)
+    create_shift_data
+  end
 end

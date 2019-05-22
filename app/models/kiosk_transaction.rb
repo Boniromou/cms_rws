@@ -4,6 +4,8 @@ class KioskTransaction < ActiveRecord::Base
   belongs_to :shift
   belongs_to :transaction_type
   belongs_to :casino
+  belongs_to :payment_method
+  belongs_to :source_of_fund
 
   include FundHelper
   include ActionView::Helpers

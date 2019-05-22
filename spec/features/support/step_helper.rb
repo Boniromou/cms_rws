@@ -326,7 +326,7 @@ module StepHelper
       credit_expire_duration_str = ""
     end
     expect(item[0].text).to eq player.member_id
-    expect(item[1].text).to eq "MockUp"
+    expect(item[1].text).to eq "20000"
     expect(item[2].text).to eq accounting_date.accounting_date.strftime("%Y-%m-%d")
     expect(item[3].text).to eq player_transaction.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S")
     expect(item[4].text).to eq location
@@ -339,7 +339,7 @@ module StepHelper
     expect(item[11].text).to eq YAML.load(player_transaction.data)[:remark]
   end
 
-  def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true, casino='MockUp')
+  def check_player_transaction_result_items(transaction_list, reprint_granted = true, void_granted = true, reprint_void_granted = true, casino='20000')
     items = all("table#datatable_col_reorder tbody tr")
     expect(items.length).to eq transaction_list.length
     items.length.times do |i|
@@ -617,10 +617,7 @@ module StepHelper
     PlayerTransaction.last
   end
 
-  def create_void_transaction(transaction_id)
-    target_transaction = PlayerTransaction.find(transaction_id)
-    transaction = PlayerTransaction.create!(:shift_id => target_transaction.shift_id, :player_id => target_transaction.player_id, :user_id => target_transaction.user_id, :transaction_type_id => target_transaction.transaction_type_id + 2, :status => "completed", :amount => target_transaction.amount, :machine_token => target_transaction.machine_token , :created_at => Time.now, :slip_number => target_transaction.slip_number + 1, :ref_trans_id => target_transaction.ref_trans_id, :casino_id => 20000)
-  end
+
 
   def reset_slip_number
     TransactionSlip.all.each do |s|
@@ -704,30 +701,6 @@ module StepHelper
       expect(find("div#pop_up_dialog")[:style]).to include "none"
   end
 
-  def create_player_transaction
-    @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-    @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
-
-    @player_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :slip_number => 1, :casino_id => 20000, :trans_date => Time.now)
-    @player_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 20000, :trans_date => Time.now + 30*60)
-    @player_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :slip_number => 3, :casino_id => 20000, :trans_date => Time.now + 60*60)
-  end
-
-  def create_10010_player_transaction
-    @machine_token_lic_10010 = '10010|10|LOCATION10|10|STATION10|10|machine10|6e80a295eeff4554bf025098cca6eb100'
-
-    @player_transaction_lic_10010 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 10000, :machine_token => @machine_token_lic_10010, :created_at => Time.now, :slip_number => 1, :casino_id => 10010, :trans_date => Time.now)
-  end
-
-  def create_credit_transaction
-    @machine_token1 = '20000|1|LOCATION1|1|STATION1|1|machine1|6e80a295eeff4554bf025098cca6eb37'
-    @machine_token2 = '20000|2|LOCATION2|2|STATION2|2|machine2|6e80a295eeff4554bf025098cca6eb38'
-
-    @credit_transaction1 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now, :data => {:remark => 'test1', :duration => 0.5}.to_yaml, :casino_id => 20000)
-    @credit_transaction2 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 5, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :data => {:remark => 'test2', :duration => 3}.to_yaml, :casino_id => 20000)
-    @credit_transaction3 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 6, :status => "completed", :amount => 30000, :machine_token => @machine_token2, :created_at => Time.now + 60*60, :data => {:remark => 'test3'}.to_yaml, :casino_id => 20000)
-  end
-
   def check_credit_transaction(credit_transaction, transaction_type_name, status, amount, remark, duration= 0.5)
     expect(credit_transaction).not_to be_nil
     expect(credit_transaction.transaction_type.name).to eq transaction_type_name
@@ -735,15 +708,6 @@ module StepHelper
     expect(credit_transaction.amount).to eq amount
     expect(YAML.load(credit_transaction.data)[:remark]).to eq remark
     expect(YAML.load(credit_transaction.data)[:duration]).to eq duration if credit_transaction.transaction_type.name == 'credit_deposit'
-  end
-
-  def create_default_player(*params)
-    player_data = {:first_name => "test", :last_name => "player", :member_id => "123456", :card_id => "1234567890", :currency_id => 2, :status => "active", :licensee_id => 20000}
-    options = params.extract_options!
-    options.each do |k,v|
-      player_data[k] = v
-    end
-    Player.create!(player_data)
   end
 end
 

@@ -14,8 +14,8 @@ end
 
 module Merge
   class InvalidMachineToken < CageError
-  end 
-  
+  end
+
   class AmountInvalidError < CageError
   end
 end
@@ -64,10 +64,10 @@ module PlayerProfile
 
   class PlayerNotFound < PlayerProfile
   end
-  
+
   class PlayerDuplicate < PlayerProfile
-  end 
-  
+  end
+
   class PlayerNotValidated < PlayerProfile
   end
 
@@ -277,6 +277,12 @@ module Request
   class InvalidAmount < RequestError
     def initialize(data=nil)
       super(400, 'Amount is invalid.', data)
+    end
+  end
+
+  class InvalidSourceType < RequestError
+    def initialize(data=nil)
+      super(400, 'SourceType is invalid.', data)
     end
   end
 

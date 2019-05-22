@@ -69,5 +69,6 @@ group :test do
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
   gem 'simplecov'
   #gem 'capybara-webkit'
+  gem 'database_cleaner', '1.4.1'
 end
 

@@ -5,6 +5,7 @@ require 'capybara/rails'
 require 'phantomjs'
 require 'capybara/rspec'
 require 'phantomjs/poltergeist'
+require 'database_cleaner'
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, :phantomjs => Phantomjs.path, :js_errors => false, :default_wait_time => 5, :timeout => 90)
@@ -33,7 +34,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 end
 
-Capybara.server do |app, port|
-  require 'rack/handler/thin'
-  Rack::Handler::Thin.run(app, :Port => port)
-end
+# Capybara.server do |app, port|
+#   require 'rack/handler/thin'
+#   Rack::Handler::Thin.run(app, :Port => port)
+# end

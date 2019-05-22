@@ -12,8 +12,11 @@ describe WithdrawController do
 
   describe '[7] Withdraw' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:audit_log_search_range, 7)
+      create_config(:daily_deposit_limit, 2000000)
+      create_config(:daily_withdraw_limit, 2000000)
+      create_config(:withdraw_authorized_amount, 5000000)
+      create_transaction_slip_type('withdraw')
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
@@ -24,12 +27,6 @@ describe WithdrawController do
       mock_wallet_transaction_success(:withdraw)
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({}))
       allow_any_instance_of(RequesterHelper).to receive(:validate_pin).and_return(true)
-    end
-
-    after(:each) do
-      AuditLog.delete_all
-      PlayerTransaction.delete_all
-      Player.delete_all
     end
 
     it '[7.1] show Withdraw page', :js => true do
@@ -385,8 +382,10 @@ describe WithdrawController do
 
   describe '[52] Enter PIN withdraw success ' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:daily_deposit_limit, 25000000)
+      create_config(:daily_withdraw_limit, 25000000)
+      create_config(:withdraw_authorized_amount, 5000000)
+      create_transaction_slip_type('withdraw')
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
@@ -395,12 +394,6 @@ describe WithdrawController do
       @player_balance = 20000
       mock_wallet_balance(200.0)
       mock_wallet_transaction_success(:withdraw)
-    end
-
-    after(:each) do
-      AuditLog.delete_all
-      PlayerTransaction.delete_all
-      Player.delete_all
     end
 
     it '[52.1] Enter PIN withdraw success', :js => true do

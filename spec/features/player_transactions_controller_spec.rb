@@ -13,8 +13,7 @@ describe PlayersController do
 
   describe '[8] Transaction History report' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:trans_history_search_range, 30)
       mock_cage_info
       mock_patron_not_change
 
@@ -23,10 +22,6 @@ describe PlayersController do
       @player_10010 = create_default_player(:last_name => "player_10010", :member_id => "123457", :card_id => "1234567891", :licensee_id => 10010)
 
       mock_wallet_balance(0.0)
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[8.2] successfully generate report. (search by accounting date)', js: true do
@@ -61,7 +56,7 @@ describe PlayersController do
       find("input#search").click
       wait_for_ajax
 
-      check_player_transaction_result_items([@player_transaction_lic_10010],true,true,true,"MGM Trial")
+      check_player_transaction_result_items([@player_transaction_lic_10010],true,true,true,"10010")
     end
 
     it '[8.3] successfully generate report. (search by slip ID)', js: true do
@@ -199,7 +194,7 @@ describe PlayersController do
     it '[8.14] cannot search othoer casino transactions. (search by accounting date)', js: true do
       login_as_admin
       create_player_transaction
-      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 1003)
+      @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player2.id, :user_id => User.first.id, :transaction_type_id => 1, :status => "completed", :amount => 20000, :machine_token => @machine_token1, :created_at => Time.now + 30*60, :slip_number => 2, :casino_id => 20000)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -219,10 +214,10 @@ describe PlayersController do
       create_10010_player_transaction
       @kiosk_id = '123456789'
       @source_type = 'everi_kiosk'
-      @kiosk_transaction1 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 70*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 70*60, :trans_date => Time.now + 70*60)
+      @kiosk_transaction1 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 10000, :status => 'completed', :trans_date => Time.now + 70*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 70*60, :trans_date => Time.now + 70*60, payment_method_id: 2, source_of_fund_id: 7)
       @player_transaction4 = PlayerTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :user_id => User.first.id, :transaction_type_id => 2, :status => "completed", :amount => 10000, :machine_token => @machine_token1, :created_at => Time.now + 80*60, :slip_number => 1, :casino_id => 20000, :created_at => Time.now + 80*60, :trans_date => Time.now + 80*60)
-      @kiosk_transaction2 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60, :trans_date => Time.now + 90*60)
-      @kiosk_transaction3 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 10010, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60, :trans_date => Time.now + 90*60)
+      @kiosk_transaction2 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 20000, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60, :trans_date => Time.now + 90*60, payment_method_id: 2, source_of_fund_id: 7)
+      @kiosk_transaction3 = KioskTransaction.create!(:shift_id => Shift.last.id, :player_id => @player_10010.id, :transaction_type_id => 2, :ref_trans_id => @ref_trans_id, :amount => 5000, :status => 'completed', :trans_date => Time.now + 90*60, :casino_id => 10010, :kiosk_name => @kiosk_id, :source_type => @source_type, :created_at => Time.now + 90*60, :trans_date => Time.now + 90*60, payment_method_id: 2, source_of_fund_id: 7)
       visit home_path
       click_link I18n.t("tree_panel.player_transaction")
       check_player_transaction_page_js
@@ -239,8 +234,7 @@ describe PlayersController do
 
   describe '[16] Print Transaction report' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:trans_history_search_range, 30)
       mock_cage_info
       mock_patron_not_change
 
@@ -248,10 +242,6 @@ describe PlayersController do
       @player2 = create_default_player(:last_name => "player2", :member_id => "123457", :card_id => "1234567891")
 
       mock_wallet_balance(0.0)
-    end
-
-    after(:each) do
-      PlayerTransaction.delete_all
     end
 
     it '[16.2] unauthorized print transaction report', js: true do
@@ -273,8 +263,7 @@ describe PlayersController do
 
   describe '[49] Slip ID' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:trans_history_search_range, 30)
       mock_cage_info
       mock_close_after_print
       mock_have_active_location
@@ -288,9 +277,6 @@ describe PlayersController do
       mock_wallet_transaction_success(:void_deposit)
       mock_wallet_transaction_success(:void_withdraw)
       allow_any_instance_of(Requester::Patron).to receive(:validate_pin).and_return(Requester::ValidatePinResponse.new({:error_code => 'OK'}))
-    end
-
-    after(:each) do
     end
 
     def create_player_transaction
@@ -370,8 +356,7 @@ describe PlayersController do
 
   describe '[58] Update player info when search in transaction history' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:trans_history_search_range, 30)
       mock_cage_info
 
       @player = create_default_player
@@ -379,11 +364,6 @@ describe PlayersController do
 
       mock_wallet_balance(0.0)
     end
-
-    after(:each) do
-      clean_dbs
-    end
-
     it '[58.1] Search transaction history with card change', :js => true do
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567893", :member_id => @player.member_id, :blacklist => @player.has_lock_type?('blacklist'), :pin_status => 'created', :licensee_id => 20000}})
       login_as_admin

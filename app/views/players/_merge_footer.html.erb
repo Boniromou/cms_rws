@@ -10,7 +10,7 @@
           <%= hidden_field(:player_transaction, :vic_amount, :value => @player_balance) %>
         <% end %>   
         <% pop_up_btn :id => "confirm_#{@player2.member_id}",:str => t("button.merge"), :form_id => "merge_request", :style => "confirm_fund_btn" do %>
-          <% label_tag(:confirm_message, "Confirm to merge to account from [#{@card_id}] to [#{@card_id2}] ?") %>
+          <% label_tag(:confirm_message, "Confirm fund transfer to account from [#{@card_id}] to [#{@card_id2}] ?") %>
         <% end %>
     <% end %>
   <% end %>

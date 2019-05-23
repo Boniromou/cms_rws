@@ -20,7 +20,7 @@ en:
     edit_player: "Edit Player"
     fund_management: "Fund Management"
     balance: "Balance Enquiry"
-    merge: "Merge"
+    merge: "Fund Transfer"
     withdraw_exception: "Exception Withdraw"
     fund_in: "Deposit"
     fund_out: "Withdrawal"
@@ -124,7 +124,7 @@ en:
     exceed_remain_limit: Transaction exceeded daily transaction limit. Please follow SOP to check patron identity before "Confirm" transaction.
     need_authorize: Authorization is required. Click "Confirm" for override process.
   merge:
-    approval: "Merge Approval"
+    approval: "Fund Transfer Approval"
   balance_enquiry:
     account_balance: "Account Balance"
     no_balance: "--"
@@ -155,7 +155,7 @@ en:
     void: "Void"
     print_void: "Print Void"
     export: Export
-    merge: "Merge"
+    merge: "Fund Transfer"
 #    create_pin: "Set PIN"
 #    reset_pin: "Reset PIN"
 #    credit_deposit: "Add Promo. Credit"
@@ -229,7 +229,7 @@ en:
     withdraw: "invalid withdrawal amount"
     fund_in: "invalid deposit amount"
     fund_out: "invalid withdrawal amount"
-    merge: "invalid merge amount"
+    merge: "invalid fund transfer amount"
     payment_method_type: "Please select one method type"
     source_of_funds: "Please select one source"
 #    credit_deposit: "invalid credit amount"
@@ -249,7 +249,7 @@ en:
     manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
     authorize_failed: "Authorize failed; Please try again or contact technical support to check your role permission."
     authorize_success: Authorize Withdrawal success; Please click "Confirm" to enter player PIN.
-    merge_complete: "Merge Player [%{vic_player}] to [%{sur_player}] request is submitted. Merge request pending approval."
+    merge_complete: "Fund Transfer Player [%{vic_player}] to [%{sur_player}] request is submitted. Fund Transfer request pending approval."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"
 #    credit_expire_complete: "Expire Promo. Credit %{amount} successfully!"
   transaction_history:
@@ -366,10 +366,10 @@ en:
   export:
     account_activity_file_name: Cage_AccountActivity.xls
     account_activity: Account Activity
-    approved_merge: Approved Merge
-    rejected_merge: Rejected Merge
-    approved_merge_file_name: Approved_Merge.xls
-    rejected_merge_file_name: Rejected_merge.xls
+    approved_merge: Approved Fund Transfer
+    rejected_merge: Rejected Fund Transfer
+    approved_merge_file_name: Approved_Fund_Transfer.xls
+    rejected_merge_file_name: Rejected_Fund_Transfer.xls
     last_updated_at: Last updated at
     player_balance_report: Player Balance Report
     tab_player_balance_report: Cage_PlayerBalanceReport

@@ -43,12 +43,12 @@ class MergeController < ApplicationController
   def execute_transaction
     AuditLog.player_log('deposit', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @data = {:remark => ""}
-      @data[:deposit_remark] = "Merge from account #{@player_vic.member_id}"
+      @data[:deposit_remark] = "Fund transfer from account #{@player_vic.member_id}"
       @transaction = create_deposit_transaction(@player_sur.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
     end
     AuditLog.player_log('withdraw', current_user.name, client_ip, sid,:description => {:location => get_location_info, :shift => current_shift.name}) do
       @data = {:remark => ""}
-      @data[:withdraw_remark] = "Merge to account #{@player_sur.member_id}"
+      @data[:withdraw_remark] = "Fund transfer to account #{@player_sur.member_id}"
       @transaction2 = create_withdraw_transaction(@player_vic.member_id, @server_amount, @ref_trans_id, @data.to_yaml)
     end
     puts Approval::Request::PENDING

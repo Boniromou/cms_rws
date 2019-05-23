@@ -3,7 +3,7 @@ module ViewsHelper
     I18n.t("tree_panel.balance").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("tree_panel.fund_management") },
     I18n.t("tree_panel.profile").to_sym => { :icon_style => "glyphicon glyphicon-user", :title => I18n.t("tree_panel.player_management") },
     I18n.t("deposit_withdrawal.exception").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("deposit_withdrawal.exception") },
-    I18n.t("tree_panel.merge").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("tree_panel.merge") }
+    I18n.t("tree_panel.merge").to_sym => { :icon_style => "fa fa-bank", :title => I18n.t("tree_panel.fund_management") }
   }
   def close_to_home
     icon = create_icon("fa fa-times")

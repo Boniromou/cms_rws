@@ -85,7 +85,7 @@ class FundController < ApplicationController
 
     auth_result = second_auth_result
     Rails.logger.info "Authorize result: #{auth_result}"
-    raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || cookies[:second_auth_info].blank? || auth_result[:message_id] != second_auth_info[:message_id]
+    raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || cookies[:second_auth_info].blank? || auth_result[:message_id] != second_auth_info[:message_id] || auth_result[:authorized_by] == current_user.username_with_domain
 
     @authorized_by = auth_result[:authorized_by]
     @authorized_at = auth_result[:authorized_at]

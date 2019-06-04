@@ -16,6 +16,11 @@ class User < ActiveRecord::Base
     user && user[:admin]
   end
 
+  def username_with_domain
+    user = Rails.cache.fetch "#{self.uid}"
+    user[:username_with_domain] if user
+  end
+
   def get_permission_value(target, action)
     cache_key = "#{APP_NAME}:permissions:#{self.uid}"
     permissions = Rails.cache.fetch cache_key
@@ -45,7 +50,7 @@ class User < ActiveRecord::Base
         []
       end
     end
-    
+
     def get_casino_ids_by_uid(uid)
       user = Rails.cache.fetch "#{uid}"
       if user && user[:casinos]

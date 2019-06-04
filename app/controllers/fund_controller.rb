@@ -208,7 +208,7 @@ class FundController < ApplicationController
 
   def handle_authorization_fail_same_user(e)
     clear_authorize_info
-    flash[:fail] = 'flash_message.authorize_failed.same_user'
+    flash[:fail] = 'flash_message.authorize_failed_same_user'
     redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 

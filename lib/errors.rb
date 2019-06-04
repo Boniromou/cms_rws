@@ -41,6 +41,9 @@ module FundInOut
 
   class NoBalanceRetrieve < FundError
   end
+  
+  class AccountLocked < FundError
+  end
 
   class InvalidLoginName < FundError
   end

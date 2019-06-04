@@ -49,3 +49,4 @@ en:
     not_enough_amount: "Approve manual deposit/withdrawal failed. Insufficient fund for withdrawal."
     invalid_login_name: "Approve request failed. Invalid login name"
     no_balance_retrieve: "Approve request failed. Can't retrieve player balance"
+    account_locked: "Account locked, can't approve the request"

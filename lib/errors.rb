@@ -56,6 +56,9 @@ module FundInOut
 
   class AuthorizationFail < FundError
   end
+  
+  class AuthorizationFailSameUser < FundError
+  end
 
   class NeedAuthorization < FundError
   end

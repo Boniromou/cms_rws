@@ -248,6 +248,7 @@ en:
     manual_deposit_complete: "Manual deposit %{amount} submitted. Transaction pending approval."
     manual_withdraw_complete: "Manual withdrawal %{amount} submitted. Transaction pending approval."
     authorize_failed: "Authorize failed; Please try again or contact technical support to check your role permission."
+    authorize_failed_same_user: "Authorize transaction failed; Self-approval is not allowed."
     authorize_success: Authorize Withdrawal success; Please click "Confirm" to enter player PIN.
     merge_complete: "Fund Transfer Player [%{vic_player}] to [%{sur_player}] request is submitted. Fund Transfer request pending approval."
 #    credit_deposit_complete: "Deposit Promo. Credit %{amount} successfully!"

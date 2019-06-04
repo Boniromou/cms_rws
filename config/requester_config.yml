@@ -1,6 +1,6 @@
 development:
   :wallet: http://dennis01.rnd.laxino.com:3002/cwms
-  :patron: http://hq-stg-pis-vapp01.laxino.local:80
+  :patron: http://dennis01.rnd.laxino.com:3003
   :station: http://hq-stg-sm-vapp01.laxino.local:80
   :marketing: http://yunxiaopan01.rnd.laxino.com:3001
   :marketing_wallet: http://dennis01.rnd.laxino.com:3003/mwms

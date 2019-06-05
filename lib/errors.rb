@@ -18,6 +18,9 @@ module Merge
 
   class AmountInvalidError < CageError
   end
+  
+  class PendingTransaction < CageError
+  end
 end
 
 module FundInOut
@@ -76,6 +79,9 @@ module PlayerProfile
 
   class PlayerNotValidated < PlayerProfile
   end
+
+#  class PlayerPendingTransaction < PlayerProfile
+#  end
 
   class PlayerNotActivated < PlayerProfile
     attr_reader :player

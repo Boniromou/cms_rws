@@ -4,6 +4,8 @@ class MergeController < ApplicationController
 
   rescue_from Merge::InvalidMachineToken, :with => :handle_invalid_machine_token
   rescue_from Merge::AmountInvalidError, :with => :handle_amount_invalid_error
+  rescue_from Merge::PendingTransaction, :with => :handle_pending_transaction
+ 
   def new
     super
     @casino_id = current_casino_id
@@ -20,6 +22,10 @@ class MergeController < ApplicationController
     @amount = params[:player_transaction][:sur_amount]
     @amount2 = params[:player_transaction][:vic_amount]
     validate_amount(@amount2)
+    @check_transaction_player = PlayerTransaction.find_by_player_id_and_status(@player_sur.id, 'pending')
+    @check_transaction_player2 = PlayerTransaction.find_by_player_id_and_status(@player_vic.id, 'pending')
+    raise Merge::PendingTransaction if (@check_transaction_player or @check_transaction_player2)
+    
     @server_amount = to_server_amount(@amount2)
     @ref_trans_id = nil
     @payment_method_type = params[:payment_method_type]
@@ -104,6 +110,10 @@ class MergeController < ApplicationController
 
   def handle_amount_invalid_error(e)
     handle_fund_error("invalid_amt.merge")
+  end
+ 
+  def handle_pending_transaction(e)
+    handle_fund_error("search_error.pending_transaction")
   end
 
   def handle_fund_error(msg)

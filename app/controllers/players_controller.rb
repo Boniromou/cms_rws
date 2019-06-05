@@ -8,6 +8,7 @@ class PlayersController < ApplicationController
   rescue_from PlayerProfile::PlayerNotActivated, :with => :handle_player_not_activated
   rescue_from PlayerProfile::PlayerNotValidated, :with => :handle_player_not_validated
   rescue_from PlayerProfile::PlayerDuplicate, :with => :handle_player_duplicate
+  #rescue_from PlayerProfile::PlayerPendingTransaction, :with => :handle_player_pending_transaction
   def balance
     player_info
   end
@@ -120,9 +121,12 @@ class PlayersController < ApplicationController
 
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id)
     @player2 = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id2)
+   # @check_transaction_player = PlayerTransaction.find_by_player_id_and_status(@player.id, 'pending')
+   # @check_transaction_player2 = PlayerTransaction.find_by_player_id_and_status(@player2.id, 'pending')
+    #raise PlayerProfile::PlayerPendingTransaction if (@check_transaction_player or @check_transaction_player2)
     raise PlayerProfile::PlayerNotFound unless (@player && @player2)
-    raise PlayerProfile::PlayerDuplicate unless (@player != @player2)
- 
+    raise PlayerProfile::PlayerDuplicate unless (@player != @player2)    
+    
     @players = policy_scope(Player).where(member_id: [@card_id, @card_id2])
     @players = @players.index_by(&:member_id).values_at(*card_ids)
 
@@ -150,6 +154,15 @@ class PlayersController < ApplicationController
       search 
     end
   end
+  
+#  def handle_player_pending_transaction(e)
+#    flash[:error] = 'search_error.pending_transaction'
+#    if @exception_transaction == nil
+#      search_merge
+#    else
+#      search
+#    end
+#  end
 
   def handle_player_not_found(e)
     flash[:error] = 'search_error.not_found'

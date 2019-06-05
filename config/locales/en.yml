@@ -164,7 +164,8 @@ en:
     not_found: "Player Not Found!!"
     create_player: "Create new player?"
     not_validated: "Player validation failed or not found; Please try again."
-    duplicate: "Vittim and Surcical member ID duplicated, please try again."
+    duplicate: "Victim and Survival member ID duplicated, please try again."
+    pending_transaction: "Member(s) have pending transaction, can't perform fund transfer, please try again later"
   player:
     create: "Create"
     deposit: "Deposit"

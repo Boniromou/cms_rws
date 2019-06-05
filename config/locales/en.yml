@@ -165,7 +165,7 @@ en:
     create_player: "Create new player?"
     not_validated: "Player validation failed or not found; Please try again."
     duplicate: "Victim and Survival member ID duplicated, please try again."
-    pending_transaction: "Member(s) have pending transaction, can't perform fund transfer, please try again later"
+    pending_transaction: "Submit Fund Transfer failed; Member have other pending Fund Transfer transaction."
   player:
     create: "Create"
     deposit: "Deposit"

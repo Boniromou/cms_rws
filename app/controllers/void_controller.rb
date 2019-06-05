@@ -71,4 +71,8 @@ class VoidController < FundController
   def handle_authorization_fail(e)
     handle_fund_error('flash_message.authorize_failed')
   end
+
+  def handle_authorization_fail_same_user(e)
+    handle_fund_error('flash_message.authorize_failed_same_user')
+  end
 end

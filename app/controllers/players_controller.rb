@@ -112,8 +112,8 @@ class PlayersController < ApplicationController
   end
 
   def do_search_merge
-    @card_id = params[:id_number]
-    @card_id2 = params[:id_number2]
+    @card_id = params[:id_number].to_s.strip
+    @card_id2 = params[:id_number2].to_s.strip
     @id_type = 'member_id'
     @operation = params[:operation]
     
@@ -121,6 +121,7 @@ class PlayersController < ApplicationController
 
     @player = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id)
     @player2 = policy_scope(Player).find_by_id_type_and_number(@id_type, @card_id2)
+    
    # @check_transaction_player = PlayerTransaction.find_by_player_id_and_status(@player.id, 'pending')
    # @check_transaction_player2 = PlayerTransaction.find_by_player_id_and_status(@player2.id, 'pending')
     #raise PlayerProfile::PlayerPendingTransaction if (@check_transaction_player or @check_transaction_player2)
@@ -129,6 +130,9 @@ class PlayersController < ApplicationController
     
     @players = policy_scope(Player).where(member_id: [@card_id, @card_id2])
     @players = @players.index_by(&:member_id).values_at(*card_ids)
+    p '1111111111111111111111111'
+    p @players
+    p '111111111111111111111111111'
 
     @current_user = current_user
     @casino_id = params[:select_casino_id] || current_casino_id

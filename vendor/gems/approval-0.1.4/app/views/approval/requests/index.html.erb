@@ -35,7 +35,7 @@
               <%= link_to '', requests_cancel_submit_path(id: request[:id], search_by: @search_by, all: @all, remote: @remote), method: :post, id: "cancel_submit_#{request[:id]}", remote: @remote, method: :post, hidden: 'hidden' %>
             <% end %>
 
-            <% if policy(request[:target].to_sym).send("#{request[:action]}_approve?") %>
+            <% if policy(request[:target].to_sym).send("#{request[:action]}_approve?") and request[:submit_by] != current_user.name %>
               <%= button_tag I18n.t('approval.approve'), :type => 'button', 'request_id' => request[:id], 'operation' => 'approve', :class => 'btn btn-primary approve request_button' %>
               <%= link_to '', requests_approve_path(id: request[:id], search_by: @search_by, all: @all, remote: @remote), id: "approve_#{request[:id]}", remote: @remote, method: :post, hidden: 'hidden' %>
             <% end %>

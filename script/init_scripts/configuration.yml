@@ -19,6 +19,8 @@ default: &default
     withdraw_authorized_amount: [5000000, 'authorized amount of withdraw (cent)']
     void_deposit_authorized_amount: [5000000, 'authorized amount of void deposit (cent)']
     void_withdraw_authorized_amount: [5000000, 'authorized amount of void deposit (cent)']
+    deposit_transaction_limit: [5000000, 'limit amount of deposit transaction (cent)']
+    withdraw_transaction_limit: [5000000, 'limit amount of withdraw transaction (cent)']
 
  #   source_of_funds: ['Business earnings,Salary or wages,Savings,Winnings,Marker,Other(Please specify manually in remark)','type of funds']
   #  payment_method_types: ['Credit Cards,Debit Cards,Cashier Order,Casino Cheque,Personal Cheque,TT-in,Cash Chips,Marker','types payment method']

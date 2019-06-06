@@ -13,18 +13,16 @@ describe VoidController do
 
   describe '[47] Void Transaction' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:trans_history_search_range, 30)
+      create_config(:void_deposit_authorized_amount, 5000000)
+      create_config(:void_withdraw_authorized_amount, 5000000)
+      create_transaction_slip_type
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
       @player = create_default_player
 
       mock_wallet_balance(0.0)
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     def create_player_transaction(amount = 10000)
@@ -214,6 +212,7 @@ describe VoidController do
     end
 
     it '[47.8] Void deposit fail when the transaction not exist', :js => true do
+      create_casino(1003)
       mock_wallet_transaction_success(:void_deposit)
       login_as_admin
       create_player_transaction
@@ -227,6 +226,7 @@ describe VoidController do
       find("input#search").click
       wait_for_ajax
       check_player_transaction_result_items([@player_transaction1])
+      sleep 3
 
       @player_transaction1.casino_id = 1003
       @player_transaction1.save!
@@ -234,6 +234,7 @@ describe VoidController do
       content_list = [I18n.t("confirm_box.void_transaction", slip_number: @player_transaction1.slip_number.to_s)]
       click_pop_up_confirm("void_deposit_" + @player_transaction1.id.to_s, content_list, 1)
       check_flash_message I18n.t("void_transaction.invalid_machine_token")
+      wait_for_ajax
     end
 
     it '[47.9] Update trans date', :js => true do

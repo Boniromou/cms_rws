@@ -8,6 +8,10 @@ module FundHelper
     amount.is_a?(String) && amount =~ /^\d+(\.\d{1,2})?$/ && to_server_amount( amount ) > 0
   end
 
+  def is_kiosk_source_type_valid?(source_type)
+    source_type =~ /\w+_kiosk/
+  end
+
   def to_server_amount( amount )
     (amount.to_f * 100).round(2).to_i
   end

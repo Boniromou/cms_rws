@@ -10,6 +10,8 @@ class WithdrawController < FundController
       auth_info = second_auth_info
       auth_result = second_auth_result
       raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || auth_result[:message_id] != auth_info[:message_id]
+      
+      raise FundInOut::AuthorizationFailSameUser if  auth_result[:authorized_by] == current_user.username_with_domain
 
       auth_info = auth_info[:auth_info].recursive_symbolize_keys!
       @authorize_result = 'yes'

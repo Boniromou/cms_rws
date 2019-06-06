@@ -21,15 +21,9 @@ describe PlayerBalanceReportsController do
 
   describe 'Search Player Balance Report', js: true do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_current_casino_id
       mock_total_balances
       @player = create_default_player
-    end
-
-    after(:each) do
-      Player.delete_all
     end
 
     it 'show player balance report page' do

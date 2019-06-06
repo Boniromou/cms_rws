@@ -12,8 +12,10 @@ describe DepositController do
 
   describe '[6] Deposit' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:daily_deposit_limit, 25000000)
+      create_config(:daily_withdraw_limit, 25000000)
+      create_config(:deposit_authorized_amount, 5000000)
+      create_transaction_slip_type
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
@@ -22,12 +24,6 @@ describe DepositController do
 
       mock_wallet_balance(0.0)
       mock_wallet_transaction_success(:deposit)
-    end
-
-    after(:each) do
-      AuditLog.delete_all
-      PlayerTransaction.delete_all
-      Player.delete_all
     end
 
     it '[6.1] show Deposit page', :js => true do
@@ -394,8 +390,8 @@ describe DepositController do
 
   describe '[28] Unauthorized permission without location (Deposit, Withdraw)' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:daily_deposit_limit, 25000000)
+      create_config(:daily_withdraw_limit, 25000000)
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
@@ -403,12 +399,6 @@ describe DepositController do
 
       mock_wallet_balance(0.0)
       mock_wallet_transaction_success(:deposit)
-    end
-
-    after(:each) do
-      AuditLog.delete_all
-      PlayerTransaction.delete_all
-      Player.delete_all
     end
 
     it '[28.1] Disappear deposit, withdraw button', :js => true do

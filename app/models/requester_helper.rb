@@ -66,7 +66,7 @@ class RequesterHelper
       credit_expired_at = balance_response.credit_expired_at
       raise Request::RetrieveBalanceFail.new unless balance.class == Float
       session_token = Token.generate(player.id, casino_id).session_token
-      {:login_name => login_name, :card_id => player.card_id, :currency => currency, :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at, :session_token => session_token, :test_mode_player => player.test_mode_player}
+      {:login_name => login_name, :card_id => player.card_id, :currency => currency, :balance => balance, :credit_balance => credit_balance, :credit_expired_at => credit_expired_at, :session_token => session_token, :test_mode_player => player.test_mode_player, :is_member => player.is_member}
     end
   end
 
@@ -142,6 +142,7 @@ class RequesterHelper
     kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
     raise Request::RetrieveBalanceFail unless balance.class == Float
     raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
+    raise Request::InvalidSourceType unless PlayerTransaction.is_kiosk_source_type_valid?(source_type)
     server_amount = PlayerTransaction.to_server_amount(amount)
     if !kiosk_transaction.nil?
       raise Request::AlreadyProcessed if kiosk_transaction.player.member_id == login_name && kiosk_transaction.amount == server_amount
@@ -188,6 +189,7 @@ class RequesterHelper
     Token.validate(login_name, session_token, licensee_id)
     player = Player.find_by_member_id_and_casino_id(login_name, casino_id)
     raise Request::InvalidAmount unless PlayerTransaction.is_amount_str_valid?(amount)
+    raise Request::InvalidSourceType unless PlayerTransaction.is_kiosk_source_type_valid?(source_type)
     server_amount = PlayerTransaction.to_server_amount(amount)
     kiosk_transaction = KioskTransaction.find_by_ref_trans_id(ref_trans_id)
     if !kiosk_transaction.nil?

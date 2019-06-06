@@ -7,6 +7,7 @@ module Approval
     rescue_from FundInOut::InvalidMachineToken, :with => :handle_invalid_machine_token
     rescue_from FundInOut::NoBalanceRetrieve, :with => :handle_no_balance_retrieve
     rescue_from FundInOut::InvalidLoginName, :with => :handle_invalid_login_name
+    rescue_from FundInOut::AccountLocked, :with => :handle_account_locked
 
     ['approve', 'cancel_submit', 'cancel_approve'].each do |method_name|
       define_method method_name do
@@ -48,17 +49,21 @@ module Approval
           transaction.approved_by = current_user.name
           transaction.save
  
-          if transaction.transaction_type_id == 1 || transaction.transaction_type_id == 8
-            if transaction.transaction_type_id == 8
+          if (transaction.transaction_type_id == 1 || transaction.transaction_type_id == 8)
+            if transaction.transaction_type_id == 8 and player.status != 'locked'
               data[:source_type] = "cage_manual_transaction"
+            elsif transaction.transaction_type_id == 8 and player.status == 'locked'
+              raise FundInOut::AccountLocked
             end
             raise FundInOut::InvalidMachineToken unless current_machine_token
             deposit_request(data)
           end
           
-          if transaction.transaction_type_id == 2 || transaction.transaction_type_id == 9
-            if transaction.transaction_type_id == 9
+          if (transaction.transaction_type_id == 2 || transaction.transaction_type_id == 9)
+            if transaction.transaction_type_id == 9 and player.status != 'locked'
               data[:source_type] = "cage_manual_transaction"
+            elsif transaction.transaction_type_id == 9 and player.status == 'locked'
+              raise FundInOut::AccountLocked
             end
             raise FundInOut::InvalidMachineToken unless current_machine_token
             withdraw_request(data)
@@ -199,7 +204,12 @@ module Approval
       flash[:fail] = I18n.t("void_transaction.invalid_machine_token")
       redirect_to_approval_list(@method_name, @approval_request, params[:search_by], params[:all], true)
     end
-    
+   
+    def handle_account_locked(e)
+      flash[:fail] = I18n.t("flash_message.account_locked")
+      redirect_to_approval_list(@method_name, @approval_request, params[:search_by], params[:all], true)
+    end 
+ 
     def handle_invalid_login_name(e)
       flash[:fail] = I18n.t("flash_message.invalid_login_name")
       redirect_to_approval_list(@method_name, @approval_request, params[:search_by], params[:all], true)

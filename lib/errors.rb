@@ -14,9 +14,12 @@ end
 
 module Merge
   class InvalidMachineToken < CageError
-  end 
-  
+  end
+
   class AmountInvalidError < CageError
+  end
+  
+  class PendingTransaction < CageError
   end
 end
 
@@ -41,6 +44,9 @@ module FundInOut
 
   class NoBalanceRetrieve < FundError
   end
+  
+  class AccountLocked < FundError
+  end
 
   class InvalidLoginName < FundError
   end
@@ -53,6 +59,9 @@ module FundInOut
 
   class AuthorizationFail < FundError
   end
+  
+  class AuthorizationFailSameUser < FundError
+  end
 
   class NeedAuthorization < FundError
   end
@@ -64,12 +73,15 @@ module PlayerProfile
 
   class PlayerNotFound < PlayerProfile
   end
-  
+
   class PlayerDuplicate < PlayerProfile
-  end 
-  
+  end
+
   class PlayerNotValidated < PlayerProfile
   end
+
+#  class PlayerPendingTransaction < PlayerProfile
+#  end
 
   class PlayerNotActivated < PlayerProfile
     attr_reader :player
@@ -277,6 +289,12 @@ module Request
   class InvalidAmount < RequestError
     def initialize(data=nil)
       super(400, 'Amount is invalid.', data)
+    end
+  end
+
+  class InvalidSourceType < RequestError
+    def initialize(data=nil)
+      super(400, 'SourceType is invalid.', data)
     end
   end
 

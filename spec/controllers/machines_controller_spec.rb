@@ -2,12 +2,6 @@ require "feature_spec_helper"
 require "rails_helper"
 
 describe MachinesController do
-  def clean_dbs
-    Token.delete_all
-    PlayersLockType.delete_all
-    Player.delete_all    
-  end
-
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
@@ -19,13 +13,8 @@ describe MachinesController do
 
   describe '[39] Validate machine token API' do
     before(:each) do
-      clean_dbs
       bypass_rescue
       allow_any_instance_of(LaxSupport::AuthorizedRWS::Parser).to receive(:verify).and_return([20000])
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[39.1] Validate machine token success' do

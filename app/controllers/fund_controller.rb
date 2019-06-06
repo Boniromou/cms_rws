@@ -20,6 +20,7 @@ class FundController < ApplicationController
   rescue_from FundInOut::InvalidMachineToken, :with => :handle_invalid_machine_token
   rescue_from FundInOut::AuthorizationFail, :with => :handle_authorization_fail
   rescue_from FundInOut::NeedAuthorization, :with => :handle_need_authorization
+  rescue_from FundInOut::AuthorizationFailSameUser, :with => :handle_authorization_fail_same_user
 
   def operation_sym
     (action_str + '?').to_sym
@@ -86,6 +87,8 @@ class FundController < ApplicationController
     auth_result = second_auth_result
     Rails.logger.info "Authorize result: #{auth_result}"
     raise FundInOut::AuthorizationFail if auth_result[:error_code] != 'OK' || cookies[:second_auth_info].blank? || auth_result[:message_id] != second_auth_info[:message_id]
+
+    raise FundInOut::AuthorizationFailSameUser if  auth_result[:authorized_by] == current_user.username_with_domain
 
     @authorized_by = auth_result[:authorized_by]
     @authorized_at = auth_result[:authorized_at]
@@ -200,6 +203,12 @@ class FundController < ApplicationController
   def handle_authorization_fail(e)
     clear_authorize_info
     flash[:fail] = 'flash_message.authorize_failed'
+    redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
+  end
+
+  def handle_authorization_fail_same_user(e)
+    clear_authorize_info
+    flash[:fail] = 'flash_message.authorize_failed_same_user'
     redirect_to :action => 'new', member_id: @player.member_id, exception_transaction: @exception_transaction
   end
 

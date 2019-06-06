@@ -2,13 +2,13 @@ class PlayerPolicy < ApplicationPolicy
   policy_target :player
   map_policy :lock?, :unlock?, :reset_pin?
   map_policy :balance?, :action_name => :balance_enquiry
-  map_policy :merge?, :action_name => :merge
+  map_policy :merge?, :action_name => :fund_transfer
   map_policy :profile?, :action_name => :player_profile
   map_policy :create_pin?, :delegate_policies => [:reset_pin?]
   map_policy :do_reset_pin?, :delegate_policies => [:reset_pin?]
-  map_policy :merge_player_approval_list?, :target => :merge_approval, :action_name => :list
-  map_policy :merge_player_cancel_submit?, :target => :merge_approval, :action_name => :reject_submit
-  map_policy :merge_player_approve?, :target => :merge_approval, :action_name => :approve
+  map_policy :merge_player_approval_list?, :target => :fund_transfer_approval, :action_name => :list
+  map_policy :merge_player_cancel_submit?, :target => :fund_transfer_approval, :action_name => :reject_submit
+  map_policy :merge_player_approve?, :target => :fund_transfer_approval, :action_name => :approve
   
   def merge_player_approval_list?
     true
@@ -29,6 +29,7 @@ class PlayerPolicy < ApplicationPolicy
 #  def merge?
 #    true
 #  end
+
   class Scope
     attr_reader :user, :scope
 

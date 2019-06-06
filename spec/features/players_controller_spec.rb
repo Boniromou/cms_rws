@@ -4,27 +4,25 @@ describe PlayersController do
   before(:all) do
     include Warden::Test::Helpers
     Warden.test_mode!
-    PlayerTransaction.delete_all
   end
 
   after(:all) do
-    PlayerTransaction.delete_all
-    User.delete_all
     Warden.test_reset!
+  end
+
+  before(:each) do
+    create_config(:daily_deposit_limit, 2000000)
+    create_config(:daily_deposit_limit, 2000000, 10010)
+    create_config(:daily_withdraw_limit, 2000000)
+    create_config(:daily_withdraw_limit, 2000000, 10010)
   end
 
   describe '[4] Search player by membership ID' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
 
       mock_wallet_balance(0.0)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[4.1] Show search Page' do
@@ -47,7 +45,6 @@ describe PlayersController do
     end
 
     it '[4.5] successfully search player - Licensee 10010' do
-      create_shift_data
       @player = create_default_player(:first_name => "exist", :last_name => "player")
       @player_10010 = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 10010)
       login_as_10010
@@ -73,6 +70,7 @@ describe PlayersController do
     end
 
     it '[4.4] fail to search other licensee player' do
+      create_casino(1003)
       mock_player_info_result({:error_code => 'not OK'})
       @player = create_default_player(:first_name => "exist", :last_name => "player", :licensee_id => 1003)
       login_as_admin
@@ -85,16 +83,10 @@ describe PlayersController do
 
   describe '[5] Balance Enquiry' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
 
       mock_wallet_balance(0.0)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[5.1] view player balance enquiry', :js => true do
@@ -232,6 +224,9 @@ describe PlayersController do
 
     it '[5.10] View player balance enquiry based on casino selected', :js => true do
     #not finish
+      create_casino(1003)
+      create_config(:deposit_authorized_amount, 5000000)
+      create_transaction_slip_type
       mock_close_after_print
       mock_patron_not_change
       mock_have_active_location
@@ -278,16 +273,10 @@ describe PlayersController do
 
   describe '[12] Search player by card ID' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
 
       mock_wallet_balance(0.0)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[12.1] Show search Page' do
@@ -601,15 +590,9 @@ describe PlayersController do
 
   describe '[37] Show balance not found' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
 
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[37.1] Player balance not found', :js => true do
@@ -642,16 +625,10 @@ describe PlayersController do
 
   describe '[38] Retry create player' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
       mock_have_active_location
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
       @player = create_default_player(:first_name => "exist", :last_name => "player")
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     # it '[38.1] Retry create player success', :js => true do
@@ -704,16 +681,10 @@ describe PlayersController do
 
   describe '[53] Update player info when search in Balance Enquiry/Player Profile' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
 
       mock_wallet_balance(0.0)
       @player = create_default_player(:first_name => "exist", :last_name => "player")
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[53.1] Show PIS player info when search  Player Profile without change' do
@@ -1151,16 +1122,10 @@ describe PlayersController do
 
   describe '[72] Test mode player - Balance enquiry' do
     before(:each) do
-      clean_dbs
-      create_shift_data
       mock_cage_info
 
       mock_wallet_balance(0.0)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => '1234567890', :member_id => '123456', :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[72.1] Show test mode player info, disappear deposit and withdraw, add credit and expire credit button', :js => true do

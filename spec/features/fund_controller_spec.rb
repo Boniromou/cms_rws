@@ -12,8 +12,12 @@ describe FundController do
 
   describe '[48] Pending Transaction' do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:daily_deposit_limit, 25000000)
+      create_config(:daily_withdraw_limit, 25000000)
+      create_config(:deposit_authorized_amount, 5000000)
+      create_config(:withdraw_authorized_amount, 5000000)
+      create_transaction_slip_type
+      create_transaction_slip_type('withdraw')
       mock_cage_info
       mock_close_after_print
       mock_have_active_location
@@ -25,10 +29,6 @@ describe FundController do
       # allow_any_instance_of(Requester::Wallet).to receive(:remote_response_checking).and_raise(Exception.new)
       mock_player_info_result({:error_code => 'OK', :player => {:card_id => "1234567890", :member_id => "123456", :blacklist => false, :pin_status => 'used', :licensee_id => 20000}})
       allow_any_instance_of(RequesterHelper).to receive(:validate_pin).and_return(true)
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     def create_player_transaction
@@ -124,8 +124,12 @@ describe FundController do
 
   describe '[73] Do not allow test mode player to do fund transaction', :js => true do
     before(:each) do
-      clean_dbs
-      create_shift_data
+      create_config(:daily_deposit_limit, 25000000)
+      create_config(:daily_withdraw_limit, 25000000)
+      create_config(:deposit_authorized_amount, 5000000)
+      create_config(:withdraw_authorized_amount, 5000000)
+      create_transaction_slip_type
+      create_transaction_slip_type('withdraw')
       mock_cage_info
       mock_close_after_print
       mock_patron_not_change
@@ -134,10 +138,6 @@ describe FundController do
 
       mock_wallet_balance(0.0)
       mock_wallet_transaction_success(:deposit)
-    end
-
-    after(:each) do
-      clean_dbs
     end
 
     it '[73.1] Deposit fail due to test mode player', :js => true do

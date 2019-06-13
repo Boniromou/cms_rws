@@ -130,9 +130,6 @@ class PlayersController < ApplicationController
     
     @players = policy_scope(Player).where(member_id: [@card_id, @card_id2])
     @players = @players.index_by(&:member_id).values_at(*card_ids)
-    p '1111111111111111111111111'
-    p @players
-    p '111111111111111111111111111'
 
     @current_user = current_user
     @casino_id = params[:select_casino_id] || current_casino_id

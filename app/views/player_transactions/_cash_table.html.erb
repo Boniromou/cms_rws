@@ -57,7 +57,7 @@
                   <td>
                     <% if t.source_type == 'cage_transaction'%>
                       <% if policy(:player_transaction).void? && t.status == 'completed'%>
-                        <% if t.can_void? %>
+                        <% #if t.can_void? %>
                           <% trans_type = t.transaction_type.name.gsub('manual_', '') %>
                           <% pop_up_btn :id => "void_#{trans_type}_" + t.id.to_s, :str => t("button.void"), :form_id => "void_#{trans_type}", :style => "void_#{trans_type}_btn" do %>
                             <p><%= t("confirm_box.void_transaction", {:slip_number => t.slip_number}) %></p>
@@ -74,11 +74,11 @@
                               </div>
                             </form>
                           <% end %>
-                        <% else %>
+                        <% #else %>
                           <% if t.voided? && policy(:PlayerTransaction).reprint_void? %>
                             <%= link_to t("button.print_void"), reprint_path + "?transaction_id=#{t.void_transaction.id}", :id => "reprint_void", :class => "btn btn-primary", :method => "get", :remote => true %>
                           <% end %>
-                        <% end %>
+                        <%# end %>
                       <% end %>
                         <% if policy(:player_transaction).reprint? %>
                           <%= link_to t("button.print"), reprint_path + "?transaction_id=#{t.id}", :id => "reprint", :class => "btn btn-primary", :method => "get", :remote => true %>

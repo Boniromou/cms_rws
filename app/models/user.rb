@@ -16,6 +16,12 @@ class User < ActiveRecord::Base
     user && user[:admin]
   end
 
+  def time_zone
+    user = Rails.cache.fetch "#{self.uid}"
+    user[:timezone] = "+07:00"
+    user && user[:timezone]
+  end
+
   def username_with_domain
     user = Rails.cache.fetch "#{self.uid}"
     user[:username_with_domain] if user

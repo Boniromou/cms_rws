@@ -113,6 +113,11 @@ class ApplicationController < ActionController::Base
   def current_licensee_id
     Casino.get_licensee_id_by_casino_id(current_casino_id)
   end
+  
+  def current_licensee_time_zone
+    p 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
+    Licensee.find_by_id(current_licensee_id).time_zone
+  end
 
   def config_helper
     @config_helper = ConfigHelper.new(current_casino_id) unless @config_helper

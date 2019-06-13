@@ -152,7 +152,7 @@ module Approval
       data = (self.data.is_a? String) ? JSON.parse(self.data) : self.data
       request = self.as_json.merge(data).slice!('data')
       request['created_at'] = request['created_at'].getlocal.strftime("%Y-%m-%d %H:%M:%S")
-      request['updated_at'] = request['updated_at'].getlocal.strftime("%Y-%m-%d %H:%M:%S")
+      request['updated_at']
       request.recursive_symbolize_keys
     end
   end

@@ -15,7 +15,7 @@ module ApplicationHelper
         flash_type.to_s
     end
   end
- 
+   
   def approval_tree_li(target, actions, options={})
     li = nil
     actions.each do |action|

@@ -12,7 +12,7 @@ module Approval
     def format_json
       log = self.as_json
       log['created_at'] = log['created_at'].getlocal.strftime("%Y-%m-%d %H:%M:%S")
-      log['updated_at'] = log['updated_at'].getlocal.strftime("%Y-%m-%d %H:%M:%S")
+      log['updated_at'] 
       log.recursive_symbolize_keys
     end
   end

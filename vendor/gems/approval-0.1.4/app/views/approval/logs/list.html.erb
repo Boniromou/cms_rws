@@ -37,7 +37,7 @@
           <% end %>
           <td><%= I18n.t('approval.reject')%></td>
           <td><%= log[:action_by] %></td>
-          <td><%= log[:updated_at].to_time.getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+          <td><%= log[:updated_at].to_time.getlocal(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S") %></td>
         </tr>
       <% end %>
     </tbody>

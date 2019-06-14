@@ -2,10 +2,9 @@ class AccountActivityDatatable
   include FundHelper
   include FormattedTimeHelper
 
-  def initialize(requester_factory, params, time_zone)
+  def initialize(requester_factory, params)
     @wallet_requester = requester_factory.get_wallet_requester
     @params = params
-    @time_zone = time_zone
   end
 
   def as_json(options = {})
@@ -30,7 +29,7 @@ class AccountActivityDatatable
     transactions = get_transactions_detail(response.transactions)
     transactions.map do |trans|
       [
-        trans['trans_date'].to_time.getlocal(@time_zone).strftime("%Y-%m-%d %H:%M:%S"),
+        trans['trans_date'].to_time.getlocal(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S"),
         trans['trans_type'] ? trans['trans_type'].titleize : '',
         trans['casino_name'],
         trans['property_name'],

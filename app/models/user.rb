@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
 
   def time_zone
     user = Rails.cache.fetch "#{self.uid}"
-    user[:timezone] = "+07:00"
     user && user[:timezone]
   end
 

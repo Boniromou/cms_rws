@@ -2,40 +2,40 @@ module FormattedTimeHelper
   def format_time(time)
     begin
       unless time.blank?
-        time.to_time.getlocal(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")
+        time.to_time.getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S")
       end
     rescue Exception
-      Time.parse(time).getlocal(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")
+      Time.parse(time).getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S")
     end
   end
   
   def format_time_slip(time)
     begin
       unless time.blank?
-        time.to_time.getlocal(TIMEZONE).strftime("%d-%b-%Y %I:%M:%S %p")
+        time.to_time.getlocal(current_user.time_zone).strftime("%d-%b-%Y %I:%M:%S %p")
       end
     rescue Exception
-      Time.parse(time).getlocal(TIMEZONE).strftime("%d-%b-%Y %I:%M:%S %p")
+      Time.parse(time).getlocal(current_user.time_zone).strftime("%d-%b-%Y %I:%M:%S %p")
     end
   end
 
   def format_time_slip_date(time)
     begin
       unless time.blank?
-        time.to_time.getlocal(TIMEZONE).strftime("%d-%b-%Y")
+        time.to_time.getlocal(current_user.time_zone).strftime("%d-%b-%Y")
       end
     rescue Exception
-      Time.parse(time).getlocal(TIMEZONE).strftime("%d-%b-%Y")
+      Time.parse(time).getlocal(current_user.time_zone).strftime("%d-%b-%Y")
     end
   end
 
   def format_time_slip_time(time)
     begin
       unless time.blank?
-        time.to_time.getlocal(TIMEZONE).strftime("%I:%M:%S %p")
+        time.to_time.getlocal(current_user.time_zone).strftime("%I:%M:%S %p")
       end
     rescue Exception
-      Time.parse(time).getlocal(TIMEZONE).strftime("%I:%M:%S %p")
+      Time.parse(time).getlocal(current_user.time_zone).strftime("%I:%M:%S %p")
     end
   end
   

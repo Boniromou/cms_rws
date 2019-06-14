@@ -25,7 +25,7 @@ class AccountActivitiesController < ApplicationController
   end
 
   def do_search
-    result = AccountActivityDatatable.new(requester_factory, params).as_json
+    result = AccountActivityDatatable.new(requester_factory, params, current_user.time_zone).as_json
     if result[:player_id]
       player = policy_scope(Player).find_by_id(result[:player_id])
       result.merge!({member_id: player.member_id, licensee_name: player.licensee.name, start_time: format_time(params[:start_time]), end_time: format_time(params[:end_time])}) if player

@@ -11,7 +11,7 @@ function getDateStr(now) {
   return now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate());
 }
 
-function getTimeStr(now,time_zone) {
+function getTimeStr(now) {
   return addZero(now.getHours()) + ':' + addZero(now.getMinutes()) + ':' + addZero(now.getSeconds());
 }
 
@@ -21,9 +21,7 @@ function getTimeStrWithoutSecond(now) {
 
 function getDateTimeStr(time_zone) {
   var now = getLocalTime(time_zone);
-  
-  console.log(now);
-  return getDateStr(now) + ' ' + getTimeStr(now,time_zone);
+  return getDateStr(now) + ' ' + getTimeStr(now);
 }
 
 function getLocalTime(i) {

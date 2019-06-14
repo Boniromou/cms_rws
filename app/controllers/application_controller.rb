@@ -115,7 +115,6 @@ class ApplicationController < ActionController::Base
   end
   
   def current_licensee_time_zone
-    p 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
     Licensee.find_by_id(current_licensee_id).time_zone
   end
 

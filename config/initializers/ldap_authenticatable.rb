@@ -25,8 +25,6 @@ module Devise
           end
           clear_cookie_and_cache
           success!(user)
-          Object.send(:remove_const, :TIMEZONE) if defined? TIMEZONE
-          Object.const_set('TIMEZONE', user.time_zone)
       end
 
       # def user_data

@@ -42,7 +42,6 @@ class FundController < ApplicationController
   def create
     read_auth_info
     @exception_transaction = params[:exception_transaction]
-    @time_zone = current_licensee_time_zone
     extract_params
     check_authorization if @exception_transaction != 'yes'
     check_transaction_acceptable

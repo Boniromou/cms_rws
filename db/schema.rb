@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190429000001) do
+ActiveRecord::Schema.define(:version => 20190613000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20190429000001) do
     t.datetime "purge_at"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "time_zone",  :null => false
   end
 
   add_index "licensees", ["purge_at"], :name => "index_licensees_on_purge_at"
@@ -233,6 +234,22 @@ ActiveRecord::Schema.define(:version => 20190429000001) do
   add_index "players", ["purge_at"], :name => "index_players_on_purge_at"
   add_index "players", ["updated_at"], :name => "idx_updated_at"
 
+  create_table "players_bak", :id => false, :force => true do |t|
+    t.integer  "id",               :default => 0,     :null => false
+    t.string   "member_id"
+    t.string   "card_id"
+    t.integer  "currency_id"
+    t.string   "status"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "purge_at"
+    t.integer  "licensee_id",                         :null => false
+    t.boolean  "test_mode_player", :default => false, :null => false
+    t.boolean  "is_member",        :default => true
+  end
+
   create_table "players_lock_types", :force => true do |t|
     t.integer  "player_id",                  :null => false
     t.integer  "lock_type_id",               :null => false
@@ -256,6 +273,10 @@ ActiveRecord::Schema.define(:version => 20190429000001) do
   end
 
   add_index "properties", ["purge_at"], :name => "index_properties_on_purge_at"
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version", :default => 0, :null => false
+  end
 
   create_table "shift_types", :force => true do |t|
     t.string   "name"
@@ -301,6 +322,10 @@ ActiveRecord::Schema.define(:version => 20190429000001) do
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "testerr", :force => true do |t|
+    t.string "member_id"
   end
 
   create_table "tokens", :force => true do |t|

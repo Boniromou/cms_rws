@@ -39,6 +39,16 @@ staging0:
   host: hq-stg-cms-vdb01.laxino.local
   port: 3306
 
+staging1:
+  adapter: mysql2
+  encoding: utf8
+  collation: utf8_bin
+  database: rothorn_cms_staging
+  username: rothorn
+  password: rothorn
+  host: cms-vdb01.stg1.ias.local
+  port: 3306
+
 mockup0:
   adapter: mysql2
   encoding: utf8

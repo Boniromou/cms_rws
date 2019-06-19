@@ -22,6 +22,10 @@ staging0:
   <<: *default
   :internal_property_id: 4
 
+staging1:
+  <<: *default
+  :internal_property_id: 4
+
 sandbox0:
   <<: *default
   :internal_property_id: 5

@@ -36,6 +36,15 @@ staging0:
   no_block: false
   timeout: 30
 
+staging1:
+  servers:
+   - s3-vapp01.stg1.ias.local:11211
+   - s3-vapp01.stg1.ias.local:11212
+   expires: 3600
+   namespace: s3_stg
+   no_block: false
+   timeout: 30
+
 sandbox0:
   servers:
     - snd-cons-vapp01.sandbox.laxigames.com:11211

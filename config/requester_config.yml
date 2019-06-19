@@ -26,6 +26,18 @@ integration0:
   :marketing: http://hq-int-mp-vapp01.laxino.local:80
   :marketing_wallet: http://hq-int-mwms-vapp01.laxino.local:80/mwms
 
+staging1:
+  # :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
+  # :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80
+  # :station: http://mo-stg-sm-vapp01.rnd.laxino.com:80
+  # :marketing: http://mo-stg-mp-vapp01.rnd.laxino.com:80
+  # :marketing_wallet: http://mo-stg-mwms-vapp01.rnd.laxino.com:80/mwms
+  :wallet: http://hq-stg-cwms-vapp01.laxino.local:80/cwms
+  :patron: http://hq-stg-pis-vapp01.laxino.local:80
+  :station: http://hq-stg-sm-vapp01.laxino.local:80
+  :marketing: http://hq-stg-mp-vapp01.laxino.local:80
+  :marketing_wallet: http://hq-stg-mwms-vapp01.laxino.local:80/mwms 
+
 staging0:
   # :wallet: http://mo-stg-cwms-vapp01.rnd.laxino.com:80/cwms
   # :patron: http://mo-stg-pis-vapp01.rnd.laxino.com:80

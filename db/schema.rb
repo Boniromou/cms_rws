@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190613000001) do
+ActiveRecord::Schema.define(:version => 20190619000001) do
 
   create_table "accounting_dates", :force => true do |t|
     t.date     "accounting_date"
@@ -103,6 +103,53 @@ ActiveRecord::Schema.define(:version => 20190613000001) do
   add_index "change_histories", ["purge_at"], :name => "idx_purge_at"
   add_index "change_histories", ["updated_at"], :name => "idx_updated_at"
 
+  create_table "chronos_archive_transaction_logs", :force => true do |t|
+    t.string   "archive_job_id",              :null => false
+    t.string   "target_uuid"
+    t.integer  "target_id",      :limit => 8
+    t.datetime "traced_at",                   :null => false
+    t.datetime "opened_at",                   :null => false
+    t.datetime "closed_at",                   :null => false
+  end
+
+  add_index "chronos_archive_transaction_logs", ["archive_job_id", "closed_at"], :name => "chronos_archive_transaction_logs_archive_job_id_closed_at_index"
+  add_index "chronos_archive_transaction_logs", ["archive_job_id", "traced_at"], :name => "chronos_archive_transaction_logs_archive_job_id_traced_at_index"
+  add_index "chronos_archive_transaction_logs", ["closed_at"], :name => "chronos_archive_transaction_logs_closed_at_index"
+  add_index "chronos_archive_transaction_logs", ["target_id", "archive_job_id"], :name => "chronos_atxs_tid_ajid", :unique => true
+  add_index "chronos_archive_transaction_logs", ["target_uuid", "archive_job_id"], :name => "chronos_atxs_tuuid_ajid", :unique => true
+
+  create_table "chronos_archive_transactions", :force => true do |t|
+    t.string   "archive_job_id",              :null => false
+    t.string   "target_uuid"
+    t.integer  "target_id",      :limit => 8
+    t.datetime "traced_at",                   :null => false
+    t.datetime "opened_at",                   :null => false
+    t.datetime "closed_at"
+  end
+
+  add_index "chronos_archive_transactions", ["archive_job_id", "closed_at"], :name => "chronos_archive_transactions_archive_job_id_closed_at_index"
+  add_index "chronos_archive_transactions", ["archive_job_id", "traced_at"], :name => "chronos_archive_transactions_archive_job_id_traced_at_index"
+  add_index "chronos_archive_transactions", ["target_id", "archive_job_id"], :name => "chronos_atxs_tid_ajid", :unique => true
+  add_index "chronos_archive_transactions", ["target_uuid", "archive_job_id"], :name => "chronos_atxs_tuuid_ajid", :unique => true
+
+  create_table "chronos_schema_info", :id => false, :force => true do |t|
+    t.integer "version", :default => 0, :null => false
+  end
+
+  create_table "chronos_trace_logs", :force => true do |t|
+    t.string   "job_id",     :null => false
+    t.string   "target",     :null => false
+    t.string   "type",       :null => false
+    t.datetime "synced_at",  :null => false
+    t.datetime "traced_at",  :null => false
+    t.datetime "created_at", :null => false
+  end
+
+  add_index "chronos_trace_logs", ["created_at"], :name => "chronos_trace_logs_created_at_index"
+  add_index "chronos_trace_logs", ["job_id", "created_at"], :name => "chronos_trace_logs_job_id_created_at_index"
+  add_index "chronos_trace_logs", ["target", "job_id", "synced_at"], :name => "chronos_trace_logs_target_job_id_synced_at_index"
+  add_index "chronos_trace_logs", ["type", "job_id", "target"], :name => "chronos_trace_logs_type_job_id_target_id"
+
   create_table "configurations", :force => true do |t|
     t.integer  "casino_id",                  :null => false
     t.string   "key",         :limit => 45,  :null => false
@@ -154,7 +201,7 @@ ActiveRecord::Schema.define(:version => 20190613000001) do
     t.datetime "purge_at"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.string   "time_zone",  :null => false
+    t.string   "time_zone"
   end
 
   add_index "licensees", ["purge_at"], :name => "index_licensees_on_purge_at"
@@ -382,6 +429,7 @@ ActiveRecord::Schema.define(:version => 20190613000001) do
     t.integer  "casino_id"
   end
 
+  add_index "users", ["casino_id"], :name => "fk_users_casino_id"
   add_index "users", ["purge_at"], :name => "index_users_on_purge_at"
   add_index "users", ["updated_at"], :name => "idx_updated_at"
 

@@ -1,6 +1,6 @@
 class AddTimeZoneToLicensees < ActiveRecord::Migration
   def up
-    add_column :licensees, :time_zone, :string, :null => false
+    add_column :licensees, :time_zone, :string
   end
 
   def down

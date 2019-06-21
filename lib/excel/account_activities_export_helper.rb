@@ -79,10 +79,10 @@ module Excel
     def format_time(time)
       begin
         unless time.blank?
-          time.getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S")
+          time.in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S")
         end
       rescue Exception
-        Time.parse(time).getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S")
+        Time.parse(time).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S")
       end
     end
 

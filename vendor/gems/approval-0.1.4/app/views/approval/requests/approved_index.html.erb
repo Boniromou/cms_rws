@@ -31,7 +31,7 @@
             <td><%= request[title.to_sym] %></td>
           <% end %>
           <td><%= request[:submit_by] %></td>
-          <td><%= request[:updated_at].to_time.getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+          <td><%= request[:updated_at].in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
           <% if @approval_action == 'exception_transaction'%>
             <td><%= PlayerTransaction.find_by_id(request[:target_id]).status %></td>
             <td>

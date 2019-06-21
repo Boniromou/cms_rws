@@ -115,7 +115,7 @@ class ApplicationController < ActionController::Base
   end
   
   def current_licensee_time_zone
-    Licensee.find_by_id(current_licensee_id).time_zone
+    @time_zone ||= Licensee.find_by_id(current_licensee_id).time_zone
   end
 
   def config_helper

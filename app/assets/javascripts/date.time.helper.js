@@ -20,18 +20,11 @@ function getTimeStrWithoutSecond(now) {
 }
 
 function getDateTimeStr(time_zone) {
-  var now = getLocalTime(time_zone);
-  return getDateStr(now) + ' ' + getTimeStr(now);
-}
-
-function getLocalTime(i) {
-
-  if (typeof i !== 'number') return;
+  
   var d = new Date();
   var len = d.getTime();
   var offset = d.getTimezoneOffset() * 60000;
   var utcTime = len + offset;
 
   return new Date(utcTime + 3600000 * i);
-
 }

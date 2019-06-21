@@ -82,6 +82,9 @@ integration0:
 staging0:
   <<: *default
 
+staging1:
+  <<: *default
+
 sandbox3:
   <<: *default
 

@@ -32,7 +32,11 @@ class PlayersController < ApplicationController
     @casino_id = params[:select_casino_id] || current_casino_id
     @member_id = params[:member_id]
     @exception_transaction = params[:exception_transaction]
-
+    p '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    p @casino_id
+    p @member_id
+    p @current_user.casino_ids
+    p '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
     unless @player
       raise PlayerProfile::PlayerNotFound
     end

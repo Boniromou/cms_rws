@@ -1,10 +1,12 @@
 # Define your release to be deployed to integration environment here.
 # Release number for integration environment is supposed to be odd numbers.
-set :branch, 'integration'
+set :branch, 'fix_second_approve'
 
 # Define your repository server for integration environment here.
 #   production SVN - svn.prod.laxigames.com
 #   development SVN - svn.mo.laxino.com
+set :user, "swe"
+set :group, "swe"
 set :repo_host, 'svn.mo.laxino.com'
 
 # Define your application servers for integration environment here.

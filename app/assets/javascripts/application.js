@@ -29,6 +29,7 @@
 //=require "plugin/jquery-nestable/jquery.nestable.min"
 //=require "plugin/pace/pace.min"
 //=require "moment"
+//=require moment-timezone-with-data
 //=require "bootstrap/bootstrap-datetimepicker"
 //=require "app"
 //=require "app-extend"

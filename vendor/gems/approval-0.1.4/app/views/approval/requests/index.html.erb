@@ -28,7 +28,7 @@
             <td><%= request[title.to_sym] %></td>
           <% end %>
           <td><%= request[:submit_by] %></td>
-          <td><%= request[:updated_at].to_time.getlocal(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+          <td><%= request[:updated_at].in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
           <td>
             <% if policy(request[:target].to_sym).send("#{request[:action]}_cancel_submit?") %>
               <%= button_tag I18n.t('approval.reject'), :type => 'button', 'request_id' => request[:id], 'operation' => 'cancel_submit', :class => 'btn btn-primary cancel_submit request_button' %>

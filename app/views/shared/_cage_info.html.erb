@@ -35,17 +35,15 @@
   </tr>
 </table>
 
-<%= javascript_include_tag "date.time.helper.js" %>
-
+<%#= javascript_include_tag "date.time.helper.js" %>
 <script>
-  function updateInfo() {
-    var localDateTimeStr = getDateTimeStr(<%= @time_zone %>);
-    var time_zone = <%= @time_zone %>;
+    function updateInfo()
+    { 
+      var localDateTimeStr = moment().tz("<%= @time_zone %>").format("YYYY-MM-DD HH:mm:ss");
 
-    $('#local_date_time').html(localDateTimeStr);
+      $('#local_date_time').html(localDateTimeStr);
 
-    setTimeout(updateInfo, 1000);
-  }
-
-  updateInfo();
+      setTimeout(updateInfo, 1000); 
+    }
+    updateInfo();
 </script>

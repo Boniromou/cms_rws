@@ -47,7 +47,7 @@ CmsRws::Application.configure do
 end
 
 #SSO_URL = 'https://stg-sso2.laxino.com'
-SSO_URL = 'https://stg-sso.laxino.com'
+SSO_URL = 'https://stg1-sso.laxino.com'
 URL_BASE = 'https://stg1-cms.laxino.com'
 REGISTRATION_PATH = '/register'
 RESET_PASSWORD_PATH = '/passwords'

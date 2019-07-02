@@ -30,7 +30,7 @@ class AccountActivityDatatable
     transactions = get_transactions_detail(response.transactions)
     transactions.map do |trans|
       [
-        trans['trans_date'].in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S"),
+        Time.parse(trans['trans_date']).in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S"),
         trans['trans_type'] ? trans['trans_type'].titleize : '',
         trans['casino_name'],
         trans['property_name'],

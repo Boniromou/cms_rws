@@ -2,16 +2,17 @@ require File.expand_path(File.dirname(__FILE__) + "/base")
 
 class Requester::Marketing < Requester::Base
 
-  def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
+  def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist, is_member)
     retry_call(RETRY_TIMES) do
-      response = remote_rws_call('post', "#{@path}/internal/create_player", :body => {:id => player_id, 
-                                                                                      :member_id => member_id, 
+      response = remote_rws_call('post', "#{@path}/internal/create_player", :body => {:id => player_id,
+                                                                                      :member_id => member_id,
                                                                                       :card_id => card_id,
-                                                                                      :status => status, 
+                                                                                      :status => status,
                                                                                       :test_mode_player => test_mode_player,
-                                                                                      :licensee_id => licensee_id, 
+                                                                                      :licensee_id => licensee_id,
                                                                                       :currency_id => currency_id,
-                                                                                      :blacklist => blacklist})
+                                                                                      :blacklist => blacklist,
+                                                                                      :is_member => is_member})
       parse_create_player_response(response)
     end
   end

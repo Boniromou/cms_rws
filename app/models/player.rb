@@ -117,6 +117,7 @@ class Player < ActiveRecord::Base
       player.last_name = params[:last_name].downcase if params[:first_name]
       player.licensee_id = params[:licensee_id]
       player.test_mode_player = params[:test_mode_player]
+      player.is_member = params[:is_member]
       player.currency_id = Currency.find_by_name('HKD').id
       player.status = STATUS_NORMAL
       begin
@@ -129,7 +130,7 @@ class Player < ActiveRecord::Base
       if !mp_create
         player_status = params[:blacklist] ? STATUS_LOCKED : STATUS_NORMAL
         casino = Casino.where(:licensee_id => player.licensee_id).first
-        get_requester_helper(casino.id).create_mp_player(player.id, player.member_id, player.card_id, player_status, player.test_mode_player, player.licensee_id, player.currency_id, params[:blacklist])
+        get_requester_helper(casino.id).create_mp_player(player.id, player.member_id, player.card_id, player_status, player.test_mode_player, player.licensee_id, player.currency_id, params[:blacklist], params[:is_member])
       end
       player
     end
@@ -167,6 +168,7 @@ class Player < ActiveRecord::Base
       player.card_id = card_id
       player.first_name = first_name
       player.last_name = last_name
+      player.is_member = params[:is_member]
       begin
         player.save!
       rescue

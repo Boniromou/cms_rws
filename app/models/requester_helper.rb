@@ -24,8 +24,8 @@ class RequesterHelper
     @requester_factory.get_marketing_wallet_requester
   end
 
-  def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
-    marketing_requester.create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist)
+  def create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist, is_member)
+    marketing_requester.create_mp_player(player_id, member_id, card_id, status, test_mode_player, licensee_id, currency_id, blacklist, is_member)
   end
 
   def get_player_info(id_type, id_value, licensee_id)

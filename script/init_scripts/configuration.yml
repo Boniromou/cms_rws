@@ -36,6 +36,7 @@ default: &default
     <<: *20000
   12000:
     <<: *20000
+    session_life_time: [30]
   10006:
     <<: *20000
     session_life_time: [30]

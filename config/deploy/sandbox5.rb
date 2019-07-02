@@ -7,7 +7,7 @@ set :branch, 'REL_1_4_6'
 #   development SVN - svn.mo.laxino.com
 set :user, "swe"
 set :group, "swe"
-set :repo_host, 'svn.prod.laxigames.com'
+set :repo_host, 'prd-cbms-app01.prod.laxigames.com'
 
 # Define your application servers for integration environment here.
 #   int - Integration

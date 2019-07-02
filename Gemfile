@@ -6,7 +6,7 @@ gem 'rails', '3.2.19'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2'
+gem 'mysql2', '0.3.17'
 gem 'lax-support', '0.6.32', :path => "vendor/gems/lax-support-0.6.32"
 gem 'sequel'
 gem 'httparty'

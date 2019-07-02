@@ -61,6 +61,15 @@ sandbox2:
   no_block: true
   timeout: 30
 
+sandbox5:
+  servers:
+    - s3-vapp01.snd5.gamesource.local:11211
+    - s3-vapp01.snd5.gamesource.local:11212
+  expires: 3600
+  namespace: s3_snd
+  no_block: true
+  timeout: 30
+
 smartocean2:
   servers:
     - prd-s3-vapp01.prod.so.idc02.laxigames.local:7000

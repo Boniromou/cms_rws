@@ -38,6 +38,10 @@ sandbox3:
   <<: *default
   :internal_property_id: 5
 
+sandbox5:
+  <<: *default
+  :internal_property_id: 5
+
 sandbox:
   <<: *default
   :internal_property_id: 5

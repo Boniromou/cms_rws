@@ -57,6 +57,13 @@ sandbox3:
   :marketing: http://mo-snd-mp-vapp01.lb.laxigames.local:80
   :marketing_wallet: http://mo-snd-mwms-vapp01.lb.laxigames.local:80/mwms
 
+sandbox5:
+  :wallet: http://cwms-vapp01.snd5.gamesource.local:80/cwms
+  :patron: http://pis-vapp01.snd5.gamesource.local.local:80
+  :station: http://sm-vapp01.snd5.gamesource.local.local:80
+  :marketing: http://mp-vapp01.snd5.gamesource.local.local:80
+  :marketing_wallet: http://mwms-vapp01.snd5.gamesource.local:80/mwms
+
 production3:
   :wallet: http://mo-prd-cwms-vapp01.lb.laxigames.local:80/cwms
   :patron: http://mo-prd-pis-vapp01.lb.laxigames.local:80

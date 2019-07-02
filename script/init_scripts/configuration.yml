@@ -34,6 +34,8 @@ default: &default
     <<: *20000
   10001:
     <<: *20000
+  12000:
+    <<: *20000
   10006:
     <<: *20000
     session_life_time: [30]
@@ -83,6 +85,9 @@ staging0:
   <<: *default
 
 staging1:
+  <<: *default
+
+sandbox5:
   <<: *default
 
 sandbox3:

@@ -139,7 +139,8 @@ module Requester
 
   class WalletTransactionResponse < WalletResponse
     def trans_date
-      @result_hash[:trans_date].to_time(:local)
+      #@result_hash[:trans_date].to_time(:local)
+      Time.parse(@result_hash[:trans_date])
     end
 
     def success?

@@ -59,9 +59,9 @@ sandbox3:
 
 sandbox5:
   :wallet: http://cwms-vapp01.snd5.gamesource.local:80/cwms
-  :patron: http://pis-vapp01.snd5.gamesource.local.local:80
-  :station: http://sm-vapp01.snd5.gamesource.local.local:80
-  :marketing: http://mp-vapp01.snd5.gamesource.local.local:80
+  :patron: http://pis-vapp01.snd5.gamesource.local:80
+  :station: http://sm-vapp01.snd5.gamesource.local:80
+  :marketing: http://mp-vapp01.snd5.gamesource.local:80
   :marketing_wallet: http://mwms-vapp01.snd5.gamesource.local:80/mwms
 
 production3:
